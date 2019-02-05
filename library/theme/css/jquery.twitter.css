@@ -1,0 +1,120 @@
+/* jquery.minitwitter.js - http://minitwitter.webdevdesigner.com/
+ 	Copyright (c) 2012 Olivier Bréchet */
+
+ul.twitter {
+    
+}
+
+#wrapper ul.twitter li {
+    padding: 15px 0;
+    border-bottom: 1px dashed #D7D7D7;
+    min-height: 54px;
+    margin: 0;
+}
+
+ul.twitter li .avatar {
+    float: left;
+    width: 30px;
+    margin-right: 10px;
+}
+
+ul.twitter li img.icon {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 50px;
+}
+
+ul.twitter li .meta {
+    margin: 0px 0 10px 40px;
+}
+
+ul.twitter li .meta a {
+    margin-right: 4px;
+    font-size: 0.9em;
+}
+
+.tweets .tweets_header {
+    border-bottom:1px solid #e7e7e7;
+    padding:12px 12px;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.tweets .tweets_header a {
+    text-decoration:none !important;
+    font-weight:bold !important;
+    font-style:normal !important;
+    text-transform:lowercase !important;
+}
+
+.tweets .tweets_header a:hover {
+}
+
+.tweets_footer {
+    padding:6px 12px;
+    text-align: center;
+}
+
+.tweets_footer #bird, .mt_footer .image_r {
+    background:url("http://twimg0-a.akamaihd.net/a/1331143368/t1/img/twitter_web_sprite_icons.png") no-repeat;
+}
+
+.tweets .tweet .time {
+    float:right;
+    color:#999;
+    font-size:11px;
+}
+
+.tweets .tweet .avatar {
+    float:left;
+    margin-right:12px;
+    border-radius:5px;
+}
+
+.tweets .tweet .avatar img {
+    border-radius:5px;
+}
+
+.mt_header {
+    padding-bottom:2px;
+}
+
+.mt_screen_name {
+    font-size:12px;
+    color:#999;
+}
+
+ul.twitter li .meta a.mt_user {
+    font-size: 1em;
+}
+
+.mt_text {
+}
+
+.mt_footer {
+    color:#006699;
+    font-size:12px;
+    margin-top: 5px;
+}
+
+.mt_footer div {
+    float: left;
+    margin-right: 8px;
+}
+
+.mt_footer .image_r {
+    display:inline-block;
+    margin-bottom:-2px;
+    margin-right:4px;
+    background-position: -20px -290px;
+    width: 14px;
+    height:13px;
+    background-color:#999;
+}
+
+.mt_footer .time {
+    margin-top: 1px;
+}
+
+.mt_footer a{
+}

@@ -1,0 +1,8 @@
+.side-scroll ul {
+    width: 10000px;
+    padding: 0 0 0 125px;
+}
+.side-scroll ul li {
+        padding: 0px 15px;
+}
+.h-scroll { overflow-x: scroll; } 

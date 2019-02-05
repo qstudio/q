@@ -1,0 +1,248 @@
+/*
+
+CSS STYLES FOR HOVER ANIMATIONS
+
+*/
+
+/*/ AJAX PURE CSS FALLBACK - site specific greenheart.org/*/
+.ajax-loaded .blog-wrapper,
+.ajax-loaded .event-wrapper {
+	transition: all .3s ease;
+}
+.ajax-loaded .blog-wrapper:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 4px 25px 0 rgba(0,0,0,0.15);
+
+}
+
+/*/ ADD SITE SPECIFIC ANIMATION EFFECTS HERE /*/
+.add_link {
+	background: rgba(0,0,0,.7);
+}
+.add_link #hoverlink {
+    position: absolute;
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    z-index: 0;
+    top: 0;
+    background: rgba(0,0,0,.5);
+    border-radius: 4px;
+}
+.linkup .external_icon {
+	width:100%;
+	background-position: center;
+	top: 0;
+	margin-bottom: 5px;
+
+}
+.add_link #hoverlink .linkup {
+	margin-top:40px;
+	color: #fff;
+	font-weight: bold;
+	font-size: 14px;
+	animation: txtup .2s ease-in 1 forwards;
+	transition: all .2s ease-in-out;
+	position: relative;
+}
+
+.hide_link #hoverlink .linkup {
+	margin-top: 40px;
+	color: #fff;
+	animation: txtdown .2s ease-in 1 forwards;
+	transition: all .2s ease-in-out;
+}
+
+
+body, div, ul, li, .col, .col-xs-3 {
+	transition: all .2s ease;
+}
+/* BEATING HEART */
+ 
+logo_left {
+  display:block;
+}
+.logo_left:hover {
+  animation: .7s 1 beatHeart ease-in;
+}
+ 
+@keyframes beatHeart {
+  0% {
+    transform: scale(1);
+  }
+  22% {
+    transform: scale(1.05);
+  }
+  40% {
+    transform: scale(1);
+  }
+  60% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+ 
+/* END BEATING HEART */
+
+
+/*/ FUNCTION EFFECTS /*/
+
+.smallfade {
+	opacity: .9;
+}
+.smalljump {
+	transition: all .2s ease;
+	transform: translateY(-4px);
+	
+}
+
+.pickup {
+	transition: all .5s ease;
+	transform: translateY(-5px);
+	box-shadow: 0 4px 25px 0 rgba(0,0,0,0.15);
+	box-sizing:border-box
+}
+/*/ UNIVERSAL FRAME ELEMENT /*/
+.hoverframe {
+	position: relative;
+	overflow: hidden;
+
+}
+.moveup {
+	animation: moveup .2s ease-in 1 forwards;
+	transition: all .2s ease-in-out;
+}
+
+.movedown {
+	animation: movedown .2s ease-in 1 forwards;
+	transition: all .2s ease-in-out;
+}
+
+/*/  SHOW DETAILS  /*/
+
+.hover-up-details {
+    font-size: 14px;
+    opacity: 0;
+  	line-height: 1.43;
+  	font-family: Lato, "Lato";
+    color: white;
+    position: absolute;
+    z-index: 9;
+    text-align: center;
+    width: 80%;
+    left: 10%;
+    padding-top: 12px;
+    transition: all .2s ease-in-out;
+}
+.hover-up-details p {
+	opacity: 1;
+	display: block;
+
+}
+.showdetails {
+	animation: txtup .2s ease-in 1 forwards;
+	transition: all .2s ease-in-out;
+}
+.hidedetails{
+	animation: txtdown .2s ease-in 1 forwards;
+	transition: all .2s ease-in-out;
+}
+
+
+.external_icon {
+	height: 24px;
+	width: 24px;
+	display: inline-block;
+	background: url('images/global/new-tab.png') no-repeat;
+	margin:0;
+	top:6px;
+	position:relative;
+
+}
+#hoverlink {
+	display: block;
+	font-family: Lato, "Lato"
+	font-size: 14px;
+	font-weight: bold;
+	padding: 0;
+	margin: 0 auto 30px;
+	position: relative;
+	line-height: 20px;
+	padding-top:22px;
+	padding-left:5px;
+}
+
+@keyframes txtup {
+	0% { 
+		top: 155px;
+		opacity: 0;
+
+	}
+	20%{
+		top: 105px;
+		opacity: .3;
+
+	}
+	60%{
+		top: 55px;
+		opacity: .6;
+	}
+	100%{
+		opacity: 1;
+		top: 0px;
+	}
+}
+@keyframes txtdown {
+	0% { 
+		top: 0px;
+		opacity: 1;
+
+	}
+	20%{
+		top: 55px;
+		opacity: .7;
+
+	}
+	60%{
+		top: 105px;
+		opacity: .3;
+	}
+	100%{
+		opacity: 0;
+		top: 155px;
+	}
+}
+
+@keyframes moveup {
+0% { 
+		top: 0px;
+	}
+	20%{
+		top: -10px
+	}
+	60%{
+		top: -20px;
+	}
+	100%{
+		top: -30px;
+	}
+}
+@keyframes movedown {
+0% { 
+		top: -30px;
+	}
+	20%{
+		top: -20px
+	}
+	60%{
+		top: -10px;
+	}
+	100%{
+		top: 0px;
+	}
+}
