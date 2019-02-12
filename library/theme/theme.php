@@ -122,6 +122,9 @@ class theme extends \Q {
             \wp_register_style( 'q-theme-css', helper::get( "theme/css/q.theme.css", 'return' ), array(), self::$plugin_version, 'all' );
             \wp_enqueue_style( 'q-theme-css' );
 
+            \wp_register_style( 'q-theme', helper::get( "scss/index.css", 'return' ), array(), self::$plugin_version, 'all' );
+            \wp_enqueue_style( 'q-theme' );
+
         }
 
         if ( 
