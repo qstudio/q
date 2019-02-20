@@ -1,0 +1,39 @@
+.q-consent-bar {
+  background-color: $c-blue;
+  color: white;
+  padding: 10px 0;
+
+  .content {
+    font-size: 14px;
+
+    a {
+      color: white;
+      text-decoration: underline;
+
+      &:hover {
+        color: white;
+      }
+    }
+  }
+
+  .cta {
+    text-align: right;
+  }
+
+  @media (max-width: 767px) {
+    position: fixed;
+    bottom: 0;
+    z-index: 999;
+
+    .cta {
+      margin-top: 15px;
+
+      .btn {
+        width: 47%;
+      }
+    }
+    .content, .cta {
+      text-align: center;
+    }
+  }
+}

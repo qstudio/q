@@ -116,13 +116,13 @@ class theme extends \Q {
             isset( self::$options->plugin_css ) 
             && false === self::$debug 
         ) {
-            // \wp_register_style( 'q-wordpress-css', helper::get( "theme/css/q.wordpress.css", 'return' ), array(), self::$plugin_version, 'all' );
-            // \wp_enqueue_style( 'q-wordpress-css' );
+            \wp_register_style( 'q-wordpress-css', helper::get( "theme/css/q.wordpress.css", 'return' ), array(), self::$plugin_version, 'all' );
+            \wp_enqueue_style( 'q-wordpress-css' );
 
             \wp_register_style( 'q-theme-css', helper::get( "theme/css/q.theme.css", 'return' ), array(), self::$plugin_version, 'all' );
             \wp_enqueue_style( 'q-theme-css' );
 
-            \wp_register_style( 'q-theme', helper::get( "scss/index.css", 'return' ), array(), self::$plugin_version, 'all' );
+            \wp_register_style( 'q-theme', helper::get( "theme/scss/index.css", 'return' ), array(), self::$plugin_version, 'all' );
             \wp_enqueue_style( 'q-theme' );
 
         }

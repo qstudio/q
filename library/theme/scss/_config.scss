@@ -1,0 +1,70 @@
+@import "variables";
+
+// @TODO remove
+body {
+  max-width: unset !important;
+}
+
+.q-bsg {
+  .row {
+    width: auto !important;
+
+    &:first-child {
+      margin-left: -15px;
+    }
+  }
+}
+
+h1, h2, h3, h4, h5, h6, strong {
+  color: $c-text;
+}
+
+h3 {
+  font-family: 'Sanchez';
+  font-size: 28px;
+}
+
+h5 {
+  font-size: 18px;
+  font-weight: bold;
+  padding-top: 5px;
+}
+
+a.btn:hover {
+  color: white;
+}
+
+.btn {
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 25px;
+
+  &.btn-border {
+    border-color: white !important;
+  }
+
+  &.btn-light {
+    color: $c-blue;
+    background-color: white;
+    border-color: white;
+  }
+
+  &.btn-dark {
+    background-color: $c-dark;
+    border-color: $c-dark;
+  }
+
+  &.btn-success {
+    background-color: $c-green;
+    border-color: $c-green;
+  }
+}
+
+input:checked + .slider {
+  background-color: $c-green;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px $c-green;
+}

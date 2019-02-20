@@ -1,0 +1,55 @@
+@import "variables";
+
+.post {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &:hover {
+    @include hoverBox;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+
+  .blog-image {
+    background-image: linear-gradient(297deg, #aedb74, #e0fe9c);
+    display: block;
+    height: 200px;
+    position: relative;
+    width: 100%;
+
+    .btn {
+      font-size: 11px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+  }
+
+  .blog-content {
+    background-color: white;
+    border: 1px solid $c-border;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 15px;
+
+    h5 {
+      margin-bottom: 10px;
+    }
+
+    .details {
+      font-size: 14px;
+      margin-top: auto;
+
+      a {
+        color: $c-green;
+        font-size: 14px;
+      }
+
+      .date {
+        line-height: 1;
+      }
+    }
+  }
+}
