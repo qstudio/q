@@ -11,6 +11,63 @@ use q\controller\css as css;
 
 class navigation extends \Q {
 
+
+
+    /**
+    * Check if a page shoould show sub navigation
+    *
+    * @since    2.0.0
+    * @return   Boolean
+    */
+    public static function has_sub_navigation()
+    {
+
+        // array of parent slugs to allow sub navigation
+        $slugs = array(
+            'about'
+        );
+
+        // check for the_post ## 
+        if ( ! $the_post = wordpress::the_post() ) {
+
+            #helper::log( 'No Post object found' );
+
+            return false;
+
+        }
+
+        // check for post parent ##
+        if ( ! $the_post->post_parent ) {
+
+            #helper::log( 'Post has no parent' );
+
+            return false;
+
+        }
+
+        if ( ! $parent = \get_post( $the_post->post_parent ) ) {
+
+            #helper::log( 'Parent post missing..' );
+
+            return false;
+
+        }
+
+        if ( in_array( $parent->post_name, $slugs ) ) {
+
+            #helper::log( 'Slug matched: '.$parent->post_name );
+
+            return true;
+
+        }
+
+        #helper::log( 'Not a page with sub navigation' );
+
+        return false;
+
+    }
+
+
     /**
     * Build Sub Navigation
     *

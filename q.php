@@ -13,7 +13,7 @@
  * Plugin Name:     Q
  * Plugin URI:      https://www.qstudio.us
  * Description:     Q is a Development Framework that provides an API to manage libraries, themes, plugins and widgets.
- * Version:         2.0.1
+ * Version:         2.1.0
  * Author:          Q Studio
  * Author URI:      https://www.qstudio.us
  * License:         GPL
@@ -24,10 +24,6 @@
  * GitHub Plugin URI: qstudio/q
 */
 
-// namespace q;
-
-// use q\core\helper as helper;
-
 // quick check :) ##
 defined( 'ABSPATH' ) OR exit;
 
@@ -37,9 +33,6 @@ if ( ! class_exists( 'Q' ) ) {
     // instatiate plugin via WP plugins_loaded ##
     add_action( 'plugins_loaded', array ( 'Q', 'get_instance' ), 0 );
     
-    // define( 'Q_DEBUG', false );
-    // define( 'Q_VERSION', '2.0.1' );
-
     // Q Class ##
     class Q {
         
@@ -47,7 +40,7 @@ if ( ! class_exists( 'Q' ) ) {
         private static $instance = null;
 
         // Plugin Settings
-        const version = '2.0.1';
+        const version = '2.1.0';
         const text_domain = 'q-textdomain'; // for translation ##
         static $debug = false; // controls how js is loaded ##
         static $device; // current device ##
@@ -106,7 +99,7 @@ if ( ! class_exists( 'Q' ) ) {
             
             $q_options = array( 
                 'configured'    => true 
-                ,'version'      => Q_VERSION
+                ,'version'      => self::version
             );
             
             // init running, so update configuration flag ##
@@ -187,7 +180,7 @@ if ( ! class_exists( 'Q' ) ) {
 
 
         /**
-         * Check for required classes to build UI features
+         * Check for required classes to run
          * 
          * @return      Boolean 
          * @since       0.1.0
@@ -198,8 +191,6 @@ if ( ! class_exists( 'Q' ) ) {
             // check for what's needed ##
             if (
                 ! class_exists( 'Q' )
-                || ! class_exists( 'Q_Control' )
-                // || ! class_exists( 'q_theme' ) // @todo, is this class is required ? ##
             ) {
 
                 // helper::log( 'Required dependencies missing, so bulking...' );
@@ -237,15 +228,18 @@ if ( ! class_exists( 'Q' ) ) {
             require_once self::get_plugin_path( 'library/core/options.php' );
             require_once self::get_plugin_path( 'library/core/wordpress.php' );
 
-            // adin ##
+            // admin ##
             require_once self::get_plugin_path( 'library/admin/admin.php' );
             require_once self::get_plugin_path( 'library/admin/menu.php' ); 
 
             // hooks ##
             require_once self::get_plugin_path( 'library/hook/hook.php' );
 
+            // plugins ##
+            require_once self::get_plugin_path( 'library/plugin/plugin.php' );
+
             // frontend ##
-            // require_once self::get_plugin_path( 'library/theme/widget.php' );
+            require_once self::get_plugin_path( 'library/theme/widget.php' );
             require_once self::get_plugin_path( 'library/theme/meta.php' );
             // require_once self::get_plugin_path( 'library/theme/template.php' );
             require_once self::get_plugin_path( 'library/theme/theme.php' );
