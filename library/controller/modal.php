@@ -61,11 +61,15 @@ class modal extends \Q {
 
         // featherlight JS ##
         \wp_register_script( 'featherlight-js', helper::get( "theme/javascript/featherlight.min.js", 'return' ), array( 'jquery' ), self::version, true );
-        \wp_enqueue_script( 'featherlight-js' );  
+        \wp_enqueue_script( 'featherlight-js' );
+        \wp_register_script( 'featherlight-gallery-js', helper::get( "theme/javascript/featherlight.gallery.js", 'return' ), array( 'jquery' ), self::version, true );
+        \wp_enqueue_script( 'featherlight-gallery-js' );
 
         // featherlight css
         \wp_register_style( 'featherlight-css', helper::get( "theme/css/featherlight.min.css", 'return' ), '', self::version, 'all' );
         \wp_enqueue_style( 'featherlight-css' );
+        \wp_register_style( 'featherlight-gallery-css', helper::get( "theme/css/featherlight.gallery.css", 'return' ), '', self::version, 'all' );
+        \wp_enqueue_style( 'featherlight-gallery-css' );
 
     }
 
