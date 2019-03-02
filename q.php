@@ -1,7 +1,7 @@
 <?php
 
 /* 
- * Global UI 
+ * WordPress Framework
  *
  * @package         q
  * @author          Q Studio <social@qstudio.us>
@@ -42,7 +42,7 @@ if ( ! class_exists( 'Q' ) ) {
         // Plugin Settings
         const version = '2.1.1';
         const text_domain = 'q-textdomain'; // for translation ##
-        static $debug = false; // controls how js is loaded ##
+        static $debug = false; // global debuggin ##
         static $device; // current device ##
         static $locale; // current locale ##
 

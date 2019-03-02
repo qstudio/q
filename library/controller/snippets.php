@@ -6,7 +6,7 @@ use q\core\core as core;
 use q\core\helper as helper;
 
 // load it up ##
-#\q\q_theme\theme\frontpage::run();
+#\q\theme\theme\frontpage::run();
 
 class snippets extends \Q {
 

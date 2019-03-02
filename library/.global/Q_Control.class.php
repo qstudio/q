@@ -335,7 +335,7 @@ if ( ! class_exists( 'Q_Control' ) ) {
                     // check if method exists in 'q_theme' ##
                     if (
                         method_exists( $args->view, $args->method )
-                        // && is_callable( array( "\q\q_theme\theme\view\{$args->template}\{$args->template}", "the_{$args->template}_loop" ) )
+                        // && is_callable( array( "\q\theme\theme\view\{$args->template}\{$args->template}", "the_{$args->template}_loop" ) )
                     ) {
 
                         #pr( $args_array );
@@ -363,7 +363,7 @@ if ( ! class_exists( 'Q_Control' ) ) {
                 // get sidebar ##
                 if ( $args->sidebar ) {
                     
-                    \q\q_theme\theme\controller\navigation\navigation::the_sidebar();
+                    \q\theme\theme\controller\navigation\navigation::the_sidebar();
 
                 }
 
@@ -375,7 +375,7 @@ if ( ! class_exists( 'Q_Control' ) ) {
 
                     // self::log( 'Adding pagination..' );
                     
-                    \q\q_theme\theme\controller\navigation\navigation::the_pagination([
+                    \q\theme\theme\controller\navigation\navigation::the_pagination([
 					    'posts_per_page'	=> $posts_args['posts_per_page'],
 					    'post_count'		=> count( $q_query->post_count )
                     ]);
@@ -385,7 +385,7 @@ if ( ! class_exists( 'Q_Control' ) ) {
             } else {
 
                 // nothing found ##
-                \q\q_theme\theme\view\fourzerofour\fourzerofour::render();
+                \q\theme\theme\view\fourzerofour\fourzerofour::render();
 
             }
 
@@ -1316,8 +1316,8 @@ if ( ! class_exists( 'Q_Control' ) ) {
 
             // check if method exists in 'q_theme' ##
             if (
-                method_exists( '\q\q_theme\theme\snippets\snippets', $slug )
-                && is_callable( array( '\q\q_theme\theme\snippets\snippets', $slug ) )
+                method_exists( '\q\theme\theme\snippets\snippets', $slug )
+                && is_callable( array( '\q\theme\theme\snippets\snippets', $slug ) )
             ) {
 
                 // check args are in array, if not caste ##
@@ -1325,7 +1325,7 @@ if ( ! class_exists( 'Q_Control' ) ) {
 
                 // call class emthod and pass arguments ##
                 call_user_func_array (
-                        array( '\q\q_theme\theme\snippets\snippets', $slug )
+                        array( '\q\theme\theme\snippets\snippets', $slug )
                     ,   ( array )$args
                 );
 

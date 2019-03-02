@@ -84,16 +84,21 @@ class options extends \Q {
         self::$q_options = array ( 
 
             // plugin settings ##
-            "plugin_css"                => true, // add plugin css styling ##
-            "plugin_js"                 => true, // add plugin javascript ##
+            "plugin_css"                    => true, // add plugin css styling ##
+            "plugin_js"                     => true, // add plugin javascript ##
 
             // theme settings ##
-            "theme_css"                 => true, // add theme css styling to child theme ##
-            "theme_js"                  => true, // add theme javascript files to child theme ##
+            "theme_css"                     => true, // add theme css styling to child theme ##
+            "theme_js"                      => true, // add theme javascript files to child theme ##
 
-            // google codes ##
-            "google_analytics"          => '', // tracking code ##
-            "google_webmasters"         => '', // verification code ##
+            // google ##
+            "google_analytics"              => false, // tracking code ##
+            "google_tag_manager"            => false, // GTM code ##
+            "google_tag_manager_noscript"   => false, // GTM noscript ##
+            
+            // facebook ##
+            "facebook_pixel"                => false, // FB Pixel code ##
+            "facebook_pixel_noscript"       => false, // FB Pixel noscript ##
 
         );
         
@@ -145,7 +150,6 @@ class options extends \Q {
         // helper::log( $q_options );
 
         // kick it back ##
-        #return \q_array_to_object( $q_options );
         return $q_options;
 
     }
@@ -207,7 +211,6 @@ class options extends \Q {
         $q_options = \get_site_option( 'q_options' );
 
         // add item to object ##
-        #$q_options[$item] = true;
         $q_options[$item] = true;
 
         // update class property ##
@@ -258,7 +261,7 @@ class options extends \Q {
         // get FRESH Q Plugin data ##
         $plugin_data = wordpress::plugin_data( true );
 
-        // get Q options ## -- @todo, move to functions::array_to_object
+        // get Q options ##
         $options = core::array_to_object( self::get() );
 
 ?>
@@ -425,21 +428,51 @@ class options extends \Q {
             
             <h3>Google Settings:</h3>
             <table class="form-table">
+
                 <tr valign="top">
                     <th scope="row"><label for="q_options[google_analytics]"><?php _e( 'Google Analytics', 'q-textdomain' ); ?></label></th>
                     <td>
-                        <input id="q_options[google_analytics]" class="regular-text" type="text" name="q_options[google_analytics]" value="<?php esc_attr_e( $options->google_analytics ); ?>" />
-                        <p class="description" ><?php _e( 'Enter Your Google Analytics UA', 'q-textdomain' ); ?> - <a href="http://www.google.co.uk/analytics/" target="_blank">Sign Up</a></p>
+                        <textarea id="q_options[google_analytics]" cols="40" rows="4" style="width: 100%;" name="q_options[google_analytics]"><?php \esc_attr_e( $options->google_analytics ); ?></textarea>
+                        <p class="description" ><?php _e( 'Enter the complete Google Analytics snippet', 'q-textdomain' ); ?></p>
                     </td>
                 </tr>
 
                 <tr valign="top">
-                    <th scope="row"><label for="q_options[google_webmasters]"><?php _e( 'Google Webmasters', 'q-textdomain' ); ?></label></th>
+                    <th scope="row"><label for="q_options[google_tag_manager]"><?php _e( 'Google Tag Manager', 'q-textdomain' ); ?></label></th>
                     <td>
-                        <input id="q_options[google_webmasters]" class="regular-text" type="text" name="q_options[google_webmasters]" value="<?php esc_attr_e( $options->google_webmasters ); ?>" />
-                        <p class="description" ><?php _e( 'Enter Your Google Webmasters Verify Code', 'q-textdomain' ); ?> - <a href="https://www.google.com/webmasters/" target="_blank">Sign Up</a></p>
+                        <textarea id="q_options[google_tag_manager]" cols="40" rows="4" style="width: 100%;" name="q_options[google_tag_manager]"><?php \esc_attr_e( $options->google_tag_manager ); ?></textarea>
+                        <p class="description" ><?php _e( 'Enter the complete Google Tag Manager snippet', 'q-textdomain' ); ?></p>
                     </td>
                 </tr>
+                <tr valign="top">
+                    <th scope="row"><label for="q_options[google_tag_manager_noscript]"><?php _e( 'Google Tag Manager noscript', 'q-textdomain' ); ?></label></th>
+                    <td>
+                        <textarea id="q_options[google_tag_manager_noscript]" cols="40" rows="4" style="width: 100%;" name="q_options[google_tag_manager_noscript]"><?php \esc_attr_e(  $options->google_tag_manager_noscript ); ?></textarea>
+                        <p class="description" ><?php _e( 'Enter the complete Google Tag Manager noscript snippet', 'q-textdomain' ); ?></p>
+                    </td>
+                </tr>
+
+            </table>
+
+
+            <h3>Facebook Settings:</h3>
+            <table class="form-table">
+
+                <tr valign="top">
+                    <th scope="row"><label for="q_options[facebook_pixel]"><?php _e( 'Facebook Pixel', 'q-textdomain' ); ?></label></th>
+                    <td>
+                        <textarea id="q_options[facebook_pixel]" cols="40" rows="4" style="width: 100%;" name="q_options[facebook_pixel]"><?php \esc_attr_e( $options->facebook_pixel ); ?></textarea>
+                        <p class="description" ><?php _e( 'Enter the complete Facebook Pixel snippet', 'q-textdomain' ); ?></p>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><label for="q_options[facebook_pixel_noscript]"><?php _e( 'Facebook Pixel noscript', 'q-textdomain' ); ?></label></th>
+                    <td>
+                        <textarea id="q_options[facebook_pixel_noscript]" cols="40" rows="4" style="width: 100%;" name="q_options[facebook_pixel_noscript]"><?php \esc_attr_e(  $options->facebook_pixel_noscript ); ?></textarea>
+                        <p class="description" ><?php _e( 'Enter the complete Facebook Pixel  noscript snippet', 'q-textdomain' ); ?></p>
+                    </td>
+                </tr>
+
             </table>
 
             <p class="submit">
@@ -469,14 +502,19 @@ class options extends \Q {
         \delete_site_option( 'q_options' ); // delete option ##
 
         // force default value if radio empty ##
-        $input['plugin_css']         = ( $input['plugin_css'] == 1 ? true : false );
-        $input['plugin_js']          = ( $input['plugin_js'] == 1 ? true : false );
+        $input['plugin_css']                    = ( $input['plugin_css'] == 1 ? true : false );
+        $input['plugin_js']                     = ( $input['plugin_js'] == 1 ? true : false );
 
-        $input['theme_css']            = ( $input['theme_css'] == 1 ? true : false );
-        $input['theme_js']             = ( $input['theme_js'] == 1 ? true : false );
+        $input['theme_css']                     = ( $input['theme_css'] == 1 ? true : false );
+        $input['theme_js']                      = ( $input['theme_js'] == 1 ? true : false );
 
-        $input['google_analytics']      = \wp_filter_nohtml_kses( $input['google_analytics'] );
-        $input['google_webmasters']     = \wp_filter_nohtml_kses( $input['google_webmasters'] );
+        $input['google_analytics']              = $input['google_analytics'];
+
+        $input['google_tag_manager']            = $input['google_tag_manager'];
+        $input['google_tag_manager_noscript']   = $input['google_tag_manager_noscript'];
+
+        $input['facebook_pixel']                = $input['facebook_pixel'];
+        $input['facebook_pixel_noscript']       = $input['facebook_pixel_noscript'];
 
         return $input;
 
@@ -533,18 +571,10 @@ class options extends \Q {
     public static function add_theme_support( $support )
     {
 
-        // if ( ! class_exists( '\q\core\options' ) ) {
-
-        //     helper::log( 'options class missing, install q_ui plugin and activiate.' );
-
-        //     return false;
-
-        // } 
-        
         // grab the options ##
         $q_options = self::get();
 
-        // Q_Control::log( $q_options );
+        // helper::log( $q_options );
 
         if ( $support && is_array( $q_options ) ) { // check to see if $support passed ##
 
@@ -554,7 +584,7 @@ class options extends \Q {
 
                    if ( $add ) {
 
-                        // Q_Control::log( 'Add single item from array: '.$add );
+                        // helper::log( 'Add single item from array: '.$add );
                         self::update( $add );
 
                    }
@@ -563,7 +593,7 @@ class options extends \Q {
 
           } else { // single variable ##
 
-              #Q_Control::log( 'Add single item: '.$support );
+              #helper::log( 'Add single item: '.$support );
 
               self::update( $support );
 
@@ -571,7 +601,7 @@ class options extends \Q {
 
        }
 
-       #Q_Control::log( options::get() );
+       #helper::log( options::get() );
 
     }
     

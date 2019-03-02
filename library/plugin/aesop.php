@@ -4,8 +4,8 @@ namespace q\plugin;
 
 use q\core\core as core;
 use q\core\helper as helper;
-use q\q_theme\theme\template as template;
-use q\q_theme\theme\view\fourzerofour\fourzerofour as fourzerofour;
+use q\theme\theme\template as template;
+use q\theme\theme\view\fourzerofour\fourzerofour as fourzerofour;
 
 // load it up ##
 \q\plugin\aesop::run();

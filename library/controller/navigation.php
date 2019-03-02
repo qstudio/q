@@ -7,7 +7,7 @@ use q\core\helper as helper;
 use q\controller\css as css;
 
 // load it up ##
-#\q\q_theme\theme\frontpage::run();
+#\q\theme\theme\frontpage::run();
 
 class navigation extends \Q {
 

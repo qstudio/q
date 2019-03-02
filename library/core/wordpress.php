@@ -6,7 +6,7 @@ namespace q\core;
 use q\core\helper as helper;
 use q\theme\template as template;
 use q\theme\ui as ui;
-use q\q_theme\theme\template\generic\generic as theme;
+use q\theme\theme\template\generic\generic as theme;
 
 // load it up ##
 #\q\core\wordpress::run();
@@ -463,7 +463,7 @@ class wordpress extends \Q {
                 // check if method exists in 'q_theme' ##
                 if (
                     method_exists( $args->view, $args->method )
-                    // && is_callable( array( "\q\q_theme\theme\view\{$args->template}\{$args->template}", "the_{$args->template}_loop" ) )
+                    // && is_callable( array( "\q\theme\theme\view\{$args->template}\{$args->template}", "the_{$args->template}_loop" ) )
                 ) {
 
                     #pr( $args_array );
@@ -513,7 +513,7 @@ class wordpress extends \Q {
         } else {
 
             // nothing found ##
-            \q\q_theme\theme\view\fourzerofour\fourzerofour::render();
+            \q\theme\theme\view\fourzerofour\fourzerofour::render();
 
         }
 

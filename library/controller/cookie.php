@@ -5,9 +5,9 @@ namespace q\controller;
 use q\core\core as core;
 use q\core\helper as helper;
 use q\core\config as config;
-// use q\q_theme\theme\view\fourzerofour as fourzerofour;
-// use q\q_theme\theme\view\post as post;
-// use q\q_theme\core\core as theme_core;
+// use q\theme\theme\view\fourzerofour as fourzerofour;
+// use q\theme\theme\view\post as post;
+// use q\theme\core\core as theme_core;
 
 /*
 * @read - https://stackoverflow.com/questions/15966812/user-recognition-without-cookies-or-local-storage/16120977#16120977

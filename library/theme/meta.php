@@ -7,7 +7,7 @@ use q\core\helper as helper;
 // use q\core\config as config;
 
 // load it up ##
-#\q\q_theme\theme\frontpage::run();
+#\q\theme\theme\frontpage::run();
 
 class meta extends \Q {
 

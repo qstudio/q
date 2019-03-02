@@ -46,7 +46,7 @@ class wp_head extends \Q {
         \add_action( 'wp_head', array ( get_class(), 'simple_seo' ) );
 
         // simple SEO stuff #
-        \add_action( 'wp_head', array ( get_class(), 'webmasters' ), 3 );
+        // \add_action( 'wp_head', array ( get_class(), 'webmasters' ), 3 );
 
         // remove category feeds
         \remove_action( 'wp_head', 'feed_links_extra', 3 );
@@ -85,11 +85,6 @@ class wp_head extends \Q {
         \add_action( 'wp_head', array ( get_class(), 'favicon' ) ); // add to theme ##
         \add_action( 'admin_head', array ( get_class(), 'favicon' ) ); // add to backend ##
 
-        // google analytics tracking code - add just before </head> ##
-        // @todo - move all GA into Q to control global insertion ##
-        //add_action( 'wp_head','google_analytics', 1000 ); // add to backend ##
-        //add_action( 'q_action_body_open', array ( get_class(), 'google_analytics' ), 0 );
-        
         // add body classes ##
         \add_filter( 'body_class', array ( get_class(), 'body_class' ), 1 );
         

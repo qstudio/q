@@ -17,8 +17,14 @@ class google extends \Q {
         
         if ( ! \is_admin() ) {
 
+            // google analytics tracking code - add just before </head> ##
+            \add_action( 'wp_head', [ get_class(), 'analytics'], 10 );
+
             // define Google Tag Manager ##
-            \add_action( 'wp_head', [ get_class(), 'tag_manager'], 10 );
+            \add_action( 'wp_head', [ get_class(), 'tag_manager'], 11 );
+
+            // add <noscript> after opening <body> tag ##
+            \add_action( 'q_action_body_open', [ get_class(), 'tag_manager_noscript'], 2 );
 
         }
 
@@ -142,22 +148,35 @@ class google extends \Q {
 
 
     
+
+
     /**
-    * Get Google Analtics code for insertion in template - on GHT also includes Pardot tracking code
-    *
-    * @since       1.0.2
-    * @return      string   HTML
-    */
-    public static function analytics()
+     * Add Google Tag Manager to <head>
+     *
+     * @since       1.0.2
+     * @return      string   HTML
+     */
+    public static function tag_manager()
     {
 
         // bulk on localhost ##
-        if ( helper::is_localhost() ) { return false; }
+        if ( helper::is_localhost() ) { 
+        
+            // helper::log( 'Tag Manager skipped, as on localhost...' );
 
-        // @todo - add consent checks ##
+            return false; 
+        
+        }
 
-        // grab global ##
-        global $post;
+        // check if consent given to load script ##
+        if ( ! generic::consent( 'analytics' ) ) {
+
+            // helper::log( 'Analytics NOT allowed...' );
+
+            // kick out ##
+            return false;
+
+        }
 
         // grab the options ##
         $q_options = options::get();
@@ -177,62 +196,83 @@ class google extends \Q {
         }
 
         // check for UI ##
-        if ( ! $analytics = $q_options["google_analytics"] ) { return false; }
+        if ( ! $q_options["google_tag_manager"] ) { 
 
-        // check for custom GA code additions ##
-        $google_analytics = isset( $post->google_analytics ) ? $post->google_analytics : false ;
+            // Log ##
+            // helper::log( 'Google Tag Manager not defined' );
 
-?>
-        <script type="text/javascript">
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+            // kick off ##
+            return false; 
 
-            // create event listener ##
-            ga('create', '<?php echo $analytics; ?>', '<?php echo parse_url( get_site_url(), PHP_URL_HOST ); ?>');
-            
-            <?php echo $google_analytics; ?>
-            
-            // send to GA ##
-            ga('send', 'pageview');
-        </script>
-<?php
+        }
+
+        // kick it back, cleanly... ##
+        echo $q_options['google_tag_manager'];
 
     }
 
 
+
+
+    
     /**
-     * Add Google Tag Manager to <head>
+     * Add GTM noscript to the <body>
      *
      * @since       1.0.2
      * @return      string   HTML
      */
-    public static function tag_manager()
+    public static function tag_manager_noscript()
     {
 
         // bulk on localhost ##
         if ( helper::is_localhost() ) { 
-            
+                
+            // helper::log( 'Analytics skipped, as on localhost...' );
+
             return false; 
-            
+
         }
 
-        // @todo - add consent checks ##
+        // check if consent given to load script ##
+        if ( ! generic::consent( 'analytics' ) ) {
 
-        // check if we have tag_manager defined in config ##
+            // helper::log( 'Marketing NOT allowed...' );
+
+            // kick out ##
+            return false;
+
+        }
+
+        // grab the options ##
+        $q_options = options::get();
+
+        #helper::log( $q_options );
+
+        // bulk if no options found ##
         if ( 
-            ! self::$google_tag_manager 
+            ! $q_options 
+            || ! is_array( $q_options )    
         ) {
 
-            helper::log( 'Google Tag Manager not defined in config' );
+            helper::log( 'Error: Options missing...' );
 
             return false;
 
         }
 
-        // kick it back ##
-        echo self::$google_tag_manager;
+        // check for UI ##
+        if ( ! $q_options["google_tag_manager_noscript"] ) { 
+
+            // Log ##
+            // helper::log( 'Google Tag Manager No Script not defined' );
+
+            // kick off ##
+            return false; 
+
+        }
+
+        // kick it back, cleanly... ##
+        echo $q_options['google_tag_manager_noscript'];
 
     }
 
@@ -249,9 +289,23 @@ class google extends \Q {
     {
 
         // bulk on localhost ##
-        if ( helper::is_localhost() ) { return false; }
+        if ( helper::is_localhost() ) { 
+        
+            // helper::log( 'Adwords skipped, as on localhost...' );
 
-        // @todo - add consent checks ##
+            return false; 
+        
+        }
+
+        // check if consent given to load script ##
+        if ( ! generic::consent( 'marketing' ) ) {
+
+            // helper::log( 'Marketing NOT allowed...' );
+
+            // kick out ##
+            return false;
+
+        }
 
         // get the_post ##
         if (
@@ -284,6 +338,73 @@ class google extends \Q {
         // print filtered markup ##
         #pr( wp_kses_allowed_html() );
         echo $template_adwords_markup;
+
+    }
+
+
+
+    /**
+    * Get Google Analtics code for insertion in template - on GHT also includes Pardot tracking code
+    *
+    * @since       1.0.2
+    * @return      string   HTML
+    */
+    public static function analytics()
+    {
+
+        // bulk on localhost ##
+        if ( helper::is_localhost() ) { 
+        
+            // helper::log( 'Analytics skipped, as on localhost...' );
+
+            return false; 
+        
+        }
+
+        // check if consent given to load script ##
+        if ( ! generic::consent( 'analytics' ) ) {
+
+            // helper::log( 'Marketing NOT allowed...' );
+
+            // kick out ##
+            return false;
+
+        }
+
+        // grab the options ##
+        $q_options = options::get();
+
+        #helper::log( $q_options );
+
+        // bulk if no options found ##
+        if ( 
+            ! $q_options 
+            || ! is_array( $q_options )    
+        ) {
+
+            helper::log( 'Error: Options missing...' );
+
+            return false;
+
+        }
+
+        // check for UI ##
+        if ( ! $q_options["google_analytics"] ) { 
+        
+            // Log ##
+            // helper::log( 'Google Analytics not defined' );
+
+            // kick off ##
+            return false; 
+        
+        }
+
+        // kick it back, cleanly... ##
+        echo $q_options['google_analytics'];
+
+        // check for custom GA code additions ##
+        // $google_analytics = isset( $post->google_analytics ) ? $post->google_analytics : false ;
+
 
     }
 

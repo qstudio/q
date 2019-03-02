@@ -6,8 +6,8 @@ use q\core\core as core;
 use q\core\helper as helper;
 use q\core\config as config;
 use q\theme\ui as ui;
-// use q\q_theme\core\options as options;
-// use q\q_theme\theme\template as template; // @todo -- what ??
+// use q\theme\core\options as options;
+// use q\theme\theme\template as template; // @todo -- what ??
 use q\controller\minifier as minifier;
 use q\controller\css as css;
 
@@ -558,7 +558,8 @@ class generic extends \Q {
 
 
 
-    public static function add_cors_http_header(){
+    public static function add_cors_http_header()
+    {
 
         // club login status ##
         if ( core::is_site( "club" ) ) {
@@ -570,6 +571,104 @@ class generic extends \Q {
         header( "Access-Control-Allow-Origin: ".\get_site_url( '2', '/', 'https' ) );
 
     }
+
+
+
+    public static function stars( $integer = null )
+    {
+
+        // sanity ##
+        if ( 
+            is_null( $integer )
+            || ! $integer
+        ) {
+
+            helper::log( 'Value passed to method invalid: '.$integer );
+
+        }
+
+        // convert to integer ##
+        $integer = (int) $integer;
+
+        // mins and max ##
+        if ( $integer < 0 ) {
+
+            helper::log( 'Interger too low, setting to zero: '.$integer );
+
+            $integer = 0;
+
+        }
+
+        // mins and max ##
+        if ( $integer > 100 ) {
+
+            helper::log( 'Interger too high, setting to 100: '.$integer );
+
+            $integer = 100;
+
+        }
+
+        // define steps - allow for filtering ##
+        $steps = [
+            '5.0' => 'full',
+            '4.5' => 'half',
+            '4.0' => 'full',
+            '3.5' => 'half',
+            '3.0' => 'full',
+            '2.5' => 'half',
+            '2.0' => 'full',
+            '1.5' => 'half',
+            '1.0' => 'full',
+            '0.5' => 'half'
+        ];
+
+        // apply filters ##
+        $steps = \apply_filters( 'q/generic/stars/steps', $steps );
+
+        // label ##
+        $label = \apply_filters( 'q/generic/stars/label', '<label class="%class%%highlight%" title="%key% stars"></label>' );
+
+        // highlight ##
+        $highlight = \apply_filters( 'q/generic/stars/highlight', 'checked' );
+
+        // convert percentage to value to match $steps key ( 0-10 == 0.5 )##
+        // maths = /20 round to half decimal place ##
+        $integer = ( $integer / 20 );
+        $integer = ( floor( $integer * 2 ) / 2 );
+
+        // helper::log( 'star rating value: "'.$integer.'"' );
+
+        // compile ##
+        $string = '';
+
+        // loop over steps, check for matching
+        foreach( $steps as $key => $value ) {
+
+            // grab fresh label ##
+            $row = $label;
+
+            // check for match ##
+            $row = str_replace( '%highlight%', $key == $integer ? ' '.$highlight : '', $row );
+
+            // add class ##
+            $row = str_replace( '%class%', $value, $row );
+
+            // add star rating ##
+            $row = str_replace( '%key%', $key, $row );
+
+            // append to string ##
+            $string .= $row;
+
+        }
+
+        // log ##
+        // helper::log( $string );
+
+        // return ##
+        return $string;
+
+    }
+
 
 
 }
