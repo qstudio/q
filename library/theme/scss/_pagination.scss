@@ -1,0 +1,13 @@
+.q-search-pagination {
+  text-align: center;
+}
+
+.q-search-pagination .page-numbers {
+  border: 1px solid #e9eaea;
+  color: #363637;
+  padding: 5px 10px;
+}
+
+.q-search-pagination .page-numbers.current {
+  background-color: #e9eaea;
+}

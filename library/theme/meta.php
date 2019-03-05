@@ -691,7 +691,7 @@ class meta extends \Q {
             // url ##
             case 'url':
 
-                $array->value = '<a href="'.\q_add_http($array->value).'" target="_blank">'.str_replace( array( "http://", "https://", "www." ), "", $array->value ).'</a>';
+                $array->value = '<a href="'.core::add_http($array->value).'" target="_blank">'.str_replace( array( "http://", "https://", "www." ), "", $array->value ).'</a>';
 
             break;
 

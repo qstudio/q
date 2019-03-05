@@ -224,6 +224,28 @@ class core extends \Q {
     }
 
 
+
+    /**
+     * Add http:// if it's not in the URL?
+     *
+     * @param string $url
+     * @return string
+     * @link    http://stackoverflow.com/questions/2762061/how-to-add-http-if-its-not-exists-in-the-url
+     */
+    public static function add_http( $url = null ) {
+
+        if ( is_null ( $url ) ) { return false; }
+
+        if ( ! preg_match("~^(?:f|ht)tps?://~i", $url ) ) {
+
+            $url = "http://" . $url;
+
+        }
+
+        return $url;
+
+    }
+
     
 
     

@@ -5,6 +5,7 @@ namespace q\controller;
 use q\core\core as core;
 use q\core\helper as helper;
 use q\controller\css as css;
+use q\core\wordpress as wordpress;
 
 // load it up ##
 #\q\theme\theme\frontpage::run();

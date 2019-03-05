@@ -276,11 +276,19 @@ class wordpress extends \Q {
      * @since       1.0.2
      * @return      string   HTML
      */
-    public static function get_content_open( $args = array() )
+    public static function get_content_open( $args = array() ) 
     {
 
         // grab global post - or kick back ##
-        if ( ! $the_post = self::the_post( $args ) ) { return false; }
+        if ( ! $the_post = self::the_post( $args ) ) { 
+            
+            // helper::log( 'Cannot find post...' );
+
+            // return false; 
+        
+        }
+
+        // helper::log( $args );
 
         // set-up new array ##
         $array = array();
@@ -295,17 +303,30 @@ class wordpress extends \Q {
         array_push( $array, $template[0] );
 
         // add page-$post_name ##
-        $post_name = ( isset( $the_post ) && \get_post_type() == "page" ) ? "page-{$the_post->post_name}" : '' ;
+        if ( $post_name = ( isset( $the_post ) && \get_post_type() == "page" ) ? "page-{$the_post->post_name}" : false ) {
 
-        // add to array ##
-        array_push( $array, $post_name );
-
-        // added passed element, if ! is_null ##
-        if ( isset ( $args->element ) ) {
-
-            array_push( $array, $args->element );
+            // add to array ##
+            array_push( $array, $post_name );
 
         }
+
+        // added passed element, if ! is_null ##
+        if ( isset ( $args['class'] ) ) {
+
+            // helper::log( 'Adding passed class..' );
+
+            if ( is_array( $args['class'] ) ) {
+                
+                $args['class'] = implode( array_filter( $args['class'] ), ' ' ) ;
+
+            } 
+
+            // add it in ##
+            array_push( $array, $args['class'] );
+
+        }
+
+        // helper::log( $array );
 
         // kick it back ##
         return $array;
@@ -370,7 +391,7 @@ class wordpress extends \Q {
     public static function get_posts( $args = array() )
     {
 
-        // self::log( $args );
+        // helper::log( $args );
 
         // Parse incoming $args into an array and merge it with $defaults - caste to object ##
         $args_array = \wp_parse_args( $args, \is_search() ? \q_theme::$the_search : \q_theme::$the_posts );
@@ -409,14 +430,14 @@ class wordpress extends \Q {
 
         }
 
-        // self::log( $posts_args );
+        // helper::log( $posts_args );
 
         // set-up main query ##
         $q_query = new \WP_Query( $posts_args );
 
-        // self::log( $q_query->request );
-        // self::log( $q_query->found_posts );
-        // self::log( $q_query->post_count, 'post_count' );
+        // helper::log( $q_query->request );
+        // helper::log( $q_query->found_posts );
+        // helper::log( $q_query->post_count );
 
         // weird WPE hack - to reduce the returned array to the size of $args->limit ##
         if ( -1 != $args->limit && $q_query->post_count > $args->limit ) {
@@ -440,7 +461,7 @@ class wordpress extends \Q {
         ) {
 
             // open wrapping tag ##
-            self::get_tag( $args->tag, array ( 'posts', $args->class ) );
+            ui::get_tag( $args->tag, array ( 'posts', $args->class ) );
 
             // total ##
             if ( isset( $args->total ) ) {
@@ -486,12 +507,12 @@ class wordpress extends \Q {
             }
 
             // close wrapping tag ##
-            self::get_tag( $args->tag, '', 'close' );
+            ui::get_tag( $args->tag, '', 'close' );
 
             // get sidebar ##
             if ( $args->sidebar ) {
                 
-                \q\controller\navigation\navigation::the_sidebar();
+                \q\controller\navigation::the_sidebar();
 
             }
 
@@ -503,7 +524,7 @@ class wordpress extends \Q {
 
                 // self::log( 'Adding pagination..' );
                 
-                \q\controller\navigation\navigation::the_pagination([
+                \q\controller\navigation::the_pagination([
                     'posts_per_page'	=> $posts_args['posts_per_page'],
                     'post_count'		=> count( $q_query->post_count )
                 ]);
@@ -1150,7 +1171,7 @@ class wordpress extends \Q {
         if ( $args->layout == 'full_width' ) theme::the_content_close();
 
         // open wrapping tag ##
-        self::get_tag( $args->tag, array ( $args->class ) );
+        ui::get_tag( $args->tag, array ( $args->class ) );
 
         // test the gallery array ##
         #pr( $gallery );
@@ -1162,19 +1183,19 @@ class wordpress extends \Q {
             $img_src = isset( $args->acf ) ? $image["sizes"]["{$args->img_handle}"] : $image['src'] ;
 
             // tag_node + class ##
-            self::get_tag( $args->tag_node, array ( $args->class_node ) );
+            ui::get_tag( $args->tag_node, array ( $args->class_node ) );
 
 ?>
                 <img src="<?php echo $img_src; ?>" />
 <?php
 
             // tag_node + class ##
-            self::get_tag( $args->tag_node, '', 'close' );
+            ui::get_tag( $args->tag_node, '', 'close' );
 
         }
 
         // close wrapping tag ##
-        self::get_tag( $args->tag, '', 'close' );
+        ui::get_tag( $args->tag, '', 'close' );
 
         // reopen content area ##
         if ( $args->layout == 'full_width' ) theme::the_content_open();
@@ -1234,7 +1255,7 @@ class wordpress extends \Q {
             if ( $args->layout == 'full_width' ) theme::the_content_close();
 
             // open wrapping tag ##
-            self::get_tag( $args->tag, array ( $args->class ) );
+            ui::get_tag( $args->tag, array ( $args->class ) );
 
             // test the gallery array ##
             #pr( $gallery );
@@ -1246,19 +1267,19 @@ class wordpress extends \Q {
                 $img_src = isset( $args->acf ) ? 'url' : 'src' ;
 
                 // tag_node + class ##
-                self::get_tag( $args->tag_node, array ( $args->class_node ) );
+                ui::get_tag( $args->tag_node, array ( $args->class_node ) );
 
 ?>
                     <img src="<?php echo $image[$img_src]; ?>" />
 <?php
 
                 // tag_node + class ##
-                self::get_tag( $args->tag_node, '', 'close' );
+                ui::get_tag( $args->tag_node, '', 'close' );
 
             }
 
             // close wrapping tag ##
-            self::get_tag( $args->tag, '', 'close' );
+            ui::get_tag( $args->tag, '', 'close' );
 
             // reopen content area ##
             if ( $args->layout == 'full_width' ) theme::the_content_open();
@@ -1571,7 +1592,7 @@ class wordpress extends \Q {
             $wp_query->max_num_pages ;
 
         // helper::log( $total );
-        // helper::log( 'device handle: '.self::get_device_handle() );
+        // helper::log( 'device handle: '.self::get_device() );
 
         // prepare first item ##
         $first = '<a class="page-numbers first" href="'.\get_pagenum_link().'">First</a>';
@@ -1586,13 +1607,13 @@ class wordpress extends \Q {
             //'total'               => $total,
             'current'               => $current,
             'show_all'              => false,
-            'end_size'		        => 'desktop' == helper::get_device_handle() ? 1 : 0,
-            'mid_size'		        => 'desktop' == helper::get_device_handle() ? 2 : 0,
+            'end_size'		        => 'desktop' == helper::get_device() ? 1 : 0,
+            'mid_size'		        => 'desktop' == helper::get_device() ? 2 : 0,
             'type'                  => 'plain',
-            'prev_text'             => 'desktop' == helper::get_device_handle() ? '&laquo; '.__('Previous', 'q-textdomain' ) : '&laquo;',
-            'next_text'             => 'desktop' == helper::get_device_handle() ? __('Next', 'q-textdomain' ).' &raquo;' : '&raquo;',
-            'first'                 => 'desktop' == helper::get_device_handle() ? false : $first,
-            'last'                  => 'desktop' == helper::get_device_handle() ? false : $last,
+            'prev_text'             => 'desktop' == helper::get_device() ? '&laquo; '.__('Previous', 'q-textdomain' ) : '&laquo;',
+            'next_text'             => 'desktop' == helper::get_device() ? __('Next', 'q-textdomain' ).' &raquo;' : '&raquo;',
+            'first'                 => 'desktop' == helper::get_device() ? false : $first,
+            'last'                  => 'desktop' == helper::get_device() ? false : $last,
         );
 
         #pr( $wp_query->max_num_pages );
