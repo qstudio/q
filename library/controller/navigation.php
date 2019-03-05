@@ -289,9 +289,8 @@ class navigation extends \Q {
         if ( ! $array = wordpress::get_pagination( $args ) ) { return false; }
 
 ?>
-        <nav class="nav-single post-pagination wrapper-padding">
+        <nav class="q-search-pagination">
             <div class="pagination-inner">
-<!--                <h3 class="assistive-text">--><?php //_e( 'Post navigation', self::text_domain ); ?><!--</h3>-->
 <?php
 
                 // get pagination links, based on passed arguments ##
