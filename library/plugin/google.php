@@ -6,6 +6,8 @@ use q\core\core as core;
 use q\core\helper as helper;
 use q\core\options as options;
 use q\controller\generic as generic;
+use q\core\wordpress as wordpress;
+use q\program\core\core as program_core;
 
 // load it up ##
 \q\plugin\google::run();
@@ -319,7 +321,7 @@ class google extends \Q {
         // check for q_program and that we're on a "thanks" page ##
         if (
             ! class_exists( 'q_program' )
-            || 'thanks' != \q_program::get_qpage()
+            || 'thanks' != program_core::get_qpage()
         ) {
 
             return false;
