@@ -833,21 +833,23 @@ if ( typeof jQuery !== 'undefined' ) {
             'gallery'       => [
                 'wrap'      => '<div class="gallery">
                                     %content%
-                                    %row%
+                                    <div class="row">%row%</div>
                                 </div>',
                 'row'       => '
-                                <a href="#/tab/%tab%/modal/%key%"><img src="" data-src="%image_thumb%" class="lazy" title="%title%" /></a>
-                                <div class="d-none modal-data" data-modal-key="%key%">
-                                    <span 
-                                        data-modal-close="#/tab/%tab%"
-                                        data-modal-key="program-%key%"
-                                        data-modal-scroll="program-%key%"
-                                    >
-                                        <div class="modal-content-inner">
-                                            <span data-modal-scroll="%key%"></span>
-                                            <img src="" data-src="%image_large%" class="lazy" />
-                                        </div>
-                                    </span>
+                                <div class="col-sm-3 p-3">
+                                    <a href="#/tab/%tab%/modal/gallery-%key%"><img src="" data-src="%image_thumb%" class="lazy" title="%title%" /></a>
+                                    <div class="d-none modal-data" data-modal-key="%key%">
+                                        <span 
+                                            data-modal-close="#/tab/%tab%"
+                                            data-modal-key="gallery-%key%"
+                                            data-modal-scroll="gallery-%key%"
+                                        >
+                                            <div class="modal-content-inner">
+                                                <span data-modal-scroll="gallery-%key%"></span>
+                                                <img src="" data-src="%image_large%" class="lazy" />
+                                            </div>
+                                        </span>
+                                    </div>
                                 </div>
                                 ',
                 'handle'    => [
