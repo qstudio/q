@@ -38,6 +38,12 @@
       .post .blog-content .details .date {
         line-height: 1; }
 
+@media (max-width: 767px) {
+  .post .blog-image {
+    height: 147px; }
+  .post .blog-content h5 {
+    font-size: 18px;
+    margin-bottom: 20px; } }
 .pagination-inner {
   text-align: center; }
   .pagination-inner .page-numbers {

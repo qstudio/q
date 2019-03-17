@@ -54,3 +54,18 @@
     }
   }
 }
+
+@media (max-width: 767px) {
+  .post {
+    .blog-image {
+      height: 147px;
+    }
+
+    .blog-content {
+      h5 {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+    }
+  }
+}
