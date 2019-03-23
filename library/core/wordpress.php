@@ -1595,7 +1595,7 @@ class wordpress extends \Q {
         // helper::log( 'device handle: '.self::get_device() );
 
         // prepare first item ##
-        $first = 'class="page-numbers pagelink-1 pagelink" rel="1" href="'.\get_pagenum_link().'">First</a>';
+        $first = '<a class="page-numbers pagelink-1 pagelink" rel="1" href="'.\get_pagenum_link().'">First</a>';
 
         // prepae last item ##
         $last = '<a class="page-numbers last" href="'.\get_pagenum_link( $wp_query->max_num_pages ).'">Last</a>';

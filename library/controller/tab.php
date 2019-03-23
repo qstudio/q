@@ -780,9 +780,9 @@ if ( typeof jQuery !== 'undefined' ) {
                                 </div>
                             ',
                             'handheld' => '
-                                <div class="col-xs-12 myaffix">
+                                <div class="col-12 col-xs-12 myaffix">
                                     <div class="row">
-                                        <div class="col-xs-6">
+                                        <div class="col-12 col-xs-6">
                                             <select class="form-control tab-navigation nav-pills nav-stacked" role="tablist">%row%</select>
                                         </div>
                                         <div id="program-button-container" class="col-xs-6"></div>
@@ -809,7 +809,7 @@ if ( typeof jQuery !== 'undefined' ) {
             ],
             'content'       => [
                 'wrap'      => '
-                                <div class="col-lg-8 col-md-8 col-xs-12">
+                                <div class="col-lg-8 col-md-8 col-xs-12 col-12">
                                     %program_cta%
                                     <ul class="tab-content" data-scroll-slug="content">
                                         %row%
