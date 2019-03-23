@@ -281,6 +281,9 @@ class theme extends \Q {
             #global $options; // load plugin options ##
             #wp_die(pr($options)); // test options ##
 
+            \wp_register_script( 'stickyfill', helper::get( "theme/javascript/stickyfill.min.js", 'return' ), array(), self::$plugin_version, 'all' );
+            \wp_enqueue_script( 'stickyfill' );
+
             // Loads HTML5 JavaScript file to add support for HTML5 elements in older IE versions ##
             if ( $q_browser['type'] == 'ie8' || $q_browser['type'] == 'ie7' || $q_browser['type'] == 'ie6' && self::$options->plugin_js === TRUE ) {
 
