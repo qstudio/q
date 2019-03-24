@@ -831,12 +831,11 @@ if ( typeof jQuery !== 'undefined' ) {
                                 </div>'
             ],
             'gallery'       => [
-                'wrap'      => '<div class="gallery">
-                                    %content%
-                                    <div class="row">%row%</div>
+                'wrap'      => '%content%<div class="gallery sly sly-mobile">
+                                    <div class="row slidee">%row%</div>
                                 </div>',
                 'row'       => '
-                                <div class="col-sm-3 p-3">
+                                <div class="col-sm-3 p-3 item">
                                     <a href="#/tab/%tab%/modal/gallery-%key%"><img src="" data-src="%image_thumb%" class="lazy" title="%title%" /></a>
                                     <div class="d-none modal-data" data-modal-key="%key%">
                                         <span 

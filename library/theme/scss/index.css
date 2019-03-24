@@ -1,3 +1,6 @@
+.post-wrapper {
+  margin-bottom: 20px; }
+
 .post {
   display: flex;
   flex-direction: column;
