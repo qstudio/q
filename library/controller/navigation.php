@@ -286,7 +286,11 @@ class navigation extends \Q {
     {
 
         // grab array ##
-        if ( ! $array = wordpress::get_pagination( $args ) ) { return false; }
+        if ( ! $array = wordpress::get_pagination( $args ) ) { 
+            
+            return false; 
+        
+        }
 
 ?>
         <nav class="q-search-pagination">

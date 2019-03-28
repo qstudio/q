@@ -1,5 +1,11 @@
 .pagination-inner {
-  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+
+  .page-numbers-wrapper {
+    display: flex;
+  }
 
   .page-numbers {
     border: 1px solid #e9eaea;
@@ -8,6 +14,18 @@
 
     &.current {
       background-color: #e9eaea;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .pagination-inner {
+    .page-numbers {
+      display: none;
+    }
+
+    .next, .prev, .pagelink {
+      display: inline-block;
     }
   }
 }

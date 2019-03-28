@@ -416,7 +416,7 @@ class wordpress extends \Q {
             // merge all args together ##
             $posts_args = array_merge( $wp_query->query_vars, $posts_args );
 
-            // self::log( array( 'added query vars' => $posts_args ) );
+            // helper::log( array( 'added query vars' => $posts_args ) );
 
         }
 
@@ -724,7 +724,10 @@ class wordpress extends \Q {
         }
 
         // content ##
-        $object->content = self::excerpt_from_id( $the_post->ID, $args->length ) ? self::excerpt_from_id( $the_post->ID, $args->length ) : \get_bloginfo( 'description' ) ;
+        $object->content = 
+            self::excerpt_from_id( $the_post->ID, $args->length ) ? 
+            self::excerpt_from_id( $the_post->ID, $args->length ) : 
+            \get_bloginfo( 'description' ) ;
 
         // date ##
         $object->date = \get_the_date( $args->date_format, $the_post->ID ); 
@@ -1583,35 +1586,48 @@ class wordpress extends \Q {
         global $wp_query, $wp_rewrite;
 
         // work out paging ##
-        $wp_query->query_vars['paged'] > 1 ? $current = $wp_query->query_vars['paged'] : $current = 1;
+        $wp_query->query_vars['paged'] > 1 ? 
+            $current = $wp_query->query_vars['paged'] : 
+            $current = 1;
 
         // work out total ##
         $total =
-            \is_search() && isset( $args["posts_per_page"] ) && isset( $args["post_count"] ) ?
-            intval( $args["posts_per_page"] / $args["post_count"] ) :
-            $wp_query->max_num_pages ;
+            // \is_search() && isset( $args["posts_per_page"] ) && isset( $args["post_count"] ) ?
+            // intval( $args["posts_per_page"] / $args["post_count"] ) :
+            intval( $wp_query->found_posts / ( $args["posts_per_page"] ? $args["posts_per_page"] : 20 ) );
 
-        // helper::log( $total );
+        helper::log( $total );
+        // helper::log( $wp_query->found_posts );
         // helper::log( 'device handle: '.self::get_device() );
+        // helper::log( $current );
+
+        // pagination url ##
+        $base_url = \get_site_url( \get_current_blog_id() ).'?s='.\get_search_query().'&paged=';
 
         // prepare first item ##
-        $first = '<a class="page-numbers pagelink-1 pagelink" rel="1" href="'.\get_pagenum_link().'">First</a>';
+        $first = '<a class="page-numbers page-first pagelink-1 pagelink" rel="1" href="'.$base_url.'1">&laquo; First</a>';
 
         // prepae last item ##
-        $last = '<a class="page-numbers last" href="'.\get_pagenum_link( $wp_query->max_num_pages ).'">Last</a>';
+        $last = '<a class="page-numbers page-last pagelink pagelink-'.$total.'" href="'.$base_url.$total.'">Last &raquo;</a>';
 
         // build array to query from ##
         $array = array(
             'base'                  => @\add_query_arg('paged','%#%'),
             'format'                => '',
-            //'total'               => $total,
+            'total'                 => $total,
             'current'               => $current,
             'show_all'              => false,
-            'end_size'		        => 'desktop' == helper::get_device() ? 1 : 0,
-            'mid_size'		        => 'desktop' == helper::get_device() ? 2 : 0,
+            'end_size'		        => 'desktop' == helper::get_device() ? 0 : 0,
+            'mid_size'		        => 'desktop' == helper::get_device() ? 4 : 0,
             'type'                  => 'plain',
-            'prev_text'             => 'desktop' == helper::get_device() ? '&laquo; '.__('Previous', 'q-textdomain' ) : '&laquo;',
-            'next_text'             => 'desktop' == helper::get_device() ? __('Next', 'q-textdomain' ).' &raquo;' : '&raquo;',
+            'prev_text'             => 
+                                        'desktop' == helper::get_device() ? 
+                                        '&lsaquo; '.__('Previous', 'q-textdomain' ) : 
+                                        '&lsaquo; '.__('Previous', 'q-textdomain' ) , 
+            'next_text'             => 
+                                        'desktop' == helper::get_device() ? 
+                                        __('Next', 'q-textdomain' ).' &rsaquo;' : 
+                                        __('Next', 'q-textdomain' ).' &rsaquo;' , 
             'first'                 => 'desktop' == helper::get_device() ? false : $first,
             'last'                  => 'desktop' == helper::get_device() ? false : $last,
         );

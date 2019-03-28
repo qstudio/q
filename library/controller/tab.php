@@ -758,7 +758,7 @@ if ( typeof jQuery !== 'undefined' ) {
 
         // build defaults ##
         $array = [
-            'default'       => '<div class="col-md-6 col-sm-8 col-sm-push-1">
+            'default'       => '<div class="col-md-8 col-12">
                                     %string%
                                 </div>',
             'navigation'    => [
