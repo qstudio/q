@@ -1,0 +1,687 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Q\n"
+"POT-Creation-Date: 2014-04-14 19:22-0000\n"
+"PO-Revision-Date: 2014-04-14 19:22-0000\n"
+"Last-Translator: Ray <ray@qstudio.us>\n"
+"Language-Team: Q Studio <team@qstudio.us>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.3\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: .\n"
+
+#: ../q.php:178
+msgid " requires WordPress "
+msgstr ""
+
+#: ../admin/Q_Admin.class.php:93
+msgid "Thumbnail"
+msgstr ""
+
+#: ../global/Q_Options.class.php:48 ../widget/Q_Widget_Hero.class.php:108
+msgid "Yes"
+msgstr ""
+
+#: ../global/Q_Options.class.php:52 ../widget/Q_Widget_Hero.class.php:109
+msgid "No"
+msgstr ""
+
+#: ../global/Q_Options.class.php:144
+msgid ""
+"<h2>Q Error!</h2><p>There was an error loading the required Q Options.</p>"
+msgstr ""
+
+#: ../global/Q_Options.class.php:193 ../global/Q_Options.class.php:194
+msgid "Q"
+msgstr ""
+
+#: ../global/Q_Options.class.php:251
+msgid "Settings Saved - Q Key missing or invalid."
+msgstr ""
+
+#: ../global/Q_Options.class.php:267 ../global/Q_Options.class.php:626
+#: ../global/Q_Options.class.php:724
+msgid "Q Options"
+msgstr ""
+
+#: ../global/Q_Options.class.php:268
+#, fuzzy
+msgid ""
+"If the option you are looking for is not listed on this page, it has "
+"probably been added via a plugin or theme."
+msgstr "We kunnen niet vinden wat u zoekt, misschien zal zoeken helpen."
+
+#: ../global/Q_Options.class.php:281
+msgid "Q Key"
+msgstr ""
+
+#: ../global/Q_Options.class.php:285
+msgid "Entering a valid Q Key gives you priority support and updates"
+msgstr ""
+
+#: ../global/Q_Options.class.php:286 ../global/Q_Options.class.php:705
+msgid "Get a Q Key"
+msgstr ""
+
+#: ../global/Q_Options.class.php:301
+msgid "Liberate Q Key"
+msgstr ""
+
+#: ../global/Q_Options.class.php:304
+msgid "Check here and save to liberate this Q Key."
+msgstr ""
+
+#: ../global/Q_Options.class.php:304
+msgid "Read More"
+msgstr ""
+
+#: ../global/Q_Options.class.php:327 ../global/Q_Options.class.php:328
+msgid "Load Framework CSS"
+msgstr ""
+
+#: ../global/Q_Options.class.php:355 ../global/Q_Options.class.php:356
+msgid "Load Framework JavaScript"
+msgstr ""
+
+#: ../global/Q_Options.class.php:383 ../global/Q_Options.class.php:384
+msgid "Show Framework Warnings"
+msgstr ""
+
+#: ../global/Q_Options.class.php:414 ../global/Q_Options.class.php:415
+msgid "Load Parent CSS"
+msgstr ""
+
+#: ../global/Q_Options.class.php:442 ../global/Q_Options.class.php:443
+msgid "Load Parent JavaScript"
+msgstr ""
+
+#: ../global/Q_Options.class.php:474
+msgid "Google Analytics"
+msgstr ""
+
+#: ../global/Q_Options.class.php:477
+msgid "Enter Your Google Analytics UA"
+msgstr ""
+
+#: ../global/Q_Options.class.php:482
+msgid "Google Webmasters"
+msgstr ""
+
+#: ../global/Q_Options.class.php:485
+msgid "Enter Your Google Webmasters Verify Code"
+msgstr ""
+
+#: ../global/Q_Options.class.php:495
+msgid "Save Options"
+msgstr ""
+
+#: ../global/Q_Options.class.php:632
+msgid "You have Q installed and active but you have not entered a Q Key."
+msgstr ""
+
+#: ../global/Q_Options.class.php:701
+#, fuzzy
+msgid "Please enter your Q Key to activate all Q Options."
+msgstr "Alle rechten voorbehouden"
+
+#: ../global/Q_Options.class.php:710
+#, fuzzy
+msgid ""
+"You can configure <strong>Q</strong> or visit our website to find "
+"documentation."
+msgstr "Onze Best Selection"
+
+#: ../global/Q_Options.class.php:715
+#, fuzzy
+msgid "Help"
+msgstr ""
+"Excuses, maar er werden geen resultaten gevonden. Misschien zal zoeken "
+"helpen."
+
+#: ../hook/Q_Hook_WP_Head.class.php:199
+#, php-format
+msgid "Page %s"
+msgstr ""
+
+#: ../hook/Q_Hook_WP_Head.class.php:270
+msgid "category archive."
+msgstr ""
+
+#: ../hook/Q_Hook_WP_Head.class.php:273
+msgid "tag archive."
+msgstr ""
+
+#: ../hook/Q_Hook_WP_Head.class.php:276
+msgid "archive page."
+msgstr ""
+
+#: ../hook/Q_Hook_WP_Head.class.php:279
+#, fuzzy
+msgid "search results."
+msgstr ""
+"Excuses, maar er werden geen resultaten gevonden. Misschien zal zoeken "
+"helpen."
+
+#: ../hook/Q_Hook_WP_Head.class.php:282
+#, fuzzy
+msgid "404 - page not found."
+msgstr ""
+"Excuses, maar er werden geen resultaten gevonden. Misschien zal zoeken "
+"helpen."
+
+#: ../pluggable/theme.php:144 ../pluggable/theme.php:229
+msgid "inactive"
+msgstr ""
+
+#: ../pluggable/theme.php:144
+msgid "Edit Framework Options"
+msgstr ""
+
+#: ../pluggable/theme.php:144
+msgid "Edit Options"
+msgstr ""
+
+#: ../pluggable/theme.php:148
+msgid "Template missing"
+msgstr ""
+
+#: ../pluggable/theme.php:202
+msgid "empty"
+msgstr ""
+
+#: ../pluggable/theme.php:202
+msgid "error"
+msgstr ""
+
+#: ../pluggable/theme.php:203 ../pluggable/theme.php:412
+msgid "not supported!"
+msgstr ""
+
+#: ../pluggable/theme.php:230 ../pluggable/theme.php:235
+msgid "fix it"
+msgstr ""
+
+#: ../pluggable/theme.php:234
+msgid "missing"
+msgstr ""
+
+#: ../pluggable/theme.php:240
+msgid "Plugin"
+msgstr ""
+
+#: ../pluggable/theme.php:528
+msgid "Open in new window"
+msgstr ""
+
+#: ../pluggable/theme.php:626 ../pluggable/theme.php:634
+#, php-format
+msgid "%s"
+msgstr ""
+
+#: ../pluggable/theme.php:630
+#, php-format
+msgid "Archive %s"
+msgstr ""
+
+#: ../pluggable/theme.php:644
+msgid "Archive"
+msgstr ""
+
+#: ../pluggable/theme.php:678
+#, fuzzy
+msgid "Search Results"
+msgstr ""
+"Excuses, maar er werden geen resultaten gevonden. Misschien zal zoeken "
+"helpen."
+
+#: ../pluggable/theme.php:682
+msgid "404"
+msgstr ""
+
+#: ../pluggable/theme.php:741
+#, php-format
+msgid "%1$s at %2$s"
+msgstr ""
+
+#: ../pluggable/theme.php:747
+msgid "Your comment is awaiting moderation."
+msgstr ""
+
+#: ../pluggable/theme.php:755
+msgid "Edit"
+msgstr ""
+
+#: ../pluggable/theme.php:798
+msgid "Delete Comment"
+msgstr ""
+
+#: ../pluggable/theme.php:798
+msgid "Del"
+msgstr ""
+
+#: ../pluggable/theme.php:799
+msgid "Spam Comment"
+msgstr ""
+
+#: ../pluggable/theme.php:799
+msgid "Spam"
+msgstr ""
+
+#: ../pluggable/theme.php:811
+msgid ""
+"Please enable referrers in your browser, or, if you're a spammer, get out of "
+"here!"
+msgstr ""
+
+#: ../pluggable/wordpress.php:61
+msgid "year"
+msgstr ""
+
+#: ../pluggable/wordpress.php:61
+msgid "years"
+msgstr ""
+
+#: ../pluggable/wordpress.php:62
+msgid "month"
+msgstr ""
+
+#: ../pluggable/wordpress.php:62
+msgid "months"
+msgstr ""
+
+#: ../pluggable/wordpress.php:63
+msgid "week"
+msgstr ""
+
+#: ../pluggable/wordpress.php:63
+msgid "weeks"
+msgstr ""
+
+#: ../pluggable/wordpress.php:64
+msgid "day"
+msgstr ""
+
+#: ../pluggable/wordpress.php:64
+msgid "days"
+msgstr ""
+
+#: ../pluggable/wordpress.php:65
+msgid "hour"
+msgstr ""
+
+#: ../pluggable/wordpress.php:65
+msgid "hours"
+msgstr ""
+
+#: ../pluggable/wordpress.php:66
+msgid "minute"
+msgstr ""
+
+#: ../pluggable/wordpress.php:66
+msgid "minutes"
+msgstr ""
+
+#: ../pluggable/wordpress.php:67
+msgid "second"
+msgstr ""
+
+#: ../pluggable/wordpress.php:67 ../pluggable/wordpress.php:110
+msgid "seconds"
+msgstr ""
+
+#: ../pluggable/wordpress.php:87
+msgid "sometime"
+msgstr ""
+
+#: ../pluggable/wordpress.php:113
+msgid " ago"
+msgstr ""
+
+#: ../pluggable/wordpress.php:543
+#, fuzzy
+msgid "No feed available,please visit our <a href=\""
+msgstr "Onze Best Selection"
+
+#: ../pluggable/wordpress.php:597
+msgid "Page"
+msgstr ""
+
+#: ../pluggable/wordpress.php:993
+#, fuzzy
+msgid "listing all shortcodes"
+msgstr "Alle rechten voorbehouden"
+
+#: ../widget/Q_Widget_Breadcrumb.class.php:27
+msgid "Breadcrumb - display clickable location trail"
+msgstr ""
+
+#: ../widget/Q_Widget_Breadcrumb.class.php:94
+msgid "Home"
+msgstr ""
+
+#: ../widget/Q_Widget_Breadcrumb.class.php:100
+msgid "You're in:"
+msgstr ""
+
+#: ../widget/Q_Widget_Breadcrumb.class.php:106
+msgid "&bull;"
+msgstr ""
+
+#: ../widget/Q_Widget_Breadcrumb.class.php:110
+msgid "Home Title"
+msgstr ""
+
+#: ../widget/Q_Widget_Breadcrumb.class.php:114
+msgid "Text before breadcrumb:"
+msgstr ""
+
+#: ../widget/Q_Widget_Breadcrumb.class.php:118
+msgid "Item Seperation ( HTML allowed ):"
+msgstr ""
+
+#: ../widget/Q_Widget_Facebook_Share.class.php:27
+msgid "Add a Facebook share option"
+msgstr ""
+
+#: ../widget/Q_Widget_Facebook_Share.class.php:151
+msgid "Share on Facebook"
+msgstr ""
+
+#: ../widget/Q_Widget_Facebook_Share.class.php:155
+#: ../widget/Q_Widget_Flickr.class.php:130
+#: ../widget/Q_Widget_Follow.class.php:175
+#: ../widget/Q_Widget_Twitter.class.php:225
+msgid "Title"
+msgstr ""
+
+#: ../widget/Q_Widget_Flickr.class.php:27
+msgid "Connect to Flickr API to include images."
+msgstr ""
+
+#: ../widget/Q_Widget_Flickr.class.php:120
+msgid "Flickr Pics"
+msgstr ""
+
+#: ../widget/Q_Widget_Flickr.class.php:123
+msgid "10"
+msgstr ""
+
+#: ../widget/Q_Widget_Flickr.class.php:124
+msgid ".q_flickr"
+msgstr ""
+
+#: ../widget/Q_Widget_Flickr.class.php:125
+msgid "m"
+msgstr ""
+
+#: ../widget/Q_Widget_Flickr.class.php:126
+msgid "background"
+msgstr ""
+
+#: ../widget/Q_Widget_Flickr.class.php:135
+msgid "API Key"
+msgstr ""
+
+#: ../widget/Q_Widget_Flickr.class.php:140
+msgid "Photoset ID"
+msgstr ""
+
+#: ../widget/Q_Widget_Flickr.class.php:145
+msgid "Number of Photos"
+msgstr ""
+
+#: ../widget/Q_Widget_Flickr.class.php:150
+msgid "DOM Selector"
+msgstr ""
+
+#: ../widget/Q_Widget_Flickr.class.php:155
+msgid "Image Size"
+msgstr ""
+
+#: ../widget/Q_Widget_Flickr.class.php:160
+msgid "Image Placement"
+msgstr ""
+
+#: ../widget/Q_Widget_Follow.class.php:26
+msgid "Offer fast-loading links to your social network sites"
+msgstr ""
+
+#: ../widget/Q_Widget_Follow.class.php:162
+msgid "Follow Us"
+msgstr ""
+
+#: ../widget/Q_Widget_Follow.class.php:179
+msgid "Facebook"
+msgstr ""
+
+#: ../widget/Q_Widget_Follow.class.php:183
+#: ../widget/Q_Widget_Twitter.class.php:211
+msgid "Twitter"
+msgstr ""
+
+#: ../widget/Q_Widget_Follow.class.php:187
+msgid "Flickr"
+msgstr ""
+
+#: ../widget/Q_Widget_Follow.class.php:191
+msgid "YouTube"
+msgstr ""
+
+#: ../widget/Q_Widget_Follow.class.php:195
+msgid "Meetup"
+msgstr ""
+
+#: ../widget/Q_Widget_Follow.class.php:199
+msgid "Pinterest"
+msgstr ""
+
+#: ../widget/Q_Widget_Follow.class.php:203
+msgid "Instagram"
+msgstr ""
+
+#: ../widget/Q_Widget_Follow.class.php:207
+msgid "Contact"
+msgstr ""
+
+#: ../widget/Q_Widget_Follow.class.php:211
+msgid "RSS"
+msgstr ""
+
+#: ../widget/Q_Widget_Hero.class.php:26
+msgid "Q - Hero Image"
+msgstr ""
+
+#: ../widget/Q_Widget_Hero.class.php:27
+msgid "Add a top banner image to each page"
+msgstr ""
+
+#: ../widget/Q_Widget_Hero.class.php:96
+msgid "trees.jpg"
+msgstr ""
+
+#: ../widget/Q_Widget_Hero.class.php:102
+msgid "Default Image ( theme/library/heros/ ):"
+msgstr ""
+
+#: ../widget/Q_Widget_Hero.class.php:106
+msgid "Use featured image?"
+msgstr ""
+
+#: ../widget/Q_Widget_Latest_Images.class.php:24
+msgid "Q - Latest Images"
+msgstr ""
+
+#: ../widget/Q_Widget_Latest_Images.class.php:25
+msgid "Show the latest images uploaded to your site"
+msgstr ""
+
+#: ../widget/Q_Widget_Latest_Images.class.php:113
+msgid "Latest Images"
+msgstr ""
+
+#: ../widget/Q_Widget_Latest_Images.class.php:118
+#: ../widget/Q_Widget_Mailchimp.class.php:103
+#: ../widget/Q_Widget_Post_Filter.class.php:586
+#: ../widget/Q_Widget_Sidebar_Blog.class.php:93
+#: ../widget/Q_Widget_Sidebar_General.class.php:92
+#: ../widget/Q_Widget_WP_Socialite.class.php:109
+msgid "Title:"
+msgstr ""
+
+#: ../widget/Q_Widget_Latest_Images.class.php:122
+msgid "Number to display ( Between 1 - 24 ):"
+msgstr ""
+
+#: ../widget/Q_Widget_Mailchimp.class.php:27
+msgid "Q - MailChimp Signup"
+msgstr ""
+
+#: ../widget/Q_Widget_Mailchimp.class.php:28
+msgid "Offer a MailChimp newsletter signup for your visitors - plugin required"
+msgstr ""
+
+#: ../widget/Q_Widget_Mailchimp.class.php:99
+msgid "Newsletter Signup"
+msgstr ""
+
+#: ../widget/Q_Widget_Post_Filter.class.php:26
+#, fuzzy
+msgid "Q - Post Filter"
+msgstr "Bericht navigatie"
+
+#: ../widget/Q_Widget_Post_Filter.class.php:27
+msgid "Filter Posts by Category"
+msgstr ""
+
+#: ../widget/Q_Widget_Post_Filter.class.php:580
+#, fuzzy
+msgid "Post Filter"
+msgstr "Bericht navigatie"
+
+#: ../widget/Q_Widget_Post_Filter.class.php:581
+#, fuzzy
+msgid "post"
+msgstr "Bericht navigatie"
+
+#: ../widget/Q_Widget_Post_Filter.class.php:582
+msgid "category"
+msgstr ""
+
+#: ../widget/Q_Widget_Post_Filter.class.php:590
+#, fuzzy
+msgid "Post Type:"
+msgstr "Bericht navigatie"
+
+#: ../widget/Q_Widget_Post_Filter.class.php:594
+msgid "Taxonomy:"
+msgstr ""
+
+#: ../widget/Q_Widget_Sidebar_Blog.class.php:26
+#, fuzzy
+msgid "Q - Blog Navigation"
+msgstr "Bericht navigatie"
+
+#: ../widget/Q_Widget_Sidebar_Blog.class.php:27
+#, fuzzy
+msgid "Blog Navigation - category, tag & archive links"
+msgstr "Bericht navigatie"
+
+#: ../widget/Q_Widget_Sidebar_Blog.class.php:89
+#, fuzzy
+msgid "Blog Navigation"
+msgstr "Bericht navigatie"
+
+#: ../widget/Q_Widget_Sidebar_General.class.php:26
+#, fuzzy
+msgid "Q - General Navigation"
+msgstr "Bericht navigatie"
+
+#: ../widget/Q_Widget_Sidebar_General.class.php:27
+#, fuzzy
+msgid "Lists connected site pages in an hierarchial order"
+msgstr "Pagina's:"
+
+#: ../widget/Q_Widget_Sidebar_General.class.php:88
+#, fuzzy
+msgid "Navigation"
+msgstr "Bericht navigatie"
+
+#: ../widget/Q_Widget_Twitter.class.php:26
+msgid "Show tweets from a twitter user or query."
+msgstr ""
+
+#: ../widget/Q_Widget_Twitter.class.php:138
+msgid "Tweeted"
+msgstr ""
+
+#: ../widget/Q_Widget_Twitter.class.php:138
+msgid "ago"
+msgstr ""
+
+#: ../widget/Q_Widget_Twitter.class.php:212
+msgid "_qstudio"
+msgstr ""
+
+#: ../widget/Q_Widget_Twitter.class.php:213
+msgid "from:_qstudio"
+msgstr ""
+
+#: ../widget/Q_Widget_Twitter.class.php:214
+msgid "20"
+msgstr ""
+
+#: ../widget/Q_Widget_Twitter.class.php:221
+msgid "0"
+msgstr ""
+
+#: ../widget/Q_Widget_Twitter.class.php:229
+msgid "Username"
+msgstr ""
+
+#: ../widget/Q_Widget_Twitter.class.php:233
+msgid "Query"
+msgstr ""
+
+#: ../widget/Q_Widget_Twitter.class.php:237
+msgid "Count"
+msgstr ""
+
+#: ../widget/Q_Widget_Twitter.class.php:241
+msgid "Consumer Key"
+msgstr ""
+
+#: ../widget/Q_Widget_Twitter.class.php:245
+msgid "Consumer Secret"
+msgstr ""
+
+#: ../widget/Q_Widget_Twitter.class.php:249
+msgid "oAuth Access Token"
+msgstr ""
+
+#: ../widget/Q_Widget_Twitter.class.php:253
+msgid "oAuth Access Token Secret"
+msgstr ""
+
+#: ../widget/Q_Widget_Twitter.class.php:257
+msgid "Debug"
+msgstr ""
+
+#: ../widget/Q_Widget_WP_Socialite.class.php:24
+msgid "Q - Socialite"
+msgstr ""
+
+#: ../widget/Q_Widget_WP_Socialite.class.php:25
+#, fuzzy
+msgid "Share your content with social networks - plugin required."
+msgstr "Ga naar inhoud"
+
+#: ../widget/Q_Widget_WP_Socialite.class.php:105
+msgid "Share"
+msgstr ""
