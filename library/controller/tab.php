@@ -574,7 +574,7 @@ class tab extends \Q {
         // helper::log( 'filtering special tab: '.$tab['special'] );
 
         // filter value run via seperate plugins ##
-        return \apply_filters( 'q/tab/special/'.$tab['special'], $args );
+        return \apply_filters( 'q/tab/special/'.$tab['special'], $args, $tab );
 
     }
 
@@ -758,13 +758,13 @@ if ( typeof jQuery !== 'undefined' ) {
 
         // build defaults ##
         $array = [
-            'default'       => '<div class="col-md-8 col-12">
+            'default'       => '<div class="col-md-10 col-12 wysiwyg page-content">
                                     %string%
                                 </div>',
             'navigation'    => [
                 'wrap'      => [
                             'desktop' => '
-                                <div class="col-lg-2 col-md-4 col-sm-12">
+                                <div class="p-3 col-lg-2 col-md-4 col-sm-12">
                                     <div class="myaffix">
                                         <ul class="nav flex-column" role="tablist">
                                             %row%
@@ -830,25 +830,17 @@ if ( typeof jQuery !== 'undefined' ) {
                                     <div id="%faq%" class="panel-collapse collapse"><div class="wysiwyg panel-body">%content%</div></div>
                                 </div>'
             ],
+            'schedule'    	=> '
+                                    <div class="wysiwyg">%string%</div>
+                                    <div class="embed embed-schedule">%schedule%</div>
+                                ',
             'gallery'       => [
                 'wrap'      => '%content%<div class="gallery sly sly-mobile">
                                     <div class="row slidee">%row%</div>
                                 </div>',
                 'row'       => '
                                 <div class="col-sm-3 p-3 item">
-                                    <a href="#/tab/%tab%/modal/gallery-%key%"><img src="" data-src="%image_thumb%" class="lazy" title="%title%" /></a>
-                                    <div class="d-none modal-data" data-modal-key="%key%">
-                                        <span 
-                                            data-modal-close="#/tab/%tab%"
-                                            data-modal-key="gallery-%key%"
-                                            data-modal-scroll="gallery-%key%"
-                                        >
-                                            <div class="modal-content-inner">
-                                                <span data-modal-scroll="gallery-%key%"></span>
-                                                <img src="" data-src="%image_large%" class="lazy" />
-                                            </div>
-                                        </span>
-                                    </div>
+                                    <a class="q-gallery" href="%image_large%"><img src="" data-src="%image_thumb%" class="lazy" title="%title%" /></a>
                                 </div>
                                 ',
                 'handle'    => [

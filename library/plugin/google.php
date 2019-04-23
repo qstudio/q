@@ -19,7 +19,7 @@ class google extends \Q {
         
         if ( ! \is_admin() ) {
 
-            // google analytics tracking code - add just before </head> ##
+            // google analytics tracking code - add just before </head> ## 
             \add_action( 'wp_head', [ get_class(), 'analytics'], 10 );
 
             // define Google Tag Manager ##

@@ -382,6 +382,13 @@ jQuery(document).ready(function() {
         q_modal(<?php echo json_encode( self::$args ); ?>);
     }
 
+    jQuery('.q-gallery').featherlightGallery({
+        previousIcon: '❮',
+        nextIcon: '❯',
+        galleryFadeIn: 300,
+        openSpeed: 300,
+        variant: 'featherlight-gallery'
+    });
 });
 </script>
 <?php

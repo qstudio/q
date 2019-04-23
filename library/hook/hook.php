@@ -7,9 +7,9 @@ use q\core\helper as helper;
 use q\core\options as options;
 
 // load it up ##
-\q\hook\hook::run();
+\q\hook\construct::run();
 
-class hook extends \Q {
+class construct extends \Q {
 
     public static function run()
     {
@@ -33,6 +33,7 @@ class hook extends \Q {
 
         // admin hooks ##
         // require_once self::get_plugin_path( 'library/hook/switch_theme.php' );
+        require_once self::get_plugin_path( 'library/hook/admin_init.php' );
         require_once self::get_plugin_path( 'library/hook/after_switch_theme.php' );
         // require_once self::get_plugin_path( 'library/hook/comment_post.php' );
         // require_once self::get_plugin_path( 'library/hook/save_post.php' );
