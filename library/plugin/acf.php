@@ -371,7 +371,7 @@ class acf extends \Q {
                         array (
                             'param' => 'page_template',
                             'operator' => '==',
-                            'value' => 'about.php',
+                            'value' => 'page.php',
                         ),
                     ),
                     array (
