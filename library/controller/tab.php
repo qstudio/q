@@ -8,6 +8,8 @@ use q\core\config as config;
 use q\controller\generic as generic;
 use q\controller\javascript as javascript;
 use q\controller\css as css;
+use q\core\wordpress as wordpress;
+use q\program\core\core as program_core;
 
 // load it up ##
 \q\controller\tab::run();
@@ -156,8 +158,14 @@ class tab extends \Q {
         // backup content - no tabs ##
         } else {
 
+            // remove known shortcodes ##
+            $string = \strip_shortcodes( \get_post_field( 'post_content', \get_the_ID() ) );
+
+            // strip all missing shortcodes ##
+            $string = preg_replace( '#\[[^\]]+\]#', '', $string );
+
             // get the post content ##
-            $string = \apply_filters( 'the_content', \get_post_field( 'post_content', \get_the_ID() ) ); 
+            $string = \apply_filters( 'the_content', $string ); 
 
             // apply some basic markup ##
             $string = str_replace( '%string%', $string, $args['markup']['default'] );
@@ -232,6 +240,13 @@ class tab extends \Q {
         $string .= str_replace( '%row%', $navigation, $args['markup']['navigation']['wrap'][helper::get_device()] );
         $string .= str_replace( '%row%', $content, $args['markup']['content']['wrap'] );
 
+        // program cta ##
+        // %program_cta%
+        $string = 
+            '#' == program_core::get_purl() ?
+            str_replace( '%program_cta%', '', $string ) :
+            str_replace( '%program_cta%', $args['markup']['content']['cta'] , $string ) ;
+
         // filter complete markup ##
         $string = \apply_filters( 'q/tab/markup/complete', $string, $array, $args );
 
@@ -283,6 +298,13 @@ class tab extends \Q {
 
                     // array of WP_Post objects
                     $content = self::type_blog( $tab, $args ); 
+
+                break ;
+
+                case 'gallery' :
+
+                    // array of media objects
+                    $content = self::type_gallery( $tab, $args ); 
 
                 break ;
 
@@ -438,6 +460,67 @@ class tab extends \Q {
 
 
     /**
+    * Gallery Engine
+    *
+    * @since    2.0.0
+    * @return   Mixed Boolean on error or HTML string
+    */
+    public static function type_gallery( $array = null, $args ){
+
+        // helper::log( $args['markup']['gallery'] );
+        // helper::log( $array );
+
+        if (
+            ! $the_post = wordpress::the_post() 
+        ) {
+
+            helper::log( 'No post object...' );
+
+            return false;
+
+        }
+
+        // stop here for now ##
+        // return false;
+
+        // new string ##
+        $string = '';
+
+        // admin controls should ensure we have an array with at least 2 rows ##
+        foreach( $array['tab_special_gallery'] as $row ) {
+
+            // helper::log( $row );
+
+            $markup = $args['markup']['gallery']['row'];
+
+            $data = [
+                'tab'           => \sanitize_title( $array['title'] ), // remake tab title ##
+                'key'           => \esc_html( \sanitize_title_with_dashes( $row['title'] ) ), // key for modal ##
+                'title'         => \esc_html( $row['title'] ),
+                'image_thumb'   => \esc_html( $row['sizes'][ $args['markup']['gallery']['handle']['thumb'][helper::get_device()] ] ),
+                'image_large'   => \esc_html( $row['sizes'][ $args['markup']['gallery']['handle']['large'][helper::get_device()] ] ),
+            ];
+
+            // helper::log( $data );
+
+            $string .= generic::markup( $markup, $data ); ; 
+
+        }
+
+        // get wrapper ##
+        $return = str_replace( '%row%', $string, $args['markup']['gallery']['wrap'] ); 
+
+        // add content ##
+        $return = str_replace( '%content%', $array['text'], $return );
+
+        // kick back ##
+        return $return;
+
+    }
+
+
+
+    /**
     * FAQ Engine
     *
     * @since    2.0.0
@@ -491,7 +574,7 @@ class tab extends \Q {
         // helper::log( 'filtering special tab: '.$tab['special'] );
 
         // filter value run via seperate plugins ##
-        return \apply_filters( 'q/tab/special/'.$tab['special'], $args );
+        return \apply_filters( 'q/tab/special/'.$tab['special'], $args, $tab );
 
     }
 
@@ -667,6 +750,122 @@ if ( typeof jQuery !== 'undefined' ) {
         ]);
 
     }
+
+
+
+    public static function get_markup()
+    {
+
+        // build defaults ##
+        $array = [
+            'default'       => '<div class="col-md-10 col-12 wysiwyg page-content">
+                                    %string%
+                                </div>',
+            'navigation'    => [
+                'wrap'      => [
+                            'desktop' => '
+                                <div class="p-3 col-lg-2 col-md-4 col-sm-12">
+                                    <div class="myaffix">
+                                        <ul class="nav flex-column" role="tablist">
+                                            %row%
+                                        </ul>
+                                        <div id="program-button-container"></div>
+                                    </div>
+                                </div>',
+                            'tablet' => '
+                                <div class="col-sm-8">
+                                    <select class="form-control tab-navigation nav-pills nav-stacked" role="tablist">%row%</select>
+                                </div>
+                                <div id="program-button-container" class="col-sm-4">
+                                </div>
+                            ',
+                            'handheld' => '
+                                <div class="col-12 col-xs-12 myaffix">
+                                    <div class="row">
+                                        <div class="col-12 col-xs-6">
+                                            <select class="form-control tab-navigation nav-pills nav-stacked" role="tablist">%row%</select>
+                                        </div>
+                                        <div id="program-button-container" class="col-xs-6"></div>
+                                    </div>
+                                </div>
+                            '
+                            ],
+                'row'       => [
+                            'desktop' => '
+                                <li data-tab-trigger="%hash%" class="q-tab-trigger nav-item">
+                                    <a href="%url%#/tab/%hash%" class="nav-link">
+                                        %title%
+                                    </a>
+                                </li>',
+                            'tablet' => '
+                                <option data-tab-trigger="%hash%" class="q-tab-trigger">
+                                    %title%
+                                </option>',
+                            'handheld' => '
+                                <option data-tab-trigger="%hash%" class="q-tab-trigger">
+                                    %title%
+                                </option>'
+                            ],
+            ],
+            'content'       => [
+                'wrap'      => '
+                                <div class="col-lg-8 col-md-8 col-xs-12 col-12">
+                                    %program_cta%
+                                    <ul class="tab-content" data-scroll-slug="content">
+                                        %row%
+                                    </ul>
+                                </div>
+                                '
+                            ,
+                'cta'       => '<a class="btn btn-sm c-red apply-now" href="'.program_core::get_purl().'" class="apply r-desktop">Apply Now</a>',
+                'row'       => '<li data-tab-target="%hash%" class="clearfix q-tab-target type-%type%"><h3>%title%</h3>%content%</li>'
+            ],
+            'text'          => [
+                'wrap'      => '<div class="wysiwyg">%string%</div>' // text element wrapper ##
+            ],
+            'faq'           => [
+                'wrap'      => '<div class="panel-group panel-group-default">%row%</div>',
+                'row'       => '
+                                    <h5 data-toggle="collapse" data-target="#%faq%" class="panel-heading">%title%</h5>
+                                    <div id="%faq%" class="panel-collapse collapse"><div class="wysiwyg panel-body">%content%</div></div>
+                                '
+            ],
+            'schedule'    	=> '
+                                    <div class="wysiwyg">%string%</div>
+                                    <div class="embed embed-schedule">%schedule%</div>
+                                ',
+            'gallery'       => [
+                'wrap'      => '%content%<div class="gallery sly sly-mobile">
+                                    <div class="row slidee">%row%</div>
+                                </div>',
+                'row'       => '
+                                <div class="col-sm-3 p-3 item">
+                                    <a class="q-gallery" href="%image_large%"><img src="" data-src="%image_thumb%" class="lazy" title="%title%" /></a>
+                                </div>
+                                ',
+                'handle'    => [
+                                'thumb' => [
+                                    'handheld'  => 'handheld-thumb-gallery',
+                                    'desktop'   => 'desktop-thumb-gallery'
+                                ],
+                                'large' => [
+                                    'handheld'  => 'handheld-modal-gallery',
+                                    'desktop'   => 'desktop-modal-gallery'
+                                ]
+                            ],
+
+
+            ],
+        ];
+
+        // filter ##
+        $array = \apply_filters( 'q/tab/markup/get_default', $array );
+
+        // return ##
+        return $array;
+
+    }
+
 
 
 

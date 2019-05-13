@@ -3,7 +3,7 @@ Contributors: qlstudio
 Tags: Q, theme, framework, developers 
 Requires at least: 3.6
 Tested up to: 3.8.2
-Stable tag: 2.1.2
+Stable tag: 2.1.5
 License: GPL2
 
 NOTE: Q WordPress Development Framework

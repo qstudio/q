@@ -37,12 +37,11 @@ class plugin extends \Q {
 
         // plugins ##
         require_once self::get_plugin_path( 'library/plugin/acf.php' );
-        // require_once self::get_plugin_path( 'library/plugin/gravityforms.php' );
+        require_once self::get_plugin_path( 'library/plugin/gravityforms.php' );
         require_once self::get_plugin_path( 'library/plugin/google.php' );
         require_once self::get_plugin_path( 'library/plugin/facebook.php' );
-        #require_once self::get_plugin_path( 'library/plugin/salesforce.php' );
+        require_once self::get_plugin_path( 'library/plugin/twitter.php' );
         require_once self::get_plugin_path( 'library/plugin/youtube.php' );
-        // require_once self::get_plugin_path( 'library/plugin/aesop.php' );
 
     }
 

@@ -82,8 +82,8 @@ class wp_head extends \Q {
         #add_filter( 'script_loader_src', array ( get_class(), 'remove_wp_ver_css_js' ), 9999 );
 
         // add favicon ##
-        \add_action( 'wp_head', array ( get_class(), 'favicon' ) ); // add to theme ##
-        \add_action( 'admin_head', array ( get_class(), 'favicon' ) ); // add to backend ##
+        \add_action( 'wp_head', array ( get_class(), 'favicon' ), 9999999 ); // add to theme ##
+        \add_action( 'admin_head', array ( get_class(), 'favicon' ), 9999999 ); // add to backend ##
 
         // add body classes ##
         \add_filter( 'body_class', array ( get_class(), 'body_class' ), 1 );
@@ -299,9 +299,9 @@ class wp_head extends \Q {
 
         if ( $webmasters && strlen( $webmasters  ) > 1 ) {
 
-    ?>
+?>
         <meta name="google-site-verification" content="<?php echo $webmasters; ?>" />
-    <?php
+<?php
 
         }
     }
@@ -312,10 +312,17 @@ class wp_head extends \Q {
      * 
      * @deprecated
      */
-    public static function remove_wp_ver_css_js( $src ) {
-        if ( strpos( $src, 'ver=' ) )
+    public static function remove_wp_ver_css_js( $src ) 
+    {
+    
+        if ( strpos( $src, 'ver=' ) ) {
+
             $src = \remove_query_arg( 'ver', $src );
+
+        }
+
         return $src;
+
     }
 
 
@@ -325,26 +332,17 @@ class wp_head extends \Q {
      * include favicon.ico on IE if found ## 
      */
     public static function favicon(){
-        
-        /*
-        if ( file_exists( q_get_option("path_child").'favicon.png' ) ) { // load child over parent ##
 
-    ?>
-        <link rel="icon" type="image/png" href="<?php echo q_get_option("uri_child"); ?>favicon.png" /><!-- Major Browsers -->
-        <!--[if IE]><link rel="SHORTCUT ICON" href="<?php echo q_get_option("uri_child"); ?>favicon.ico" /><![endif]--><!-- Internet Explorer-->
-    <?php
+        #if ( $file = helper::get( 'favicon.png' ) ) { // load from parent ##
 
-        } else
-        */
+        // helper::log( 'Adding favicon...' );
 
-        if ( $file = helper::get( 'favicon.png' ) ) { // load from parent ##
-
-    ?>
-        <link rel="icon" type="image/png" href="/favicon.png" /><!-- Major Browsers -->
+?>
+        <link rel="icon" type="image/png" href="<?php echo \get_site_url( '1' ); ?>/favicon.png" /><!-- Major Browsers -->
         <!--[if IE]><link rel="SHORTCUT ICON" href="/favicon.ico" /><![endif]--><!-- Internet Explorer-->
-    <?php 
+<?php 
 
-            }
+           # }
     }
 
 

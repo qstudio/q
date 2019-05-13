@@ -250,7 +250,6 @@ class config extends \Q {
         unset( $sizes['slides-small']);
         unset( $sizes['home']);
         unset( $sizes['new-photos']);
-        unset( $sizes['new-photos']);
         unset( $sizes['hero']);
 
         return $sizes;

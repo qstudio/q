@@ -16,7 +16,7 @@ class gravityforms extends \Q {
         // no GF ##
         if ( ! self::is_active() ){ 
             
-            helper::log( 'No GF... or called too early..' );
+            // helper::log( 'No GF... or called too early..' );
             
             return false; 
         

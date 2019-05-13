@@ -16,6 +16,10 @@ class acf extends \Q {
         // add fields ##
         \add_action( 'acf/init', array( get_class(), 'add_fields' ), 1 );
 
+        // permalinks from post objects ##
+        \add_filter( 'q/meta/cta/generic_cta_url_1', array( get_class(), 'meta_post_object_permalink' ), 2, 10 );
+        // \add_filter( 'q/meta/cta/generic_cta_url_2', array( get_class(), 'meta_post_object_permalink' ), 2, 10 );
+
     }
 
 
@@ -202,8 +206,8 @@ class acf extends \Q {
                         ),
                         'post_type' => array (
                             0 => 'page',
-                            1 => 'ezine',
-                            2 => 'impact'
+                            1 => 'program',
+                            // 2 => 'impact'
                         ),
                         'taxonomy' => array (
                         ),
@@ -363,6 +367,20 @@ class acf extends \Q {
                             'value' => 'post',
                         ),
                     ),
+                    array (
+                        array (
+                            'param' => 'page_template',
+                            'operator' => '==',
+                            'value' => 'page.php',
+                        ),
+                    ),
+                    array (
+                        array (
+                            'param' => 'page_template',
+                            'operator' => '==',
+                            'value' => 'resource.php',
+                        ),
+                    ),
                 ),
                 'menu_order' => 0,
                 'position' => 'normal',
@@ -457,5 +475,49 @@ class acf extends \Q {
         return false;
 
     }
+
+
+    /**
+    * Handler for meta permalink
+    *
+    * @since    2.0.0
+    */
+    public static function meta_post_object_permalink( $value = null, $array = null, $args = null )
+    {
+
+        // helper::log( 'post_object_permalink' );
+        
+        if ( ! $value || is_null( $value ) ) {
+
+            return false;
+
+        }
+
+        if ( is_numeric( $value ) ) {
+
+            // helper::log( 'ID int passed: '.$value );
+
+            if ( $permalink = \get_permalink( $value ) ) {
+
+                // kick it back ##
+                return $permalink;
+
+            }
+
+        } 
+
+        if ( is_string( $value ) ) {
+
+            // helper::log( 'Predefined string URL: '.$value );
+
+            return $value;   
+
+        }
+
+        // or nada ##
+        return false;
+
+    }
+
 
 }

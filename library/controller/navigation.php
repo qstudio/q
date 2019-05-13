@@ -5,6 +5,7 @@ namespace q\controller;
 use q\core\core as core;
 use q\core\helper as helper;
 use q\controller\css as css;
+use q\core\wordpress as wordpress;
 
 // load it up ##
 #\q\theme\theme\frontpage::run();
@@ -285,12 +286,15 @@ class navigation extends \Q {
     {
 
         // grab array ##
-        if ( ! $array = wordpress::get_pagination( $args ) ) { return false; }
+        if ( ! $array = wordpress::get_pagination( $args ) ) { 
+            
+            return false; 
+        
+        }
 
 ?>
-        <nav class="nav-single post-pagination wrapper-padding">
+        <nav class="q-search-pagination">
             <div class="pagination-inner">
-<!--                <h3 class="assistive-text">--><?php //_e( 'Post navigation', self::text_domain ); ?><!--</h3>-->
 <?php
 
                 // get pagination links, based on passed arguments ##
