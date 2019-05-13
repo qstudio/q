@@ -6,7 +6,7 @@ Tested up to: 3.8.2
 Stable tag: 2.1.5
 License: GPL2
 
-NOTE: Q WordPress Development Framework
+NOTE: Beta release of Q WordPress Development Framework
 
 == Description ==
 
@@ -33,10 +33,6 @@ No applicable screenshots
 Currently, there is scant documentation, but over the coming months as this plugin matures, we'll be adding more details at qstudio.us/plugins
 
 == Changelog ==
-
-= 2.0.0 =
-
-* Move to github hosted plugin
 
 = 1.6.1 =
 
