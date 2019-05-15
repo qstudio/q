@@ -7,7 +7,6 @@ use q\core\helper as helper;
 use q\core\options as options;
 use q\controller\generic as generic;
 use q\core\wordpress as wordpress;
-use q\program\core\core as program_core;
 
 // load it up ##
 \q\plugin\google::run();
@@ -20,10 +19,10 @@ class google extends \Q {
         if ( ! \is_admin() ) {
 
             // google analytics tracking code - add just before </head> ## 
-            \add_action( 'wp_head', [ get_class(), 'analytics'], 10 );
+            \add_action( 'wp_head', [ get_class(), 'analytics'], 100 );
 
             // define Google Tag Manager ##
-            \add_action( 'wp_head', [ get_class(), 'tag_manager'], 11 );
+            \add_action( 'wp_head', [ get_class(), 'tag_manager'], 100 );
 
             // add <noscript> after opening <body> tag ##
             \add_action( 'q_action_body_open', [ get_class(), 'tag_manager_noscript'], 2 );
@@ -302,7 +301,7 @@ class google extends \Q {
         // check if consent given to load script ##
         if ( ! generic::consent( 'analytics' ) ) {
 
-            helper::log( 'Analytics NOT allowed...' );
+            // helper::log( 'Analytics NOT allowed...' );
 
             // kick out ##
             return false;
@@ -330,7 +329,7 @@ class google extends \Q {
         if ( ! $q_options["google_analytics"] ) { 
         
             // Log ##
-            helper::log( 'Google Analytics not defined' );
+            // helper::log( 'Google Analytics not defined' );
 
             // kick off ##
             return false; 

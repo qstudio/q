@@ -19,10 +19,10 @@ class facebook extends \Q {
         if ( ! \is_admin() ) {
 
             // add facebook pixel ##
-            \add_action( 'wp_head', [ get_class(), 'pixel'], 12 );
+            \add_action( 'wp_head', [ get_class(), 'pixel'], 2 );
 
             // add <noscript> after opening <body> tag ##
-            \add_action( 'q_action_body_open', [ get_class(), 'pixel_noscript'], 3 );
+            \add_action( 'q_action_body_open', [ get_class(), 'pixel_noscript'], 2 );
 
             // if on a single post screen, generate and insert twitter:OG tags ##
             \add_action( 'wp_head', [ get_class(), 'meta' ], 12 );      
