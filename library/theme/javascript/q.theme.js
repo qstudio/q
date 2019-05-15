@@ -1,7 +1,7 @@
 /**
 Plugin:     Q Theme
-Version:    2.2.0
-Date:       14/05/2019 10:43:22 am
+Version:    2.1.2
+Date:       14/05/2019 03:14:16 pm
 */
 $q_modal_hash_value=!1;$q_modal_key=!1;$q_modal_args=!1;if(typeof jQuery!=='undefined'){jQuery(document).ready(function(){jQuery(window).bind('hashchange',function(e){e.preventDefault();q_modal_toggle($q_modal_args)})})}
 function q_modal($args)
