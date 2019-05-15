@@ -166,14 +166,14 @@ class google extends \Q {
         
             // helper::log( 'Tag Manager skipped, as on localhost...' );
 
-            return false; 
+            // return false; 
         
         }
 
         // check if consent given to load script ##
         if ( ! generic::consent( 'analytics' ) ) {
 
-            // helper::log( 'Analytics NOT allowed...' );
+            helper::log( 'Analytics NOT allowed...' );
 
             // kick out ##
             return false;
@@ -201,7 +201,7 @@ class google extends \Q {
         if ( ! $q_options["google_tag_manager"] ) { 
 
             // Log ##
-            // helper::log( 'Google Tag Manager not defined' );
+            helper::log( 'Google Tag Manager not defined' );
 
             // kick off ##
             return false; 
@@ -231,14 +231,14 @@ class google extends \Q {
                 
             // helper::log( 'Analytics skipped, as on localhost...' );
 
-            return false; 
+            // return false; 
 
         }
 
         // check if consent given to load script ##
         if ( ! generic::consent( 'analytics' ) ) {
 
-            // helper::log( 'Marketing NOT allowed...' );
+            helper::log( 'Analytics NOT allowed...' );
 
             // kick out ##
             return false;
@@ -266,7 +266,7 @@ class google extends \Q {
         if ( ! $q_options["google_tag_manager_noscript"] ) { 
 
             // Log ##
-            // helper::log( 'Google Tag Manager No Script not defined' );
+            helper::log( 'Google Tag Manager No Script not defined' );
 
             // kick off ##
             return false; 
@@ -278,70 +278,6 @@ class google extends \Q {
 
     }
 
-
-
-
-     /**
-     * Get Google Adwords code for insertion in template
-     *
-     * @since       1.0.2
-     * @return      string   HTML
-     */
-    public static function adwords()
-    {
-
-        // bulk on localhost ##
-        if ( helper::is_localhost() ) { 
-        
-            // helper::log( 'Adwords skipped, as on localhost...' );
-
-            return false; 
-        
-        }
-
-        // check if consent given to load script ##
-        if ( ! generic::consent( 'marketing' ) ) {
-
-            // helper::log( 'Marketing NOT allowed...' );
-
-            // kick out ##
-            return false;
-
-        }
-
-        // get the_post ##
-        if (
-            ! $the_post = wordpress::the_post()
-        ) {
-
-            return false;
-
-        }
-
-        // check for q_program and that we're on a "thanks" page ##
-        if (
-            ! class_exists( 'q_program' )
-            || 'thanks' != program_core::get_qpage()
-        ) {
-
-            return false;
-
-        }
-
-        // check for adwords markup ##
-        if (
-            ! $template_adwords_markup = $the_post->template_adwords_markup
-        ) {
-
-            return false;
-            
-        }
-
-        // print filtered markup ##
-        #pr( wp_kses_allowed_html() );
-        echo $template_adwords_markup;
-
-    }
 
 
 
@@ -359,14 +295,14 @@ class google extends \Q {
         
             // helper::log( 'Analytics skipped, as on localhost...' );
 
-            return false; 
+            // return false; 
         
         }
 
         // check if consent given to load script ##
         if ( ! generic::consent( 'analytics' ) ) {
 
-            // helper::log( 'Marketing NOT allowed...' );
+            helper::log( 'Analytics NOT allowed...' );
 
             // kick out ##
             return false;
@@ -394,7 +330,7 @@ class google extends \Q {
         if ( ! $q_options["google_analytics"] ) { 
         
             // Log ##
-            // helper::log( 'Google Analytics not defined' );
+            helper::log( 'Google Analytics not defined' );
 
             // kick off ##
             return false; 
@@ -403,10 +339,6 @@ class google extends \Q {
 
         // kick it back, cleanly... ##
         echo $q_options['google_analytics'];
-
-        // check for custom GA code additions ##
-        // $google_analytics = isset( $post->google_analytics ) ? $post->google_analytics : false ;
-
 
     }
 
