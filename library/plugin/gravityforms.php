@@ -32,7 +32,7 @@ class gravityforms extends \Q {
         \add_filter( "gform_init_scripts_footer", [ get_class(), "gform_init_scripts_footer" ] );
 
         // remove GF CSS ##
-        \add_filter( 'pre_option_rg_gforms_disable_css', '__return_true' );
+        // \add_filter( 'pre_option_rg_gforms_disable_css', '__return_true' );
 
         // add privacy policy to consent links ##
         \add_filter( 'gform_submit_button', [ get_class(), 'gform_submit_button' ], 1000, 2 );
