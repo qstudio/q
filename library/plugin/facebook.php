@@ -77,7 +77,7 @@ class facebook extends \Q {
 ?>
         <meta name="og:title" content="<?php echo $array['title']; ?>">
         <meta name="og:description" content="<?php echo $array['description']; ?>">
-        <meta name="og:image" content=" <?php echo $array['image']; ?>">
+        <meta name="og:image" content="<?php echo $array['image']; ?>">
         <meta name="og:url" content="<?php echo $array['url']; ?>">
 <?php
 
