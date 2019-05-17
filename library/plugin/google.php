@@ -172,7 +172,7 @@ class google extends \Q {
         // check if consent given to load script ##
         if ( ! generic::consent( 'analytics' ) ) {
 
-            helper::log( 'Analytics NOT allowed...' );
+            // helper::log( 'Analytics NOT allowed...' );
 
             // kick out ##
             return false;
@@ -190,7 +190,7 @@ class google extends \Q {
             || ! is_array( $q_options )    
         ) {
 
-            helper::log( 'Error: Options missing...' );
+            // helper::log( 'Error: Options missing...' );
 
             return false;
 
@@ -200,7 +200,7 @@ class google extends \Q {
         if ( ! $q_options["google_tag_manager"] ) { 
 
             // Log ##
-            helper::log( 'Google Tag Manager not defined' );
+            // helper::log( 'Google Tag Manager not defined' );
 
             // kick off ##
             return false; 
@@ -237,7 +237,7 @@ class google extends \Q {
         // check if consent given to load script ##
         if ( ! generic::consent( 'analytics' ) ) {
 
-            helper::log( 'Analytics NOT allowed...' );
+            // helper::log( 'Analytics NOT allowed...' );
 
             // kick out ##
             return false;
@@ -255,7 +255,7 @@ class google extends \Q {
             || ! is_array( $q_options )    
         ) {
 
-            helper::log( 'Error: Options missing...' );
+            // helper::log( 'Error: Options missing...' );
 
             return false;
 
@@ -265,7 +265,7 @@ class google extends \Q {
         if ( ! $q_options["google_tag_manager_noscript"] ) { 
 
             // Log ##
-            helper::log( 'Google Tag Manager No Script not defined' );
+            // helper::log( 'Google Tag Manager No Script not defined' );
 
             // kick off ##
             return false; 
@@ -319,7 +319,7 @@ class google extends \Q {
             || ! is_array( $q_options )    
         ) {
 
-            helper::log( 'Error: Options missing...' );
+            // helper::log( 'Error: Options missing...' );
 
             return false;
 

@@ -124,7 +124,7 @@ class facebook extends \Q {
             || ! is_array( $q_options )    
         ) {
 
-            helper::log( 'Error: Options missing...' );
+            // helper::log( 'Error: Options missing...' );
 
             return false;
 
@@ -186,7 +186,7 @@ class facebook extends \Q {
             || ! is_array( $q_options )    
         ) {
 
-            helper::log( 'Error: Options missing...' );
+            // helper::log( 'Error: Options missing...' );
 
             return false;
 
