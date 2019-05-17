@@ -31,7 +31,7 @@ class gravityforms extends \Q {
         // move GF to footer ##
         \add_filter( "gform_init_scripts_footer", [ get_class(), "gform_init_scripts_footer" ] );
 
-        // remove GF CSS ##
+        // remove GF CSS ## - note removed, as causing problems on Docs site, can be added back in on individual site config files ##
         // \add_filter( 'pre_option_rg_gforms_disable_css', '__return_true' );
 
         // add privacy policy to consent links ##
