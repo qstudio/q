@@ -3,7 +3,7 @@
 **Tags:** Q, theme, framework, developers   
 **Requires at least:** 3.6  
 **Tested up to:** 3.8.2  
-**Stable tag:** 2.2.1
+**Stable tag:** 2.2.2
 **License:** GPL2  
 
 NOTE: Beta release of Q WordPress Development Framework
@@ -34,7 +34,11 @@ Currently, there is scant documentation, but over the coming months as this plug
 
 ## Changelog ##
 
-### 2.2.0 ###
+### 2.2.2 ###
+
+* Facebook and Twitter script consent checks
+
+### 2.2.1 ###
 
 * Facebook and Twitter Open Graph meta tags added
 
