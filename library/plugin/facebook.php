@@ -99,7 +99,7 @@ class facebook extends \Q {
         
             // helper::log( 'FB pixel not added on localhost' );
 
-            return false; 
+            // return false; 
         
         }
 
@@ -116,15 +116,15 @@ class facebook extends \Q {
         // grab the options ##
         $q_options = options::get();
 
-        #helper::log( $q_options );
+        // helper::log( $q_options );
 
         // bulk if no options found ##
         if ( 
             ! $q_options 
-            || ! is_array( $q_options )    
+            || ! is_object( $q_options )   
         ) {
 
-            // helper::log( 'Error: Options missing...' );
+            helper::log( 'Error: Options missing...' );
 
             return false;
 
@@ -132,7 +132,7 @@ class facebook extends \Q {
 
 
         // check if we have tag_manager defined in config ##
-        if ( ! $q_options['facebook_pixel'] ) {
+        if ( ! isset( $q_options->facebook_pixel ) ) {
 
             // helper::log( 'Facebook Pixel not defined in config' );
 
@@ -141,7 +141,7 @@ class facebook extends \Q {
         }
 
         // kick it back, cleanly... ##
-        echo $q_options['facebook_pixel'];
+        echo $q_options->facebook_pixel;
 
     }
 
@@ -161,7 +161,7 @@ class facebook extends \Q {
                 
             // helper::log( 'Analytics skipped, as on localhost...' );
 
-            return false; 
+            // return false; 
 
         }
 
@@ -183,17 +183,17 @@ class facebook extends \Q {
         // bulk if no options found ##
         if ( 
             ! $q_options 
-            || ! is_array( $q_options )    
+            || ! is_object( $q_options )   
         ) {
 
-            // helper::log( 'Error: Options missing...' );
+            helper::log( 'Error: Options missing...' );
 
             return false;
 
         }
 
         // check for UI ##
-        if ( ! $q_options["facebook_pixel_noscript"] ) { 
+        if ( ! isset( $q_options->facebook_pixel_noscript ) ) { 
 
             // Log ##
             // helper::log( 'Facebook Pixel No Script not defined' );
@@ -204,7 +204,7 @@ class facebook extends \Q {
         }
 
         // kick it back, cleanly... ##
-        echo $q_options['facebook_pixel_noscript'];
+        echo $q_options->facebook_pixel_noscript;
 
     }
 

@@ -187,7 +187,7 @@ class google extends \Q {
         // bulk if no options found ##
         if ( 
             ! $q_options 
-            || ! is_array( $q_options )    
+            || ! is_object( $q_options )    
         ) {
 
             // helper::log( 'Error: Options missing...' );
@@ -197,7 +197,7 @@ class google extends \Q {
         }
 
         // check for UI ##
-        if ( ! $q_options["google_tag_manager"] ) { 
+        if ( ! isset( $q_options->google_tag_manager ) ) { 
 
             // Log ##
             // helper::log( 'Google Tag Manager not defined' );
@@ -208,8 +208,8 @@ class google extends \Q {
         }
 
         // kick it back, cleanly... ##
-        echo $q_options['google_tag_manager'];
-
+        echo $q_options->google_tag_manager;
+        
     }
 
 
@@ -252,7 +252,7 @@ class google extends \Q {
         // bulk if no options found ##
         if ( 
             ! $q_options 
-            || ! is_array( $q_options )    
+            || ! is_object( $q_options )    
         ) {
 
             // helper::log( 'Error: Options missing...' );
@@ -262,7 +262,7 @@ class google extends \Q {
         }
 
         // check for UI ##
-        if ( ! $q_options["google_tag_manager_noscript"] ) { 
+        if ( ! isset( $q_options->google_tag_manager_noscript ) ) { 
 
             // Log ##
             // helper::log( 'Google Tag Manager No Script not defined' );
@@ -273,7 +273,7 @@ class google extends \Q {
         }
 
         // kick it back, cleanly... ##
-        echo $q_options['google_tag_manager_noscript'];
+        echo $q_options->google_tag_manager_noscript;
 
     }
 
@@ -316,7 +316,7 @@ class google extends \Q {
         // bulk if no options found ##
         if ( 
             ! $q_options 
-            || ! is_array( $q_options )    
+            || ! is_object( $q_options )    
         ) {
 
             // helper::log( 'Error: Options missing...' );
@@ -326,7 +326,7 @@ class google extends \Q {
         }
 
         // check for UI ##
-        if ( ! $q_options["google_analytics"] ) { 
+        if ( ! isset( $q_options->google_analytics ) ) { 
         
             // Log ##
             // helper::log( 'Google Analytics not defined' );
@@ -337,7 +337,7 @@ class google extends \Q {
         }
 
         // kick it back, cleanly... ##
-        echo $q_options['google_analytics'];
+        echo $q_options->google_analytics;
 
     }
 
