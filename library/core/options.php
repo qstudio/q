@@ -11,9 +11,6 @@ use q\core\wordpress as wordpress;
 
 class options extends \Q {
 
-    public static $radio_options;
-    protected static $q_options;
-
     /**
     * Class Constructor
     * 
@@ -22,91 +19,553 @@ class options extends \Q {
     */
     public static function run()
     {
+
+        // add acf options page ##
+        self::acf_add_options_page();
         
-        if ( ! \is_admin() ) {
+        // add fields ##
+        \add_action( 'acf/init', array( get_class(), 'add_fields' ), 1 );
+
+        // example how to inject extra options in libraries select API ##
+        // \add_filter( 'acf/load_field/name=q_option_library', [ get_class(), 'filter_acf_library' ], 10, 1 );
+        
+        // get stored options, early ##
+        // \add_action( 'plugins_loaded', [ get_class(), 'get' ], 1 );
+
+    }
+
+
+
+    /**
+     * API to add fields to Q settings
+     * 
+     * @since 2.3.0
+     */
+    public static function api( Array $args = null )
+    {
+
+        // @todo ... but should be a wrapper to: 
+        // \add_filter( 'acf/load_field/name=q_option_library', [ get_class(), 'filter_acf_library' ], 1000000, 1 );
+
+    }
+
+
+
+    /**
+     * Example of how to add a select option for a new library
+     * 
+     * @since 2.3.0
+     */
+    public static function filter_acf_library( $field )
+    {
+
+        // helper::log( $field['choices'] );
+        // helper::log( $field['default_value'] );
+
+        // pop on a new choice ##
+        $field['choices']['new'] = 'New Item';
+
+        // make it selected ##
+        $field['default_value'][] = 'new';
+
+        // helper::log( $field['choices'] );
+        // helper::log( $field['default_value'] );
+
+        return $field;
+
+    }
+
+
+
+    public static function acf_add_options_page()
+    {
+
+        if ( ! function_exists( 'acf_add_options_page' ) ) {
+
+            helper::log( 'ACF Missing, please install or activate...' );
 
             return false;
 
         }
 
-        // extend the radio_options property ##
-        self::$radio_options = array(
-            'yes' => array(
-                'value' => '1',
-                'label' => __( 'Yes', 'q-textdomain' )
-            ),
-            'no' => array(
-                'value' => '0',
-                'label' => __( 'No', 'q-textdomain' )
-            ),
-        );
-        
-        
-        if ( is_admin() ) { // make sure this is only loaded up in the admin ##
-            
-            // options nags, panels and notices ##
-            \add_action( 'admin_notices', array ( get_class(), 'options_notices' ) );
-            \add_action( 'admin_init', array ( get_class(), 'options_notices_ignore' ) );
-            
-            // register settings API ##
-            \add_action( 'admin_init', array ( get_class(), 'register_setting' ) );
-            
-            // plugin options page ##
-            \add_action( 'admin_menu', array ( get_class(), 'add_submenu_page' ) );
-            
-            // filter saved data ##
-            #\add_action( 'update_optionq_options', 'drop_support', 10, 2 );
+        // helper::log( 'Adding ACF settings page...' );
+
+        \acf_add_options_page( array(
+            'page_title' 	=> 'Q Settings',
+            'menu_title'	=> 'Q',
+            'menu_slug' 	=> 'q',
+            'capability'	=> 'manage_options',
+            'parent'        => 'options-general.php',
+            'redirect'		=> false
+        ));
+
+    }
+
+
+
+    /**
+    * Add ACF Fields
+    *
+    * @since    2.0.0
+    */
+    public static function add_fields()
+    {
+
+        // get all field groups ##
+        $groups = self::get_fields();
+
+        if ( 
+            ! $groups 
+            || ! is_array( $groups )
+        ) {
+
+            helper::log( 'No groups to load.' );
+
+            return false;
 
         }
-        
+
+        // loop over gruops ##
+        foreach( $groups as $group ) {
+
+            // load them all up ##
+            \acf_add_local_field_group( $group );
+
+        }
+
     }
 
 
-    public static function drop_support( $old, $new ) {
-
-        helper::log(  'Saving q_options from admin..' );
-
-        return $new;
-
-    }
-        
-    
     /**
-    * Define Default Q Options
-    * 
-    * @since       1.0
-    * @return      void
+    * Define field groups
+    *
+    * @since    2.0.0
+    * @return   Mixed
     */
-    protected static function define()
+    public static function get_fields( $group = null )
     {
-        
-        // build options array ##
-        self::$q_options = array ( 
 
-            // plugin settings ##
-            "plugin_css"                    => true, // add plugin css styling ##
-            "plugin_js"                     => true, // add plugin javascript ##
+        // define field groups - exported from ACF ##
+        $groups = array (
 
-            // theme settings ##
-            "theme_css"                     => true, // add theme css styling to child theme ##
-            "theme_js"                      => true, // add theme javascript files to child theme ##
+            'analytics' => array(
+                'key' => 'group_q_option_analytics',
+                'title' => 'Analytics and Marketing',
+                'fields' => array(
+                    array(
+                        'key' => 'field_q_option_google_analytics',
+                        'label' => 'Google Analytics',
+                        'name' => 'q_option_google_analytics',
+                        'type' => 'textarea',
+                        'instructions' => 'Enter the complete Google Analytics snippet',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => '',
+                        'placeholder' => '',
+                        'maxlength' => '',
+                        'rows' => 3,
+                        'new_lines' => '',
+                    ),
+                    array(
+                        'key' => 'field_q_option_google_tag_manager',
+                        'label' => 'Google Tag Manager',
+                        'name' => 'q_option_google_tag_manager',
+                        'type' => 'textarea',
+                        'instructions' => 'Enter the complete Google Tag Manager snippet',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => '',
+                        'placeholder' => '',
+                        'maxlength' => '',
+                        'rows' => 4,
+                        'new_lines' => '',
+                    ),
+                    array(
+                        'key' => 'field_q_option_google_tag_manager_noscript',
+                        'label' => 'Google Tag Manager Noscript',
+                        'name' => 'q_option_google_tag_manager_noscript',
+                        'type' => 'textarea',
+                        'instructions' => 'Enter the complete Google Tag Manager noscript snippet',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => '',
+                        'placeholder' => '',
+                        'maxlength' => '',
+                        'rows' => 4,
+                        'new_lines' => '',
+                    ),
+                    array(
+                        'key' => 'field_q_option_facebook_pixel',
+                        'label' => 'Facebook Pixel',
+                        'name' => 'q_option_facebook_pixel',
+                        'type' => 'textarea',
+                        'instructions' => 'Enter the complete Facebook Pixel snippet',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => '',
+                        'placeholder' => '',
+                        'maxlength' => '',
+                        'rows' => 4,
+                        'new_lines' => '',
+                    ),
+                    array(
+                        'key' => 'field_q_option_facebook_pixel_noscript',
+                        'label' => 'Facebook Pixel Noscript',
+                        'name' => 'q_option_facebook_pixel_noscript',
+                        'type' => 'textarea',
+                        'instructions' => 'Enter the complete Facebook Pixel Noscript snippet',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => '',
+                        'placeholder' => '',
+                        'maxlength' => '',
+                        'rows' => 4,
+                        'new_lines' => '',
+                    ),
+                    array(
+                        'key' => 'field_q_option_linkedin',
+                        'label' => 'LinkedIn Tracking',
+                        'name' => 'q_option_linkedin',
+                        'type' => 'textarea',
+                        'instructions' => 'Enter the complete LinkedIn snippet',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => '',
+                        'placeholder' => '',
+                        'maxlength' => '',
+                        'rows' => 4,
+                        'new_lines' => '',
+                    ),
+                    array(
+                        'key' => 'field_q_option_linkedin_noscript',
+                        'label' => 'LinkedIn Tracking Noscript',
+                        'name' => 'q_option_linkedin_noscript',
+                        'type' => 'textarea',
+                        'instructions' => 'Enter the complete LinkedIn Noscript snippet',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => '',
+                        'placeholder' => '',
+                        'maxlength' => '',
+                        'rows' => 4,
+                        'new_lines' => '',
+                    ),
+                ),
+                'location' => array(
+                    array(
+                        array(
+                            'param' => 'options_page',
+                            'operator' => '==',
+                            'value' => 'q',
+                        ),
+                    ),
+                ),
+                'menu_order' => 0,
+                'position' => 'normal',
+                'style' => 'default',
+                'label_placement' => 'top',
+                'instruction_placement' => 'label',
+                'hide_on_screen' => '',
+                'active' => true,
+                'description' => '',
+            ),
 
-            // google ##
-            "google_analytics"              => false, // tracking code ##
-            "google_tag_manager"            => false, // GTM code ##
-            "google_tag_manager_noscript"   => false, // GTM noscript ##
-            
-            // facebook ##
-            "facebook_pixel"                => false, // FB Pixel code ##
-            "facebook_pixel_noscript"       => false, // FB Pixel noscript ##
+            'ui' => array(
+                'key' => 'group_q_option_ui',
+                'title' => 'Asset Inclusion',
+                'fields' => array(
+                    array(
+                        'key' => 'field_q_option_plugin_css',
+                        'label' => 'Plugin CSS',
+                        'name' => 'q_option_plugin_css',
+                        'type' => 'radio',
+                        'instructions' => '',
+                        'required' => 1,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'choices' => array(
+                            1 => 'Yes',
+                            0 => 'No',
+                        ),
+                        'allow_null' => 0,
+                        'other_choice' => 0,
+                        'default_value' => 1,
+                        'layout' => 'horizontal',
+                        'return_format' => 'value',
+                        'save_other_choice' => 0,
+                    ),
+                    array(
+                        'key' => 'field_q_option_plugin_js',
+                        'label' => 'Plugin JavaScript',
+                        'name' => 'q_option_plugin_js',
+                        'type' => 'radio',
+                        'instructions' => '',
+                        'required' => 1,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'choices' => array(
+                            1 => 'Yes',
+                            0 => 'No',
+                        ),
+                        'allow_null' => 0,
+                        'other_choice' => 0,
+                        'default_value' => 1,
+                        'layout' => 'horizontal',
+                        'return_format' => 'value',
+                        'save_other_choice' => 0,
+                    ),
+                    array(
+                        'key' => 'field_q_option_theme_css',
+                        'label' => 'Theme CSS',
+                        'name' => 'q_option_theme_css',
+                        'type' => 'radio',
+                        'instructions' => '',
+                        'required' => 1,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'choices' => array(
+                            1 => 'Yes',
+                            0 => 'No',
+                        ),
+                        'allow_null' => 0,
+                        'other_choice' => 0,
+                        'default_value' => 1,
+                        'layout' => 'horizontal',
+                        'return_format' => 'value',
+                        'save_other_choice' => 0,
+                    ),
+                    array(
+                        'key' => 'field_q_option_theme_js',
+                        'label' => 'Theme JavaScript',
+                        'name' => 'q_option_theme_js',
+                        'type' => 'radio',
+                        'instructions' => '',
+                        'required' => 1,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'choices' => array(
+                            1 => 'Yes',
+                            0 => 'No',
+                        ),
+                        'allow_null' => 0,
+                        'other_choice' => 0,
+                        'default_value' => 1,
+                        'layout' => 'horizontal',
+                        'return_format' => 'value',
+                        'save_other_choice' => 0,
+                    ),
+                ),
+                'location' => array(
+                    array(
+                        array(
+                            'param' => 'options_page',
+                            'operator' => '==',
+                            'value' => 'q',
+                        ),
+                    ),
+                ),
+                'menu_order' => 3,
+                'position' => 'side',
+                'style' => 'default',
+                'label_placement' => 'top',
+                'instruction_placement' => 'label',
+                'hide_on_screen' => '',
+                'active' => true,
+                'description' => '',
+            ), 
+
+            'library' => array(
+                'key' => 'group_q_option_library',
+                'title' => 'External Libraries',
+                'fields' => array(
+                    array(
+                        'key' => 'field_q_option_library',
+                        'label' => 'Libraries',
+                        'name' => 'q_option_library',
+                        'type' => 'checkbox',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'choices' => array(
+                            'bootstrap' => 'Bootstrap',
+                            'featherlight' => 'Featherlight JS',
+                            'sly' => 'Sly Swipe JS',
+                            'lazy' => 'Lazy Load JS',
+                            'snackbar' => 'Snackbar JS',
+                        ),
+                        'allow_custom' => 0,
+                        'default_value' => array(
+                            0 => 'bootstrap',
+                            1 => 'featherlight',
+                            2 => 'sly',
+                            3 => 'lazy',
+                            4 => 'snackbar',
+                        ),
+                        'layout' => 'vertical',
+                        'toggle' => 1,
+                        'return_format' => 'value',
+                        'save_custom' => 0,
+                    ),
+                ),
+                'location' => array(
+                    array(
+                        array(
+                            'param' => 'options_page',
+                            'operator' => '==',
+                            'value' => 'q',
+                        ),
+                    ),
+                ),
+                'menu_order' => 2,
+                'position' => 'side',
+                'style' => 'default',
+                'label_placement' => 'top',
+                'instruction_placement' => 'label',
+                'hide_on_screen' => '',
+                'active' => true,
+                'description' => '',
+            ),
+
+            'plugin'   => array(
+                'key' => 'group_q_option_plugin',
+                'title' => 'Global Plugins',
+                'fields' => array(
+                    array(
+                        'key' => 'field_q_option_plugin',
+                        'label' => 'Plugins',
+                        'name' => 'q_option_plugin',
+                        'type' => 'checkbox',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'choices' => array(
+                            'q-gh-brand-bar' => 'Global Brand Bar',
+                            'q-gh-consent' => 'Consent',
+                            'q-search' => 'Search',
+                        ),
+                        'allow_custom' => 0,
+                        'default_value' => array(
+                            0 => 'q-gh-brand-bar',
+                            1 => 'q-gh-consent',
+                        ),
+                        'layout' => 'vertical',
+                        'toggle' => 0,
+                        'return_format' => 'value',
+                        'save_custom' => 0,
+                    ),
+                ),
+                'location' => array(
+                    array(
+                        array(
+                            'param' => 'options_page',
+                            'operator' => '==',
+                            'value' => 'q',
+                        ),
+                    ),
+                ),
+                'menu_order' => 1,
+                'position' => 'side',
+                'style' => 'default',
+                'label_placement' => 'top',
+                'instruction_placement' => 'label',
+                'hide_on_screen' => '',
+                'active' => true,
+                'description' => '',
+            )
 
         );
-        
+
+        // check if we ar returning a single set or all groups ##
+        if ( is_null( $group ) ) {
+
+            #helper::log( 'Returning all groups.' );
+
+            return $groups;
+
+        } elseif ( 
+            isset( $group ) 
+            && is_array( $groups )
+            && array_key_exists( $group, $groups )
+            && array_key_exists( 'fields', $groups[$group] )
+        ) {
+
+            #helper::log( 'returning fields in group: '.$group );
+
+            return $groups[$group]['fields'];
+
+        }
+
+        // nothing cooking ##
+        return false;
+
     }
-    
+
+
+
     
     /**
-    * Expose options to other functions 
+    * Get stored values of defined options
     * 
     * @since       1.0
     * @return      Object
@@ -114,494 +573,198 @@ class options extends \Q {
     public static function get() 
     {
         
-        // check for options ##
-        $q_options = \get_site_option( 'q_options' );
+        // we need to get all stored options from WP ##
+        if ( ! $array = self::wpdb() ) {
 
-        // helper::log( $q_options );
-        
-        // no options loaded from wp_options ##
-        if ( ! $q_options ) {
+            helper::log( 'No stored values found.' );
 
-            // define default options ##
-            self::define();
+            return false;
+
+        }
+
+        // now we need to format them into something which all existing theme controllers expect:
+        // an array with "q_option_" removed and a value of 1 or 0 ##
+        if ( ! $object = self::prepare( $array ) ) {
+
+            helper::log( 'Error preparing stored values' );
+
+            return false;
+
+        }
+
+        // helper::log( $object );
+
+        // check if we have an object ##
+        if ( ! is_object( $object ) ) {
+
+            helper::log( 'Error converting stored values to object' );    
             
-            // grab those options ##
-            $q_options = self::$q_options;
+            return false;
 
-            // still no options !! ##
-            if ( ! is_array( $q_options ) ) { 
+        }
 
-                // kill WP ##
-                wp_die( 
-                    _e( 
-                        "<h2>Error!</h2><p>There was an error loading the required Q Options.</p>" 
-                        ,'q-textdomain'
-                    ) ); 
+        // test ##
+        // helper::log( $object );
 
-            } else { 
+        // return ##
+        return $object;
 
-                // add wp_options reference ##
-                wordpress::add_update_option( 'q_options', $q_options, '', 'yes' );
+    }
+
+
+
+    /**
+     * Single query to retrieve all stored options saved via ACF
+     * 
+     * @since 2.3.0
+    */
+    public static function wpdb()
+    {
+
+        // grab teh global object ##
+        global $wpdb;
+
+        // run the query ##
+        $query = $wpdb->get_results( 
+            $wpdb->prepare( 
+                "SELECT option_name AS name, option_value AS value FROM $wpdb->options WHERE `option_name` LIKE %s limit 0, 1000",
+                'options_q_option%'
+            ),
+            'ARRAY_A' // array ##
+        );
+
+        // test ##
+        // helper::log( $query );
+
+        // validate ##
+        if ( 
+            ! $query  
+            || ! is_array ( $query )
+            || 0 == count ( $query ) 
+        ) {
+
+            // helper::log( 'wpdb failure...' );
+
+            return false;
+
+        }
+
+        // kick it back ##
+        return $query;
+
+    }
+
+
+
+    /**
+     * Single query to retrieve all stored options saved via ACF
+     * 
+     * @since 2.3.0
+    */
+    public static function prepare( Array $array = null )
+    {
+
+        // sanity check ##
+        if (
+            is_null( $array )
+            || ! is_array( $array )
+        ) {
+
+            helper::log( 'Passed Array is corrupt.' );
+
+            return false;
+
+        }
+
+        // we will create a new array, with name and value ##
+        $object = new \stdClass();
+
+        // loop over each item and remove - some are strings, some are serliazed ##
+        foreach ( $array as $item ) {
+
+            // helper::log( $item );
+
+            // get key ##
+            $key = str_replace( 'options_q_option_', '', $item['name'] );
+
+            // check if value is serlized, if so, break out as single items ##
+            if ( is_serialized( $item['value'] ) ) {
+
+                $option = unserialize( $item['value'] );
+
+                // helper::log( $option );
+                // helper::log( core::array_to_object( $option ) );
+
+                // new sub object ##
+                $option_object = new \stdClass();
+
+                // we need these to be converted to an object ##
+                foreach( $option as $option_key => $option_value ) {
+
+                    // if ( 1 == $option_value ) {
+
+                        // helper::log( $option_value );
+                 
+                        $option_object->$option_value = true;
+
+                    // }
+
+                }
+
+                $value = $option_object;
+
+            } else {
+
+                $value = ( 1 == $item['value'] ) ? true : $item['value'] ;
 
             }
 
+            // add ##
+            $object->$key = $value ;
+
         }
-        
-        // helper::log( $q_options );
+
+        // test ##
+        // helper::log( $array );
+
+        // validate ##
+        if ( 
+            ! is_object ( $object )
+            // || 0 == count ( $object ) 
+        ) {
+
+            helper::log( 'Prepared object is corrupt.' );
+
+            return false;
+
+        }
 
         // kick it back ##
-        return $q_options;
+        return $object;
 
     }
     
     
+    
+
     /**
     * Delete Q Options - could be used to clear old settings
     */
     public static function delete( $option = null )
     {
 
-        $q_options = \get_site_option( 'q_options' );
         
-        if ( 
-            ! is_null( $option ) 
-            && is_array( $q_options )
-            && isset ( $q_options[$option] )
-        ) {
-
-            // remove key ##
-            unset( $q_options[$option] );
-
-            // update class property ##
-            self::$q_options = $q_options;
-
-        } else {
-
-            // remove all options
-            \delete_site_option( 'q_options' ); // delete option ##
-        
-            // update class property ##
-            self::$q_options = false;
-
-        }
-
-        // update stored value ##
-        wordpress::add_update_option( 'q_options', $q_options, '', 'yes' ); 
-
-        // kick it back ##
-        return self::$q_options;
 
     }
 
-
-    /**
-    * Update Q Options
-    */
-    public static function update( $item = null )
-    {
-        
-        if ( is_null( $item ) ) {
-            
-            self::log( 'nothing passed' );
-
-            return false;
-
-        }
-
-        $q_options = \get_site_option( 'q_options' );
-
-        // add item to object ##
-        $q_options[$item] = true;
-
-        // update class property ##
-        self::$q_options = $q_options;
-
-        // update stored value ##
-        wordpress::add_update_option( 'q_options', $q_options, '', 'yes' ); 
-        
-    }
-    
-
-    
-    /**
-    * Init plugin options to white list our options
-    */
-    public static function register_setting()
-    {
-        
-        \register_setting( 'q_options', 'q_options', array ( get_class(), 'validate' ) );
-        
-    }
-    
-    
-    /**
-    * Load up the menu page
-    */
-    public static function add_submenu_page() 
-    {
-        
-        \add_submenu_page( 
-            'themes.php' 
-            ,__( 'Q', 'q-textdomain' )
-            ,__( 'Q', 'q-textdomain' )
-            , 'manage_options'
-            , 'q'
-            , array ( get_class(), 'options_page')
-        ); 
-        
-    }
-
-
-    /**
-        * Create the options page
-        */
-    public static function options_page() 
-    {
-        
-        // get FRESH Q Plugin data ##
-        $plugin_data = wordpress::plugin_data( true );
-
-        // get Q options ##
-        $options = core::array_to_object( self::get() );
-
-?>
-    <style>
-        .update-nag { display: none; }
-        .small { font-size: 70%; }
-        .form-table th { font-weight: 100; }
-        input[type="radio"] { margin: 0 10px; }
-    </style>
-<?php
-
-    // check for update in request headers ##
-    if ( isset( $_GET['settings-updated'] ) ) { 
-            
-?>
-    <script type="text/javascript">
-    jQuery(document).ready(function() {
-
-        jQuery("div.updated p strong").html('<?php _e( 'Settings Saved.', 'q-textdomain' ); ?>'); 
-
-    });
-    </script>
-<?php
-
-    }
-
-?>
-    <div class="wrap">
-<?php
-
-        // page header ##
-        $version = ' <span class="small">( version '.$plugin_data->version.' )</span>';
-        echo "<h2>".__( 'Q Options', 'q-textdomain' ).$version."</h2>"; 
-        echo "<p>".__( 'If the option you are looking for is not listed on this page, it has probably been added via a plugin.', 'q-textdomain' ) . "</p>"; 
-
-?>
-        <form method="post" action="options.php">
-<?php                 
-
-        // add nonce field ##
-        \settings_fields( 'q_options' );
-
-        // plugin settings ##
-    
-?>
-            <h3>Plugin Settings:</h3>
-            <table class="form-table">
-                <tr valign="top"><th scope="row"><?php _e( 'Load Plugin CSS', 'q-textdomain' ); ?></th><td><fieldset>
-                    <legend class="screen-reader-text"><span><?php _e( 'Load Plugin CSS', 'q-textdomain' ); ?></span></legend>
-    <?php
-
-                    // no checked option ##
-                    if ( !isset( $checked ) ) {  $checked = ''; }
-
-                    // loop all options ##
-                    foreach ( self::$radio_options as $option ) {
-
-                        // get value from options ##
-                        $radio_setting = $options->plugin_css;
-                        $bool_option_value = (bool)$option['value']; // cast to boolean ##
-                        if ( $radio_setting === $bool_option_value ) {
-                            $checked = "checked=\"checked\"";
-                        } else {
-                            $checked = '';
-                        }
-
-    ?>
-                    <label class="description" style="margin-right: 10px;">
-                        <input type="radio" name="q_options[plugin_css]" value="<?php esc_attr_e( $option['value'] ); ?>" <?php echo $checked; ?> /> <?php echo $option['label']; ?>
-                    </label>
-    <?php
-                    } // foreach radio ##
-    ?>
-                </fieldset></td></tr>
-
-                <tr valign="top"><th scope="row"><?php _e( 'Load Plugin JavaScript', 'q-textdomain' ); ?></th><td><fieldset>
-                    <legend class="screen-reader-text"><span><?php _e( 'Load Plugin JavaScript', 'q-textdomain' ); ?></span></legend>
-    <?php
-
-                    // no checked option ##
-                    if ( !isset( $checked ) ) {  $checked = ''; }
-
-                    // loop all options ##
-                    foreach ( self::$radio_options as $option ) {
-
-                        // get value from options ##
-                        $radio_setting = $options->plugin_js;
-                        $bool_option_value = (bool)$option['value']; // convert to boolean ##
-                        if ( $radio_setting === $bool_option_value ) {
-                            $checked = "checked=\"checked\"";
-                        } else {
-                            $checked = '';
-                        }
-
-    ?>
-                    <label class="description" style="margin-right: 10px;">
-                        <input type="radio" name="q_options[plugin_js]" value="<?php esc_attr_e( $option['value'] ); ?>" <?php echo $checked; ?> /> <?php echo $option['label']; ?>
-                    </label>
-    <?php
-                        }
-    ?>
-                </fieldset></td></tr>
-                
-            </table>
-            
-            <h3>Theme Settings:</h3>
-            <table class="form-table">
-                <tr valign="top"><th scope="row"><?php _e( 'Load Theme CSS', 'q-textdomain' ); ?></th><td><fieldset>
-                    <legend class="screen-reader-text"><span><?php _e( 'Load Theme CSS', 'q-textdomain' ); ?></span></legend>
-    <?php
-
-                    // no checked option ##
-                    if ( !isset( $checked ) ) {  $checked = ''; }
-
-                    // loop all options ##
-                    foreach ( self::$radio_options as $option ) {
-
-                        // get value from options ##
-                        $radio_setting = $options->theme_css;
-                        $bool_option_value = (bool)$option['value']; // convert to boolean ##
-                        if ( $radio_setting === $bool_option_value ) {
-                            $checked = "checked=\"checked\"";
-                        } else {
-                            $checked = '';
-                        }
-
-    ?>
-                    <label class="description" style="margin-right: 10px;">
-                        <input type="radio" name="q_options[theme_css]" value="<?php esc_attr_e( $option['value'] ); ?>" <?php echo $checked; ?> /> <?php echo $option['label']; ?>
-                    </label>
-    <?php
-                        }
-    ?>
-                </fieldset></td></tr>
-
-                <tr valign="top"><th scope="row"><?php _e( 'Load Theme JavaScript', 'q-textdomain' ); ?></th><td><fieldset>
-                    <legend class="screen-reader-text"><span><?php _e( 'Load Theme JavaScript', 'q-textdomain' ); ?></span></legend>
-    <?php
-
-                    // no checked option ##
-                    if ( !isset( $checked ) ) {  $checked = ''; }
-
-                    // loop all options ##
-                    foreach ( self::$radio_options as $option ) {
-
-                        // get value from options ##
-                        $radio_setting = $options->theme_js;
-                        $bool_option_value = (bool)$option['value']; // convert to boolean ##
-                        if ( $radio_setting === $bool_option_value ) {
-                            $checked = "checked=\"checked\"";
-                        } else {
-                            $checked = '';
-                        }
-
-    ?>
-                    <label class="description" style="margin-right: 10px;">
-                        <input type="radio" name="q_options[theme_js]" value="<?php esc_attr_e( $option['value'] ); ?>" <?php echo $checked; ?> /> <?php echo $option['label']; ?>
-                    </label>
-    <?php
-                        }
-    ?>
-                </fieldset></td></tr>
-            </table>
-            
-            <h3>Google Settings:</h3>
-            <table class="form-table">
-
-                <tr valign="top">
-                    <th scope="row"><label for="q_options[google_analytics]"><?php _e( 'Google Analytics', 'q-textdomain' ); ?></label></th>
-                    <td>
-                        <textarea id="q_options[google_analytics]" cols="40" rows="4" style="width: 100%;" name="q_options[google_analytics]"><?php \esc_attr_e( $options->google_analytics ); ?></textarea>
-                        <p class="description" ><?php _e( 'Enter the complete Google Analytics snippet', 'q-textdomain' ); ?></p>
-                    </td>
-                </tr>
-
-                <tr valign="top">
-                    <th scope="row"><label for="q_options[google_tag_manager]"><?php _e( 'Google Tag Manager', 'q-textdomain' ); ?></label></th>
-                    <td>
-                        <textarea id="q_options[google_tag_manager]" cols="40" rows="4" style="width: 100%;" name="q_options[google_tag_manager]"><?php \esc_attr_e( $options->google_tag_manager ); ?></textarea>
-                        <p class="description" ><?php _e( 'Enter the complete Google Tag Manager snippet', 'q-textdomain' ); ?></p>
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><label for="q_options[google_tag_manager_noscript]"><?php _e( 'Google Tag Manager noscript', 'q-textdomain' ); ?></label></th>
-                    <td>
-                        <textarea id="q_options[google_tag_manager_noscript]" cols="40" rows="4" style="width: 100%;" name="q_options[google_tag_manager_noscript]"><?php \esc_attr_e(  $options->google_tag_manager_noscript ); ?></textarea>
-                        <p class="description" ><?php _e( 'Enter the complete Google Tag Manager noscript snippet', 'q-textdomain' ); ?></p>
-                    </td>
-                </tr>
-
-            </table>
-
-
-            <h3>Facebook Settings:</h3>
-            <table class="form-table">
-
-                <tr valign="top">
-                    <th scope="row"><label for="q_options[facebook_pixel]"><?php _e( 'Facebook Pixel', 'q-textdomain' ); ?></label></th>
-                    <td>
-                        <textarea id="q_options[facebook_pixel]" cols="40" rows="4" style="width: 100%;" name="q_options[facebook_pixel]"><?php \esc_attr_e( $options->facebook_pixel ); ?></textarea>
-                        <p class="description" ><?php _e( 'Enter the complete Facebook Pixel snippet', 'q-textdomain' ); ?></p>
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><label for="q_options[facebook_pixel_noscript]"><?php _e( 'Facebook Pixel noscript', 'q-textdomain' ); ?></label></th>
-                    <td>
-                        <textarea id="q_options[facebook_pixel_noscript]" cols="40" rows="4" style="width: 100%;" name="q_options[facebook_pixel_noscript]"><?php \esc_attr_e(  $options->facebook_pixel_noscript ); ?></textarea>
-                        <p class="description" ><?php _e( 'Enter the complete Facebook Pixel  noscript snippet', 'q-textdomain' ); ?></p>
-                    </td>
-                </tr>
-
-            </table>
-
-            <p class="submit">
-                <input type="submit" class="button-primary" value="<?php _e( 'Save Options', 'q-textdomain' ); ?>" />
-            </p>
-            
-        </form>
-    </div>
-<?php
-
-    } // theme_options_do_page ##
-
-    
-
-
-
-    /**
-     * Sanitize and validate input. Accepts an array, returns a sanitized array.
-     */
-    public static function validate( $input ) 
-    {
-
-        // helper::log( 'validation:' );
-        // helper::log( $input );
-
-        // remove all options added via q_add_theme_support - these are recompilled on load ##
-        \delete_site_option( 'q_options' ); // delete option ##
-
-        // force default value if radio empty ##
-        $input['plugin_css']                    = ( $input['plugin_css'] == 1 ? true : false );
-        $input['plugin_js']                     = ( $input['plugin_js'] == 1 ? true : false );
-
-        $input['theme_css']                     = ( $input['theme_css'] == 1 ? true : false );
-        $input['theme_js']                      = ( $input['theme_js'] == 1 ? true : false );
-
-        $input['google_analytics']              = $input['google_analytics'];
-
-        $input['google_tag_manager']            = $input['google_tag_manager'];
-        $input['google_tag_manager_noscript']   = $input['google_tag_manager_noscript'];
-
-        $input['facebook_pixel']                = $input['facebook_pixel'];
-        $input['facebook_pixel_noscript']       = $input['facebook_pixel_noscript'];
-
-        return $input;
-
-    }
-    
-    
-    
-
-    
-    /**
-     * Display a notice that can be dismissed 
-     * 
-     * @since       1.0
-     */
-    public static function options_notices() 
-    {
-
-        // grab options ##
-        $q_options = self::get();
-
-        // get options ##
-        $q_key = isset( $q_options->q_key ) ? $q_options->q_key : false ;
-
-        // user ##
-        #global $current_user;
-        #$user_id = $current_user->ID;
-
-        // plugin ##
-        $url_q_options = \admin_url( 'options-general.php?page=q', 'http' );
-        $button_q_options = '<input type="button" style="margin-left: 10px;" class="button" value="'.__("Q Options", "q").'" onclick="document.location.href=\''.$url_q_options.'\'">';
-
-    }
-    
-    
-    /**
-     * Hide Options Notice
-     * 
-     * @since       1.0
-     * @return      void
-     */
-    public static function options_notices_ignore() 
-    {
-        
-        global $current_user;
-        $user_id = $current_user->ID;
-        /* If user clicks to ignore the notice, add that to their user meta */
-        if ( isset($_GET['q_nag_ignore']) && '0' == $_GET['q_nag_ignore'] ) {
-            \add_user_meta ($user_id, 'q_ignore_notice', 'true', true);
-        }
-        
-    }
 
 
     public static function add_theme_support( $support )
     {
 
-        // grab the options ##
-        $q_options = self::get();
+       helper::log( 'add_theme_support is deprecated, please use the new Q settings page and filters.' );
 
-        // helper::log( $q_options );
-
-        if ( $support && is_array( $q_options ) ) { // check to see if $support passed ##
-
-           if ( is_array( $support ) ) {
-
-               foreach ( $support as $add ) {
-
-                   if ( $add ) {
-
-                        // helper::log( 'Add single item from array: '.$add );
-                        self::update( $add );
-
-                   }
-
-               }
-
-          } else { // single variable ##
-
-              #helper::log( 'Add single item: '.$support );
-
-              self::update( $support );
-
-          }
-
-       }
-
-       #helper::log( options::get() );
+       return false;
 
     }
     
