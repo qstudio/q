@@ -533,7 +533,57 @@ class options extends \Q {
                 'hide_on_screen' => '',
                 'active' => true,
                 'description' => '',
-            )
+            ),
+
+            'debug' => array(
+                'key' => 'group_q_option_debug',
+                'title' => 'Debug',
+                'fields' => array(
+                    array(
+                        'key' => 'field_q_option_debug',
+                        'label' => 'Debugging Options',
+                        'name' => 'q_option_debug',
+                        'type' => 'radio',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'choices' => array(
+                            'false' => 'False',
+                            'true' => 'True',
+                        ),
+                        'allow_custom' => 0,
+                        'default_value' => array(
+                            '0' => 'false',
+                        ),
+                        'layout' => 'vertical',
+                        'toggle' => 0,
+                        'return_format' => 'value',
+                        'save_custom' => 0,
+                    ),
+                ),
+                'location' => array(
+                    array(
+                        array(
+                            'param' => 'options_page',
+                            'operator' => '==',
+                            'value' => 'q',
+                        ),
+                    ),
+                ),
+                'menu_order' => 3,
+                'position' => 'side',
+                'style' => 'default',
+                'label_placement' => 'top',
+                'instruction_placement' => 'label',
+                'hide_on_screen' => '',
+                'active' => true,
+                'description' => '',
+            ),
 
         );
 
