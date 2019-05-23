@@ -30,8 +30,7 @@ class theme extends \Q {
             // plugins and enhanecments ##
             \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_general' ), 2 );
 
-            // theme css / js -- @note theme assets loaded by q_theme ##
-            // \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_theme' ), 11 );
+            // theme css / js -- theme assets loaded by q_theme ##
 
         }
 
@@ -110,6 +109,7 @@ class theme extends \Q {
     public static function wp_enqueue_scripts_plugin() {
 
         // helper::log( self::$options );
+        // helper::log( 'debug set to: '. ( true === self::$debug ? 'True' : 'False' ) );
 
         if ( 
             isset( self::$options->plugin_css ) 
@@ -123,7 +123,7 @@ class theme extends \Q {
 
         if ( 
             isset( self::$options->plugin_css ) 
-            && false === self::$debug 
+            // && false === self::$debug 
         ) {
             
             \wp_register_style( 'q-wordpress-css', helper::get( "theme/css/q.wordpress.css", 'return' ), array(), self::$plugin_version, 'all' );
@@ -169,110 +169,6 @@ class theme extends \Q {
 
 
 
-    /*
-    * script enqueuer 
-    *
-    * @since  2.0
-    */
-    public static function wp_enqueue_scripts_theme() {
-        
-        if ( isset( self::$options->theme_css ) ) {
-
-            if ( 
-                defined( 'Q_CHILD_THEME' )
-                && Q_CHILD_THEME
-                #&& \is_child_theme()   
-            ) {
-
-                // add parent css ##
-                \wp_register_style( 'theme-parent-css', \get_template_directory_uri() . '/style.css', '', self::$plugin_version );
-                \wp_enqueue_style( 'theme-parent-css' );
-
-            }
-
-            #helper::log( get_stylesheet_directory() . '/style.css' );
-
-            // add css ##
-            \wp_register_style( 'theme-css', \get_stylesheet_directory_uri() . '/style.css', '', self::$plugin_version );
-            \wp_enqueue_style( 'theme-css' );
-
-            // load site/device.css - re: theme/css/q.1.desktop.css
-            // @TODO helper::get_device() @viktor
-            // $handle = "q.".\get_current_blog_id().".".helper::get_device().".css";
-            $handle = "q.".\get_current_blog_id().".".helper::get_device().".css";
-
-            // first check if the file exists ##
-            if ( $file = helper::get( "theme/sass/".$handle, "return" ) ) {
-
-                // helper::log( 'Loading up file: '.$file );
-
-                \wp_register_style( 'q-theme-style', $file, '', self::$plugin_version );
-                \wp_enqueue_style( 'q-theme-style' );
-
-            } else {
-
-                $handle = "q.1.theme.css";
-                $file = helper::get( "theme/sass/".$handle, "return" );
-
-                // helper::log( 'Loading up file: '.$file );
-
-                \wp_register_style( 'q-theme-style', $file, '', self::$plugin_version );
-                \wp_enqueue_style( 'q-theme-style' );
-
-                // helper::log( "Cannot locate file: 'theme/sass/".$handle."' - using default" );
-
-            }
-
-        }
-
-        // load site/device.js - re: theme/javascript/q.1.desktop.js
-        if ( isset( self::$options->theme_js ) ) {
-
-            \wp_register_script( 'theme-js', helper::get( "theme/javascript/scripts.js", 'return' ), array( 'jquery' ), self::$plugin_version, true );
-            \wp_enqueue_script( 'theme-js' );
-
-            // pass variable values defined in parent class ##
-            \wp_localize_script( 'theme-js', 'q_theme', array(
-                'ajaxurl'           => \admin_url( 'admin-ajax.php', \is_ssl() ? 'https' : 'http' ), /*, 'https' */ ## add 'https' to use secure URL ##
-                'debug'             => self::$debug
-            ));
-
-            // load site/device.css - re: theme/css/q.1.desktop.js
-            $handle = "q.".\get_current_blog_id().".".helper::get_device().".js";
-
-            if ( ! helper::get( "theme/javascript/".$handle, "return" ) ) {
-
-                $handle = "q.1.".helper::get_device().".js";
-
-            }
-
-            // first check if the file exists ##
-             if ( $file = helper::get( "theme/javascript/".$handle, "return" ) ) {
-
-                // helper::log( 'Loading up file: '.$file );
-
-                \wp_register_script( $handle, $file, array( 'jquery' ), self::$plugin_version, true );
-                \wp_enqueue_script( $handle );
-
-                // nonce ##
-                $nonce = \wp_create_nonce( 'q-'.\get_current_blog_id().'-nonce' );
-
-                // pass variable values defined in parent class ##
-                \wp_localize_script( $handle, 'q_'.\get_current_blog_id(), array(
-                    'ajaxurl'           => \admin_url( 'admin-ajax.php', \is_ssl() ? 'https' : 'http' ), /*, 'https' */ ## add 'https' to use secure URL ##
-                    'debug'             => self::$debug,
-                    'nonce'             => $nonce
-                ));
-
-             } else {
-
-                helper::log( "Cannot locate file: theme/javascript/".$handle );
-
-             }
-
-        }
-
-    }
 
 
     /*
@@ -288,44 +184,57 @@ class theme extends \Q {
             #global $options; // load plugin options ##
             #wp_die(pr($options)); // test options ##
 
-            \wp_register_script( 'stickyfill', helper::get( "theme/javascript/stickyfill.min.js", 'return' ), array(), self::$plugin_version, 'all' );
-            \wp_enqueue_script( 'stickyfill' );
+            // https://github.com/wilddeer/stickyfill 
+            if ( isset( self::$options->library->stickyfill ) ) {
+            
+                \wp_register_script( 'q-stickyfill', helper::get( "theme/javascript/stickyfill.min.js", 'return' ), array(), self::$plugin_version, 'all' );
+                \wp_enqueue_script( 'q-stickyfill' );
+
+            }
 
             // Loads HTML5 JavaScript file to add support for HTML5 elements in older IE versions ##
-            if ( $q_browser['type'] == 'ie8' || $q_browser['type'] == 'ie7' || $q_browser['type'] == 'ie6' && self::$options->plugin_js === TRUE ) {
+            if ( 
+                $q_browser['type'] == 'ie8' 
+                || $q_browser['type'] == 'ie7' 
+                || $q_browser['type'] == 'ie6' 
+                && self::$options->plugin_js === TRUE 
+            ) {
 
-                \wp_register_script( 'html5', helper::get( "theme/javascript/q.html5.js", 'return' ), array(), self::$plugin_version, 'all' );
-                \wp_enqueue_script( 'html5' );
+                \wp_register_script( 'q-html5', helper::get( "theme/javascript/q.html5.js", 'return' ), array(), self::$plugin_version, 'all' );
+                \wp_enqueue_script( 'q-html5' );
 
             }
 
             // add jquery ##
-            // could be loaded from google to improve caching.. ##
-            // http://www.wpbeginner.com/wp-themes/replace-default-wordpress-jquery-script-with-google-library/
             \wp_enqueue_script( "jquery" );
 
             // Required for nested reply function that moves reply inline with JS ##
-            if ( \is_singular() && \comments_open() && \get_option( 'thread_comments' ) ) {
+            if ( 
+                \is_singular() 
+                && \comments_open() 
+                && \get_option( 'thread_comments' ) 
+            ) {
+            
                 \wp_enqueue_script( 'comment-reply' ); // enqueue the javascript that performs in-link comment reply fanciness
+            
             }
 
             // snackbar ##
             // https://github.com/FezVrasta/snackbarjs
             if ( isset( self::$options->library->snackbar ) ) {
 
-                #helper::log( 'Loading snackbar...' );
-                // helper::log( helper::get( "theme/css/jquery.snackbar.min.css", "return" ) );
-
+                // helper::log( 'Loading snackbar: '.helper::get( "theme/javascript/snackbar".( ! self::$debug ? '.min' : '' ).".js", 'return' ) );
+                
                 // jquery snackbar ##
-                \wp_register_script( 'q-jquery-snackbar', helper::get( "theme/javascript/jquery.snackbar".( ! self::$debug ? '.min' : '' ).".js", 'return' ), array( 'jquery' ), self::$plugin_version, true );
+                \wp_register_script( 'q-jquery-snackbar', helper::get( "theme/javascript/snackbar".( ! self::$debug ? '.min' : '' ).".js", 'return' ), array( 'jquery' ), self::$plugin_version, true );
                 \wp_enqueue_script( 'q-jquery-snackbar' );
 
-                \wp_register_style( 'q-snackbar', helper::get( "theme/css/jquery.snackbar".( ! self::$debug ? '.min' : '' ).".css", 'return' ), array( 'theme-css' ), self::$plugin_version, 'all' );
+                \wp_register_style( 'q-snackbar', helper::get( "theme/css/snackbar".( ! self::$debug ? '.min' : '' ).".css", 'return' ), self::$plugin_version, 'all' );
                 \wp_enqueue_style( 'q-snackbar' );
 
             }
 
-            // bootstrap ##
+            // bootstrap -- removed, but might be needed on older sites to patch ##
             if ( isset( self::$options->library->bootstrap ) ) {
 
 //               \wp_register_style( 'bootstrap-grid', helper::get( "theme/css/bootstrap-grid.css", "return" ), array( 'theme-css' ), self::$plugin_version, 'all' );
@@ -337,8 +246,8 @@ class theme extends \Q {
             if ( isset( self::$options->library->ba_hashchange) ) {
 
                 // jquery bxslider ##
-                \wp_register_script( 'jquery-ba-hashchange', helper::get( "theme/javascript/jquery.ba-hashchange.js", 'return' ), array( 'jquery' ), self::$plugin_version, true );
-                \wp_enqueue_script( 'jquery-ba-hashchange' );  
+                \wp_register_script( 'q-jquery-ba-hashchange', helper::get( "theme/javascript/ba-hashchange.js", 'return' ), array( 'jquery' ), self::$plugin_version, true );
+                \wp_enqueue_script( 'q-jquery-ba-hashchange' );  
 
             }
             
@@ -346,7 +255,7 @@ class theme extends \Q {
             // // Easy Tabs - http://os.alfajango.com/easytabs/ ##
             // if ( isset(self::$options->easy_tabs) && self::$options->easy_tabs === TRUE ) {
 
-            //     \wp_register_script( 'jquery-easy-tabs', helper::get( "theme/javascript/jquery.easytabs".( ! self::$debug ? '.min' : '' ).".js", 'return' ), array( 'jquery', 'jquery-ba-hashchange' ), self::$plugin_version, true );
+            //     \wp_register_script( 'jquery-easy-tabs', helper::get( "theme/javascript/easytabs".( ! self::$debug ? '.min' : '' ).".js", 'return' ), array( 'jquery', 'jquery-ba-hashchange' ), self::$plugin_version, true );
             //     \wp_enqueue_script( 'jquery-easy-tabs' );  
 
             // }
@@ -355,7 +264,7 @@ class theme extends \Q {
             // Tipsy - OG Version - http://onehackoranother.com/projects/jquery/tipsy/ ##
             // if ( isset(self::$options->tipsy) && self::$options->tipsy === TRUE ) {
 
-            //     \wp_register_script( 'jquery-tipsy', helper::get( "theme/javascript/jquery.tipsy.js", 'return' ), array( 'jquery' ), self::$plugin_version, true );
+            //     \wp_register_script( 'jquery-tipsy', helper::get( "theme/javascript/tipsy.js", 'return' ), array( 'jquery' ), self::$plugin_version, true );
             //     \wp_enqueue_script( 'jquery-tipsy' );  
 
             // }
@@ -364,19 +273,19 @@ class theme extends \Q {
             // Sly - http://darsa.in/sly/#!examples ##
             if ( isset( self::$options->library->sly ) ) {
                 
-                \wp_register_script( 'jquery-sly', helper::get( "theme/javascript/jquery.sly".( ! self::$debug ? '.min' : '' ).".js", 'return' ), array( 'jquery' ), self::$plugin_version, true );
-                \wp_enqueue_script( 'jquery-sly' );  
+                \wp_register_script( 'q-jquery-sly', helper::get( "theme/javascript/sly".( ! self::$debug ? '.min' : '' ).".js", 'return' ), array( 'jquery' ), self::$plugin_version, true );
+                \wp_enqueue_script( 'q-jquery-sly' );  
 
             }
             
 
-            // Lazy Load - http://jquery.eisbehr.de/lazy/ ##
-            if ( isset( self::$options->library->lazy) ) {
+            // Lazy Load - http://eisbehr.de/lazy/ ##
+            if ( isset( self::$options->library->lazy ) ) {
                 
-                // helper::log( 'Loading Lazy: '.helper::get( "theme/javascript/jquery.lazy".( ! self::$debug ? '.min' : '' ).".js", 'return' ) );
+                // helper::log( 'Loading Lazy: '.helper::get( "theme/javascript/lazy".( ! self::$debug ? '.min' : '' ).".js", 'return' ) );
 
-                \wp_register_script( 'jquery-lazy', helper::get( "theme/javascript/jquery.lazy".( ! self::$debug ? '.min' : '' ).".js", 'return' ), array( 'jquery' ), self::$plugin_version, false );
-                \wp_enqueue_script( 'jquery-lazy' );  
+                \wp_register_script( 'q-jquery-lazy', helper::get( "theme/javascript/lazy".( ! self::$debug ? '.min' : '' ).".js", 'return' ), array( 'jquery' ), self::$plugin_version, false );
+                \wp_enqueue_script( 'q-jquery-lazy' );  
 
             }
 
@@ -386,11 +295,11 @@ class theme extends \Q {
             if ( isset( self::$options->library->colorbox ) ) {
 
                 // colorbox js ##
-                \wp_register_script( 'jquery-colorbox', helper::get( "theme/javascript/jquery.colorbox.js", 'return' ), array('jquery'),self::$plugin_version, true );
-                \wp_enqueue_script( 'jquery-colorbox' );   
+                \wp_register_script( 'q-jquery-colorbox', helper::get( "theme/javascript/colorbox.js", 'return' ), array('jquery'),self::$plugin_version, true );
+                \wp_enqueue_script( 'q-jquery-colorbox' );   
 
                 // colorbox css ##
-                \wp_register_style( 'q-colorbox', helper::get( "theme/css/jquery.colorbox.css", 'return' ), array( 'q-wordpress-css' ), self::$plugin_version, 'all' );
+                \wp_register_style( 'q-colorbox', helper::get( "theme/css/colorbox.css", 'return' ), array( 'q-wordpress-css' ), self::$plugin_version, 'all' );
                 \wp_enqueue_style( 'q-colorbox' );
 
             }
@@ -399,7 +308,7 @@ class theme extends \Q {
             if ( isset( self::$options->library->twitter ) ) {
                 
                 // twitter css ##
-                \wp_register_style( 'q-twitter', helper::get( "theme/css/jquery.twitter.css", 'return' ),  '', self::$plugin_version, 'all' );
+                \wp_register_style( 'q-twitter', helper::get( "theme/css/twitter.css", 'return' ),  '', self::$plugin_version, 'all' );
                 \wp_enqueue_style( 'q-twitter' );
 
                 // oauth library ##
@@ -412,8 +321,8 @@ class theme extends \Q {
             if ( isset( self::$options->library->masonry) ) {
 
                 // isotope js ##
-                \wp_register_script( 'jquery-masonry', helper::get( "theme/javascript/jquery.masonry.js", 'return' ), array('jquery'), self::$plugin_version, true );
-                \wp_enqueue_script( 'jquery-masonry' );   
+                // \wp_register_script( 'q-jquery-masonry', helper::get( "theme/javascript/masonry.js", 'return' ), array('jquery'), self::$plugin_version, true );
+                // \wp_enqueue_script( 'q-jquery-masonry' );   
 
 
             } 
@@ -423,7 +332,7 @@ class theme extends \Q {
             // if ( isset( self::$options->library->hoverintent ) ) {
 
             //     // isotope js ##
-            //     \wp_register_script( 'jquery-hoverintent', helper::get( "theme/javascript/jquery.hoverintent.js", 'return' ), array('jquery'), self::$plugin_version,true );
+            //     \wp_register_script( 'jquery-hoverintent', helper::get( "theme/javascript/hoverintent.js", 'return' ), array('jquery'), self::$plugin_version,true );
             //     \wp_enqueue_script( 'jquery-hoverintent' );   
 
 
@@ -433,35 +342,50 @@ class theme extends \Q {
             if ( isset( self::$options->library->flickr ) ) {
 
                 // flickr js ##
-                \wp_register_script( 'jquery-flickr', helper::get( "theme/javascript/jquery.flickr.js", 'return' ), array('jquery'), self::$plugin_version, false );
-                \wp_enqueue_script( 'jquery-flickr' );   
+                \wp_register_script( 'q-jquery-flickr', helper::get( "theme/javascript/flickr.js", 'return' ), array('jquery'), self::$plugin_version, false );
+                \wp_enqueue_script( 'q-jquery-flickr' );   
 
             }
 
 
             // Gravity Forms ##
-            if ( wordpress::plugin_is_active( 'gravityforms/gravityforms.php' ) && self::$options->plugin_css === TRUE ) {
+            if ( 
+                // wordpress::plugin_is_active( 'gravityforms/gravityforms.php' ) 
+                // && 
+                isset( self::$options->library->gravityforms )
+            ) {
 
-                \wp_register_style( 'q-gravityforms', helper::get( "theme/css/plugin.gravityforms.css", 'return' ), '', self::$plugin_version, 'all' );
+                \wp_register_style( 'q-gravityforms', helper::get( "theme/css/gravityforms.css", 'return' ), '', self::$plugin_version, 'all' );
                 \wp_enqueue_style( 'q-gravityforms' );
 
             }
 
             // tubepress ##
-            if ( ( wordpress::plugin_is_active( 'tubepress/tubepress.php' ) || wordpress::plugin_is_active( 'tubepress_pro/tubepress.php') ) && self::$options->plugin_css === TRUE ) {
+            if ( 
+                // ( 
+                    // wordpress::plugin_is_active( 'tubepress/tubepress.php' ) 
+                    // || wordpress::plugin_is_active( 'tubepress_pro/tubepress.php') 
+                // ) 
+                // && 
+                isset( self::$options->library->tubepress )
+            ) {
 
-                \wp_register_style( 'q-tubepress', helper::get( "theme/css/plugin.tubepress.css", 'return' ), '', self::$plugin_version, 'all' );
+                \wp_register_style( 'q-tubepress', helper::get( "theme/css/tubepress.css", 'return' ), '', self::$plugin_version, 'all' );
                 \wp_enqueue_style( 'q-tubepress' );
 
-            } // tubepress ##
+            }
 
             // mailchimp ##
-            if ( wordpress::plugin_is_active( 'mailchimp/mailchimp.php' ) && self::$options->plugin_css === TRUE ) {
+            if ( 
+                // wordpress::plugin_is_active( 'mailchimp/mailchimp.php' ) 
+                // && 
+                isset( self::$options->library->mailchimp ) 
+            ) {
 
-                \wp_register_style( 'q-mailchimp', helper::get( "theme/css/plugin.mailchimp.css", 'return' ), '', self::$plugin_version, 'all' );
-                \wp_enqueue_style( 'q-mailchimp' );
+                // \wp_register_style( 'q-mailchimp', helper::get( "theme/css/mailchimp.css", 'return' ), '', self::$plugin_version, 'all' );
+                // \wp_enqueue_style( 'q-mailchimp' );
 
-            } // mailchimp ##
+            }
 
             
         }

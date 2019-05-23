@@ -290,7 +290,7 @@ Date:       {$date}
                 );
 
                 // update transient of length ##
-                \set_site_transient( 'q_ui_css_length', $length, 1 * WEEK_IN_SECONDS );
+                \set_site_transient( 'q_css_length', $length, 1 * WEEK_IN_SECONDS );
 
             break ;
 
@@ -306,7 +306,7 @@ Date:       {$date}
         // force refresh ##
         if ( self::$force ) {
 
-            \delete_site_transient( 'q_ui_css_length' );
+            \delete_site_transient( 'q_css_length' );
 
             helper::log( 'Force refresh of CSS file..' );
 
@@ -327,7 +327,7 @@ Date:       {$date}
         }
 
         // get the stored file length from teh database ##
-        if ( false === ( $stored_length = \get_site_transient( 'q_ui_css_length' ) ) ) {
+        if ( false === ( $stored_length = \get_site_transient( 'q_css_length' ) ) ) {
 
             #helper::log( 'Nothing found in transients.' );
 

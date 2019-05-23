@@ -288,7 +288,7 @@ Date:       {$date}
                 );
 
                 // update transient of length ##
-                \set_site_transient( 'q_ui_javascript_length', $length, 1 * WEEK_IN_SECONDS );
+                \set_site_transient( 'q_javascript_length', $length, 1 * WEEK_IN_SECONDS );
 
             break ;
 
@@ -304,7 +304,7 @@ Date:       {$date}
         // force refresh ##
         if ( self::$force ) {
 
-            \delete_site_transient( 'q_ui_javascript_length' );
+            \delete_site_transient( 'q_javascript_length' );
 
             helper::log( 'Force refresh of JS file..' );
 
@@ -325,7 +325,7 @@ Date:       {$date}
         }
 
         // get the stored file length from teh database ##
-        if ( false === ( $stored_length = \get_site_transient( 'q_ui_javascript_length' ) ) ) {
+        if ( false === ( $stored_length = \get_site_transient( 'q_javascript_length' ) ) ) {
 
             #helper::log( 'Nothing found in transients.' );
 

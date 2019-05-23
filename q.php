@@ -13,7 +13,7 @@
  * Plugin Name:     Q
  * Plugin URI:      https://www.qstudio.us
  * Description:     Q is a Development Framework that provides an API to manage libraries, themes, plugins and widgets.
- * Version:         2.3.0
+ * Version:         2.3.1
  * Author:          Q Studio
  * Author URI:      https://www.qstudio.us
  * License:         GPL
@@ -40,7 +40,7 @@ if ( ! class_exists( 'Q' ) ) {
         private static $instance = null;
 
         // Plugin Settings
-        const version = '2.3.0';
+        const version = '2.3.1';
         const text_domain = 'q-textdomain'; // for translation ##
         static $debug = false; // global debuggin ##
         static $device; // current device ##
@@ -180,46 +180,12 @@ if ( ! class_exists( 'Q' ) ) {
 
 
         /**
-         * Check for required classes to run
-         * 
-         * @return      Boolean 
-         * @since       0.1.0
-         */
-        public static function has_dependencies()
-        {
-
-            // check for what's needed ##
-            if (
-                ! class_exists( 'Q' )
-            ) {
-
-                // helper::log( 'Required dependencies missing, so bulking...' );
-
-                return false;
-
-            }
-
-            // ok ##
-            return true;
-
-        }
-        
-
-        /**
         * Load Libraries
         *
         * @since        2.0
         */
 		private static function load_libraries()
         {
-
-            // check for dependencies ##
-            // if ( ! self::has_dependencies() ) {
-
-                // this is a top level dependency, without this, the earth stops spinning... ##
-                // return false;
-
-            // }
 
             // core ##
             require_once self::get_plugin_path( 'library/core/helper.php' );

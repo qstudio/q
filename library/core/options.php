@@ -11,6 +11,8 @@ use q\core\wordpress as wordpress;
 
 class options extends \Q {
 
+    // store db query ##
+    public static $query = false;
 
     /**
     * Class Constructor
@@ -32,6 +34,9 @@ class options extends \Q {
         
         // get stored options, early ##
         // \add_action( 'plugins_loaded', [ get_class(), 'get' ], 1 );
+
+        // set debug ##
+        \add_action( 'plugins_loaded', [ get_class(), 'debug' ], 1 );
 
     }
 
@@ -444,11 +449,18 @@ class options extends \Q {
                             'id' => '',
                         ),
                         'choices' => array(
-                            'bootstrap' => 'Bootstrap',
-                            'featherlight' => 'Featherlight JS',
-                            'sly' => 'Sly Swipe JS',
-                            'lazy' => 'Lazy Load JS',
-                            'snackbar' => 'Snackbar JS',
+                            'bootstrap'         => 'Bootstrap',
+                            'featherlight'      => 'Featherlight JS',
+                            'sly'               => 'Sly Swipe JS',
+                            'lazy'              => 'Lazy Load JS',
+                            'snackbar'          => 'Snackbar JS / CSS',
+                            'stickyfill'        => 'Stickyfill JS',
+                            'ba_hashchange'     => 'Hashchange JS',
+                            'colorbox'          => 'Colorbox JS / CSS',
+                            'twitter'           => 'Twitter CSS',
+                            'flickr'            => 'Flickr JS',
+                            'tubepress'         => 'TubePress CSS',
+                            'gravityforms'      => 'Gravity Forms CSS',
                         ),
                         'allow_custom' => 0,
                         'default_value' => array(
@@ -457,6 +469,7 @@ class options extends \Q {
                             2 => 'sly',
                             3 => 'lazy',
                             4 => 'snackbar',
+                            5 => 'stickyfill',
                         ),
                         'layout' => 'vertical',
                         'toggle' => 1,
@@ -541,9 +554,9 @@ class options extends \Q {
                 'fields' => array(
                     array(
                         'key' => 'field_q_option_debug',
-                        'label' => 'Debugging Options',
+                        'label' => 'Enable debugging',
                         'name' => 'q_option_debug',
-                        'type' => 'radio',
+                        'type' => 'true_false',
                         'instructions' => '',
                         'required' => 0,
                         'conditional_logic' => 0,
@@ -552,18 +565,11 @@ class options extends \Q {
                             'class' => '',
                             'id' => '',
                         ),
-                        'choices' => array(
-                            'false' => 'False',
-                            'true' => 'True',
-                        ),
                         'allow_custom' => 0,
-                        'default_value' => array(
-                            '0' => 'false',
-                        ),
-                        'layout' => 'vertical',
-                        'toggle' => 0,
-                        'return_format' => 'value',
-                        'save_custom' => 0,
+                        'default_value' => 0,
+                        'ui' => 0,
+                        'ui_on_text' => '',
+                        'ui_off_text' => '',
                     ),
                 ),
                 'location' => array(
@@ -621,7 +627,7 @@ class options extends \Q {
     * @since       1.0
     * @return      Object
     */
-    public static function get() 
+    public static function get( String $field = null ) 
     {
         
         // we need to get all stored options from WP ##
@@ -655,10 +661,28 @@ class options extends \Q {
         }
 
         // test ##
-        // helper::log( $object );
+        // helper::log( $object->debug );
+
+        // check if we return a single field or the entire array/object ##
+        if ( is_null( $field ) ) {
+
+            // helper::log( 'Returning all options.' );
+
+            return $object;
+
+        } elseif ( 
+            isset( $field )
+            && isset( $object->$field )
+        ) {
+
+            // helper::log( 'returning field: '.$field );
+
+            return $object->$field;
+
+        }
 
         // return ##
-        return $object;
+        return false;
 
     }
 
@@ -671,6 +695,14 @@ class options extends \Q {
     */
     public static function wpdb()
     {
+
+        if ( self::$query ) {
+
+            // helper::log( 'query already returned, so using stored values...' );
+
+            return self::$query;
+
+        }
 
         // grab teh global object ##
         global $wpdb;
@@ -701,7 +733,7 @@ class options extends \Q {
         }
 
         // kick it back ##
-        return $query;
+        return self::$query = $query;
 
     }
 
@@ -796,7 +828,43 @@ class options extends \Q {
     }
     
     
-    
+
+    /**
+    * define debug setting from stored option
+    *
+    * @since 2.3.1   
+    */
+    public static function debug( $option = null )
+    {
+
+        // if debug set in code, use that setting first ##
+        if ( self::$debug ) { 
+        
+            helper::log( 'Debug set to true' );
+
+            return true; 
+        
+        }
+
+        // get all stored options ##
+        $debug = \get_site_option( 'options_q_option_debug', false );
+
+        // check ##
+        // helper::log( $debug );
+        // helper::log( 'debug pulled from options table: '. ( 1 == $debug ? 'True' : 'False' ) );
+
+        // make a real boolean ##
+        $debug = ( '1' == $debug ? true : false ) ;
+
+        // check what we got ##
+        // helper::log( 'debug set to: '. ( $debug ? 'True' : 'False' ) );
+
+        // kick it back ##
+        return self::$debug = $debug;
+
+    }
+
+
 
     /**
     * Delete Q Options - could be used to clear old settings
