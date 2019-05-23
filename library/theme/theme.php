@@ -184,20 +184,18 @@ class theme extends \Q {
             #global $options; // load plugin options ##
             #wp_die(pr($options)); // test options ##
 
-            // https://github.com/wilddeer/stickyfill 
-            if ( isset( self::$options->library->stickyfill ) ) {
-            
-                \wp_register_script( 'q-stickyfill', helper::get( "theme/javascript/stickyfill.min.js", 'return' ), array(), self::$plugin_version, 'all' );
-                \wp_enqueue_script( 'q-stickyfill' );
-
-            }
-
             // Loads HTML5 JavaScript file to add support for HTML5 elements in older IE versions ##
-            if ( 
-                $q_browser['type'] == 'ie8' 
-                || $q_browser['type'] == 'ie7' 
-                || $q_browser['type'] == 'ie6' 
-                && self::$options->plugin_js === TRUE 
+            if (
+                (
+                    $q_browser
+                    && is_array( $q_browser ) 
+                )
+                && ( 
+                    $q_browser['type'] == 'ie8' 
+                    || $q_browser['type'] == 'ie7' 
+                    || $q_browser['type'] == 'ie6' 
+                    && self::$options->plugin_js === TRUE 
+                )
             ) {
 
                 \wp_register_script( 'q-html5', helper::get( "theme/javascript/q.html5.js", 'return' ), array(), self::$plugin_version, 'all' );
@@ -219,9 +217,79 @@ class theme extends \Q {
             
             }
 
+            // helper::log( self::$options->library );
+
+            // loop over libraries and include - checking for "min" version is debugging ##
+            foreach( self::$options->library as $key => $value ) {
+
+                // helper::log( 'working: '.$key );
+
+                // CSS or JS
+                $type = explode( "_" , $key );
+
+                // if no type - skip ##
+                if ( ! is_array( $type ) ) {
+
+                    helper::log( 'Skipping: '.$key );
+
+                    continue;
+
+                }
+
+                $type_dir = ( 'css' == $type[1] ) ? 'css' : 'javascript' ;
+                $type_ext = ( 'css' == $type[1] ) ? 'css' : 'js' ;
+
+                // give it a handle ##
+                $handle = 'q_'.$key;
+
+                // look for library ##
+                $file = helper::get( "theme/".$type_dir."/".$type[0].".min.".$type_ext, 'return' );
+
+                // if not debugging, check if we can find a non-min version ##
+                if ( 
+                    self::$debug 
+                    && helper::get( "theme/".$type_dir."/".$type[0].".".$type_ext, 'return' )
+                ) {
+
+                    $file = helper::get( "theme/".$type_dir."/".$type[0].".".$type_ext, 'return' ) ;
+
+                }
+
+                // helper::log( 'Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
+
+                // register and enqueue ##
+                switch ( $type_ext ) {
+
+                    case "css" :
+
+                        \wp_register_style( $handle, $file, self::$plugin_version, 'all' );
+                        \wp_enqueue_style( $handle );
+
+                    break ;
+
+                    case "js" :
+
+                        \wp_register_script( $handle, $file, array(), self::$plugin_version, 'all' );
+                        \wp_enqueue_script( $handle );
+
+                    break ;
+
+                }
+
+            }
+
+            /*
+            // https://github.com/wilddeer/stickyfill 
+            if ( isset( self::$options->library->stickyfill ) ) {
+            
+                \wp_register_script( 'q-stickyfill', helper::get( "theme/javascript/stickyfill.min.js", 'return' ), array(), self::$plugin_version, 'all' );
+                \wp_enqueue_script( 'q-stickyfill' );
+
+            }
+
             // snackbar ##
             // https://github.com/FezVrasta/snackbarjs
-            if ( isset( self::$options->library->snackbar ) ) {
+            if ( isset( self::$options->library->snackbar_js ) ) {
 
                 // helper::log( 'Loading snackbar: '.helper::get( "theme/javascript/snackbar".( ! self::$debug ? '.min' : '' ).".js", 'return' ) );
                 
@@ -229,6 +297,12 @@ class theme extends \Q {
                 \wp_register_script( 'q-jquery-snackbar', helper::get( "theme/javascript/snackbar".( ! self::$debug ? '.min' : '' ).".js", 'return' ), array( 'jquery' ), self::$plugin_version, true );
                 \wp_enqueue_script( 'q-jquery-snackbar' );
 
+            }
+
+            if ( isset( self::$options->library->snackbar_css ) ) {
+
+                // helper::log( 'Loading snackbar: '.helper::get( "theme/javascript/snackbar".( ! self::$debug ? '.min' : '' ).".js", 'return' ) );
+                
                 \wp_register_style( 'q-snackbar', helper::get( "theme/css/snackbar".( ! self::$debug ? '.min' : '' ).".css", 'return' ), self::$plugin_version, 'all' );
                 \wp_enqueue_style( 'q-snackbar' );
 
@@ -292,11 +366,16 @@ class theme extends \Q {
 
 
             // colorbox ##
-            if ( isset( self::$options->library->colorbox ) ) {
+            if ( isset( self::$options->library->colorbox_js ) ) {
 
                 // colorbox js ##
                 \wp_register_script( 'q-jquery-colorbox', helper::get( "theme/javascript/colorbox.js", 'return' ), array('jquery'),self::$plugin_version, true );
                 \wp_enqueue_script( 'q-jquery-colorbox' );   
+
+            }
+
+            // colorbox ##
+            if ( isset( self::$options->library->colorbox_css ) ) {
 
                 // colorbox css ##
                 \wp_register_style( 'q-colorbox', helper::get( "theme/css/colorbox.css", 'return' ), array( 'q-wordpress-css' ), self::$plugin_version, 'all' );
@@ -387,6 +466,7 @@ class theme extends \Q {
 
             }
 
+            // */
             
         }
 
