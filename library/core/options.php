@@ -449,7 +449,7 @@ class options extends \Q {
                             'id' => '',
                         ),
                         'choices' => array(
-                            'bootstrap_css'     => 'Bootstrap',
+                            'bootstrap_grid_css'=> 'Bootstrap Grid CSS',
                             'sly_js'            => 'Sly Swipe JS',
                             'lazy_js'           => 'Lazy Load JS',
                             'snackbar_js'       => 'Snackbar JS',
@@ -465,7 +465,7 @@ class options extends \Q {
                         ),
                         'allow_custom' => 0,
                         'default_value' => array(
-                            0 => 'bootstrap_css',
+                            0 => 'bootstrap_grid_css',
                             1 => 'sly_js',
                             2 => 'lazy_js',
                             3 => 'snackbar_js',
