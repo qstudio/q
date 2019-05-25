@@ -233,7 +233,7 @@ class theme extends \Q {
                     || 2 > count( $type )
                 ) {
 
-                    helper::log( 'Skipping: '.$key );
+                    // helper::log( 'Skipping: '.$key );
 
                     continue;
 
