@@ -228,7 +228,10 @@ class theme extends \Q {
                 $type = explode( "_" , $key );
 
                 // if no type - skip ##
-                if ( ! is_array( $type ) ) {
+                if ( 
+                    ! is_array( $type ) 
+                    || 2 > count( $type )
+                ) {
 
                     helper::log( 'Skipping: '.$key );
 
@@ -236,14 +239,14 @@ class theme extends \Q {
 
                 }
 
-                $type_dir = ( 'css' == $type[1] ) ? 'css' : 'javascript' ;
-                $type_ext = ( 'css' == $type[1] ) ? 'css' : 'js' ;
+                $type_dir = ( 'css' == $type[0] ) ? 'css' : 'javascript' ;
+                $type_ext = ( 'css' == $type[0] ) ? 'css' : 'js' ;
 
                 // give it a handle ##
                 $handle = 'q_'.$key;
 
                 // look for minified library ##
-                $file = helper::get( "theme/".$type_dir."/".$type[0].".min.".$type_ext, 'return' );
+                $file = helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' );
 
                 // if not debugging, check if we can find a non-min version ##
                 if ( 
@@ -251,11 +254,20 @@ class theme extends \Q {
                     ||
                     (
                         self::$debug 
-                        && helper::get( "theme/".$type_dir."/".$type[0].".".$type_ext, 'return' )
+                        && helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' )
                     )
                 ) {
 
-                    $file = helper::get( "theme/".$type_dir."/".$type[0].".".$type_ext, 'return' ) ;
+                    $file = helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' ) ;
+
+                }
+
+                // if no type - skip ##
+                if ( ! $file ) {
+
+                    helper::log( 'Skipping: '.$handle.' - File missing...' );
+
+                    continue;
 
                 }
 
