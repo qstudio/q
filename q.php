@@ -209,6 +209,7 @@ if ( ! class_exists( 'Q' ) ) {
             require_once self::get_plugin_path( 'library/theme/widget.php' );
             require_once self::get_plugin_path( 'library/theme/meta.php' );
             // require_once self::get_plugin_path( 'library/theme/template.php' );
+            require_once self::get_plugin_path( 'library/controller/controller.php' );
             require_once self::get_plugin_path( 'library/theme/theme.php' );
 
         }

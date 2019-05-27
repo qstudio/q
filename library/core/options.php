@@ -4,7 +4,7 @@ namespace q\core;
 
 use q\core\core as core;
 use q\core\helper as helper;
-use q\core\wordpress as wordpress;
+// use q\core\wordpress as wordpress;
 
 // load it up ##
 \q\core\options::run();
@@ -35,8 +35,8 @@ class options extends \Q {
         // get stored options, early ##
         // \add_action( 'plugins_loaded', [ get_class(), 'get' ], 1 );
 
-        // set debug ##
-        \add_action( 'plugins_loaded', [ get_class(), 'debug' ], 1 );
+        // set debug from Q settings page ---- very late ##
+        \add_action( 'plugins_loaded', [ get_class(), 'debug' ], 10000000 );
 
     }
 
@@ -449,28 +449,30 @@ class options extends \Q {
                             'id' => '',
                         ),
                         'choices' => array(
-                            'bootstrap_grid_css'=> 'Bootstrap Grid CSS',
-                            'sly_js'            => 'Sly Swipe JS',
-                            'lazy_js'           => 'Lazy Load JS',
-                            'snackbar_js'       => 'Snackbar JS',
-                            'snackbar_css'      => 'Snackbar CSS',
-                            'stickyfill_js'     => 'Stickyfill JS',
-                            'ba_hashchange_js'  => 'Hashchange JS',
-                            'colorbox_js'       => 'Colorbox JS',
-                            'colorbox_css'      => 'Colorbox CSS',
-                            'twitter_css'       => 'Twitter CSS',
-                            'flickr_js'         => 'Flickr JS',
-                            'tubepress_css'     => 'TubePress CSS',
-                            'gravityforms_css'  => 'Gravity Forms CSS',
+                            // 'css_bootstrapgrid' => 'Bootstrap Grid CSS',
+                            'js_sly'            => 'Sly Swipe JS',
+                            'js_lazy'           => 'Lazy Load JS',
+                            'js_snackbar'       => 'Snackbar JS',
+                            'css_snackbar'      => 'Snackbar CSS',
+                            'js_stickyfill'     => 'Stickyfill JS',
+                            'js_hashchange'     => 'BA Hashchange JS',
+                            'js_colorbox'       => 'Colorbox JS',
+                            'css_colorbox'      => 'Colorbox CSS',
+                            'css_twitter'       => 'Twitter CSS',
+                            'js_flickr'         => 'Flickr JS',
+                            'css_tubepress'     => 'TubePress CSS',
+                            'css_gravityforms'  => 'Gravity Forms CSS',
+                            // 'css_hovereffects'  => 'Hover Effects CSS',
+                            // 'js_hovereffects'   => 'Hover Effects JS',
                         ),
                         'allow_custom' => 0,
                         'default_value' => array(
-                            0 => 'bootstrap_grid_css',
-                            1 => 'sly_js',
-                            2 => 'lazy_js',
-                            3 => 'snackbar_js',
-                            4 => 'snackbar_css',
-                            5 => 'stickyfill_js',
+                            // 0 => 'css_bootstrapgrid',
+                            0 => 'js_sly',
+                            1 => 'js_lazy',
+                            2 => 'js_snackbar',
+                            3 => 'css_snackbar',
+                            4 => 'js_stickyfill',
                         ),
                         'layout' => 'vertical',
                         'toggle' => 1,
@@ -841,16 +843,18 @@ class options extends \Q {
         // if debug set in code, use that setting first ##
         if ( self::$debug ) { 
         
-            helper::log( 'Debug set to true' );
+            helper::log( 'Debug set to true in code, so respect that...' );
 
             return true; 
         
         }
 
         // get all stored options ##
-        $debug = \get_site_option( 'options_q_option_debug', false );
+        $debug = \get_field( 'q_option_debug', 'option' ); 
+        // \get_site_option( 'options_q_option_debug', false );
 
         // check ##
+        // helper::log( \get_field( 'q_option_debug', 'option') );
         // helper::log( $debug );
         // helper::log( 'debug pulled from options table: '. ( 1 == $debug ? 'True' : 'False' ) );
 
@@ -860,8 +864,11 @@ class options extends \Q {
         // check what we got ##
         // helper::log( 'debug set to: '. ( $debug ? 'True' : 'False' ) );
 
-        // kick it back ##
-        return self::$debug = $debug;
+        // update property ##
+        self::$debug = $debug;
+
+        // kick back something ##
+        return false;
 
     }
 

@@ -46,7 +46,7 @@ class instagram extends \Q {
     {
 
         // add required script ##
-        \wp_register_script( 'q-instagram', helper::get( "theme/javascript/jquery.instagram.js", 'return' ), array('jquery'), '2.0.0', false );
+        \wp_register_script( 'q-instagram', helper::get( "theme/javascript/instagram.js", 'return' ), array('jquery'), '2.0.0', false );
         \wp_enqueue_script( 'q-instagram' );
 
 	}
@@ -194,7 +194,7 @@ class instagram extends \Q {
         // get properties ##
         $array = self::properties( $args );
         
-        #helper::log( $array );
+        // helper::log( $array );
 
         // reject if missing required data ##
         if ( 

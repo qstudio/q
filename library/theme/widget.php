@@ -86,7 +86,7 @@ class widget extends \Q {
         
                 'instagram'     => 'instagram' // Instagram ##
             ,   'gooverseaes'   => 'gooverseas' // Instagram ##
-            // ,   'sharelines'    => 'sharelines' // Facebook / Twitter Share ##
+            ,   'sharelines'    => 'sharelines' // Facebook / Twitter Share ##
                         
         );
         

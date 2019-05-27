@@ -7,6 +7,7 @@ use q\core\helper as helper;
 use q\core\config as config;
 use q\controller\javascript as javascript;
 use q\controller\css as css;
+use q\core\wordpress as wordpress;
 
 // load it up ##
 \q\controller\select::run();

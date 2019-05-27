@@ -659,7 +659,7 @@ class wordpress extends \Q {
 
         // sticky ?? ##
         $object->sticky = 
-            in_array( $the_post->ID, \get_site_option( 'sticky_posts' ) ) ?
+            in_array( $the_post->ID, \get_site_option( 'sticky_posts', [] ) ) ?
             true :
             false ;
 
@@ -781,15 +781,18 @@ class wordpress extends \Q {
         // backup ##
         } else {
 
-            $object->src = ''; #@todo... q_locate_template( 'images/holder/'.$args->holder.'.png', false, false, false ); // @todo - device specific handle ##
+            $object->src = ''; #@todo... helper::get( 'images/holder/'.$args->holder.'.png', false, false, false ); // @todo - device specific handle ##
 
         }
 
         // excerpt ##
         $object->excerpt = self::excerpt_from_id( $the_post->ID, 200 ) ? self::excerpt_from_id( $the_post->ID, 200 ) : \get_bloginfo( 'description' ) ; // @todo, change fallback ##
 
+        // helper::log( $the_post );
+        // helper::log( \get_post_field( 'post_content', $the_post->ID ) );
+
         // content ##
-        $object->content = \apply_filters( 'q/wordpress/get_page_content', \get_post_field('post_content', $the_post->ID ) );
+        $object->content = \apply_filters( 'q/wordpress/get_page_content', $the_post->post_content );
 
         // is the form on this program destination active ##
         $object->form_switch = \get_field( 'form_switch', $the_post->ID ) ? \get_field( 'form_switch', $the_post->ID ) : '0' ;
