@@ -75,6 +75,8 @@ class ui extends \Q {
     }
 
 
+    
+
     public static function rip_tags($string) {
 
         // ----- remove HTML TAGs -----

@@ -88,6 +88,10 @@ section {
 	display: block;
 }
 
+.hidden {
+    display: none;
+}
+
 ol,
 ul {
 	list-style: none;

@@ -4,7 +4,7 @@ namespace q\core;
 
 use q\core\core as core;
 use q\core\helper as helper;
-use q\core\wordpress as wordpress;
+// use q\core\wordpress as wordpress;
 
 // load it up ##
 \q\core\options::run();
@@ -35,8 +35,8 @@ class options extends \Q {
         // get stored options, early ##
         // \add_action( 'plugins_loaded', [ get_class(), 'get' ], 1 );
 
-        // set debug ##
-        \add_action( 'plugins_loaded', [ get_class(), 'debug' ], 1 );
+        // set debug from Q settings page ---- very late ##
+        \add_action( 'plugins_loaded', [ get_class(), 'debug' ], 10000000 );
 
     }
 
@@ -843,16 +843,18 @@ class options extends \Q {
         // if debug set in code, use that setting first ##
         if ( self::$debug ) { 
         
-            helper::log( 'Debug set to true' );
+            helper::log( 'Debug set to true in code, so respect that...' );
 
             return true; 
         
         }
 
         // get all stored options ##
-        $debug = \get_site_option( 'options_q_option_debug', false );
+        $debug = \get_field( 'q_option_debug', 'option' ); 
+        // \get_site_option( 'options_q_option_debug', false );
 
         // check ##
+        // helper::log( \get_field( 'q_option_debug', 'option') );
         // helper::log( $debug );
         // helper::log( 'debug pulled from options table: '. ( 1 == $debug ? 'True' : 'False' ) );
 
@@ -862,8 +864,11 @@ class options extends \Q {
         // check what we got ##
         // helper::log( 'debug set to: '. ( $debug ? 'True' : 'False' ) );
 
-        // kick it back ##
-        return self::$debug = $debug;
+        // update property ##
+        self::$debug = $debug;
+
+        // kick back something ##
+        return false;
 
     }
 

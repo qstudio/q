@@ -71,28 +71,28 @@ class theme extends \Q {
         require_once self::get_plugin_path( 'library/theme/ui.php' );
 
         // render engines ##
-        require_once self::get_plugin_path( 'library/controller/javascript.php' );
-        require_once self::get_plugin_path( 'library/controller/css.php' );
+        // require_once self::get_plugin_path( 'library/controller/javascript.php' );
+        // require_once self::get_plugin_path( 'library/controller/css.php' );
 
-        // cookies ##
-        require_once self::get_plugin_path( 'library/controller/cookie.php' );
+        // // cookies ##
+        // require_once self::get_plugin_path( 'library/controller/cookie.php' );
         
-        // minify ##
-        require_once self::get_plugin_path( 'library/controller/minifier.php' );
+        // // minify ##
+        // require_once self::get_plugin_path( 'library/controller/minifier.php' );
 
-        // UI controllers ##
-        require_once self::get_plugin_path( 'library/controller/navigation.php' );
-        require_once self::get_plugin_path( 'library/controller/generic.php' );
+        // // UI controllers ##
+        // require_once self::get_plugin_path( 'library/controller/navigation.php' );
+        // require_once self::get_plugin_path( 'library/controller/generic.php' );
 
-        // UI / JS / AJAX features ##
-        require_once self::get_plugin_path( 'library/controller/modal.php' );
-        require_once self::get_plugin_path( 'library/controller/tab.php' );
-        require_once self::get_plugin_path( 'library/controller/select.php' );
-        require_once self::get_plugin_path( 'library/controller/scroll.php' );
-        require_once self::get_plugin_path( 'library/controller/push.php' );
-        require_once self::get_plugin_path( 'library/controller/filter.php' );
-        require_once self::get_plugin_path( 'library/controller/toggle.php' );
-        require_once self::get_plugin_path( 'library/controller/load.php' );
+        // // UI / JS / AJAX features ##
+        // require_once self::get_plugin_path( 'library/controller/modal.php' );
+        // require_once self::get_plugin_path( 'library/controller/tab.php' );
+        // require_once self::get_plugin_path( 'library/controller/select.php' );
+        // require_once self::get_plugin_path( 'library/controller/scroll.php' );
+        // require_once self::get_plugin_path( 'library/controller/push.php' );
+        // require_once self::get_plugin_path( 'library/controller/filter.php' );
+        // require_once self::get_plugin_path( 'library/controller/toggle.php' );
+        // require_once self::get_plugin_path( 'library/controller/load.php' );
 
     }
 
@@ -128,6 +128,9 @@ class theme extends \Q {
             
             \wp_register_style( 'q-wordpress-css', helper::get( "theme/css/q.wordpress.css", 'return' ), array(), self::$plugin_version, 'all' );
             \wp_enqueue_style( 'q-wordpress-css' );
+
+            \wp_register_style( 'q-wordpress-global-css', helper::get( "theme/css/q.global.css", 'return' ), array(), self::$plugin_version, 'all' );
+            \wp_enqueue_style( 'q-wordpress-global-css' );
 
             \wp_register_style( 'q-theme', helper::get( "theme/scss/index.css", 'return' ), array(), self::$plugin_version, 'all' );
             \wp_enqueue_style( 'q-theme' );

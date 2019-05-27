@@ -5,7 +5,9 @@ namespace q\controller;
 use q\core\core as core;
 use q\core\helper as helper;
 use q\core\config as config;
-use q\controller\generic as generic;
+// use q\theme\theme\template\generic\generic as generic;
+// use q\controller\generic as q_generic;
+use q\theme\ui as ui;
 use q\controller\javascript as javascript;
 
 // load it up ##
@@ -68,7 +70,7 @@ class filter extends \Q {
 
                 // get branches ##
                 $branches = \get_terms( array(
-                    'taxonomy'      => 'branch',
+                    'taxonomy'      => 'branch', 
                     'hide_empty'    => true,
                     'parent'        => 0, // parent branches only ##
                     'exclude'       => array( \get_term_by( 'slug', 'general', 'branch' )->term_id ),
