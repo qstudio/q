@@ -3,7 +3,7 @@
 **Tags:** Q, theme, framework, developers   
 **Requires at least:** 3.6  
 **Tested up to:** 3.8.2  
-**Stable tag:** 2.3.6
+**Stable tag:** 2.3.7
 **License:** GPL2  
 
 NOTE: Beta release of Q WordPress Development Framework
@@ -33,6 +33,10 @@ No applicable screenshots
 Currently, there is scant documentation, but over the coming months as this plugin matures, we'll be adding more details at qstudio.us/plugins
 
 ## Changelog ##
+
+### 2.3.7 ###
+
+* Comment clean up
 
 ### 2.3.5 ###
 
