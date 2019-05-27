@@ -526,7 +526,7 @@ class wordpress extends \Q {
                 
                 \q\controller\navigation::the_pagination([
                     'posts_per_page'	=> $posts_args['posts_per_page'],
-                    'post_count'		=> count( $q_query->post_count )
+                    'post_count'		=> $q_query->found_posts
                 ]);
 
             }
@@ -1599,7 +1599,7 @@ class wordpress extends \Q {
             // intval( $args["posts_per_page"] / $args["post_count"] ) :
             intval( $wp_query->found_posts / ( $args["posts_per_page"] ? $args["posts_per_page"] : 20 ) );
 
-        helper::log( $total );
+        // helper::log( $total );
         // helper::log( $wp_query->found_posts );
         // helper::log( 'device handle: '.self::get_device() );
         // helper::log( $current );
