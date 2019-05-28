@@ -1,9 +1,9 @@
 === Q ===
 Contributors: qlstudio
 Tags: Q, theme, framework, developers 
-Requires at least: 3.6
-Tested up to: 3.8.2
-Stable tag: 2.3.5
+Requires at least: 4.0.0
+Tested up to: 5.0.0
+Stable tag: 2.3.7
 License: GPL2
 
 NOTE: Beta release of Q WordPress Development Framework
@@ -33,6 +33,38 @@ No applicable screenshots
 Currently, there is scant documentation, but over the coming months as this plugin matures, we'll be adding more details at qstudio.us/plugins
 
 == Changelog ==
+
+= 2.3.7 =
+
+* Comment clean up
+
+= 2.3.6 =
+
+* Google class reference fix
+
+= 2.3.5 =
+
+* Updated and tidied class inclusion, tested Club & International
+
+= 2.3.0 =
+
+* Moved options to ACF API
+
+= 2.2.3 =
+
+* Testing sub modules with version bump
+
+= 2.2.2 =
+
+* Facebook and Twitter script consent checks
+
+= 2.2.1 =
+
+* Facebook and Twitter Open Graph meta tags added
+
+= 2.2.0 =
+
+* preparation for sub module usage
 
 = 2.2.1 = 
 

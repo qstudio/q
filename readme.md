@@ -1,8 +1,8 @@
 # Q #
 **Contributors:** qlstudio  
 **Tags:** Q, theme, framework, developers   
-**Requires at least:** 3.6  
-**Tested up to:** 3.8.2  
+**Requires at least:** 4.0.0 
+**Tested up to:** 5.0.0  
 **Stable tag:** 2.3.7
 **License:** GPL2  
 
