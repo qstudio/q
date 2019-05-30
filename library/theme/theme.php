@@ -7,6 +7,9 @@ use q\core\helper as helper;
 use q\core\options as options;
 use q\core\wordpress as wordpress;
 
+// Q Theme ##
+use q\theme\core\helper as theme_helper;
+
 // load it up ##
 \q\theme\theme::run();
 
@@ -69,30 +72,6 @@ class theme extends \Q {
 
         // ui ##
         require_once self::get_plugin_path( 'library/theme/ui.php' );
-
-        // render engines ##
-        // require_once self::get_plugin_path( 'library/controller/javascript.php' );
-        // require_once self::get_plugin_path( 'library/controller/css.php' );
-
-        // // cookies ##
-        // require_once self::get_plugin_path( 'library/controller/cookie.php' );
-        
-        // // minify ##
-        // require_once self::get_plugin_path( 'library/controller/minifier.php' );
-
-        // // UI controllers ##
-        // require_once self::get_plugin_path( 'library/controller/navigation.php' );
-        // require_once self::get_plugin_path( 'library/controller/generic.php' );
-
-        // // UI / JS / AJAX features ##
-        // require_once self::get_plugin_path( 'library/controller/modal.php' );
-        // require_once self::get_plugin_path( 'library/controller/tab.php' );
-        // require_once self::get_plugin_path( 'library/controller/select.php' );
-        // require_once self::get_plugin_path( 'library/controller/scroll.php' );
-        // require_once self::get_plugin_path( 'library/controller/push.php' );
-        // require_once self::get_plugin_path( 'library/controller/filter.php' );
-        // require_once self::get_plugin_path( 'library/controller/toggle.php' );
-        // require_once self::get_plugin_path( 'library/controller/load.php' );
 
     }
 
@@ -161,10 +140,29 @@ class theme extends \Q {
             isset( self::$options->plugin_js ) 
         ) {
 
-            // helper::log( 'Adding q.global.js' );
+            // some themes might want to override this file, so check for a q.global.js in the q_theme/library/theme/javascript folder and include if found, else use global ##
+            if ( $file = theme_helper::get( "theme/javascript/q.global.js", 'return' ) ) {
+
+                helper::log( 'Adding q.global.js from Q Theme' );
+
+            } else if ( $file = helper::get( "theme/javascript/q.global.js", 'return' ) ) {
+
+                helper::log( 'Adding q.global.js from Q' );
+
+            }
+
+            // no file - bale ##
+            if ( ! $file ) {
+
+                helper::log( 'No q.globa.js file located to load' );
+
+                return false;
+
+            }
 
             // add JS ## -- after all dependencies ##
-            \wp_enqueue_script( 'q-global-js', helper::get( "theme/javascript/q.global.js", 'return' ), array( 'jquery' ), self::$plugin_version );
+            \wp_register_script( 'q-global-js', $file, array( 'jquery' ), self::$plugin_version );
+            \wp_enqueue_script( 'q-global-js' );
 
         }
 
