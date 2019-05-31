@@ -95,8 +95,8 @@ class theme extends \Q {
             && false === self::$debug 
         ) {
 
-            \wp_register_style( 'q-theme-css', helper::get( "theme/css/q.theme.css", 'return' ), array(), self::$plugin_version, 'all' );
-            \wp_enqueue_style( 'q-theme-css' );
+            \wp_register_style( 'q-plugin-css-theme', helper::get( "theme/css/q.theme.css", 'return' ), array(), self::$plugin_version, 'all' );
+            \wp_enqueue_style( 'q-plugin-css-theme' );
 
         }
 
@@ -105,14 +105,36 @@ class theme extends \Q {
             // && false === self::$debug 
         ) {
             
-            \wp_register_style( 'q-wordpress-css', helper::get( "theme/css/q.wordpress.css", 'return' ), array(), self::$plugin_version, 'all' );
-            \wp_enqueue_style( 'q-wordpress-css' );
+            \wp_register_style( 'q-plugin-css-wordpress', helper::get( "theme/css/q.wordpress.css", 'return' ), array(), self::$plugin_version, 'all' );
+            \wp_enqueue_style( 'q-plugin-css-wordpress' );
 
-            \wp_register_style( 'q-wordpress-global-css', helper::get( "theme/css/q.global.css", 'return' ), array(), self::$plugin_version, 'all' );
-            \wp_enqueue_style( 'q-wordpress-global-css' );
+            // some themes might want to override this file, so check for a q.global.js in the q_theme/library/theme/javascript folder and include if found, else use global ##
+            if ( $file = theme_helper::get( "theme/css/q.global.css", 'return' ) ) {
 
-            \wp_register_style( 'q-theme', helper::get( "theme/scss/index.css", 'return' ), array(), self::$plugin_version, 'all' );
-            \wp_enqueue_style( 'q-theme' );
+                // helper::log( 'Adding q.global.css from Q Theme' );
+
+            } else if ( $file = helper::get( "theme/css/q.global.css", 'return' ) ) {
+
+                // helper::log( 'Adding q.global.css from Q' );
+
+            }
+
+            // no file - bale ##
+            if ( ! $file ) {
+
+                // helper::log( 'No q.global.css file located to load' );
+
+                return false;
+
+            } else {
+
+                \wp_register_style( 'q-plugin-css-global', $file, array(), self::$plugin_version, 'all' );
+                \wp_enqueue_style( 'q-plugin-css-global' );
+
+            }
+
+            \wp_register_style( 'q-plugin-css-index-scss', helper::get( "theme/scss/index.css", 'return' ), array(), self::$plugin_version, 'all' );
+            \wp_enqueue_style( 'q-plugin-css-index-scss' );
 
         }
 
@@ -124,10 +146,10 @@ class theme extends \Q {
             // helper::log( 'Adding q.theme.js' );
 
             // add JS ## -- after all dependencies ##
-            \wp_enqueue_script( 'q-theme-js', helper::get( "theme/javascript/q.theme.js", 'return' ), array( 'jquery' ), self::$plugin_version );
+            \wp_enqueue_script( 'q-plugin-js-theme', helper::get( "theme/javascript/q.theme.js", 'return' ), array( 'jquery' ), self::$plugin_version );
             
             // pass variable values defined in parent class ##
-            \wp_localize_script( 'q-theme-js', 'q_theme_js', array(
+            \wp_localize_script( 'q-plugin-js-theme', 'q_theme_js', array(
                  'ajaxurl'           => \admin_url( 'admin-ajax.php', \is_ssl() ? 'https' : 'http' ), /*, 'https' */ ## add 'https' to use secure URL ##
                  'debug'             => self::$debug
             ));
@@ -143,26 +165,26 @@ class theme extends \Q {
             // some themes might want to override this file, so check for a q.global.js in the q_theme/library/theme/javascript folder and include if found, else use global ##
             if ( $file = theme_helper::get( "theme/javascript/q.global.js", 'return' ) ) {
 
-                helper::log( 'Adding q.global.js from Q Theme' );
+                // helper::log( 'Adding q.global.js from Q Theme' );
 
             } else if ( $file = helper::get( "theme/javascript/q.global.js", 'return' ) ) {
 
-                helper::log( 'Adding q.global.js from Q' );
+                // helper::log( 'Adding q.global.js from Q' );
 
             }
 
             // no file - bale ##
             if ( ! $file ) {
 
-                helper::log( 'No q.globa.js file located to load' );
+                helper::log( 'No q.global.js file located to load' );
 
                 return false;
 
             }
 
             // add JS ## -- after all dependencies ##
-            \wp_register_script( 'q-global-js', $file, array( 'jquery' ), self::$plugin_version );
-            \wp_enqueue_script( 'q-global-js' );
+            \wp_register_script( 'q-plugin-js-global', $file, array( 'jquery' ), self::$plugin_version );
+            \wp_enqueue_script( 'q-plugin-js-global' );
 
         }
 
@@ -244,7 +266,7 @@ class theme extends \Q {
                 $type_ext = ( 'css' == $type[0] ) ? 'css' : 'js' ;
 
                 // give it a handle ##
-                $handle = 'q_'.$key;
+                $handle = 'q-'.$key;
 
                 // look for minified library ##
                 $file = helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' );
@@ -328,7 +350,7 @@ class theme extends \Q {
             // bootstrap -- removed, but might be needed on older sites to patch ##
             if ( isset( self::$options->library->bootstrap ) ) {
 
-//               \wp_register_style( 'bootstrap-grid', helper::get( "theme/css/bootstrap-grid.css", "return" ), array( 'theme-css' ), self::$plugin_version, 'all' );
+//               \wp_register_style( 'bootstrap-grid', helper::get( "theme/css/bootstrap-grid.css", "return" ), array( 'theme' ), self::$plugin_version, 'all' );
 //               \wp_enqueue_style( 'bootstrap-grid' );
 
             }
@@ -395,7 +417,7 @@ class theme extends \Q {
             if ( isset( self::$options->library->colorbox_css ) ) {
 
                 // colorbox css ##
-                \wp_register_style( 'q-colorbox', helper::get( "theme/css/colorbox.css", 'return' ), array( 'q-wordpress-css' ), self::$plugin_version, 'all' );
+                \wp_register_style( 'q-colorbox', helper::get( "theme/css/colorbox.css", 'return' ), array( 'q-wordpress' ), self::$plugin_version, 'all' );
                 \wp_enqueue_style( 'q-colorbox' );
 
             }

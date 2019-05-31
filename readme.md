@@ -3,7 +3,7 @@
 **Tags:** Q, theme, framework, developers   
 **Requires at least:** 4.0.0 
 **Tested up to:** 5.0.0  
-**Stable tag:** 2.3.7
+**Stable tag:** 2.3.8
 **License:** GPL2  
 
 NOTE: Beta release of Q WordPress Development Framework
@@ -33,6 +33,12 @@ No applicable screenshots
 Currently, there is scant documentation, but over the coming months as this plugin matures, we'll be adding more details at qstudio.us/plugins
 
 ## Changelog ##
+
+### 2.3.8 ###
+
+* Updates from Exchange integration
+* Q global js / css can be included from q_theme with fallback check to Q
+* deprecated webmasters function in hook/wp_head
 
 ### 2.3.7 ###
 

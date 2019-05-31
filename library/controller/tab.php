@@ -243,7 +243,7 @@ class tab extends \Q {
         // program cta ##
         // %program_cta%
         $string = 
-            '#' == program_core::get_purl() ?
+            '#' == self::get_purl() ?
             str_replace( '%program_cta%', '', $string ) :
             str_replace( '%program_cta%', $args['markup']['content']['cta'] , $string ) ;
 
@@ -817,7 +817,7 @@ if ( typeof jQuery !== 'undefined' ) {
                                 </div>
                                 '
                             ,
-                'cta'       => '<a class="btn btn-sm c-red apply-now" href="'.program_core::get_purl().'" class="apply r-desktop">Apply Now</a>',
+                'cta'       => '<a class="btn btn-sm c-red apply-now" href="'.self::get_purl().'" class="apply r-desktop">Apply Now</a>',
                 'row'       => '<li data-tab-target="%hash%" class="clearfix q-tab-target type-%type%"><h3>%title%</h3>%content%</li>'
             ],
             'text'          => [
@@ -891,6 +891,26 @@ if ( typeof jQuery !== 'undefined' ) {
     }
     </style>
 <?php
+
+    }
+
+
+    public static function get_purl()
+    {
+
+        $string = '#';
+
+        if ( class_exists( 'q\program\core\core' ) ) {
+
+            $string = program_core::get_purl();
+
+        }
+
+        // filter ##
+        $string = \apply_filters( 'q/tab/markup/get_purl', $string );
+
+        // return ##
+        return $string;
 
     }
 

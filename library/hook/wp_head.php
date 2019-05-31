@@ -279,16 +279,9 @@ class wp_head extends \Q {
 
 
     /**
-     * add webmaster verification meta to head
-     * 
-     * 
-     * _deprecated
+     * add webmaster verification meta to head ##
      */
     public static function webmasters() {
-
-        helper::log( 'This function is deprecated since 2.3.6' );
-
-        return false;
 
         #global $q_options; // load framework options ##
     
@@ -357,10 +350,6 @@ class wp_head extends \Q {
      * Google Analytics tracking code ##
      */
     public static function google_analytics() {
-
-        helper::log( 'This function is deprecated since 2.3.6' );
-
-        return false;
         
         #global $q_options; // load framework options ##
         
@@ -378,17 +367,17 @@ class wp_head extends \Q {
 
         if ( ! $analytics ) { return false; }
         
-        // if ( class_exists( 'q_theme' ) && method_exists( 'q_theme', 'the_analytics' ) ) {
+        if ( class_exists( 'q_theme' ) && method_exists( 'q_theme', 'the_analytics' ) ) {
 
-        //     // print markup ##
-        //     echo Q_Template::the_analytics();
+            // print markup ##
+            echo Q_Template::the_analytics();
 
-        // // which template file to use ( plugin or theme ) -- TODO ##
-        // } else {
+        // which template file to use ( plugin or theme ) -- TODO ##
+        } else {
 
-        //     q_get_template_part( "templates/analytics.php" );    
+            q_get_template_part( "templates/analytics.php" );    
         
-        // }
+        }
         
     }
     
