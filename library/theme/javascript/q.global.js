@@ -368,7 +368,7 @@ $q_modal_key = false;
 
 jQuery(document).bind('gform_post_render', function(){
 	
-	q_is_local() ? $q_recaptcha_checked = true : false ;
+	// q_is_local() ? $q_recaptcha_checked = true : false ;
 
 	// console.log( 'is_local: '+q_is_local() );
 	// console.log( 'Form Rendered...' );
