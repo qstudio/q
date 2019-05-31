@@ -439,13 +439,13 @@ function q_gf_disable_submit( $element ){
 		$q_recaptcha_checked 
 	) {
 		
-		console.log( 'Captcha already complete, no need to disable..' );
+		// console.log( 'Captcha already complete, no need to disable..' );
 
 		return true;
 
 	}
 
-	console.log( 'disable submit...' );
+	// console.log( 'disable submit...' );
 
 	jQuery( $element ).prop( 'disabled', true );
 
