@@ -608,6 +608,7 @@ function q_is_local(){
 
 }
 
+/** @viktor - calls to sly will be install specific, so need to move to a something not loaded globally via Q */
 function slyInit() {
     var $frame = jQuery('.sly-all');
     var $wrap  = $frame.parent();
