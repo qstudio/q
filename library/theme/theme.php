@@ -269,7 +269,7 @@ class theme extends \Q {
                 $handle = 'q-'.$key;
 
                 // look for minified library ##
-                // $file = helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' );
+                $file = helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' );
 
                 // if not debugging, check if we can find a non-min version ##
                 if ( 
