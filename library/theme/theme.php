@@ -105,33 +105,33 @@ class theme extends \Q {
             // && false === self::$debug 
         ) {
             
-            \wp_register_style( 'q-plugin-css-wordpress', helper::get( "theme/css/q.wordpress.css", 'return' ), array(), self::$plugin_version, 'all' );
-            \wp_enqueue_style( 'q-plugin-css-wordpress' );
+            // \wp_register_style( 'q-plugin-css-wordpress', helper::get( "theme/css/q.wordpress.css", 'return' ), array(), self::$plugin_version, 'all' );
+            // \wp_enqueue_style( 'q-plugin-css-wordpress' );
 
-            // some themes might want to override this file, so check for a q.global.js in the q_theme/library/theme/javascript folder and include if found, else use global ##
-            if ( $file = theme_helper::get( "theme/css/q.global.css", 'return' ) ) {
+            // // some themes might want to override this file, so check for a q.global.js in the q_theme/library/theme/javascript folder and include if found, else use global ##
+            // if ( $file = theme_helper::get( "theme/css/q.global.css", 'return' ) ) {
 
-                // helper::log( 'Adding q.global.css from Q Theme' );
+            //     // helper::log( 'Adding q.global.css from Q Theme' );
 
-            } else if ( $file = helper::get( "theme/css/q.global.css", 'return' ) ) {
+            // } else if ( $file = helper::get( "theme/css/q.global.css", 'return' ) ) {
 
-                // helper::log( 'Adding q.global.css from Q' );
+            //     // helper::log( 'Adding q.global.css from Q' );
 
-            }
+            // }
 
-            // no file - bale ##
-            if ( ! $file ) {
+            // // no file - bale ##
+            // if ( ! $file ) {
 
-                // helper::log( 'No q.global.css file located to load' );
+            //     // helper::log( 'No q.global.css file located to load' );
 
-                return false;
+            //     return false;
 
-            } else {
+            // } else {
 
-                \wp_register_style( 'q-plugin-css-global', $file, array(), self::$plugin_version, 'all' );
-                \wp_enqueue_style( 'q-plugin-css-global' );
+            //     \wp_register_style( 'q-plugin-css-global', $file, array(), self::$plugin_version, 'all' );
+            //     \wp_enqueue_style( 'q-plugin-css-global' );
 
-            }
+            // }
 
             \wp_register_style( 'q-plugin-css-index-scss', helper::get( "theme/scss/index.css", 'return' ), array(), self::$plugin_version, 'all' );
             \wp_enqueue_style( 'q-plugin-css-index-scss' );
@@ -269,7 +269,7 @@ class theme extends \Q {
                 $handle = 'q-'.$key;
 
                 // look for minified library ##
-                $file = helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' );
+                // $file = helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' );
 
                 // if not debugging, check if we can find a non-min version ##
                 if ( 
@@ -288,13 +288,13 @@ class theme extends \Q {
                 // if no type - skip ##
                 if ( ! $file ) {
 
-                    helper::log( 'Skipping: '.$handle.' - File missing...' );
+                    // helper::log( 'Skipping: '.$handle.' - File missing...' );
 
                     continue;
 
                 }
 
-                // helper::log( 'Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
+                //  helper::log( 'Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
 
                 // register and enqueue ##
                 switch ( $type_ext ) {

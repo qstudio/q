@@ -31,6 +31,9 @@ class options extends \Q {
 
         // example how to inject extra options in libraries select API ##
         // \add_filter( 'acf/load_field/name=q_option_library', [ get_class(), 'filter_acf_library' ], 10, 1 );
+
+        // add link to view library from
+        \add_filter( 'acf/load_field/name=q_option_library', [ get_class(), 'filter_acf_library' ], 9, 1 );
         
         // get stored options, early ##
         // \add_action( 'plugins_loaded', [ get_class(), 'get' ], 1 );
@@ -66,17 +69,75 @@ class options extends \Q {
     {
 
         // helper::log( $field['choices'] );
-        // helper::log( $field['default_value'] );
 
-        // pop on a new choice ##
-        $field['choices']['new'] = 'New Item';
+        // empty array ##
+        $array = [];
 
-        // make it selected ##
-        $field['default_value'][] = 'new';
+        foreach( $field['choices'] as $key => $value ) {
 
-        // helper::log( $field['choices'] );
-        // helper::log( $field['default_value'] );
+            // helper::log( 'working: '.$key );
 
+            // add to array ##
+            $array[$key] = $value; 
+
+            // CSS or JS
+            $type = explode( "_" , $key );
+
+            // if no type - skip ##
+            if ( 
+                ! is_array( $type ) 
+                || 2 > count( $type )
+            ) {
+
+                // helper::log( 'Skipping: '.$key );
+
+                continue;
+
+            }
+
+            $type_dir = ( 'css' == $type[0] ) ? 'css' : 'javascript' ;
+            $type_ext = ( 'css' == $type[0] ) ? 'css' : 'js' ;
+
+            // give it a handle ##
+            $handle = 'q-'.$key;
+
+            // look for minified library ##
+            $file = helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' );
+
+            // if not debugging, check if we can find a non-min version ##
+            if ( 
+                ( ! $file )
+                ||
+                (
+                    self::$debug 
+                    && helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' )
+                )
+            ) {
+
+                $file = helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' ) ;
+
+            }
+
+            // if no type - skip ##
+            if ( ! $file ) {
+
+                // // helper::log( 'Skipping: '.$handle.' - File missing...' );
+
+                continue;
+
+            }
+
+            // helper::log( 'Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
+
+            // Add link to view ##
+            $array[$key] = $value.' ( <a href="'.$file.'" target="_blank">view</a> )';
+
+        }
+
+        // replace array ##
+        $field['choices'] = $array;
+
+        // kick it all back ##
         return $field;
 
     }
@@ -456,12 +517,15 @@ class options extends \Q {
                             'css_snackbar'      => 'Snackbar CSS',
                             'js_stickyfill'     => 'Stickyfill JS',
                             'js_hashchange'     => 'BA Hashchange JS',
-                            'js_colorbox'       => 'Colorbox JS',
-                            'css_colorbox'      => 'Colorbox CSS',
-                            'css_twitter'       => 'Twitter CSS',
-                            'js_flickr'         => 'Flickr JS',
+                            // 'js_colorbox'       => 'Colorbox JS',
+                            // 'css_colorbox'      => 'Colorbox CSS',
+                            // 'css_twitter'       => 'Twitter CSS',
+                            // 'js_flickr'         => 'Flickr JS',
                             'css_tubepress'     => 'TubePress CSS',
                             'css_gravityforms'  => 'Gravity Forms CSS',
+                            'css_q.wordpress'   => 'Q WordPress CSS',
+                            'css_q.global'      => 'Q Global CSS',
+                            'js_q.global'       => 'Q Global JS',
                             // 'css_hovereffects'  => 'Hover Effects CSS',
                             // 'js_hovereffects'   => 'Hover Effects JS',
                         ),
