@@ -34,7 +34,7 @@ class theme extends \Q {
             \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_general' ), 2 );
 
             // theme css / js from q_theme ##
-            \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_theme' ), 3 );
+            \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_theme' ), 10000 );
 
         }
 
@@ -221,7 +221,7 @@ class theme extends \Q {
 
                     // helper::log( 'DEUBBING - Adding '.$type_dir.'/'.$type[1].'.min.'.$type_ext.' from Q Theme' ) ;
 
-                // load minified version fro Q Theme ##
+                // load minified version from Q Theme ##
                 } else if (
                     theme_helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) 
                 ) {
