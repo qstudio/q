@@ -307,6 +307,14 @@ class theme extends \Q {
             // \wp_register_style( 'theme-css', \get_stylesheet_directory_uri() . '/style.css', '', self::$plugin_version );
             // \wp_enqueue_style( 'theme-css' );
 
+            // IE ##
+            if ( theme_helper::get( "theme/css/ie.css", "return" ) ) {
+         
+                \wp_enqueue_style( 'q-ie', theme_helper::get( "theme/css/ie.css", "return" ), '', self::$plugin_version );
+                \wp_style_add_data( 'q-ie', 'conditional', 'IE' );
+
+            }
+
             // css hierarchy ----
             
             // theme/css/q.2.desktop.css ##
