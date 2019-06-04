@@ -9,6 +9,8 @@ use q\controller\generic as generic;
 use q\controller\javascript as javascript;
 use q\controller\css as css;
 use q\core\wordpress as wordpress;
+
+// Q Program ##
 use q\program\core\core as program_core;
 
 // load it up ##
@@ -65,6 +67,26 @@ class tab extends \Q {
 
     }
 
+
+
+    /**
+     * Secure content, if password protected
+     * 
+     * @since       
+     * @return      Mixed
+     */
+    public static function secure()
+    {
+
+        if ( post_password_required( $the_post ) ) {
+                                            
+            // we will show password form here
+            echo get_the_password_form();
+
+        } else {
+
+
+    }
 
 
     /**
