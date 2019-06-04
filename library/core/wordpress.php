@@ -1574,6 +1574,20 @@ class wordpress extends \Q {
 
 
 
+    public static function get_the_password_form()
+    {
+
+?>
+        <div class="password" style="text-align: center; margin: 20px;">
+            <?php echo \get_the_password_form(); ?>
+        </div>
+<?php
+
+        return true;
+
+    }
+
+
     /**
      * Get Pagination links
      *

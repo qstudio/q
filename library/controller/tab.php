@@ -75,16 +75,28 @@ class tab extends \Q {
      * @since       
      * @return      Mixed
      */
-    public static function secure()
+    public static function is_secure()
     {
 
-        if ( post_password_required( $the_post ) ) {
+        if (
+            ! $the_post = wordpress::the_post() 
+        ) {
+
+            helper::log( 'No post object...' );
+
+            return false;
+
+        }
+
+        if ( \post_password_required( $the_post ) ) {
                                             
-            // we will show password form here
-            echo get_the_password_form();
+            // we will show password form here ##
+            return true; 
 
-        } else {
+        }
 
+        // default ##
+        return false;
 
     }
 
@@ -110,6 +122,13 @@ class tab extends \Q {
 
             // nothing found ##
             return false;
+
+        }
+
+        // secure ##
+        if ( self::is_secure() ) {
+
+            return wordpress::get_the_password_form();
 
         }
 
