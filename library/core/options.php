@@ -563,6 +563,7 @@ class options extends \Q {
                 'description' => '',
             ),
 
+            /*
             'plugin'   => array(
                 'key' => 'group_q_option_plugin',
                 'title' => 'Global Plugins',
@@ -614,6 +615,7 @@ class options extends \Q {
                 'active' => true,
                 'description' => '',
             ),
+            */
 
             'debug' => array(
                 'key' => 'group_q_option_debug',

@@ -158,35 +158,35 @@ class theme extends \Q {
 
 
         // global JS ##
-        if ( 
-            isset( self::$options->plugin_js ) 
-        ) {
+        // if ( 
+        //     isset( self::$options->plugin_js ) 
+        // ) {
 
-            // some themes might want to override this file, so check for a q.global.js in the q_theme/library/theme/javascript folder and include if found, else use global ##
-            if ( $file = theme_helper::get( "theme/javascript/q.global.js", 'return' ) ) {
+        //     // some themes might want to override this file, so check for a q.global.js in the q_theme/library/theme/javascript folder and include if found, else use global ##
+        //     if ( $file = theme_helper::get( "theme/javascript/q.global.js", 'return' ) ) {
 
-                // helper::log( 'Adding q.global.js from Q Theme' );
+        //         // helper::log( 'Adding q.global.js from Q Theme' );
 
-            } else if ( $file = helper::get( "theme/javascript/q.global.js", 'return' ) ) {
+        //     } else if ( $file = helper::get( "theme/javascript/q.global.js", 'return' ) ) {
 
-                // helper::log( 'Adding q.global.js from Q' );
+        //         // helper::log( 'Adding q.global.js from Q' );
 
-            }
+        //     }
 
-            // no file - bale ##
-            if ( ! $file ) {
+        //     // no file - bale ##
+        //     if ( ! $file ) {
 
-                helper::log( 'No q.global.js file located to load' );
+        //         helper::log( 'No q.global.js file located to load' );
 
-                return false;
+        //         return false;
 
-            }
+        //     }
 
-            // add JS ## -- after all dependencies ##
-            \wp_register_script( 'q-plugin-js-global', $file, array( 'jquery' ), self::$plugin_version );
-            \wp_enqueue_script( 'q-plugin-js-global' );
+        //     // add JS ## -- after all dependencies ##
+        //     \wp_register_script( 'q-plugin-js-global', $file, array( 'jquery' ), self::$plugin_version );
+        //     \wp_enqueue_script( 'q-plugin-js-global' );
 
-        }
+        // }
 
     }
 
@@ -268,33 +268,63 @@ class theme extends \Q {
                 // give it a handle ##
                 $handle = 'q-'.$key;
 
-                // look for minified library ##
-                $file = helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' );
+                // template hierarchy ##
 
-                // if not debugging, check if we can find a non-min version ##
+                // check for minified file in Q Theme ##
                 if ( 
-                    ( ! $file )
-                    ||
-                    (
-                        self::$debug 
-                        && helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' )
-                    )
+                    self::$debug
+                    && Theme_helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' )
                 ) {
 
-                    $file = helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' ) ;
+                    $file = Theme_helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' ) ;
+
+                    // helper::log( 'DEUBBING - Adding '.$type_dir.'/'.$type[1].'.min.'.$type_ext.' from Q Theme' ) ;
+
+                // load minified version fro Q Theme ##
+                } else if (
+                    theme_helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) 
+                ) {
+
+                    $file = theme_helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) ;
+
+                    // helper::log( 'Adding '.$type_dir.'/'.$type[1].'.min.'.$type_ext.' from Q Theme' );
+
+                // check for non-minified version in Q Theme, if debugging ##
+                } else if ( 
+                    self::$debug
+                    && helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' ) 
+                ) {
+
+                    $file = helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' );
+    
+                    // helper::log( 'DEUBBING - Adding '.$type_dir.'/'.$type[1].'.'.$type_ext.' from Q' );
+                    
+                // load minified version from Q ## 
+                } else if ( helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) ) {
+
+                    $file = helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) ;
+
+                    // helper::log( 'Adding '.$type_dir.'/'.$type[1].'.min.'.$type_ext.' from Q' );
+    
+                // final fallback - non minified on Q ##
+                } else {
+
+                    $file = helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' );
+    
+                    // helper::log( 'Final fallback - Adding '.$type_dir.'/'.$type[1].'.'.$type_ext.' from Q' );
 
                 }
 
                 // if no type - skip ##
                 if ( ! $file ) {
 
-                    // helper::log( 'Skipping: '.$handle.' - File missing...' );
+                    helper::log( 'Skipping: '.$handle.' - File missing...' );
 
                     continue;
 
                 }
 
-                //  helper::log( 'Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
+                // helper::log( 'Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
 
                 // register and enqueue ##
                 switch ( $type_ext ) {
