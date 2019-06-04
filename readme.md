@@ -3,7 +3,7 @@
 **Tags:** Q, theme, framework, developers   
 **Requires at least:** 4.0.0 
 **Tested up to:** 5.0.0  
-**Stable tag:** 2.4.0
+**Stable tag:** 2.4.3
 **License:** GPL2  
 
 NOTE: Beta release of Q WordPress Development Framework
@@ -33,6 +33,18 @@ No applicable screenshots
 Currently, there is scant documentation, but over the coming months as this plugin matures, we'll be adding more details at qstudio.us/plugins
 
 ## Changelog ##
+
+### 2.4.3 ###
+
+* Added ie/css to theme enqueuer
+
+### 2.4.2 ###
+
+* Moved all css / js enqueuing to Q from Q Theme - custom libraries can be added via filters and methods in Q Theme
+
+### 2.4.1 ###
+
+* Added fallback template hierarchy for all libraries added via Q settings to check in Q Theme, then Q - with debugging setting to load non-minified versions, if found
 
 ### 2.4.0 ###
 
