@@ -120,12 +120,12 @@ class select extends \Q {
             isset( self::$args['enable'] ) // function set to enable disabling ##
         ) { 
 
-            self::log( "checking enable status of group: ".self::$args['group'] );
-            self::log( "post ID: ".get_the_ID() );
+            // helper::log( "checking enable status of group: ".self::$args['field'] );
+            // helper::log( "post ID: ".\get_the_ID() );
             
-            $value = \get_field( self::$args['enable'], get_the_ID() );
+            $value = \get_field( self::$args['enable'], \get_the_ID() );
 
-            self::log( "we got the enable value: ".$value );
+            // helper::log( "we got the enable value: ".$value );
 
             if ( 
                 false === $value
@@ -133,7 +133,7 @@ class select extends \Q {
                 || ! $value
             ) {
         
-                self::log( "Group is not enabled: ".self::$args['group'] );
+                // helper::log( "Group is not enabled: ".self::$args['fields'] );
 
                 return false;
 
