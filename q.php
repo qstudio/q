@@ -13,7 +13,7 @@
  * Plugin Name:     Q
  * Plugin URI:      https://www.qstudio.us
  * Description:     Q is a Development Framework that provides an API to manage libraries, themes, plugins and widgets.
- * Version:         2.4.3
+ * Version:         2.4.4
  * Author:          Q Studio
  * Author URI:      https://www.qstudio.us
  * License:         GPL
