@@ -1,7 +1,7 @@
 /**
 Plugin:     Q Theme
 Version:    2.4.3
-Date:       18/06/2019 01:41:46 pm
+Date:       18/06/2019 07:26:51 pm
 */
 $q_modal_hash_value=!1;$q_modal_key=!1;$q_modal_args=!1;if(typeof jQuery!=='undefined'){jQuery(document).ready(function(){jQuery(window).bind('hashchange',function(e){e.preventDefault();q_modal_toggle($q_modal_args)})})}
 function q_modal($args)
@@ -22,11 +22,6 @@ function q_html_decode(input)
 function q_modal_callback($q_modal_args,$q_modal_key){$q_modal_args=$q_modal_args||!1;$q_modal_key=$q_modal_key||!1
 if(!$q_modal_args||!$q_modal_key){return!1}
 if($q_modal_args.callback){_function=$q_modal_args.callback;if(window[_function]){window[_function]($q_modal_key)}else{}}else{}}
-if(typeof jQuery!=='undefined'){jQuery(document).ready(function(){jQuery(document).on('click','[data-youtube]',function(e){q_load_youtube(jQuery(this))})})}
-function q_load_youtube(e){$youtube=e.attr('data-youtube');if(!$youtube){console.log('No youtube selector found.');return!1}
-$height=e.attr('data-youtube-height')?e.attr('data-youtube-height'):'560';$width=e.attr('data-youtube-width')?e.attr('data-youtube-width'):'315';var youtube_id=q_get_youtube_id($youtube);var iframeMarkup='<iframe width="'+$width+'" height="'+$height+'" src="//www.youtube.com/embed/'+youtube_id+'?rel=0&showinfo=0&autoplay=1" frameborder="0" allowfullscreen></iframe>';e.parent(".q-youtube").html(iframeMarkup)}
-function q_get_youtube_id(url){url=url||!1;if(!url){return!1}
-var regExp=/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;var match=String(url).match(regExp);if(match&&match[2].length==11){return match[2]}else{return!1}}
 if(typeof jQuery!=='undefined'){jQuery(window).bind("load",function(){if($the_hash=q_tab_hash()){q_tab($the_hash)}else{q_tab_default()}});jQuery(document).ready(function(){jQuery(window).bind('hashchange',function(e){history.navigationMode='compatible';e.preventDefault();$the_hash=q_tab_hash();if($the_hash)q_tab($the_hash)});jQuery('select.tab-navigation').on('change',function(){$trigger=jQuery(this).find('option:selected').attr("data-tab-trigger");q_tab($trigger);$trigger='#tab/'+$trigger
 if(history.pushState){history.pushState(null,null,$trigger)}
 else{location.hash=$trigger}})});function q_tab_default(){jQuery('.q-tab-target').hide().addClass('q-tab-hidden').removeClass('q-tab-current');jQuery('.q-tab-trigger').removeClass('q-tab-current');jQuery('.q-tab-trigger:first-child').addClass('q-tab-current');jQuery('.q-tab-target:first-child').removeClass('q-tab-hidden').addClass('q-tab-current').show()}

@@ -9,7 +9,7 @@ use q\controller\javascript as javascript;
 use q\controller\css as css;
 
 // load it up ##
-\q\plugin\youtube::run();
+// \q\plugin\youtube::run();
 
 class youtube extends \Q {
     
