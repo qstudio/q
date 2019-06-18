@@ -9,7 +9,7 @@ use q\controller\javascript as javascript;
 use q\controller\css as css;
 
 // load it up ##
-// \q\plugin\youtube::run();
+\q\plugin\youtube::run();
 
 class youtube extends \Q {
     
@@ -22,7 +22,7 @@ class youtube extends \Q {
         \add_action( 'wp_footer', [ get_class(), 'wp_footer' ], 5 ); 
 
         // add css ##
-        \add_action( 'wp_head', [ get_class(), 'wp_head' ], 5 ); 
+        // \add_action( 'wp_head', [ get_class(), 'wp_head' ], 5 ); 
 
     }
 
