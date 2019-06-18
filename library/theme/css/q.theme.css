@@ -1,6 +1,6 @@
 /**
 Plugin:     Q Theme
-Version:    2.4.3
-Date:       18/06/2019 07:26:51 pm
+Version:    2.4.5
+Date:       18/06/2019 07:43:23 pm
 */
 .q_push{position:fixed;right:0;top:50%;z-index:1000}.q-toggle-target:not(:first-child){display:none}.q-toggle-hidden{display:none}.q-toggle-current{color:red}.q_scroll{position:fixed;right:0;top:50%;z-index:1000}.q_scroll>span{list-style-type:none;list-style:none;margin:0;text-align:center}.q_scroll>span>a{width:40px;height:40px;display:block}.q_scroll>span>a:hover{text-decoration:none}.q_scroll>span>a:before{content:"\00b0";line-height:2.5}
