@@ -145,8 +145,11 @@ if ( typeof jQuery !== 'undefined' ) {
     });
 
     jQuery( window ).bind( "load", function(){
+
         $the_hash = q_scroll_hash();
+        
         if($the_hash) q_scroll( $the_hash );
+
     });
 
     jQuery(document).ready(function() {
@@ -174,6 +177,7 @@ if ( typeof jQuery !== 'undefined' ) {
 
 
     function q_scroll( data_id ){
+
         // remove all highlights ##
         jQuery( ".q_scroll > span" ).removeClass( 'current' );
 
@@ -203,19 +207,22 @@ if ( typeof jQuery !== 'undefined' ) {
     {
 
         // get new hash string ##
-        var $hash = window.location.hash.substring(1);
+        // var $hash = window.location.hash.substring(1);
 
-        if ( $hash.indexOf('scroll/') == 0 ) {
+        // if ( $hash.indexOf('scroll/') == 0 ) {
 
-            console.log( 'No scroll...' );
+        //     console.log( 'No scroll...' );
 
-            return false;
+        //     return false;
 
-        }
+        // }
 
-        // remove "/filter/" from string ##
-        $hash = $hash.replace( '/scroll/','' ).trim().replace(/\//g, ''); //catches a bit more possible string weirdness like spaces and trailing slash
+        // // remove "/filter/" from string ##
+        // $hash = $hash.replace( '/scroll/','' ).trim().replace(/\//g, ''); //catches a bit more possible string weirdness like spaces and trailing slash
         // q_select_hash_value = window.location.hash.substring(1);
+
+        // get new hash string ##
+        var $hash = q_get_hash_value_from_key( 'scroll' );
 
         if ( ! $hash ) {
 

@@ -673,9 +673,39 @@ if ( typeof jQuery !== 'undefined' ) {
     jQuery(document).ready(function() {
 
         // modern browsers hashchange event ##
+        // jQuery( '.q-tab-trigger' ).on( 'click', function( e ) {
+
+        //     console.log( 'Doing close click...' );
+            
+        //     $the_hash = q_tab_hash();
+            
+        //     if ( $the_hash ) {
+
+        //         console.log( 'hash is: '+$the_hash );
+
+        //         // if clicked on currently open tab, close it ##
+        //         if ( jQuery( "[data-tab-trigger='"+$the_hash+"']" ).hasClass( 'q-tab-current' ) ) {
+
+        //             console.log( 'Clicked on currently open tab, so close and return' );
+
+        //             jQuery( "[data-tab-target='"+$the_hash+"']" ).hide().addClass('q-tab-hidden').removeClass('q-tab-current');
+
+        //             // clear hash - seems drastic ##
+        //             parent.location.hash = ''
+
+        //             // kick back ##
+        //             return true;
+
+        //         }
+
+        //     }
+
+        // });
+
+        // modern browsers hashchange event ##
         jQuery( window ).bind( 'hashchange', function( e ) {
 
-            // console.log( 'Doing hash change for tabs...' );
+            console.log( 'Doing hash change for tabs...' );
             history.navigationMode = 'compatible';
             e.preventDefault();
             $the_hash = q_tab_hash();
@@ -731,6 +761,10 @@ if ( typeof jQuery !== 'undefined' ) {
         // check if target exists ##
         $target = jQuery( "[data-tab-target='"+data_id+"']" );
         if( $target.length ){
+
+            // console.log( 'data_id: '+ data_id ) ;
+            // console.log( 'tab_target: '+ $target.data('tab-target') ) ;
+            // console.log( 'q_tab, target found:' );
             
             // hide all targets ##
             jQuery('.q-tab-target').each( function(){
@@ -793,10 +827,14 @@ if ( typeof jQuery !== 'undefined' ) {
     }
 
 
-
     public static function get_markup()
     {
 
+        helper::log( 'get_markup is redundant, themes is filter via config' ) ;
+
+        return false;
+
+        /*
         // build defaults ##
         $array = [
             'default'       => '<div class="col-md-10 col-12 wysiwyg page-content">
@@ -904,6 +942,7 @@ if ( typeof jQuery !== 'undefined' ) {
 
         // return ##
         return $array;
+        */
 
     }
 
@@ -916,7 +955,7 @@ if ( typeof jQuery !== 'undefined' ) {
      * @since   2.0.0
      * @return  String
      */
-    public static function css(  )
+    public static function css()
     {
 
 ?>
