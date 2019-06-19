@@ -14,7 +14,7 @@ class javascript extends \Q {
     
     static $args = array();
     static $array = array();
-    static $force = true; // force refresh of JS file ##
+    static $force = false; // force refresh of JS file ##
 
     public static function run()
     {

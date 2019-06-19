@@ -175,6 +175,8 @@ function q_do_lazy() {
 
 }
 
+/*
+Removed as not global - specific to Travel
 function q_video_play(){
 	
 	if ( $q_video_playing ) {
@@ -254,7 +256,7 @@ function q_video_prepare(){
 	$q_video_prepared = true;
 
 }
-
+*/
 
 // Cookies
 function createCookie( name, value, days ) {
@@ -518,7 +520,7 @@ function recaptcha_position( $to, $from ){
 function recapatch_render( $element, $api_key ){
 
 	$element = $element || 'recaptcha';
-	$api_key = $api_key || '6LfBpzkUAAAAACJFHVDIsRf61JSRy7o0-PH9eD_P';
+	$api_key = $api_key || '6LfBpzkUAAAAACJFHVDIsRf61JSRy7o0-PH9eD_P'; // @todo - make API key global var ##
 
 	if ( 
 		$q_recaptcha_checked 

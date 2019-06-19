@@ -14,7 +14,7 @@ class css extends \Q {
     
     static $args = array();
     static $array = array();
-    static $force = true; // force refresh of CSS file ##
+    static $force = false; // force refresh of CSS file ##
 
     public static function run()
     {
