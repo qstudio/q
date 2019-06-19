@@ -260,11 +260,11 @@ Date:       {$date}
                 $file = \q_theme::get_plugin_path( 'library/theme/javascript/q.theme.js' );
 
                 // helper::log( 'File: '.$file );
-                helper::log( 'File: '.$file );
+                // helper::log( 'File: '.$file );
 
                 if ( ! file_exists( $file ) ) {
 
-                    helper::log( 'theme/javascript/q.theme.js missing, so creating..' );
+                    // helper::log( 'theme/javascript/q.theme.js missing, so creating..' );
 
                     touch( $file ) ;
 

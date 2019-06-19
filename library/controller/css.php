@@ -262,11 +262,11 @@ Date:       {$date}
                 $file = \q_theme::get_plugin_path( 'library/theme/css/q.theme.css' );
 
                 // helper::log( 'File: '.$file );
-                helper::log( 'Theme File: '.$file );
+                // helper::log( 'Theme File: '.$file );
 
                 if ( ! file_exists( $file ) ) {
 
-                    helper::log( 'theme/css/q.theme.css missing, so creating..' );
+                    // helper::log( 'theme/css/q.theme.css missing, so creating..' );
 
                     touch( $file ) ;
 
