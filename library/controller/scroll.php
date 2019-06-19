@@ -183,6 +183,7 @@ if ( typeof jQuery !== 'undefined' ) {
 
         // try to locate data element matching retreived hash value ##
         if ( jQuery( "[data-scroll-slug='" + data_id + "']" ).length ) {
+            
             // locate ##
             var target = jQuery( "[data-scroll-slug='" + data_id + "']" );
             var targetOffset = ( target.offset().top );
