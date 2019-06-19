@@ -14,7 +14,7 @@ class javascript extends \Q {
     
     static $args = array();
     static $array = array();
-    static $force = false; // force refresh of JS file ##
+    static $force = true; // force refresh of JS file ##
 
     public static function run()
     {
@@ -256,7 +256,19 @@ Date:       {$date}
             default:
 
                 //  file ##
-                $file = self::get_plugin_path( 'library/theme/javascript/q.theme.js' );
+                // $file = self::get_plugin_path( 'library/theme/javascript/q.theme.js' );
+                $file = \q_theme::get_plugin_path( 'library/theme/javascript/q.theme.js' );
+
+                // helper::log( 'File: '.$file );
+                helper::log( 'File: '.$file );
+
+                if ( ! file_exists( $file ) ) {
+
+                    helper::log( 'theme/javascript/q.theme.js missing, so creating..' );
+
+                    touch( $file ) ;
+
+                }
 
                 // flatten ##
                 $string .= implode( "", self::$array );

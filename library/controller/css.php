@@ -14,7 +14,7 @@ class css extends \Q {
     
     static $args = array();
     static $array = array();
-    static $force = false; // force refresh of CSS file ##
+    static $force = true; // force refresh of CSS file ##
 
     public static function run()
     {
@@ -258,7 +258,19 @@ Date:       {$date}
             default:
 
                 //  file ##
-                $file = self::get_plugin_path( 'library/theme/css/q.theme.css' );
+                // $file = self::get_plugin_path( 'library/theme/css/q.theme.css' );
+                $file = \q_theme::get_plugin_path( 'library/theme/css/q.theme.css' );
+
+                // helper::log( 'File: '.$file );
+                helper::log( 'Theme File: '.$file );
+
+                if ( ! file_exists( $file ) ) {
+
+                    helper::log( 'theme/css/q.theme.css missing, so creating..' );
+
+                    touch( $file ) ;
+
+                }
 
                 // flatten ##
                 $string .= implode( "", self::$array );

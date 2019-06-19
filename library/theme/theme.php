@@ -96,7 +96,7 @@ class theme extends \Q {
             && false === self::$debug 
         ) {
 
-            \wp_register_style( 'q-plugin-css-theme', helper::get( "theme/css/q.theme.css", 'return' ), array(), self::$plugin_version, 'all' );
+            \wp_register_style( 'q-plugin-css-theme', theme_helper::get( "theme/css/q.theme.css", 'return' ), array(), self::$plugin_version, 'all' );
             \wp_enqueue_style( 'q-plugin-css-theme' );
 
         }
@@ -120,7 +120,7 @@ class theme extends \Q {
             // helper::log( 'Adding q.theme.js' );
 
             // add JS ## -- after all dependencies ##
-            \wp_enqueue_script( 'q-plugin-js-theme', helper::get( "theme/javascript/q.theme.js", 'return' ), array( 'jquery' ), self::$plugin_version );
+            \wp_enqueue_script( 'q-plugin-js-theme', theme_helper::get( "theme/javascript/q.theme.js", 'return' ), array( 'jquery' ), self::$plugin_version );
             
             // pass variable values defined in parent class ##
             \wp_localize_script( 'q-plugin-js-theme', 'q_theme_js', array(
