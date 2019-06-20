@@ -3,7 +3,7 @@
 **Tags:** Q, theme, framework, developers   
 **Requires at least:** 4.0.0 
 **Tested up to:** 5.0.0  
-**Stable tag:** 2.4.6
+**Stable tag:** 2.4.7
 **License:** GPL2  
 
 NOTE: Beta release of Q WordPress Development Framework
@@ -33,6 +33,10 @@ No applicable screenshots
 Currently, there is scant documentation, but over the coming months as this plugin matures, we'll be adding more details at qstudio.us/plugins
 
 ## Changelog ##
+
+### 2.4.7 ###
+
+* Added variable definde check to q.global.js to allow for repcatcha overrides on specific templates
 
 ### 2.4.6 ###
 
