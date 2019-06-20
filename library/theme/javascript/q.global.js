@@ -358,15 +358,6 @@ function q_get_next_key(object, $key){
 	}
 }
 
-
-function q_is_modal(){ 
-    if(window.location.hash.indexOf('modal') > 0){ 
-        return true;
-    } else { 
-        return false; 
-    } 
-}
-
 $q_recaptcha_checked = false;
 $q_recaptcha_loaded = false;
 $q_recaptcha_timeout = null;
