@@ -358,13 +358,22 @@ function q_get_next_key(object, $key){
 	}
 }
 
+
+function q_is_modal(){ 
+    if(window.location.hash.indexOf('modal') > 0){ 
+        return true;
+    } else { 
+        return false; 
+    } 
+}
+
 $q_recaptcha_checked = false;
 $q_recaptcha_loaded = false;
 $q_recaptcha_timeout = null;
 $grecaptcha_id = null;
 $form_moved = false;
 $event_form = false;
-$load_count = 0;
+$load_count = typeof $load_count === "undefined" ? 0 : $load_count ; // allow templates to override
 $load_loop = 0;
 $q_modal_key = false;
 
@@ -374,9 +383,12 @@ jQuery(document).bind('gform_post_render', function(){
 
 	// console.log( 'is_local: '+q_is_local() );
 	// console.log( 'Form Rendered...' );
-	// console.log( 'Load Count: '+ $load_count );
+	console.log( 'Load Count: '+ $load_count );
 
-	if ( $load_count >= 1 ) {
+	if ( 
+		$load_count >= 1 
+		// || q_is_modal()
+	) {
 
 		// disable future submits ##
 		q_gf_disable_submit();
