@@ -175,8 +175,6 @@ function q_do_lazy() {
 
 }
 
-/*
-Removed as not global - specific to Travel
 function q_video_play(){
 	
 	if ( $q_video_playing ) {
@@ -256,7 +254,6 @@ function q_video_prepare(){
 	$q_video_prepared = true;
 
 }
-*/
 
 // Cookies
 function createCookie( name, value, days ) {
