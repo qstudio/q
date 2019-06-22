@@ -705,7 +705,7 @@ if ( typeof jQuery !== 'undefined' ) {
         // modern browsers hashchange event ##
         jQuery( window ).bind( 'hashchange', function( e ) {
 
-            console.log( 'Doing hash change for tabs...' );
+            // console.log( 'Doing hash change for tabs...' );
             history.navigationMode = 'compatible';
             e.preventDefault();
             $the_hash = q_tab_hash();
