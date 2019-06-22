@@ -371,7 +371,7 @@ jQuery(document).bind('gform_post_render', function(){
 
 	// console.log( 'is_local: '+q_is_local() );
 	// console.log( 'Form Rendered...' );
-	console.log( 'Load Count: '+ $load_count );
+	// console.log( 'Load Count: '+ $load_count );
 
 	if ( 
 		$load_count >= 1 
