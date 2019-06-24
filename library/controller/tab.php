@@ -781,13 +781,13 @@ if ( typeof jQuery !== 'undefined' ) {
             $target.show().addClass('q-tab-current').removeClass('q-tab-hidden');
             jQuery( "[data-tab-trigger='"+data_id+"']" ).addClass('q-tab-current');
 
-            // scroll to ##
-            var targetOffset = ( $target.offset().top ) - 230;
+            // scroll to --- this should be removed.. ##
+            // var targetOffset = ( $target.offset().top ) - 230;
 
             // scroll ##
-            jQuery('html,body').animate({ 
-                scrollTop: targetOffset + "px"
-            }, 500, 'swing'); 
+            // jQuery('html,body').animate({ 
+            //     scrollTop: targetOffset + "px"
+            // }, 500, 'swing'); 
 
         };
 
