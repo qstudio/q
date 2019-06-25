@@ -6,4 +6,4 @@
 **Stable tag:** 2.4.8
 **License:** GPL2  
 
-NOTE: Beta release of Q WordPress Development Framework
+Q WordPress Development Framework
