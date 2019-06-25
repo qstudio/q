@@ -1,4 +1,5 @@
-### 2.4.8
+### 2.4.8 ###
+
 * moved shared libs from q-gh-brand-bar plugin
 
 ### 2.4.7 ###

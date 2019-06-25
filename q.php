@@ -13,7 +13,7 @@
  * Plugin Name:     Q
  * Plugin URI:      https://www.qstudio.us
  * Description:     Q is a Development Framework that provides an API to manage libraries, themes, plugins and widgets.
- * Version:         2.4.7
+ * Version:         2.4.8
  * Author:          Q Studio
  * Author URI:      https://www.qstudio.us
  * License:         GPL
@@ -40,7 +40,7 @@ if ( ! class_exists( 'Q' ) ) {
         private static $instance = null;
 
         // Plugin Settings
-        const version = '2.4.7';
+        const version = '2.4.8';
         const text_domain = 'q-textdomain'; // for translation ##
         static $debug = false; // global debuggin ##
         static $device; // current device ##
@@ -192,7 +192,6 @@ if ( ! class_exists( 'Q' ) ) {
             require_once self::get_plugin_path( 'library/core/config.php' );
             require_once self::get_plugin_path( 'library/core/core.php' );
             require_once self::get_plugin_path( 'library/core/options.php' );
-            // require_once self::get_plugin_path( 'library/core/options.acf.php' );
             require_once self::get_plugin_path( 'library/core/wordpress.php' );
 
             // admin ##
@@ -207,8 +206,8 @@ if ( ! class_exists( 'Q' ) ) {
 
             // frontend ##
             require_once self::get_plugin_path( 'library/theme/widget.php' );
-            require_once self::get_plugin_path( 'library/theme/meta.php' );
-            // require_once self::get_plugin_path( 'library/theme/template.php' );
+            require_once self::get_plugin_path( 'library/theme/meta.php' ); 
+            // require_once self::get_plugin_path( 'library/theme/template.php' ); // @todo - make this the single template controller and allow plugins to inject rules via filters ##
             require_once self::get_plugin_path( 'library/controller/controller.php' );
             require_once self::get_plugin_path( 'library/theme/theme.php' );
 
