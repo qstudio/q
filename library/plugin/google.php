@@ -61,6 +61,24 @@ class google extends \Q {
     }
 
 
+    /**
+     * Hook to set-up Google ReCaptcha form inline forms, not in modal - reverse hack...
+     *
+     * @since       2.4.9
+     */
+    public static function recaptcha_hook( Array $args = null )
+    {
+
+?>
+    <script>
+        // console.log( 'Hacking load count...' );
+        $load_count = 2;
+    </script>
+<?php
+
+    }
+
+
 
     /**
      * Hook to enqueue Google Maps assets

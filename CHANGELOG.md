@@ -1,3 +1,7 @@
+### 2.4.9 ###
+
+* added google::recaptcha_hook method to allow for config to be passed to recpatcha
+
 ### 2.4.8 ###
 
 * moved shared libs from q-gh-brand-bar plugin
