@@ -6,6 +6,7 @@ use q\core\core as core;
 use q\core\helper as helper;
 use q\core\options as options;
 use q\core\wordpress as wordpress;
+use q\theme\ui as ui;
 use q\controller\generic as generic;
 
 // load it up ##
@@ -66,7 +67,20 @@ class facebook extends \Q {
         // get all the data we need ##
         $array = [];
         $array['title'] = $the_post->post_title;
-        $array['description'] = wordpress::excerpt_from_id( $the_post->ID, 200 );
+
+        // get the excerpt ##
+        $string = wordpress::excerpt_from_id( $the_post->ID, 200 );
+
+        // clean up ##
+        $string = ui::rip_tags( $string );
+
+        // replacements ##
+        $string = str_replace( "\"", "'", $string );
+
+        // keep it all to size ##
+        // $string = ui::chop( $string, 200 );
+
+        $array['description'] = $string;
         $array['image'] = 
             \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), 'large' ) ?
             \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), 'large' )[0] :

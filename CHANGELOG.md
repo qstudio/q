@@ -1,3 +1,7 @@
+### 2.5.0 ###
+
+* tweak to facebook open graph inclusion
+
 ### 2.4.9 ###
 
 * added google::recaptcha_hook method to allow for config to be passed to recpatcha
