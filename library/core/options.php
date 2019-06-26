@@ -527,7 +527,7 @@ class options extends \Q {
                             'css_q.wordpress'   => 'Q WordPress CSS',
                             'css_q.global'      => 'Q Global CSS',
                             'css_bs4'           => 'Bootstrap 4 CSS',
-                            'css_bsg'           => 'Bootstrap 4 grid transitional version CSS',
+                            'css_bsg'           => 'Bootstrap 4 Grid Temp CSS',
                             'js_q.global'       => 'Q Global JS',
                             'js_bs4'            => 'Bootstrap 4 JS',
                             // 'css_hovereffects'  => 'Hover Effects CSS',
