@@ -201,8 +201,8 @@ class controller extends \Q {
 
         if (
             options::get( 'test' )
-            && is_object( options::get( 'test' ) )
             && ! empty( options::get( 'test' ) )
+            && is_object( options::get( 'test' ) )
         ) {
 
             // helper::log( 'test suite options active' );

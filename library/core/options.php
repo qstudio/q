@@ -510,7 +510,7 @@ class options extends \Q {
 
             'library' => array(
                 'key' => 'group_q_option_library',
-                'title' => 'External Libraries',
+                'title' => 'CSS & JS Libraries',
                 'fields' => array(
                     array(
                         'key' => 'field_q_option_library',
@@ -594,9 +594,9 @@ class options extends \Q {
                             'id' => '',
                         ),
                         'choices' => array(
-                            'q-gh-brand-bar' => 'Global Brand Bar',
-                            'q-gh-consent' => 'Consent System',
-                            // 'q-search' => 'Search',
+                            'brandbar'  => 'Global Brand Bar',
+                            'promo'     => 'Promotion',
+                            'consent'   => 'Consent System',
                         ),
                         'allow_custom' => 0,
                         'default_value' => array(
