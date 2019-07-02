@@ -1,3 +1,6 @@
+### 2.5.2 ###
+* handle faq tabs close
+
 ### 2.5.1 ###
 * fixed snackbar styles
 
