@@ -180,6 +180,14 @@ class options extends \Q {
     public static function add_fields()
     {
 
+        if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+
+            helper::log( 'ACF Missing, please install or activate...' );
+
+            return false;
+
+        }
+
         // get all field groups ##
         $groups = self::get_fields();
 
@@ -568,7 +576,6 @@ class options extends \Q {
                 'description' => '',
             ),
 
-            /*
             'plugin'   => array(
                 'key' => 'group_q_option_plugin',
                 'title' => 'Global Plugins',
@@ -588,8 +595,8 @@ class options extends \Q {
                         ),
                         'choices' => array(
                             'q-gh-brand-bar' => 'Global Brand Bar',
-                            'q-gh-consent' => 'Consent',
-                            'q-search' => 'Search',
+                            'q-gh-consent' => 'Consent System',
+                            // 'q-search' => 'Search',
                         ),
                         'allow_custom' => 0,
                         'default_value' => array(
@@ -620,8 +627,8 @@ class options extends \Q {
                 'active' => true,
                 'description' => '',
             ),
-            */
 
+            /*
             'debug' => array(
                 'key' => 'group_q_option_debug',
                 'title' => 'Debug',
@@ -664,6 +671,7 @@ class options extends \Q {
                 'active' => true,
                 'description' => '',
             ),
+            */
 
         );
 
@@ -920,8 +928,10 @@ class options extends \Q {
         
         }
 
+        // helper::log( 'debug set to: '.self::get('debug') );
+
         // get all stored options ##
-        $debug = \get_field( 'q_option_debug', 'option' ); 
+        $debug = self::get('debug'); // \get_field( 'q_option_debug', 'option' ); 
         // \get_site_option( 'options_q_option_debug', false );
 
         // check ##

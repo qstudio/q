@@ -352,7 +352,7 @@ class log extends \Q {
         // empty log - good work !! ##
         if ( ! array_filter( $log ) ) {
             
-            $log_format = "<p class='q_support_log_format'>".__( 'Email Log is empty', 'q-textdomain' )."</p>";
+            $log_format = "<p class='q_support_log_format'>".__( 'Log File is empty', 'q-textdomain' )."</p>";
             
             // no point in downloading nothing ##
             $log_downloadable = false;
@@ -385,11 +385,12 @@ class log extends \Q {
         echo '<div class="wrap q_support_wrap">';
         
         // icon and h2 ##
-        echo '<h2>'; _e("Email Log"); echo '</h2>';
+        echo '<h2>'.ucfirst( self::$action ).' Log</h2>';
         
         // intro blurb ##
         printf( 
-            '<p>Here are the last 25 entries ( in reverse order ) from the Email Log, you can view the entire file using the link at the bottom, if the file has data.</p>'
+            '<p>Here are the last 25 entries ( in reverse order ) from the %s Log, you can view the entire file using the link at the bottom, if the file has data.</p>'
+            ,   ucfirst( self::$action )
             // ,esc_url( Q_SUPPORT_DOMAIN.'plugin/error-log/' )
             // ,esc_html( __("Documentation", "q-textdomain" ) ) 
         );

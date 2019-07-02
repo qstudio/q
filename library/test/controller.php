@@ -97,8 +97,27 @@ class controller extends \Q {
                 'title' => 'Test Options',
                 'fields' => array(
                     array(
+                        'key' => 'field_q_option_debug',
+                        'label' => 'Debugging',
+                        'name' => 'q_option_debug',
+                        'type' => 'true_false',
+                        'instructions' => 'Control plugin debug settings',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'allow_custom' => 0,
+                        'default_value' => 0,
+                        'ui' => 0,
+                        'ui_on_text' => '',
+                        'ui_off_text' => '',
+                    ),
+                    array(
                         'key' => 'field_q_option_test',
-                        'label' => 'Testing Tools',
+                        'label' => 'Cron & Logs',
                         'name' => 'q_option_test',
                         'type' => 'checkbox',
                         'instructions' => '',

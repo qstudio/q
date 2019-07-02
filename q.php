@@ -180,6 +180,33 @@ if ( ! class_exists( 'Q' ) ) {
 
 
         /**
+         * Check for required classes to build UI features
+         * 
+         * @return      Boolean 
+         * @since       0.1.0
+         */
+        public static function has_dependencies()
+        {
+
+            // check for what's needed ##
+            if (
+                ! class_exists( 'ACF' )
+            ) {
+
+                helper::log( 'Q requires ACF to run correctly..' );
+
+                return false;
+
+            }
+
+            // ok ##
+            return true;
+
+        }
+
+
+
+        /**
         * Load Libraries
         *
         * @since        2.0
@@ -196,7 +223,14 @@ if ( ! class_exists( 'Q' ) ) {
 
             // admin ##
             require_once self::get_plugin_path( 'library/admin/admin.php' );
-            require_once self::get_plugin_path( 'library/admin/menu.php' ); 
+            // require_once self::get_plugin_path( 'library/admin/menu.php' ); 
+
+            // check for dependencies, required for UI components - admin will still run ##
+            if ( ! self::has_dependencies() ) {
+
+                return false;
+
+            }
 
             // test suite ##
             require_once self::get_plugin_path( 'library/test/controller.php' );
