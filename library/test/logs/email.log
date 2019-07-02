@@ -1,0 +1,2 @@
+2019-07-02 08:59:50 - ERROR --> CLIENT -> SERVER: EHLO ghorg.qlocal.com -  - CLIENT -> SERVER: STARTTLS -  - SMTP Error: Could not connect to SMTP host.CLIENT -> SERVER: QUIT -  - SMTP ERROR: QUIT command failed: SMTP Error: Could not connect to SMTP host.
+2019-07-02 10:00:09 - ERROR --> CLIENT -> SERVER: EHLO ghorg.qlocal.com -  - CLIENT -> SERVER: STARTTLS -  - SMTP Error: Could not connect to SMTP host.CLIENT -> SERVER: QUIT -  - SMTP ERROR: QUIT command failed: SMTP Error: Could not connect to SMTP host.
