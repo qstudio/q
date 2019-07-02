@@ -1,3 +1,8 @@
+### 2.6.0 ###
+
+* Moved ACF Q Setting into filters, so that plugins can add and ammed listed items
+* Added Test suite to Q, controllable from Q Settings view, with email and error log viewers and controllers 
+
 ### 2.5.0 ###
 
 * tweak to facebook open graph inclusion

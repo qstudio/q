@@ -44,6 +44,9 @@ class theme extends \Q {
     }
 
 
+    
+
+
     /**
     * Load Properties
     *
@@ -272,7 +275,7 @@ class theme extends \Q {
 
                     case "css" :
 
-                        \wp_register_style( $handle, $file, self::$plugin_version, 'all' );
+                        \wp_register_style( $handle, $file, '', self::$plugin_version, 'all' );
                         \wp_enqueue_style( $handle );
 
                     break ;

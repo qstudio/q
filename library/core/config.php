@@ -4,7 +4,7 @@ namespace q\core;
 
 use q\core\core as core;
 use q\core\helper as helper;
-use q\core\options as options;
+// use q\core\options as options;
 
 // load it up ##
 \q\core\config::run();

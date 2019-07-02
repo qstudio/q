@@ -29,6 +29,8 @@ class options extends \Q {
         // add fields ##
         \add_action( 'acf/init', array( get_class(), 'add_fields' ), 1 );
 
+        // @todo - add caching to get options call, which is bust when the options page is visited -- is this really more effecient?? ##
+
         // example how to inject extra options in libraries select API ##
         // \add_filter( 'acf/load_field/name=q_option_library', [ get_class(), 'filter_acf_library' ], 10, 1 );
 
@@ -61,7 +63,7 @@ class options extends \Q {
 
 
     /**
-     * Example of how to add a select option for a new library
+     * Add view to link assets from backend
      * 
      * @since 2.3.0
      */
@@ -193,10 +195,16 @@ class options extends \Q {
         }
 
         // loop over gruops ##
-        foreach( $groups as $group ) {
+        foreach( $groups as $key => $value ) {
+
+            // filter groups ##
+            $value = \apply_filters( 'q/core/options/add_field/'.$key, $value );
+
+            // helper::log( 'filter: q/core/options/add_field/'.$key );
+            // helper::log( $value );
 
             // load them all up ##
-            \acf_add_local_field_group( $group );
+            \acf_add_local_field_group( $value );
 
         }
 
@@ -219,139 +227,139 @@ class options extends \Q {
                 'key' => 'group_q_option_analytics',
                 'title' => 'Analytics and Marketing',
                 'fields' => array(
-                    array(
-                        'key' => 'field_q_option_google_analytics',
-                        'label' => 'Google Analytics',
-                        'name' => 'q_option_google_analytics',
-                        'type' => 'textarea',
-                        'instructions' => 'Enter the complete Google Analytics snippet',
-                        'required' => 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'default_value' => '',
-                        'placeholder' => '',
-                        'maxlength' => '',
-                        'rows' => 3,
-                        'new_lines' => '',
-                    ),
-                    array(
-                        'key' => 'field_q_option_google_tag_manager',
-                        'label' => 'Google Tag Manager',
-                        'name' => 'q_option_google_tag_manager',
-                        'type' => 'textarea',
-                        'instructions' => 'Enter the complete Google Tag Manager snippet',
-                        'required' => 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'default_value' => '',
-                        'placeholder' => '',
-                        'maxlength' => '',
-                        'rows' => 4,
-                        'new_lines' => '',
-                    ),
-                    array(
-                        'key' => 'field_q_option_google_tag_manager_noscript',
-                        'label' => 'Google Tag Manager Noscript',
-                        'name' => 'q_option_google_tag_manager_noscript',
-                        'type' => 'textarea',
-                        'instructions' => 'Enter the complete Google Tag Manager noscript snippet',
-                        'required' => 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'default_value' => '',
-                        'placeholder' => '',
-                        'maxlength' => '',
-                        'rows' => 4,
-                        'new_lines' => '',
-                    ),
-                    array(
-                        'key' => 'field_q_option_facebook_pixel',
-                        'label' => 'Facebook Pixel',
-                        'name' => 'q_option_facebook_pixel',
-                        'type' => 'textarea',
-                        'instructions' => 'Enter the complete Facebook Pixel snippet',
-                        'required' => 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'default_value' => '',
-                        'placeholder' => '',
-                        'maxlength' => '',
-                        'rows' => 4,
-                        'new_lines' => '',
-                    ),
-                    array(
-                        'key' => 'field_q_option_facebook_pixel_noscript',
-                        'label' => 'Facebook Pixel Noscript',
-                        'name' => 'q_option_facebook_pixel_noscript',
-                        'type' => 'textarea',
-                        'instructions' => 'Enter the complete Facebook Pixel Noscript snippet',
-                        'required' => 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'default_value' => '',
-                        'placeholder' => '',
-                        'maxlength' => '',
-                        'rows' => 4,
-                        'new_lines' => '',
-                    ),
-                    array(
-                        'key' => 'field_q_option_linkedin',
-                        'label' => 'LinkedIn Tracking',
-                        'name' => 'q_option_linkedin',
-                        'type' => 'textarea',
-                        'instructions' => 'Enter the complete LinkedIn snippet',
-                        'required' => 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'default_value' => '',
-                        'placeholder' => '',
-                        'maxlength' => '',
-                        'rows' => 4,
-                        'new_lines' => '',
-                    ),
-                    array(
-                        'key' => 'field_q_option_linkedin_noscript',
-                        'label' => 'LinkedIn Tracking Noscript',
-                        'name' => 'q_option_linkedin_noscript',
-                        'type' => 'textarea',
-                        'instructions' => 'Enter the complete LinkedIn Noscript snippet',
-                        'required' => 0,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'default_value' => '',
-                        'placeholder' => '',
-                        'maxlength' => '',
-                        'rows' => 4,
-                        'new_lines' => '',
-                    ),
+                    // array(
+                    //     'key' => 'field_q_option_google_analytics',
+                    //     'label' => 'Google Analytics',
+                    //     'name' => 'q_option_google_analytics',
+                    //     'type' => 'textarea',
+                    //     'instructions' => 'Enter the complete Google Analytics snippet',
+                    //     'required' => 0,
+                    //     'conditional_logic' => 0,
+                    //     'wrapper' => array(
+                    //         'width' => '',
+                    //         'class' => '',
+                    //         'id' => '',
+                    //     ),
+                    //     'default_value' => '',
+                    //     'placeholder' => '',
+                    //     'maxlength' => '',
+                    //     'rows' => 3,
+                    //     'new_lines' => '',
+                    // ),
+                    // array(
+                    //     'key' => 'field_q_option_google_tag_manager',
+                    //     'label' => 'Google Tag Manager',
+                    //     'name' => 'q_option_google_tag_manager',
+                    //     'type' => 'textarea',
+                    //     'instructions' => 'Enter the complete Google Tag Manager snippet',
+                    //     'required' => 0,
+                    //     'conditional_logic' => 0,
+                    //     'wrapper' => array(
+                    //         'width' => '',
+                    //         'class' => '',
+                    //         'id' => '',
+                    //     ),
+                    //     'default_value' => '',
+                    //     'placeholder' => '',
+                    //     'maxlength' => '',
+                    //     'rows' => 4,
+                    //     'new_lines' => '',
+                    // ),
+                    // array(
+                    //     'key' => 'field_q_option_google_tag_manager_noscript',
+                    //     'label' => 'Google Tag Manager Noscript',
+                    //     'name' => 'q_option_google_tag_manager_noscript',
+                    //     'type' => 'textarea',
+                    //     'instructions' => 'Enter the complete Google Tag Manager noscript snippet',
+                    //     'required' => 0,
+                    //     'conditional_logic' => 0,
+                    //     'wrapper' => array(
+                    //         'width' => '',
+                    //         'class' => '',
+                    //         'id' => '',
+                    //     ),
+                    //     'default_value' => '',
+                    //     'placeholder' => '',
+                    //     'maxlength' => '',
+                    //     'rows' => 4,
+                    //     'new_lines' => '',
+                    // ),
+                    // array(
+                    //     'key' => 'field_q_option_facebook_pixel',
+                    //     'label' => 'Facebook Pixel',
+                    //     'name' => 'q_option_facebook_pixel',
+                    //     'type' => 'textarea',
+                    //     'instructions' => 'Enter the complete Facebook Pixel snippet',
+                    //     'required' => 0,
+                    //     'conditional_logic' => 0,
+                    //     'wrapper' => array(
+                    //         'width' => '',
+                    //         'class' => '',
+                    //         'id' => '',
+                    //     ),
+                    //     'default_value' => '',
+                    //     'placeholder' => '',
+                    //     'maxlength' => '',
+                    //     'rows' => 4,
+                    //     'new_lines' => '',
+                    // ),
+                    // array(
+                    //     'key' => 'field_q_option_facebook_pixel_noscript',
+                    //     'label' => 'Facebook Pixel Noscript',
+                    //     'name' => 'q_option_facebook_pixel_noscript',
+                    //     'type' => 'textarea',
+                    //     'instructions' => 'Enter the complete Facebook Pixel Noscript snippet',
+                    //     'required' => 0,
+                    //     'conditional_logic' => 0,
+                    //     'wrapper' => array(
+                    //         'width' => '',
+                    //         'class' => '',
+                    //         'id' => '',
+                    //     ),
+                    //     'default_value' => '',
+                    //     'placeholder' => '',
+                    //     'maxlength' => '',
+                    //     'rows' => 4,
+                    //     'new_lines' => '',
+                    // ),
+                    // array(
+                    //     'key' => 'field_q_option_linkedin',
+                    //     'label' => 'LinkedIn Tracking',
+                    //     'name' => 'q_option_linkedin',
+                    //     'type' => 'textarea',
+                    //     'instructions' => 'Enter the complete LinkedIn snippet',
+                    //     'required' => 0,
+                    //     'conditional_logic' => 0,
+                    //     'wrapper' => array(
+                    //         'width' => '',
+                    //         'class' => '',
+                    //         'id' => '',
+                    //     ),
+                    //     'default_value' => '',
+                    //     'placeholder' => '',
+                    //     'maxlength' => '',
+                    //     'rows' => 4,
+                    //     'new_lines' => '',
+                    // ),
+                    // array(
+                    //     'key' => 'field_q_option_linkedin_noscript',
+                    //     'label' => 'LinkedIn Tracking Noscript',
+                    //     'name' => 'q_option_linkedin_noscript',
+                    //     'type' => 'textarea',
+                    //     'instructions' => 'Enter the complete LinkedIn Noscript snippet',
+                    //     'required' => 0,
+                    //     'conditional_logic' => 0,
+                    //     'wrapper' => array(
+                    //         'width' => '',
+                    //         'class' => '',
+                    //         'id' => '',
+                    //     ),
+                    //     'default_value' => '',
+                    //     'placeholder' => '',
+                    //     'maxlength' => '',
+                    //     'rows' => 4,
+                    //     'new_lines' => '',
+                    // ),
                 ),
                 'location' => array(
                     array(
@@ -482,7 +490,7 @@ class options extends \Q {
                         ),
                     ),
                 ),
-                'menu_order' => 3,
+                'menu_order' => 4,
                 'position' => 'side',
                 'style' => 'default',
                 'label_placement' => 'top',
@@ -510,7 +518,6 @@ class options extends \Q {
                             'id' => '',
                         ),
                         'choices' => array(
-                            // 'css_bootstrapgrid' => 'Bootstrap Grid CSS',
                             'js_sly'            => 'Sly Swipe JS',
                             'js_lazy'           => 'Lazy Load JS',
                             'js_snackbar'       => 'Snackbar JS',
@@ -518,10 +525,6 @@ class options extends \Q {
                             'css_snackbar'      => 'Snackbar CSS',
                             'js_stickyfill'     => 'Stickyfill JS',
                             'js_hashchange'     => 'BA Hashchange JS',
-                            // 'js_colorbox'       => 'Colorbox JS',
-                            // 'css_colorbox'      => 'Colorbox CSS',
-                            // 'css_twitter'       => 'Twitter CSS',
-                            // 'js_flickr'         => 'Flickr JS',
                             'css_tubepress'     => 'TubePress CSS',
                             'css_gravityforms'  => 'Gravity Forms CSS',
                             'css_q.wordpress'   => 'Q WordPress CSS',
@@ -530,8 +533,6 @@ class options extends \Q {
                             'css_bsg'           => 'Bootstrap 4 Grid Temp CSS',
                             'js_q.global'       => 'Q Global JS',
                             'js_bs4'            => 'Bootstrap 4 JS',
-                            // 'css_hovereffects'  => 'Hover Effects CSS',
-                            // 'js_hovereffects'   => 'Hover Effects JS',
                         ),
                         'allow_custom' => 0,
                         'default_value' => array(
@@ -654,7 +655,7 @@ class options extends \Q {
                         ),
                     ),
                 ),
-                'menu_order' => 3,
+                'menu_order' => 1,
                 'position' => 'side',
                 'style' => 'default',
                 'label_placement' => 'top',
@@ -666,7 +667,7 @@ class options extends \Q {
 
         );
 
-        // check if we ar returning a single set or all groups ##
+        // check if we are returning a single set or all groups ##
         if ( is_null( $group ) ) {
 
             #helper::log( 'Returning all groups.' );

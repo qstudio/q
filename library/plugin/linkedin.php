@@ -15,7 +15,7 @@ class linkedin extends \Q {
 
     public static function run()
     {
-        
+
         if ( ! \is_admin() ) {
 
             // add linkedin pixel ##
@@ -24,7 +24,70 @@ class linkedin extends \Q {
             // add <noscript> after opening <body> tag ##
             \add_action( 'q_action_body_open', [ get_class(), 'noscript'], 2 );
 
+        } else {
+
+            // add fields to Q settings ##
+            \add_filter( 'q/core/options/add_field/analytics', [ get_class(), 'filter_acf_analytics' ], 10, 1 );
+
         }
+
+    }
+
+
+
+    public static function filter_acf_analytics( $array ) 
+    {
+
+        // test ##
+        // helper::log( $array );
+
+        // lets add our fields ##
+        array_push( $array['fields'], [
+
+            'key' => 'field_q_option_linkedin',
+            'label' => 'LinkedIn Tracking',
+            'name' => 'q_option_linkedin',
+            'type' => 'textarea',
+            'instructions' => 'Enter the complete LinkedIn snippet',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'default_value' => '',
+            'placeholder' => '',
+            'maxlength' => '',
+            'rows' => 4,
+            'new_lines' => '',
+        
+        ]);
+
+        array_push( $array['fields'], [
+            'key' => 'field_q_option_linkedin_noscript',
+            'label' => 'LinkedIn Tracking Noscript',
+            'name' => 'q_option_linkedin_noscript',
+            'type' => 'textarea',
+            'instructions' => 'Enter the complete LinkedIn Noscript snippet',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'default_value' => '',
+            'placeholder' => '',
+            'maxlength' => '',
+            'rows' => 4,
+            'new_lines' => '',
+        ]);
+
+        // helper::log( $array['fields'] );
+
+        // kick it back, as it's a filter ##
+        return $array;
 
     }
 
@@ -59,34 +122,33 @@ class linkedin extends \Q {
         }
 
         // grab the options ##
-        $q_options = options::get();
+        // $q_options = options::get();
 
         // helper::log( $q_options );
 
         // bulk if no options found ##
         if ( 
-            ! $q_options 
-            || ! is_object( $q_options )   
+            ! options::get( 'linkedin' )
         ) {
 
-            helper::log( 'Error: Options missing...' );
+            // helper::log( 'Error: Options missing...' );
 
             return false;
 
         }
 
 
-        // check if we have tag_manager defined in config ##
-        if ( ! isset( $q_options->linkedin ) ) {
+        // // check if we have tag_manager defined in config ##
+        // if ( ! isset( $q_options->linkedin ) ) {
 
-            // helper::log( 'linkedin Pixel not defined in config' );
+        //     // helper::log( 'linkedin Pixel not defined in config' );
 
-            return false;
+        //     return false;
 
-        }
+        // }
 
         // kick it back, cleanly... ##
-        echo $q_options->linkedin;
+        echo options::get( 'linkedin' );
 
     }
 
@@ -121,35 +183,34 @@ class linkedin extends \Q {
         }
 
         // grab the options ##
-        $q_options = options::get();
+        // $q_options = options::get();
 
         #helper::log( $q_options );
 
         // bulk if no options found ##
         if ( 
-            ! $q_options 
-            || ! is_object( $q_options )   
+            ! options::get( 'linkedin_noscript' )
         ) {
 
-            helper::log( 'Error: Options missing...' );
+            // helper::log( 'Error: Options missing...' );
 
             return false;
 
         }
 
         // check for UI ##
-        if ( ! isset( $q_options->linkedin_noscript ) ) { 
+        // if ( ! isset( $q_options->linkedin_noscript ) ) { 
 
-            // Log ##
-            // helper::log( 'linkedin No Script not defined' );
+        //     // Log ##
+        //     // helper::log( 'linkedin No Script not defined' );
 
-            // kick off ##
-            return false; 
+        //     // kick off ##
+        //     return false; 
 
-        }
+        // }
 
         // kick it back, cleanly... ##
-        echo $q_options->linkedin_noscript;
+        echo options::get( 'linkedin_noscript' );
 
     }
 
