@@ -1,3 +1,6 @@
+### 2.5.1 ###
+* fixed snackbar styles
+
 ### 2.5.0 ###
 
 * tweak to facebook open graph inclusion
