@@ -1,3 +1,17 @@
+### 2.5.2 ###
+* handle faq tabs close
+
+### 2.5.1 ###
+* fixed snackbar styles
+
+### 2.5.0 ###
+
+* tweak to facebook open graph inclusion
+
+### 2.4.9 ###
+
+* added google::recaptcha_hook method to allow for config to be passed to recpatcha
+
 ### 2.4.8 ###
 
 * moved shared libs from q-gh-brand-bar plugin

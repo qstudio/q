@@ -236,9 +236,9 @@ class wp_head extends \Q {
         if ( ! $meta_desc ) { $meta_desc = wordpress::excerpt_from_id( $id, $length ); }
 
         // extra fall-back ##
-        if ( !$meta_desc ) { $meta_desc = \get_the_title( $id ); }
+        if ( ! $meta_desc ) { $meta_desc = \get_the_title( $id ); }
 
-        // clean up ## // todo core::rip_tags() ##
+        // clean up ## 
         $meta_desc = ui::rip_tags($meta_desc);
 
         // replacements ##
