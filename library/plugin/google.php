@@ -89,7 +89,16 @@ class google extends \Q {
 
         #helper::log( 'adding Google Maps assets...' );
 
-        \wp_register_script('google-maps', 'https://maps.googleapis.com/maps/api/js?key='.GOOGLE_MAPS_V3_API_KEY, false, '3');
+        // we need a valid API key to continue ##
+        if ( ! $key = apply_filters( "q/google/maps/v3/api/key", false ) ) {
+
+            helper::log( 'No API key added to filter: "q/google/maps/v3/api/key"' );
+
+            return false;
+
+        }
+
+        \wp_register_script('google-maps', 'https://maps.googleapis.com/maps/api/js?key='.$key, false, '3');
         \wp_enqueue_script('google-maps');
 
         \wp_enqueue_script( 'acf-google-maps',  self::get_plugin_url( 'library/theme/javascript/acf-google-maps.js' ), array( 'jquery' ), self::version, true );
