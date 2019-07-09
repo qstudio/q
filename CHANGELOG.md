@@ -5,6 +5,14 @@
 * Added admin controllers for Brand Bar and Consent System
 * Moved debug settings into Test system
 
+### 2.5.2 ###
+
+* handle faq tabs close
+
+### 2.5.1 ###
+
+* fixed snackbar styles
+
 ### 2.5.0 ###
 
 * tweak to facebook open graph inclusion
