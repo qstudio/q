@@ -1,9 +1,37 @@
+### 2.7.5 ###
+
+* Added dependency checks for Q, q_theme and ACF to block fatal errors
+
+### 2.7.3 ###
+
+* Q Settings menu item ordering
+
+### 2.7.2 ###
+
+* Q Settings language update
+
+### 2.7.1 ###
+
+* Added external library handler to Q Settings
+
+### 2.7.0 ###
+
+* Added Font Awesome
+
 ### 2.6.0 ###
 
 * Moved ACF Q Setting into filters, so that plugins can add and ammed listed items
 * Added Test suite to Q, controllable from Q Settings view, with email and error log viewers and controllers 
 * Added admin controllers for Brand Bar and Consent System
 * Moved debug settings into Test system
+
+### 2.5.2 ###
+
+* handle faq tabs close
+
+### 2.5.1 ###
+
+* fixed snackbar styles
 
 ### 2.5.0 ###
 

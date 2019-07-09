@@ -103,8 +103,8 @@ class error extends \Q {
 
         \add_submenu_page(
             'options-general.php',
-            __('Q Test : Errors','q-textdomain'),
-            __('Q Test : Errors','q-textdomain'),
+            __('Q : PHP Errors','q-textdomain'),
+            __('Q : PHP Errors','q-textdomain'),
             'manage_options',
             'q-test-errors',
             [ get_class(), 'render' ]

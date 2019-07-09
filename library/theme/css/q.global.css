@@ -831,9 +831,11 @@ object {
 
 /*@benny - here is the crude snackbar styling ..*/
 #snackbar-container > .snackbar {
-	background-color: red;
-	padding: 30px 40px 70px;
+	padding: 20px 30px;
 	color: #fff;
+}
+#snackbar-container > .snackbar.error {
+    background-color: red;
 }
 
 /* crude bubbles */

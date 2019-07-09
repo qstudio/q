@@ -22,6 +22,13 @@ class theme extends \Q {
     public static function run()
     {
 
+        // check we have dependencies ##
+        if ( ! self::has_dependencies() ){
+
+            return false;
+
+        }
+
         // load templates ##
         self::load_properties();
 
@@ -32,6 +39,12 @@ class theme extends \Q {
 
             // plugins and enhanecments ##
             \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_general' ), 2 );
+
+            // local external scripts ##
+            \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_external' ), 3 );
+
+            // local optional scripts ##
+            \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_local' ), 4 );
 
             // theme css / js from q_theme ##
             \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_theme' ), 10000 );
@@ -45,6 +58,32 @@ class theme extends \Q {
 
 
     
+
+    /**
+     * Check for required classes to build UI features
+     * 
+     * @return      Boolean 
+     * @since       0.1.0
+     */
+    public static function has_dependencies()
+    {
+
+        // check for what's needed ##
+        if (
+            ! class_exists( 'q_theme' )
+        ) {
+
+            helper::log( 'Q requires q_theme to run correctly..' );
+
+            return false;
+
+        }
+
+        // ok ##
+        return true;
+
+    }
+
 
 
     /**
@@ -60,7 +99,7 @@ class theme extends \Q {
 
         // grab the options ##
         self::$options = options::get();
-        #helper::log( self::$options );
+        // helper::log( self::$options );
 
     }
 
@@ -101,6 +140,9 @@ class theme extends \Q {
 
             \wp_register_style( 'q-plugin-css-theme', theme_helper::get( "theme/css/q.theme.css", 'return' ), array(), self::$plugin_version, 'all' );
             \wp_enqueue_style( 'q-plugin-css-theme' );
+
+            // wp_register_style( 'fontawesome', 'https://use.fontawesome.com/releases/v5.5.0/css/all.css');
+            // wp_enqueue_style( 'fontawesome' );
 
         }
 
@@ -147,142 +189,118 @@ class theme extends \Q {
     */
     public static function wp_enqueue_scripts_general() {
 
-        if ( ! \is_admin() ) { // probably not required ##
+        global $q_browser; // get browser agent info ##
 
-            global $q_browser; // get browser agent info ##
+        // Loads HTML5 JavaScript file to add support for HTML5 elements in older IE versions ##
+        if (
+            (
+                $q_browser
+                && is_array( $q_browser ) 
+            )
+            && ( 
+                $q_browser['type'] == 'ie8' 
+                || $q_browser['type'] == 'ie7' 
+                || $q_browser['type'] == 'ie6' 
+                && self::$options->plugin_js === TRUE 
+            )
+        ) {
 
-            // Loads HTML5 JavaScript file to add support for HTML5 elements in older IE versions ##
-            if (
-                (
-                    $q_browser
-                    && is_array( $q_browser ) 
-                )
-                && ( 
-                    $q_browser['type'] == 'ie8' 
-                    || $q_browser['type'] == 'ie7' 
-                    || $q_browser['type'] == 'ie6' 
-                    && self::$options->plugin_js === TRUE 
-                )
-            ) {
+            \wp_register_script( 'q-html5', helper::get( "theme/javascript/q.html5.js", 'return' ), array(), self::$plugin_version, 'all' );
+            \wp_enqueue_script( 'q-html5' );
 
-                \wp_register_script( 'q-html5', helper::get( "theme/javascript/q.html5.js", 'return' ), array(), self::$plugin_version, 'all' );
-                \wp_enqueue_script( 'q-html5' );
+        }
 
-            }
+        // add jquery ##
+        \wp_enqueue_script( "jquery" );
 
-            // add jquery ##
-            \wp_enqueue_script( "jquery" );
+        // Required for nested reply function that moves reply inline with JS ##
+        if ( 
+            \is_singular() 
+            && \comments_open() 
+            && \get_option( 'thread_comments' ) 
+        ) {
+        
+            \wp_enqueue_script( 'comment-reply' ); // enqueue the javascript that performs in-link comment reply fanciness
+        
+        }
 
-            // Required for nested reply function that moves reply inline with JS ##
-            if ( 
-                \is_singular() 
-                && \comments_open() 
-                && \get_option( 'thread_comments' ) 
-            ) {
-            
-                \wp_enqueue_script( 'comment-reply' ); // enqueue the javascript that performs in-link comment reply fanciness
-            
-            }
+    }
 
-            // helper::log( self::$options->library );
 
-            // loop over libraries and include - checking for "min" version is debugging ##
-            foreach( self::$options->library as $key => $value ) {
 
-                // helper::log( 'working: '.$key );
-
-                // CSS or JS
-                $type = explode( "_" , $key );
-
-                // if no type - skip ##
-                if ( 
-                    ! is_array( $type ) 
-                    || 2 > count( $type )
-                ) {
-
-                    // helper::log( 'Skipping: '.$key );
-
-                    continue;
-
-                }
-
-                $type_dir = ( 'css' == $type[0] ) ? 'css' : 'javascript' ;
-                $type_ext = ( 'css' == $type[0] ) ? 'css' : 'js' ;
-
-                // give it a handle ##
-                $handle = 'q-'.$key;
-
-                // template hierarchy ##
-
-                // check for minified file in Q Theme ##
-                if ( 
-                    self::$debug
-                    && Theme_helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' )
-                ) {
-
-                    $file = Theme_helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' ) ;
-
-                    // helper::log( 'DEUBBING - Adding '.$type_dir.'/'.$type[1].'.min.'.$type_ext.' from Q Theme' ) ;
-
-                // load minified version from Q Theme ##
-                } else if (
-                    theme_helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) 
-                ) {
-
-                    $file = theme_helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) ;
-
-                    // helper::log( 'Adding '.$type_dir.'/'.$type[1].'.min.'.$type_ext.' from Q Theme' );
-
-                // check for non-minified version in Q Theme, if debugging ##
-                } else if ( 
-                    self::$debug
-                    && helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' ) 
-                ) {
-
-                    $file = helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' );
     
-                    // helper::log( 'DEUBBING - Adding '.$type_dir.'/'.$type[1].'.'.$type_ext.' from Q' );
-                    
-                // load minified version from Q ## 
-                } else if ( helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) ) {
-
-                    $file = helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) ;
-
-                    // helper::log( 'Adding '.$type_dir.'/'.$type[1].'.min.'.$type_ext.' from Q' );
     
-                // final fallback - non minified on Q ##
-                } else {
+    /*
+    * script enqueuer 
+    *
+    * @since  2.0
+    */
+    public static function wp_enqueue_scripts_external() {
 
-                    $file = helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' );
-    
-                    // helper::log( 'Final fallback - Adding '.$type_dir.'/'.$type[1].'.'.$type_ext.' from Q' );
+        // dump - shuold be an interger repesenting how many external libraries are added ##
+        // helper::log( self::$options->external );
+        // helper::log( \get_field( 'q_option_external', 'option' ) );
 
-                }
+        /*
+        [external] => 1
+        [external_0_title] => Font Awesome
+        [external_0_type] => css
+        [external_0_url] => https://use.fontawesome.com/releases/v5.5.0/css/all.css
+        [external_0_version] => 5.5.0
+        */
 
-                // if no type - skip ##
-                if ( ! $file ) {
+        // sanity check ##
+        if ( 
+            ! isset( self::$options->external )
+            || 1 > self::$options->external
+        ){
 
-                    helper::log( 'Skipping: '.$handle.' - File missing...' );
+            // helper::log( 'No external libraries to load' );
 
-                    continue;
+            return false;
 
-                }
+        }
 
-                // helper::log( 'Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
+        // our query returns all items are single properties of the $options object - so, let's make an array ##
+        if( \have_rows( 'q_option_external', 'option' ) ) {
+
+            while( \have_rows( 'q_option_external', 'option' ) ) {
+                
+                // set things up ##
+                \the_row(); 
+
+                // properties ##
+                $type = \get_sub_field('type');
+                $title = \get_sub_field('title');
+                $version = \get_sub_field('version');
+                $url = \get_sub_field('url');
+
+                // external libraries are saved in an array with "type", "title", "version" and "url" ##
+                // foreach( self::$options->external as $key ) {
+
+                // helper::log( 'working External: '.$title );
+
+                // sanitize title to handle ##
+                $handle = \sanitize_key( $title );
+
+                // validate URL ##
+
+                // debug ##
+                // helper::log( 'Adding external library: '.$handle.' version '.$version.' from url: '.$url.' as type: '.$type );
 
                 // register and enqueue ##
-                switch ( $type_ext ) {
+                switch ( $type ) {
 
                     case "css" :
 
-                        \wp_register_style( $handle, $file, '', self::$plugin_version, 'all' );
+                        \wp_register_style( $handle, $url, '', $version, 'all' );
                         \wp_enqueue_style( $handle );
 
                     break ;
 
                     case "js" :
 
-                        \wp_register_script( $handle, $file, array(), self::$plugin_version, 'all' );
+                        \wp_register_script( $handle, $url, array(), $version, 'all' );
                         \wp_enqueue_script( $handle );
 
                     break ;
@@ -290,10 +308,137 @@ class theme extends \Q {
                 }
 
             }
-            
+
+        } else {
+
+            // helper::log( 'No external libraries to load...' );
+
         }
 
     }
+
+
+
+
+    
+    /*
+    * script enqueuer 
+    *
+    * @since  2.0
+    */
+    public static function wp_enqueue_scripts_local() {
+
+        // helper::log( self::$options->library );
+
+        // loop over libraries and include - checking for "min" version is debugging ##
+        foreach( self::$options->library as $key => $value ) {
+
+            // helper::log( 'working: '.$key );
+
+            // CSS or JS
+            $type = explode( "_" , $key );
+
+            // if no type - skip ##
+            if ( 
+                ! is_array( $type ) 
+                || 2 > count( $type )
+            ) {
+
+                // helper::log( 'Skipping: '.$key );
+
+                continue;
+
+            }
+
+            $type_dir = ( 'css' == $type[0] ) ? 'css' : 'javascript' ;
+            $type_ext = ( 'css' == $type[0] ) ? 'css' : 'js' ;
+
+            // give it a handle ##
+            $handle = 'q-'.$key;
+
+            // template hierarchy ##
+
+            // check for minified file in Q Theme ##
+            if ( 
+                self::$debug
+                && theme_helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' )
+            ) {
+
+                $file = theme_helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' ) ;
+
+                // helper::log( 'DEUBBING - Adding '.$type_dir.'/'.$type[1].'.min.'.$type_ext.' from Q Theme' ) ;
+
+            // load minified version from Q Theme ##
+            } else if (
+                theme_helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) 
+            ) {
+
+                $file = theme_helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) ;
+
+                // helper::log( 'Adding '.$type_dir.'/'.$type[1].'.min.'.$type_ext.' from Q Theme' );
+
+            // check for non-minified version in Q Theme, if debugging ##
+            } else if ( 
+                self::$debug
+                && helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' ) 
+            ) {
+
+                $file = helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' );
+
+                // helper::log( 'DEUBBING - Adding '.$type_dir.'/'.$type[1].'.'.$type_ext.' from Q' );
+                
+            // load minified version from Q ## 
+            } else if ( helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) ) {
+
+                $file = helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) ;
+
+                // helper::log( 'Adding '.$type_dir.'/'.$type[1].'.min.'.$type_ext.' from Q' );
+
+            // final fallback - non minified on Q ##
+            } else {
+
+                $file = helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' );
+
+                // helper::log( 'Final fallback - Adding '.$type_dir.'/'.$type[1].'.'.$type_ext.' from Q' );
+
+            }
+
+            // if no type - skip ##
+            if ( ! $file ) {
+
+                helper::log( 'Skipping: '.$handle.' - File missing...' );
+
+                continue;
+
+            }
+
+            // helper::log( 'Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
+
+            // register and enqueue ##
+            switch ( $type_ext ) {
+
+                case "css" :
+
+                    \wp_register_style( $handle, $file, '', self::$plugin_version, 'all' );
+                    \wp_enqueue_style( $handle );
+
+                break ;
+
+                case "js" :
+
+                    \wp_register_script( $handle, $file, array(), self::$plugin_version, 'all' );
+                    \wp_enqueue_script( $handle );
+
+                break ;
+
+            }
+
+        }
+
+    }
+
+
+
 
 
     /*
