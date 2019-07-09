@@ -1,3 +1,7 @@
+### 2.7.0 ###
+
+* Added Font Awesome
+
 ### 2.6.0 ###
 
 * Moved ACF Q Setting into filters, so that plugins can add and ammed listed items

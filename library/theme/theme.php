@@ -105,6 +105,9 @@ class theme extends \Q {
             \wp_register_style( 'q-plugin-css-theme', theme_helper::get( "theme/css/q.theme.css", 'return' ), array(), self::$plugin_version, 'all' );
             \wp_enqueue_style( 'q-plugin-css-theme' );
 
+            wp_register_style( 'fontawesome', 'https://use.fontawesome.com/releases/v5.5.0/css/all.css');
+            wp_enqueue_style( 'fontawesome' );
+
         }
 
         if ( 

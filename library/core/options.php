@@ -538,6 +538,7 @@ class options extends \Q {
                             'css_q.wordpress'   => 'Q WordPress CSS',
                             'css_q.global'      => 'Q Global CSS',
                             'css_bs4'           => 'Bootstrap 4 CSS',
+                            'css_fa'            => 'Font Awesome',
                             'css_bsg'           => 'Bootstrap 4 Grid Temp CSS',
                             'js_q.global'       => 'Q Global JS',
                             'js_bs4'            => 'Bootstrap 4 JS',
@@ -550,6 +551,7 @@ class options extends \Q {
                             2 => 'js_snackbar',
                             3 => 'css_snackbar',
                             4 => 'js_stickyfill',
+                            5 => 'css_fa'
                         ),
                         'layout' => 'vertical',
                         'toggle' => 1,
