@@ -15,7 +15,7 @@ class google extends \Q {
 
     public static function run()
     {
-        
+
         if ( ! \is_admin() ) {
 
             // google analytics tracking code - add just before </head> ## 
@@ -27,7 +27,94 @@ class google extends \Q {
             // add <noscript> after opening <body> tag ##
             \add_action( 'q_action_body_open', [ get_class(), 'tag_manager_noscript'], 2 );
 
+        } else {
+
+            // add fields to Q settings ##
+            \add_filter( 'q/core/options/add_field/analytics', [ get_class(), 'filter_acf_analytics' ], 10, 1 );
+
         }
+
+    }
+
+
+
+    public static function filter_acf_analytics( $array ) 
+    {
+
+        // test ##
+        // helper::log( $array );
+
+        // lets add our fields ##
+        array_push( $array['fields'], [
+
+            'key' => 'field_q_option_google_analytics',
+            'label' => 'Google Analytics',
+            'name' => 'q_option_google_analytics',
+            'type' => 'textarea',
+            'instructions' => 'Enter the complete Google Analytics snippet',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'default_value' => '',
+            'placeholder' => '',
+            'maxlength' => '',
+            'rows' => 3,
+            'new_lines' => '',
+        
+        ]);
+
+        array_push( $array['fields'], [
+
+            'key' => 'field_q_option_google_tag_manager',
+            'label' => 'Google Tag Manager',
+            'name' => 'q_option_google_tag_manager',
+            'type' => 'textarea',
+            'instructions' => 'Enter the complete Google Tag Manager snippet',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'default_value' => '',
+            'placeholder' => '',
+            'maxlength' => '',
+            'rows' => 4,
+            'new_lines' => '',
+
+        ]);
+
+        array_push( $array['fields'], [
+
+            'key' => 'field_q_option_google_tag_manager_noscript',
+            'label' => 'Google Tag Manager Noscript',
+            'name' => 'q_option_google_tag_manager_noscript',
+            'type' => 'textarea',
+            'instructions' => 'Enter the complete Google Tag Manager noscript snippet',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'default_value' => '',
+            'placeholder' => '',
+            'maxlength' => '',
+            'rows' => 4,
+            'new_lines' => '',
+            
+        ]);
+
+        // helper::log( $array['fields'] );
+
+        // kick it back, as it's a filter ##
+        return $array;
 
     }
 
@@ -61,6 +148,8 @@ class google extends \Q {
     }
 
 
+    
+
     /**
      * Hook to set-up Google ReCaptcha form inline forms, not in modal - reverse hack...
      *
@@ -69,10 +158,30 @@ class google extends \Q {
     public static function recaptcha_hook( Array $args = null )
     {
 
+        // filter $args ##
+        $args = \apply_filters( 'q/google/recaptcha/hook', $args );
+
+        // sanity ##
+        if ( 
+            is_null( $args )
+        ){
+
+            helper::log( 'Args empty..' );
+
+            // nada ##
+            return false;
+
+        }
+
+        helper::log( $args );
+
+        // load count ##
+        $load_count = isset( $args['load_count'] ) ? intval( $args['load_count'] ) : 1 ; 
+
 ?>
     <script>
-        // console.log( 'Hacking load count...' );
-        $load_count = 2;
+        console.log( 'Hacking load count...' );
+        $load_count = <?php echo $load_count ?>;
     </script>
 <?php
 
@@ -107,16 +216,7 @@ class google extends \Q {
 
         #helper::log( 'adding Google Maps assets...' );
 
-        // we need a valid API key to continue ##
-        if ( ! $key = apply_filters( "q/google/maps/v3/api/key", false ) ) {
-
-            helper::log( 'No API key added to filter: "q/google/maps/v3/api/key"' );
-
-            return false;
-
-        }
-
-        \wp_register_script('google-maps', 'https://maps.googleapis.com/maps/api/js?key='.$key, false, '3');
+        \wp_register_script('google-maps', 'https://maps.googleapis.com/maps/api/js?key='.GOOGLE_MAPS_V3_API_KEY, false, '3');
         \wp_enqueue_script('google-maps');
 
         \wp_enqueue_script( 'acf-google-maps',  self::get_plugin_url( 'library/theme/javascript/acf-google-maps.js' ), array( 'jquery' ), self::version, true );
@@ -207,14 +307,13 @@ class google extends \Q {
         }
 
         // grab the options ##
-        $q_options = options::get();
+        // $q_options = options::get();
 
         #helper::log( $q_options );
 
         // bulk if no options found ##
         if ( 
-            ! $q_options 
-            || ! is_object( $q_options )    
+            ! options::get( 'google_tag_manager' )
         ) {
 
             // helper::log( 'Error: Options missing...' );
@@ -223,19 +322,19 @@ class google extends \Q {
 
         }
 
-        // check for UI ##
-        if ( ! isset( $q_options->google_tag_manager ) ) { 
+        // // check for UI ##
+        // if ( ! isset( $q_options->google_tag_manager ) ) { 
 
-            // Log ##
-            // helper::log( 'Google Tag Manager not defined' );
+        //     // Log ##
+        //     // helper::log( 'Google Tag Manager not defined' );
 
-            // kick off ##
-            return false; 
+        //     // kick off ##
+        //     return false; 
 
-        }
+        // }
 
         // kick it back, cleanly... ##
-        echo $q_options->google_tag_manager;
+        echo options::get( 'google_tag_manager' );
         
     }
 
@@ -272,14 +371,13 @@ class google extends \Q {
         }
 
         // grab the options ##
-        $q_options = options::get();
+        // $q_options = options::get();
 
         #helper::log( $q_options );
 
         // bulk if no options found ##
         if ( 
-            ! $q_options 
-            || ! is_object( $q_options )    
+            ! options::get( 'google_tag_manager_noscript' )
         ) {
 
             // helper::log( 'Error: Options missing...' );
@@ -288,19 +386,19 @@ class google extends \Q {
 
         }
 
-        // check for UI ##
-        if ( ! isset( $q_options->google_tag_manager_noscript ) ) { 
+        // // check for UI ##
+        // if ( ! isset( $q_options->google_tag_manager_noscript ) ) { 
 
-            // Log ##
-            // helper::log( 'Google Tag Manager No Script not defined' );
+        //     // Log ##
+        //     // helper::log( 'Google Tag Manager No Script not defined' );
 
-            // kick off ##
-            return false; 
+        //     // kick off ##
+        //     return false; 
 
-        }
+        // }
 
         // kick it back, cleanly... ##
-        echo $q_options->google_tag_manager_noscript;
+        echo options::get( 'google_tag_manager_noscript' );
 
     }
 
@@ -335,15 +433,16 @@ class google extends \Q {
 
         }
 
+        // helper::log( options::get( 'google_analytics' ) );
+
         // grab the options ##
-        $q_options = options::get();
+        // $q_options = options::get();
 
         #helper::log( $q_options );
 
         // bulk if no options found ##
         if ( 
-            ! $q_options 
-            || ! is_object( $q_options )    
+            ! options::get( 'google_analytics' )
         ) {
 
             // helper::log( 'Error: Options missing...' );
@@ -352,19 +451,8 @@ class google extends \Q {
 
         }
 
-        // check for UI ##
-        if ( ! isset( $q_options->google_analytics ) ) { 
-        
-            // Log ##
-            // helper::log( 'Google Analytics not defined' );
-
-            // kick off ##
-            return false; 
-        
-        }
-
         // kick it back, cleanly... ##
-        echo $q_options->google_analytics;
+        echo options::get( 'google_analytics' );
 
     }
 

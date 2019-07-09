@@ -17,23 +17,23 @@ use q\program\core\core as program_core;
 \q\controller\tab::run();
 
 class tab extends \Q {
-
+    
     public static $args = [];
 
     public static function run()
     {
 
         // add JS to footer if debugging or single q.theme.js script if not ##
-        \add_action( 'wp_footer', [ get_class(), 'wp_footer' ], 5 );
+        \add_action( 'wp_footer', [ get_class(), 'wp_footer' ], 5 ); 
 
         // add css ##
-        // \add_action( 'wp_head', [ get_class(), 'wp_head' ], 4 );
+        // \add_action( 'wp_head', [ get_class(), 'wp_head' ], 4 ); 
 
     }
 
 
 
-
+    
     /**
     * Load tabs from ACF repeater field
     *
@@ -44,10 +44,10 @@ class tab extends \Q {
     {
 
         // grab global post ##
-        if (
+        if ( 
             is_null( $args )
             || ! isset( $args['field'] )
-        ) {
+        ) { 
 
             helper::log( 'Kicked early, missing params..' );
 
@@ -71,15 +71,15 @@ class tab extends \Q {
 
     /**
      * Secure content, if password protected
-     *
-     * @since
+     * 
+     * @since       
      * @return      Mixed
      */
     public static function is_secure()
     {
 
         if (
-            ! $the_post = wordpress::the_post()
+            ! $the_post = wordpress::the_post() 
         ) {
 
             helper::log( 'No post object...' );
@@ -89,9 +89,9 @@ class tab extends \Q {
         }
 
         if ( \post_password_required( $the_post ) ) {
-
+                                            
             // we will show password form here ##
-            return true;
+            return true; 
 
         }
 
@@ -114,9 +114,9 @@ class tab extends \Q {
         self::$args = isset( $args ) ? (array) $args: [] ;
 
         // grab global post ##
-        if (
+        if ( 
             is_null( $args )
-        ) {
+        ) { 
 
             helper::log( 'Kicked early, missing params..' );
 
@@ -132,8 +132,8 @@ class tab extends \Q {
 
         }
 
-        // format $string ready for rendering ##
-        $string = self::prepare( $args );
+        // format $string ready for rendering ## 
+        $string = self::prepare( $args );        
 
         // render ##
         echo $string;
@@ -144,15 +144,15 @@ class tab extends \Q {
 
     /**
      * Prepare tabs and gather content, ready for rendering
-     *
+     * 
      * @since   2.0.0
      * @return  Mixed Boolean on error or String
      */
     public static function prepare( $args = null ){
 
         // we need to check if this post has some tabs stored ##
-        if (
-            ! $tabs = self::get( $args )
+        if ( 
+            ! $tabs = self::get( $args ) 
         ) {
 
             // log ##
@@ -164,9 +164,9 @@ class tab extends \Q {
         }
 
         // tabs should be an array ##
-        if (
+        if ( 
             $tabs
-            && ! is_array( $tabs )
+            && ! is_array( $tabs ) 
         ) {
 
             // log ##
@@ -179,9 +179,9 @@ class tab extends \Q {
 
         // convert data returned from acf into a workable format ##
         // $array gets formatted and rendered at the end of this method ##
-        if (
-            $tabs
-            && is_array( $tabs )
+        if ( 
+            $tabs 
+            && is_array( $tabs )   
         ) {
             /*
             0 => [
@@ -206,7 +206,7 @@ class tab extends \Q {
             $string = preg_replace( '#\[[^\]]+\]#', '', $string );
 
             // get the post content ##
-            $string = \apply_filters( 'the_content', $string );
+            $string = \apply_filters( 'the_content', $string ); 
 
             // apply some basic markup ##
             $string = str_replace( '%string%', $string, $args['markup']['default'] );
@@ -227,14 +227,14 @@ class tab extends \Q {
 
     /**
      * Markup array of tabs based onpassed config
-     *
+     * 
      * @since   2.0.0
      * @return  Mixed Boolean on error or String
      */
     public static function markup( $array = null, $args = null ){
 
         // tabs should be an array ##
-        if (
+        if ( 
             ! is_array( $array ) ) {
 
             // log ##
@@ -273,7 +273,7 @@ class tab extends \Q {
             ];
 
             // build nav ##
-            $content .= generic::markup( $args['markup']['content']['row'], $content_row ); ;
+            $content .= generic::markup( $args['markup']['content']['row'], $content_row ); ; 
 
         }
 
@@ -283,7 +283,7 @@ class tab extends \Q {
 
         // program cta ##
         // %program_cta%
-        $string =
+        $string = 
             '#' == self::get_purl() ?
             str_replace( '%program_cta%', '', $string ) :
             str_replace( '%program_cta%', $args['markup']['content']['cta'] , $string ) ;
@@ -301,14 +301,14 @@ class tab extends \Q {
 
     /**
      * Format tabs and gather content, ready for rendering
-     *
+     * 
      * @since   2.0.0
      * @return  Mixed Boolean on error or String
      */
     public static function format( $tabs = null, $args = null ){
 
         // tabs should be an array ##
-        if (
+        if ( 
             ! is_array( $tabs ) ) {
 
             // log ##
@@ -329,23 +329,23 @@ class tab extends \Q {
             switch( $tab['type'] ){
 
                 case 'special' :
-
+                    
                     // string -re: "mos" ##
-                    $content = self::type_special( $tab, $args );
+                    $content = self::type_special( $tab, $args );   
 
                 break ;
 
                 case 'blog' :
 
                     // array of WP_Post objects
-                    $content = self::type_blog( $tab, $args );
+                    $content = self::type_blog( $tab, $args ); 
 
                 break ;
 
                 case 'gallery' :
 
                     // array of media objects
-                    $content = self::type_gallery( $tab, $args );
+                    $content = self::type_gallery( $tab, $args ); 
 
                 break ;
 
@@ -422,7 +422,7 @@ class tab extends \Q {
         // helper::log( $array );
 
         if (
-            ! $the_post = wordpress::the_post()
+            ! $the_post = wordpress::the_post() 
         ) {
 
             helper::log( 'No post object...' );
@@ -451,8 +451,8 @@ class tab extends \Q {
                 'category'      => \esc_html( \get_the_category( $row['post']->ID )[0]->name ),
                 'category_url'  => \esc_html( \get_category_link( \get_the_category( $row['post']->ID )[0]->term_id ) ),
                 'author'        => \esc_html( \get_the_author_meta( 'display_name', \get_post_field ( 'post_author', $row['post']->ID ) ) ),
-                'src'           =>  \has_post_thumbnail( $row['post']->ID ) ?
-                                    \get_the_post_thumbnail( $row['post']->ID, $args['markup']['blog']['handle'][helper::get_device()] ) :
+                'src'           =>  \has_post_thumbnail( $row['post']->ID ) ? 
+                                    \get_the_post_thumbnail( $row['post']->ID, $args['markup']['blog']['handle'][helper::get_device()] ) : 
                                     ''
                 // 'hash'       => \sanitize_title_with_dashes( $array['title'] ) // current tab hash ##
             ];
@@ -461,12 +461,12 @@ class tab extends \Q {
 
             // helper::log( $data );
 
-            $string .= generic::markup( $markup, $data ); ;
+            $string .= generic::markup( $markup, $data ); ; 
 
         }
 
         // get wrapper ##
-        $return = str_replace( '%row%', $string, $args['markup']['blog']['wrap'] );
+        $return = str_replace( '%row%', $string, $args['markup']['blog']['wrap'] ); 
 
         // category link ##
         $link = str_replace( '%category_url%', $category_url, $args['markup']['blog']['link'] );
@@ -512,7 +512,7 @@ class tab extends \Q {
         // helper::log( $array );
 
         if (
-            ! $the_post = wordpress::the_post()
+            ! $the_post = wordpress::the_post() 
         ) {
 
             helper::log( 'No post object...' );
@@ -544,12 +544,12 @@ class tab extends \Q {
 
             // helper::log( $data );
 
-            $string .= generic::markup( $markup, $data ); ;
+            $string .= generic::markup( $markup, $data ); ; 
 
         }
 
         // get wrapper ##
-        $return = str_replace( '%row%', $string, $args['markup']['gallery']['wrap'] );
+        $return = str_replace( '%row%', $string, $args['markup']['gallery']['wrap'] ); 
 
         // add content ##
         $return = str_replace( '%content%', $array['text'], $return );
@@ -591,7 +591,7 @@ class tab extends \Q {
 
             // helper::log( $data );
 
-            $string .= generic::markup( $markup, $data ); ;
+            $string .= generic::markup( $markup, $data ); ; 
 
         }
 
@@ -629,7 +629,7 @@ class tab extends \Q {
     {
 
         javascript::ob_get([
-            'view'      => get_class(),
+            'view'      => get_class(), 
             'method'    => 'javascript',
             'priority'  => 13,
             'handle'    => 'Tab'
@@ -658,7 +658,7 @@ if ( typeof jQuery !== 'undefined' ) {
     jQuery( window ).bind( "load", function(){
 
         if( $the_hash = q_tab_hash() ) {
-
+            
             q_tab( $the_hash );
 
         } else {
@@ -670,15 +670,15 @@ if ( typeof jQuery !== 'undefined' ) {
     });
 
     // ready ##
-    jQuery(document).ready(function($) {
+    jQuery(document).ready(function() {
 
         // modern browsers hashchange event ##
         // jQuery( '.q-tab-trigger' ).on( 'click', function( e ) {
 
         //     console.log( 'Doing close click...' );
-
+            
         //     $the_hash = q_tab_hash();
-
+            
         //     if ( $the_hash ) {
 
         //         console.log( 'hash is: '+$the_hash );
@@ -727,7 +727,7 @@ if ( typeof jQuery !== 'undefined' ) {
 
             // compile ##
             $trigger = '#tab/'+$trigger
-
+            
             // push state ##
             if( history.pushState ) {
                  history.pushState(null, null, $trigger );
@@ -740,26 +740,7 @@ if ( typeof jQuery !== 'undefined' ) {
 
         // @todo - Viktor - pre-select select/option if hash set ##
 
-        // hack to handle faqs
-        $(document).on('click', '.faqs .q-tab-trigger', function() {
-            var $tabActive = $('[data-tab-target="'+ $(this).data('tab-trigger') +'"]');
-
-            if (!$(this).hasClass('q-tab-current')) {
-                // handle faq open with the same hash
-                if (q_get_hash_value_from_key('tab') === $(this).data('tab-trigger')) {
-                    $(this).addClass('q-tab-current');
-                    $tabActive.removeClass('q-tab-hidden').addClass('q-tab-current').show();
-                    return;
-                } else {
-                    return;
-                }
-            }
-
-            // handle faq close
-            $(this).removeClass('q-tab-current');
-            $tabActive.removeClass('q-tab-current').addClass('q-tab-hidden').hide();
-        });
-    }(jQuery));
+    });
 
     function q_tab_default(){
 
@@ -770,7 +751,7 @@ if ( typeof jQuery !== 'undefined' ) {
 
         jQuery( '.q-tab-trigger:first-child' ).addClass('q-tab-current');
         jQuery( '.q-tab-target:first-child' ).removeClass('q-tab-hidden').addClass('q-tab-current').show();
-
+    
     }
 
     function q_tab( data_id ){
@@ -784,13 +765,13 @@ if ( typeof jQuery !== 'undefined' ) {
             // console.log( 'data_id: '+ data_id ) ;
             // console.log( 'tab_target: '+ $target.data('tab-target') ) ;
             // console.log( 'q_tab, target found:' );
-
+            
             // hide all targets ##
             jQuery('.q-tab-target').each( function(){
 
                 // console.log( 'hide..' );
                 jQuery(this).hide().addClass('q-tab-hidden').removeClass('q-tab-current');
-
+                
             });
 
             // remove highlight from all triggers ##
@@ -804,13 +785,13 @@ if ( typeof jQuery !== 'undefined' ) {
             // var targetOffset = ( $target.offset().top ) - 230;
 
             // scroll ##
-            // jQuery('html,body').animate({
+            // jQuery('html,body').animate({ 
             //     scrollTop: targetOffset + "px"
-            // }, 500, 'swing');
+            // }, 500, 'swing'); 
 
         };
 
-    }
+    }   
 
     /*
     Check for passed hash value
@@ -839,13 +820,13 @@ if ( typeof jQuery !== 'undefined' ) {
     }
 
 
-
+    
 
     public static function wp_head()
     {
 
         css::ob_get([
-            'view'      => get_class(),
+            'view'      => get_class(), 
             'method'    => 'css',
             'priority'  => 42,
             'handle'    => 'Tab'
@@ -978,7 +959,7 @@ if ( typeof jQuery !== 'undefined' ) {
 
     /**
      * Render inline CSS
-     *
+     * 
      * @since   2.0.0
      * @return  String
      */
@@ -987,7 +968,7 @@ if ( typeof jQuery !== 'undefined' ) {
 
 ?>
     <style>
-    .q-tab-target:not(:first-child) {
+    .q-tab-target:not(:first-child) {     
         display: none;
     }
     .q-tab-hidden{

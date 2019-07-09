@@ -16,7 +16,7 @@ class facebook extends \Q {
 
     public static function run()
     {
-        
+
         if ( ! \is_admin() ) {
 
             // add facebook pixel ##
@@ -28,9 +28,76 @@ class facebook extends \Q {
             // if on a single post screen, generate and insert twitter:OG tags ##
             \add_action( 'wp_head', [ get_class(), 'meta' ], 12 );      
 
+        } else {
+
+            // add fields to Q settings ##
+            \add_filter( 'q/core/options/add_field/analytics', [ get_class(), 'filter_acf_analytics' ], 10, 1 );
+
         }
 
     }
+
+
+
+    
+
+
+    public static function filter_acf_analytics( $array ) 
+    {
+
+        // test ##
+        // helper::log( $array );
+
+        // lets add our fields ##
+        array_push( $array['fields'], [
+
+            'key' => 'field_q_option_facebook_pixel',
+            'label' => 'Facebook Pixel',
+            'name' => 'q_option_facebook_pixel',
+            'type' => 'textarea',
+            'instructions' => 'Enter the complete Facebook Pixel snippet',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'default_value' => '',
+            'placeholder' => '',
+            'maxlength' => '',
+            'rows' => 4,
+            'new_lines' => '',
+        
+        ]);
+
+        array_push( $array['fields'], [
+            'key' => 'field_q_option_facebook_pixel_noscript',
+            'label' => 'Facebook Pixel Noscript',
+            'name' => 'q_option_facebook_pixel_noscript',
+            'type' => 'textarea',
+            'instructions' => 'Enter the complete Facebook Pixel Noscript snippet',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'default_value' => '',
+            'placeholder' => '',
+            'maxlength' => '',
+            'rows' => 4,
+            'new_lines' => '',
+        ]);
+
+        // helper::log( $array['fields'] );
+
+        // kick it back, as it's a filter ##
+        return $array;
+
+    }
+
 
 
 
@@ -128,34 +195,33 @@ class facebook extends \Q {
         }
 
         // grab the options ##
-        $q_options = options::get();
+        // $q_options = options::get();
 
-        // helper::log( $q_options );
+        // helper::log( options::get( 'facebook_pixel' ) );
 
         // bulk if no options found ##
         if ( 
-            ! $q_options 
-            || ! is_object( $q_options )   
+            ! options::get( 'facebook_pixel' )
         ) {
 
-            helper::log( 'Error: Options missing...' );
+            // helper::log( 'Error: Options missing...' );
 
             return false;
 
         }
 
 
-        // check if we have tag_manager defined in config ##
-        if ( ! isset( $q_options->facebook_pixel ) ) {
+        // // check if we have tag_manager defined in config ##
+        // if ( ! isset( $q_options->facebook_pixel ) ) {
 
-            // helper::log( 'Facebook Pixel not defined in config' );
+        //     // helper::log( 'Facebook Pixel not defined in config' );
 
-            return false;
+        //     return false;
 
-        }
+        // }
 
         // kick it back, cleanly... ##
-        echo $q_options->facebook_pixel;
+        echo options::get( 'facebook_pixel' );
 
     }
 
@@ -190,35 +256,34 @@ class facebook extends \Q {
         }
 
         // grab the options ##
-        $q_options = options::get();
+        // $q_options = options::get();
 
         #helper::log( $q_options );
 
         // bulk if no options found ##
         if ( 
-            ! $q_options 
-            || ! is_object( $q_options )   
+            ! options::get( 'facebook_pixel_noscript' )  
         ) {
 
-            helper::log( 'Error: Options missing...' );
+            // helper::log( 'Error: Options missing...' );
 
             return false;
 
         }
 
-        // check for UI ##
-        if ( ! isset( $q_options->facebook_pixel_noscript ) ) { 
+        // // check for UI ##
+        // if ( ! isset( $q_options->facebook_pixel_noscript ) ) { 
 
-            // Log ##
-            // helper::log( 'Facebook Pixel No Script not defined' );
+        //     // Log ##
+        //     // helper::log( 'Facebook Pixel No Script not defined' );
 
-            // kick off ##
-            return false; 
+        //     // kick off ##
+        //     return false; 
 
-        }
+        // }
 
         // kick it back, cleanly... ##
-        echo $q_options->facebook_pixel_noscript;
+        echo options::get( 'facebook_pixel_noscript' );
 
     }
 

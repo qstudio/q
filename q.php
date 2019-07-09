@@ -13,7 +13,7 @@
  * Plugin Name:     Q
  * Plugin URI:      https://www.qstudio.us
  * Description:     Q is a Development Framework that provides an API to manage libraries, themes, plugins and widgets.
- * Version:         2.5.2
+ * Version:         2.6.0
  * Author:          Q Studio
  * Author URI:      https://www.qstudio.us
  * License:         GPL
@@ -40,7 +40,7 @@ if ( ! class_exists( 'Q' ) ) {
         private static $instance = null;
 
         // Plugin Settings
-        const version = '2.5.2';
+        const version = '2.6.0';
         const text_domain = 'q-textdomain'; // for translation ##
         static $debug = false; // global debuggin ##
         static $device; // current device ##
@@ -180,6 +180,33 @@ if ( ! class_exists( 'Q' ) ) {
 
 
         /**
+         * Check for required classes to build UI features
+         * 
+         * @return      Boolean 
+         * @since       0.1.0
+         */
+        public static function has_dependencies()
+        {
+
+            // check for what's needed ##
+            if (
+                ! class_exists( 'ACF' )
+            ) {
+
+                helper::log( 'Q requires ACF to run correctly..' );
+
+                return false;
+
+            }
+
+            // ok ##
+            return true;
+
+        }
+
+
+
+        /**
         * Load Libraries
         *
         * @since        2.0
@@ -196,7 +223,17 @@ if ( ! class_exists( 'Q' ) ) {
 
             // admin ##
             require_once self::get_plugin_path( 'library/admin/admin.php' );
-            require_once self::get_plugin_path( 'library/admin/menu.php' ); 
+            // require_once self::get_plugin_path( 'library/admin/menu.php' ); 
+
+            // check for dependencies, required for UI components - admin will still run ##
+            if ( ! self::has_dependencies() ) {
+
+                return false;
+
+            }
+
+            // test suite ##
+            require_once self::get_plugin_path( 'library/test/controller.php' );
 
             // hooks ##
             require_once self::get_plugin_path( 'library/hook/hook.php' );

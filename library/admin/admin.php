@@ -15,6 +15,9 @@ class admin extends \Q {
 
         if ( \is_admin() ) {
 
+            // admin js ##
+            \add_action( 'admin_enqueue_scripts', array( get_class(), 'admin_enqueue_scripts' ), 1 );
+
             // set-up admin image sizes ##
             \add_action( "admin_init", array( get_class(), 'admin_setup_images' ) );
                 
@@ -30,6 +33,40 @@ class admin extends \Q {
         }
 
     }
+
+
+
+     /**
+    * include plugin admin assets
+    *
+    * @since        0.1.0
+    * @return       __void
+    */
+    public static function admin_enqueue_scripts() {
+
+        // add JS ## -- after all dependencies ##
+        \wp_enqueue_script( 'q-admin-js', helper::get( "theme/javascript/q.admin.global.js", 'return' ), array( 'jquery' ), self::version );
+
+        // nonce ##
+        $nonce = \wp_create_nonce( 'q-admin-nonce' );
+
+        // pass variable values defined in parent class ##
+        \wp_localize_script( 'q-admin-js', 'q_admin', array(
+            'ajaxurl'           => \admin_url( 'admin-ajax.php', \is_ssl() ? 'https' : 'http' ), ## add 'https' to use secure URL ##
+            'debug'             => self::$debug,
+            'nonce'             => $nonce
+        ));
+
+        // add snackbar CSS ##
+        \wp_register_style( 'q-snackbar-admin', helper::get( "theme/css/snackbar.min.css", 'return' ), '', self::version, 'all' );
+        \wp_enqueue_style( 'q-snackbar-admin' );
+
+        // add snackbar JS ##
+        \wp_register_script( 'q-snackbar-admin', helper::get( "theme/javascript/snackbar.min.js", 'return' ), array( 'jquery' ), self::version );
+        \wp_enqueue_script( 'q-snackbar-admin' );
+
+    }
+
 
 
 

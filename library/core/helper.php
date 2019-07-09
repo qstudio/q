@@ -381,7 +381,7 @@ class helper extends \Q {
 
 
 
-    	/**
+    /**
 	 * Remove Class Action Without Access to Class Object
 	 *
 	 * In order to use the core WordPress remove_action() on an action added with the callback
