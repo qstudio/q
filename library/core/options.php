@@ -514,7 +514,7 @@ class options extends \Q {
                 'fields' => array(
                     array(
                         'key' => 'field_q_option_library',
-                        'label' => 'Libraries',
+                        'label' => 'Local',
                         'name' => 'q_option_library',
                         'type' => 'checkbox',
                         'instructions' => '',
@@ -538,7 +538,7 @@ class options extends \Q {
                             'css_q.wordpress'   => 'Q WordPress CSS',
                             'css_q.global'      => 'Q Global CSS',
                             'css_bs4'           => 'Bootstrap 4 CSS',
-                            'css_fa'            => 'Font Awesome',
+                            // 'css_fontawesome'   => 'Font Awesome 5.5.0',
                             'css_bsg'           => 'Bootstrap 4 Grid Temp CSS',
                             'js_q.global'       => 'Q Global JS',
                             'js_bs4'            => 'Bootstrap 4 JS',
@@ -558,6 +558,122 @@ class options extends \Q {
                         'return_format' => 'value',
                         'save_custom' => 0,
                     ),
+
+                    array(
+                        'key' => 'field_q_option_external',
+                        'label' => 'External',
+                        'name' => 'q_option_external',
+                        'type' => 'repeater',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'collapsed' => 'field_q_option_external_title',
+                        'min' => 0,
+                        'max' => 10,
+                        'layout' => 'block',
+                        'button_label' => 'ADD',
+                        'sub_fields' => array(
+                            
+                            array(
+                                'key' => 'field_q_option_external_type',
+                                'label' => 'Type',
+                                'name' => 'type',
+                                'type' => 'select',
+                                'instructions' => '',
+                                'required' => 1,
+                                'conditional_logic' => 0,
+                                'wrapper' => array(
+                                    'width' => '',
+                                    'class' => '',
+                                    'id' => '',
+                                ),
+                                'choices' => array(
+                                    'css'   => 'CSS',
+                                    'js'    => 'Javascript',
+                                    // 'font'  => 'Font',
+                                ),
+                                'default_value' => 'css',
+                                'allow_null' => 0,
+                                'multiple' => 0,
+                                'ui' => 0,
+                                'ajax' => 0,
+                                'placeholder' => '',
+                                'disabled' => 0,
+                                'readonly' => 0,
+                                'return_format' => 'value',
+                            ),
+
+                            array(
+                                'key' => 'field_q_option_external_title',
+                                'label' => 'Title',
+                                'name' => 'title',
+                                'type' => 'text',
+                                // 'instructions' => 'File Handle',
+                                'required' => 1,
+                                'conditional_logic' => 0,
+                                'wrapper' => array(
+                                    'width' => '',
+                                    'class' => '',
+                                    'id' => '',
+                                ),
+                                'default_value' => 'Font Awesome',
+                                'placeholder' => '',
+                                'prepend' => '',
+                                'append' => '',
+                                'maxlength' => '',
+                                'readonly' => 0,
+                                'disabled' => 0,
+                            ),
+
+                            array(
+                                'key' => 'field_q_option_external_version',
+                                'label' => 'Version',
+                                'name' => 'version',
+                                'type' => 'text',
+                                // 'instructions' => 'File Handle',
+                                'required' => 1,
+                                'conditional_logic' => 0,
+                                'wrapper' => array(
+                                    'width' => '',
+                                    'class' => '',
+                                    'id' => '',
+                                ),
+                                'default_value' => '5.5.0',
+                                'placeholder' => '',
+                                'prepend' => '',
+                                'append' => '',
+                                'maxlength' => '',
+                                'readonly' => 0,
+                                'disabled' => 0,
+                            ),
+
+                            array(
+                                'key' => 'field_q_option_external_url',
+                                'label' => 'URL',
+                                'name' => 'url',
+                                'type' => 'url',
+                                // 'instructions' => 'Enter Full URL',
+                                'required' => 1,
+                                'conditional_logic' => 0,
+                                'wrapper' => array(
+                                    'width' => '',
+                                    'class' => '',
+                                    'id' => '',
+                                ),
+                                'default_value' => 'https://use.fontawesome.com/releases/v5.5.0/css/all.css',
+                                'placeholder' => '',
+                            ),
+
+                        ),
+
+                    ),
+
+
                 ),
                 'location' => array(
                     array(
@@ -577,6 +693,7 @@ class options extends \Q {
                 'active' => true,
                 'description' => '',
             ),
+
 
             'plugin'   => array(
                 'key' => 'group_q_option_plugin',

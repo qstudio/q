@@ -1,3 +1,7 @@
+### 2.7.1 ###
+
+* Added external library handler to Q Settings
+
 ### 2.7.0 ###
 
 * Added Font Awesome
