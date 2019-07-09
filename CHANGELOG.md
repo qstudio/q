@@ -2,6 +2,8 @@
 
 * Moved ACF Q Setting into filters, so that plugins can add and ammed listed items
 * Added Test suite to Q, controllable from Q Settings view, with email and error log viewers and controllers 
+* Added admin controllers for Brand Bar and Consent System
+* Moved debug settings into Test system
 
 ### 2.5.0 ###
 

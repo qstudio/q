@@ -148,6 +148,8 @@ class google extends \Q {
     }
 
 
+    
+
     /**
      * Hook to set-up Google ReCaptcha form inline forms, not in modal - reverse hack...
      *
@@ -156,10 +158,30 @@ class google extends \Q {
     public static function recaptcha_hook( Array $args = null )
     {
 
+        // filter $args ##
+        $args = \apply_filters( 'q/google/recaptcha/hook', $args );
+
+        // sanity ##
+        if ( 
+            is_null( $args )
+        ){
+
+            helper::log( 'Args empty..' );
+
+            // nada ##
+            return false;
+
+        }
+
+        helper::log( $args );
+
+        // load count ##
+        $load_count = isset( $args['load_count'] ) ? intval( $args['load_count'] ) : 1 ; 
+
 ?>
     <script>
-        // console.log( 'Hacking load count...' );
-        $load_count = 2;
+        console.log( 'Hacking load count...' );
+        $load_count = <?php echo $load_count ?>;
     </script>
 <?php
 
