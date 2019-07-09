@@ -1,3 +1,7 @@
+### 2.7.5 ###
+
+* Added dependency checks for Q, q_theme and ACF to block fatal errors
+
 ### 2.7.3 ###
 
 * Q Settings menu item ordering

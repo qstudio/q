@@ -22,6 +22,13 @@ class theme extends \Q {
     public static function run()
     {
 
+        // check we have dependencies ##
+        if ( ! self::has_dependencies() ){
+
+            return false;
+
+        }
+
         // load templates ##
         self::load_properties();
 
@@ -51,6 +58,32 @@ class theme extends \Q {
 
 
     
+
+    /**
+         * Check for required classes to build UI features
+         * 
+         * @return      Boolean 
+         * @since       0.1.0
+         */
+        public static function has_dependencies()
+        {
+
+            // check for what's needed ##
+            if (
+                ! class_exists( 'q_theme' )
+            ) {
+
+                helper::log( 'Q requires q_theme to run correctly..' );
+
+                return false;
+
+            }
+
+            // ok ##
+            return true;
+
+        }
+
 
 
     /**
@@ -108,8 +141,8 @@ class theme extends \Q {
             \wp_register_style( 'q-plugin-css-theme', theme_helper::get( "theme/css/q.theme.css", 'return' ), array(), self::$plugin_version, 'all' );
             \wp_enqueue_style( 'q-plugin-css-theme' );
 
-            wp_register_style( 'fontawesome', 'https://use.fontawesome.com/releases/v5.5.0/css/all.css');
-            wp_enqueue_style( 'fontawesome' );
+            // wp_register_style( 'fontawesome', 'https://use.fontawesome.com/releases/v5.5.0/css/all.css');
+            // wp_enqueue_style( 'fontawesome' );
 
         }
 
@@ -234,13 +267,13 @@ class theme extends \Q {
             while( \have_rows( 'q_option_external', 'option' ) ) {
                 
                 // set things up ##
-                the_row(); 
+                \the_row(); 
 
                 // properties ##
-                $type = get_sub_field('type');
-                $title = get_sub_field('title');
-                $version = get_sub_field('version');
-                $url = get_sub_field('url');
+                $type = \get_sub_field('type');
+                $title = \get_sub_field('title');
+                $version = \get_sub_field('version');
+                $url = \get_sub_field('url');
 
                 // external libraries are saved in an array with "type", "title", "version" and "url" ##
                 // foreach( self::$options->external as $key ) {
@@ -328,10 +361,10 @@ class theme extends \Q {
             // check for minified file in Q Theme ##
             if ( 
                 self::$debug
-                && Theme_helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' )
+                && theme_helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' )
             ) {
 
-                $file = Theme_helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' ) ;
+                $file = theme_helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' ) ;
 
                 // helper::log( 'DEUBBING - Adding '.$type_dir.'/'.$type[1].'.min.'.$type_ext.' from Q Theme' ) ;
 
