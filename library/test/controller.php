@@ -129,8 +129,8 @@ class controller extends \Q {
                             'id' => '',
                         ),
                         'choices' => array(
-                            'email'     => 'Email',
-                            'error'     => 'Error Log',
+                            'email'     => 'SMTP Tracker',
+                            'error'     => 'PHP Errors',
                             // 'url'   => 'URL',
                         ),
                         'allow_custom' => 0,
