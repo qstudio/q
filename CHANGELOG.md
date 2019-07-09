@@ -1,3 +1,7 @@
+### 2.7.2 ###
+
+* Q Settings language update
+
 ### 2.7.1 ###
 
 * Added external library handler to Q Settings
