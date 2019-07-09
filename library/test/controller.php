@@ -152,7 +152,7 @@ class controller extends \Q {
                         ),
                     ),
                 ),
-                'menu_order' => 3,
+                'menu_order' => 1,
                 'position' => 'side',
                 'style' => 'default',
                 'label_placement' => 'top',

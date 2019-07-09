@@ -1,3 +1,7 @@
+### 2.7.3 ###
+
+* Q Settings menu item ordering
+
 ### 2.7.2 ###
 
 * Q Settings language update
