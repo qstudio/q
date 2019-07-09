@@ -213,23 +213,26 @@ function q_modal_do_close(e){
 
         // console.log( 'scroll found: '+$scroll );
 
-        if ( jQuery( '[data-scroll="'+$scroll+'"]').length ) {
+        // enable scroll only for desktop
+        if (!jQuery('body').first().hasClass('device-mobile')) {
+            if ( jQuery( '[data-scroll="'+$scroll+'"]').length ) {
 
-            // // check if we have a defined scrollto position ##
-            // $scrollto = 
-            //     jQuery( '[data-scroll="'+$scroll+'"]').data( 'scroll-position' ) ? 
-            //     jQuery( '[data-scroll="'+$scroll+'"]').data( 'scroll-position' ) :
-            //     jQuery( '[data-scroll="'+$scroll+'"]').offset().top ;
+                // // check if we have a defined scrollto position ##
+                // $scrollto =
+                //     jQuery( '[data-scroll="'+$scroll+'"]').data( 'scroll-position' ) ?
+                //     jQuery( '[data-scroll="'+$scroll+'"]').data( 'scroll-position' ) :
+                //     jQuery( '[data-scroll="'+$scroll+'"]').offset().top ;
 
-            // jQuery('html,body').delay(2000).animate({ 
-            //     scrollTop: jQuery( '[data-scroll="'+$scroll+'"]').offset().top
-            // }, 500);     
+                // jQuery('html,body').delay(2000).animate({
+                //     scrollTop: jQuery( '[data-scroll="'+$scroll+'"]').offset().top
+                // }, 500);
 
-            // console.log( 'scrollto element found: '+$scroll  );
-            // console.log( 'position: '+jQuery( '[data-scroll="'+$scroll+'"]').offset().top );
+                // console.log( 'scrollto element found: '+$scroll  );
+                // console.log( 'position: '+jQuery( '[data-scroll="'+$scroll+'"]').offset().top );
 
-            $hash = $hash + '/scroll/' + $scroll
+                $hash = $hash + '/scroll/' + $scroll
 
+            }
         }
 
     }
