@@ -92,8 +92,8 @@ class email extends \Q {
 
         \add_submenu_page(
             'options-general.php',
-            __('Q Test : Email','q-textdomain'),
-            __('Q Test : Email','q-textdomain'),
+            __('Q : SMTP Tracker','q-textdomain'),
+            __('Q : SMTP Tracker','q-textdomain'),
             'manage_options',
             'q-test-email',
             [ get_class(), 'render' ]
