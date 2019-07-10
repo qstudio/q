@@ -1,2 +1,3 @@
 library/test/logs/*
 library/test/logs/error.log
+library/test/logs/programs.log
