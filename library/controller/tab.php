@@ -209,7 +209,7 @@ class tab extends \Q {
             $string = \apply_filters( 'the_content', $string );
 
             // apply some basic markup ##
-            $string = str_replace( '%string%', $string, $args['markup']['default'] );
+            if ( isset( $args['markup']['default'] ) ) $string = str_replace( '%string%', $string, $args['markup']['default'] );
 
             // filter complete markup ##
             $string = \apply_filters( 'q/tab/markup/default', $string, $args );
