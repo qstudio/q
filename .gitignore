@@ -1,2 +1,1 @@
-library/test/logs/email.log
-library/test/logs/error.log
+library/test/logs/*
