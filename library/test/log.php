@@ -97,7 +97,7 @@ class log extends \Q {
 
     
     /**
-     * Check Error Log
+     * Check Log File
      * 
      * @since       0.3
      * @return      Array     data about error log ##
@@ -105,7 +105,8 @@ class log extends \Q {
     public static function check() 
     {
         
-        $check = array();
+        // start empty ##
+        $check = [];
 
         $check['file'] = self::$path.self::$file;
         $check["filesize"] = 0; // default to zero ##
@@ -138,6 +139,8 @@ class log extends \Q {
             
             $check["filesize"] = 'Larger than '.self::$max_size;
 
+            $check["file_exists"] = false; // revert to no ##
+
             self::rename();
             
         }
@@ -164,7 +167,7 @@ class log extends \Q {
         helper::log( 'Renamed log file: '.$now );
 
         // do some renaming ##
-        return @rename( self::$path.self::$file, self::$path.$now.'_email.log' );
+        return @rename( self::$path.self::$file, self::$path.$now.'_'.self::$file );
         
     }        
     

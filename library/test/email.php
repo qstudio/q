@@ -17,6 +17,7 @@ use q\test\asana as asana;
 
 class email extends \Q {
     
+    public static $log_file = 'email.log';
 
     public static function run()
     {
@@ -35,15 +36,15 @@ class email extends \Q {
             // add Email menu ##
             \add_action( 'admin_menu', array( get_class(), 'admin_menu' ), 1000 );
     
-            // allow cron method to be tested via http GET request  ##
-            if ( 
-                isset( $_GET['q_test'] ) 
-                && $_GET['q_test'] == 'email' 
-            ) {
+            // // allow cron method to be tested via http GET request  ##
+            // if ( 
+            //     isset( $_GET['q_test'] ) 
+            //     && $_GET['q_test'] == 'email' 
+            // ) {
 
-                \add_action( 'wp_loaded', [ get_class(), 'cron' ] );
+            //     \add_action( 'wp_loaded', [ get_class(), 'cron' ] );
 
-            }
+            // }
 
         }
 
@@ -67,12 +68,13 @@ class email extends \Q {
 
             // set-up log ##
             log::args([
-                'file'  => 'email.log'
+                'file'  => self::$log_file
             ]);
 
             // run the logger ##
             log::run();
 
+            // set tranny ##
             \set_site_transient( 'q/test/email/log/check', true, 24 * HOUR_IN_SECONDS );
         
         }
@@ -108,7 +110,7 @@ class email extends \Q {
 
         // set-up log ##
         log::args([
-            'file'  => 'email.log'
+            'file'  => self::$log_file
         ]);
 
         // run log render ##
@@ -173,7 +175,7 @@ class email extends \Q {
 
         // set-up log ##
         log::args([
-            'file'  => 'email.log'
+            'file'  => self::$log_file
         ]);
         
         // empty array ##
@@ -244,7 +246,8 @@ class email extends \Q {
 
             asana::create_task([
                 'method'    => 'email', // email / api ##
-                'response'  => $array['status'].' --> '.$array['response']
+                'response'  => $array['status'].' --> '.$array['response'],
+                'email'     => 'x+310727860574480@mail.asana.com'
             ]);
 
         }
@@ -270,7 +273,7 @@ class email extends \Q {
 
         // set-up log ##
         log::args([
-            'file'  => 'email.log'
+            'file'  => self::$log_file
         ]);
 
         // run the logger ##

@@ -102,6 +102,7 @@ class asana extends \Q {
             is_null( $args )
             || ! is_array( $args )
             || ! isset( $args['response'] )
+            || ! isset( $args['email'] )
         ) {
 
             helper::log( 'Error in passed araguments...' );
@@ -123,8 +124,8 @@ class asana extends \Q {
         // Create Asana task via email ##
         $email = mail(
             
-            'x+310727860574480@mail.asana.com',
-            'Email Delivery Error',
+            $args['email'], // 'x+310727860574480@mail.asana.com',
+            'Q Cron Error',
             $content,
             $headers
 
