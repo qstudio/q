@@ -173,7 +173,7 @@ class google extends \Q {
 
         }
 
-        helper::log( $args );
+        // helper::log( $args );
 
         // load count ##
         $load_count = isset( $args['load_count'] ) ? intval( $args['load_count'] ) : 1 ; 

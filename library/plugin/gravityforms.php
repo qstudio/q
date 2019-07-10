@@ -32,10 +32,13 @@ class gravityforms extends \Q {
         \add_filter( "gform_init_scripts_footer", [ get_class(), "gform_init_scripts_footer" ] );
 
         // remove GF CSS ## - note removed, as causing problems on Docs site, can be added back in on individual site config files ##
-        // \add_filter( 'pre_option_rg_gforms_disable_css', '__return_true' );
+        \add_filter( 'pre_option_rg_gforms_disable_css', '__return_true' );
 
         // add privacy policy to consent links ##
         // \add_filter( 'gform_submit_button', [ get_class(), 'gform_submit_button' ], 1000, 2 );
+
+        // move upload folder outside "uploads" folder to avoid S3 losses ##
+        \add_filter( 'gform_upload_path', [ get_class(), 'gform_upload_path' ], 10, 2 );
 
     }
 
@@ -52,6 +55,25 @@ class gravityforms extends \Q {
         return function_exists( 'gravity_form' );
 
     }
+
+
+
+    
+    public static function gform_upload_path( $path_info, $form_id ) 
+    {
+    
+        // define path and url to wp_content/gravityforms/ ##
+        $path_info['path'] = WP_CONTENT_DIR.'/gravityforms/';
+        $path_info['url'] = WP_CONTENT_URL.'/gravityforms/';
+        
+        // test settings ##
+        // helper::log( $path_info );
+
+        // kick it back ##
+        return $path_info;
+    
+    }
+
 
     
     /**

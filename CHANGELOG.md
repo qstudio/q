@@ -1,3 +1,7 @@
+### 2.7.6 ###
+
+* Filters Gravity Forms Upload path to avoid AWS S3 integration errors - https://docs.gravityforms.com/gform_upload_path/
+
 ### 2.7.5 ###
 
 * Added dependency checks for Q, q_theme and ACF to block fatal errors
