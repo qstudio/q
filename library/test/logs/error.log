@@ -24,3 +24,11 @@
 [02-Jul-2019 19:09:17 UTC] debug set to: 0 - q\core\options::debug() C:\xampp\htdocs\gh-org\www\wp-includes\class-wp-hook.php:286
 [02-Jul-2019 19:09:39 UTC] debug set to: 0 - q\core\options::debug() C:\xampp\htdocs\gh-org\www\wp-includes\class-wp-hook.php:286
 [02-Jul-2019 19:09:41 UTC] debug set to: 0 - q\core\options::debug() C:\xampp\htdocs\gh-org\www\wp-includes\class-wp-hook.php:286
+[10-Jul-2019 18:07:50 UTC] Loaded Q Hours Program Test.. - q\hours\test\programs::run() C:\xampp\htdocs\gh-org\www\wp-content\plugins\q-hours\library\test\programs.php:18
+[10-Jul-2019 18:07:52 UTC] setting up error log check... - q\test\error::setup() C:\xampp\htdocs\gh-org\www\wp-includes\class-wp-hook.php:286
+[10-Jul-2019 18:07:52 UTC] Loaded Q Hours Program Test.. - q\hours\test\programs::run() C:\xampp\htdocs\gh-org\www\wp-content\plugins\q-hours\library\test\programs.php:18
+[10-Jul-2019 18:07:56 UTC] Loaded Q Hours Program Test.. - q\hours\test\programs::run() C:\xampp\htdocs\gh-org\www\wp-content\plugins\q-hours\library\test\programs.php:18
+[10-Jul-2019 18:07:56 UTC] Loaded Q Hours Program Test.. - q\hours\test\programs::run() C:\xampp\htdocs\gh-org\www\wp-content\plugins\q-hours\library\test\programs.php:18
+[10-Jul-2019 18:08:00 UTC] Loaded Q Hours Program Test.. - q\hours\test\programs::run() C:\xampp\htdocs\gh-org\www\wp-content\plugins\q-hours\library\test\programs.php:18
+[10-Jul-2019 18:08:02 UTC] Loaded Q Hours Program Test.. - q\hours\test\programs::run() C:\xampp\htdocs\gh-org\www\wp-content\plugins\q-hours\library\test\programs.php:18
+[10-Jul-2019 18:08:56 UTC] Loaded Q Hours Program Test.. - q\hours\test\programs::run() C:\xampp\htdocs\gh-org\www\wp-content\plugins\q-hours\library\test\programs.php:18

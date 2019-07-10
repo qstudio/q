@@ -94,9 +94,9 @@ class controller extends \Q {
 
             'test'   => array(
                 'key' => 'group_q_option_test',
-                'title' => 'Test Options',
+                'title' => 'Testing Options',
                 'fields' => array(
-                    array(
+                    'debug' => array(
                         'key' => 'field_q_option_debug',
                         'label' => 'Debugging',
                         'name' => 'q_option_debug',
@@ -115,7 +115,7 @@ class controller extends \Q {
                         'ui_on_text' => '',
                         'ui_off_text' => '',
                     ),
-                    array(
+                    'test' => array(
                         'key' => 'field_q_option_test',
                         'label' => 'Cron & Logs',
                         'name' => 'q_option_test',
@@ -163,6 +163,11 @@ class controller extends \Q {
             ),
 
         );
+
+        // helper::log( $groups );
+
+        // filter fields ##
+        $groups = \apply_filters( 'q/test/controller/get_fields', $groups );
 
         // check if we are returning a single set or all groups ##
         if ( is_null( $group ) ) {
@@ -265,7 +270,7 @@ class controller extends \Q {
         foreach ( options::get( 'test' ) as $key => $value ) {
             
             // check if file exists ##
-            if ( self::get_plugin_path( "library/test/{$key}.php" ) ) {
+            if ( file_exists( self::get_plugin_path( "library/test/{$key}.php" ) ) ) {
 
                 require_once self::get_plugin_path( "library/test/{$key}.php" );
 
