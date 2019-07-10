@@ -85,6 +85,9 @@ class wp_head extends \Q {
         \add_action( 'wp_head', array ( get_class(), 'favicon' ), 9999999 ); // add to theme ##
         \add_action( 'admin_head', array ( get_class(), 'favicon' ), 9999999 ); // add to backend ##
 
+        // filter meta title ##
+        \add_filter( 'wp_title', array ( get_class(), 'wp_title' ), 10, 2 );
+
         // add body classes ##
         \add_filter( 'body_class', array ( get_class(), 'body_class' ), 1 );
         
@@ -270,9 +273,13 @@ class wp_head extends \Q {
         
         // echo or return string ##
         if ( $echo === true ) { 
+
             echo $simple_seo;
+
         } else {
+
             return $simple_seo;
+
         }
 
     }
@@ -379,6 +386,115 @@ class wp_head extends \Q {
         
         }
         
+    }
+
+
+    
+
+    /**
+     * Filters the page title appropriately depending on the current page
+     * This function is attached to the 'wp_title' filter hook.
+     *
+     * @uses	get_bloginfo()
+     * @uses	is_home()
+     * @uses	is_front_page()
+     * 
+     * @since       0.1
+     */
+    public static function wp_title( $title, $sep ) {
+
+        global $page, $paged, $post;
+        
+        $page_title = $title;
+
+        // helper::log( $page_title );
+            
+        // get site desription ##
+        $site_description = \get_bloginfo( 'description' );
+        
+        if ( $post ) { 
+
+            // allow for custom title - via post meta "metatitle" ##
+            $page_title = \get_post_meta( $post->ID, "metatitle", true ) ? \get_post_meta( $post->ID, "metatitle", true ).' '.$sep. ' ' : $title;
+            
+            // if this is a singular post - but not of type page or post add post type name as parent ##
+            if ( 
+                \is_singular( \get_post_type() ) 
+                && \get_post_type() !== 'post' 
+                && \get_post_type() !== 'page' 
+            ) {
+                
+                if ( $obj = \get_post_type_object( \get_post_type() ) ) {
+                
+                    $page_title = $page_title.' '.$obj->labels->menu_name.' '.$sep.' ';
+
+                }
+                
+            }
+            
+            // add parent page, if page ##
+            if ( 
+                $post->post_parent && 
+                $post->post_type === 'page' 
+                && ! \is_search() 
+            ) {
+
+                if ( $get_post_ancestor = \get_post_ancestors( $post->ID ) ) {
+
+                    $page_title = $page_title.' '.\get_the_title( array_pop( $get_post_ancestor ) ).' '.$sep.' ';
+
+                }
+
+            }
+            
+        }
+        
+        // if we're on a single category check if that page has a parent ##
+        if ( \is_archive() ) {
+
+            $term = \get_term_by( 'slug', \get_query_var( 'term' ), \get_query_var( 'taxonomy' ) );
+
+            if ( 
+                $term 
+                // && $term->parent > 0 
+            ) {
+
+                // helper::log( 'Archive title' );
+
+                // just use the term name ##
+                $page_title = $term->name.' '.$sep.' ';
+
+                // // get parent name ##
+                // $term_parent = \get_term_by( 'ID', $term->parent, \get_query_var( 'taxonomy' ) ) ;
+
+                // if ( $term_parent && $term_parent->name ) {
+
+                //     $page_title .= $term_parent->name.' '.$sep.' ';
+
+                // }
+
+            }
+
+        }
+        
+        // compile ##
+        $page_title = $page_title . \get_option( 'blogname' ); // with site name ##
+        #$filtered_title = $page_title; // without site name ##
+        
+        // add site description if not empty and on front page ##
+        $page_title .= ( ! empty( $site_description ) && ( \is_front_page() ) ) ? ' | ' . $site_description : '' ;
+        
+        // add paging number, if paged ##
+        $page_title .= ( 2 <= $paged || 2 <= $page ) ? ' | ' . sprintf( __( 'Page %s' ), max( $paged, $page ) ) : '' ;
+
+        // helper::log( $page_title );
+
+        // filter ##
+        $page_title = \apply_filters( 'q/hook/wp_head/wp_title', $page_title );
+
+        // return title ##
+        return $page_title;
+
     }
     
     

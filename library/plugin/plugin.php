@@ -39,6 +39,7 @@ class plugin extends \Q {
         require_once self::get_plugin_path( 'library/plugin/acf.php' );
         require_once self::get_plugin_path( 'library/plugin/gravityforms.php' );
         require_once self::get_plugin_path( 'library/plugin/google.php' );
+        require_once self::get_plugin_path( 'library/plugin/getresponse.php' );
         require_once self::get_plugin_path( 'library/plugin/facebook.php' );
         require_once self::get_plugin_path( 'library/plugin/linkedin.php' );
         require_once self::get_plugin_path( 'library/plugin/twitter.php' );
