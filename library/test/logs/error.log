@@ -1,3 +1,0 @@
-[10-Jul-2019 19:05:24 UTC] url:  - q\hours\test\users::test() C:\xampp\htdocs\gh-org\www\wp-content\plugins\q-hours\library\test\users.php:206
-[10-Jul-2019 19:05:30 UTC] PHP Warning:  mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\xampp\htdocs\gh-org\www\wp-content\plugins\q\library\test\asana.php on line 127
-[10-Jul-2019 19:05:30 UTC] Email sent to Asana:  - q\test\asana::create_task_email() C:\xampp\htdocs\gh-org\www\wp-content\plugins\q\library\test\asana.php:64

@@ -19,8 +19,8 @@ class log extends \Q {
 
         self::$action = isset( $args['action'] ) ? $args['action'] : 'email'; // helper::get( 'logs/email.log' ); ##
         self::$file = isset( $args['file'] ) ? $args['file'] : 'email.log'; // helper::get( 'logs/email.log' ); ##
-        self::$path = isset( $args['path'] ) ? self::get_plugin_path( $args['path'] ) : self::get_plugin_path( 'library/test/logs/' );
-        self::$url = isset( $args['url'] ) ? self::get_plugin_url( $args['url'] ) : self::get_plugin_url( 'library/test/logs/' );
+        self::$path = isset( $args['path'] ) ? self::get_plugin_path( $args['path'] ) : WP_CONTENT_DIR.'/logs/'; // self::get_plugin_path( 'library/test/logs/' );
+        self::$url = isset( $args['url'] ) ? self::get_plugin_url( $args['url'] ) : WP_CONTENT_URL.'/logs/'; // self::get_plugin_url( 'library/test/logs/' );
         self::$max_size = isset( $args['max_size'] ) ? $args['max_size'] : '1024' ;
 
         // helper::log( 'Action: '.self::$action );
