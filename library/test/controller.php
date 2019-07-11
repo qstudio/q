@@ -2,18 +2,18 @@
 
 namespace q\test;
 
-use q\core\core as core;
+// use q\core\core as core;
 use q\core\options as options;
 use q\core\helper as helper;
 
-use q\test\email as email ;
+// use q\test\email as email ;
 
 // load it up ##
 \q\test\controller::run();
 
 class controller extends \Q {
 
-    public static $output = false;
+    // public static $output = false;
 
     public static function run()
     {
@@ -38,6 +38,7 @@ class controller extends \Q {
 
         // load templates ##
         self::load_libraries();
+
     }
 
 
@@ -260,9 +261,11 @@ class controller extends \Q {
     private static function load_libraries()
     {
 
-        // core ##
+        // log controller ##
         require_once self::get_plugin_path( 'library/test/log.php' );
-        require_once self::get_plugin_path( 'library/test/asana.php' );
+
+        // Asana controller ##
+        require_once self::get_plugin_path( 'library/plugin/asana.php' );
 
         // helper::log( options::get( 'test' ) );
 

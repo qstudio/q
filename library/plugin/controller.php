@@ -2,14 +2,14 @@
 
 namespace q\plugin;
 
-use q\core\core as core;
+// use q\core\core as core;
 use q\core\helper as helper;
-use q\core\config as config;
+// use q\core\config as config;
 
 // load it up ##
-\q\plugin\plugin::run();
+\q\plugin\controller::run();
 
-class plugin extends \Q {
+class controller extends \Q {
 
     public static function run()
     {

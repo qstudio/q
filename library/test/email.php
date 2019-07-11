@@ -11,7 +11,7 @@ namespace q\test;
 use q\core\core as core; 
 use q\core\helper as helper;
 use q\test\log as log;
-use q\test\asana as asana;
+use q\plugin\asana as asana;
 
 \q\test\email::run();
 

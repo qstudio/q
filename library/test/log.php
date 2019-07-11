@@ -180,24 +180,36 @@ class log extends \Q {
      * 
      * @return      void
      */
-    public static function write( String $string = null ) 
+    public static function write( $log = null ) 
     {
 
         // sanity ##
-        if ( is_null( $string ) ) {
+        if ( is_null( $log ) ) {
 
-            helper::log( 'Passed string variable empty...' );
+            helper::log( 'Passed value empty...' );
 
             return false;
 
         }
 
+        // flatten objects and arrays -- risky? ##
+        if ( is_array( $log ) || is_object( $log ) ) {
+         
+            $log = print_r( $log, true ) ;
+        
+        }
+
+        // date ##
         $now = new \DateTime();
         $now->setTimezone( new \DateTimeZone( 'America/Chicago' ) ); // set locale ##
 
         // compile ##
-        $message = $now->format( 'Y-m-d H:i:s' )." - ".$string;
+        $message = $now->format( 'Y-m-d H:i:s' )." - ".$log;
 
+        // debug ##
+        // helper::log( self::$path.self::$file );
+        // helper::log( $message  );
+        
         // write ##
         $return = file_put_contents( self::$path.self::$file, $message . PHP_EOL, FILE_APPEND );
 
@@ -389,6 +401,17 @@ class log extends \Q {
         
         // icon and h2 ##
         echo '<h2>'.ucfirst( self::$action ).' Log</h2>';
+
+        // allow logs to filter in extra info ##
+        if ( $log_meta = \apply_filters( 'q/test/log/meta/'.self::$action, false ) ) {
+
+            // log ##
+            // helper::log( $log_meta );
+
+            // echo directly, trusting format passed ##
+            echo $log_meta;
+
+        }
         
         // intro blurb ##
         printf( 

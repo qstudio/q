@@ -6,11 +6,11 @@
  * 
  */
 
-namespace q\test;
+namespace q\plugin;
 
 use q\core\core as core; 
 use q\core\helper as helper;
-use q\test\log as log;
+// use q\test\log as log;
 
 // \q\plugin\asana::run();
 

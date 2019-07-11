@@ -231,15 +231,15 @@ if ( ! class_exists( 'Q' ) ) {
                 return false;
 
             }
+            
+            // plugins ##
+            require_once self::get_plugin_path( 'library/plugin/controller.php' );
 
             // test suite ##
             require_once self::get_plugin_path( 'library/test/controller.php' );
 
             // hooks ##
             require_once self::get_plugin_path( 'library/hook/hook.php' );
-
-            // plugins ##
-            require_once self::get_plugin_path( 'library/plugin/plugin.php' );
 
             // frontend ##
             require_once self::get_plugin_path( 'library/theme/widget.php' );
