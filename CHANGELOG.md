@@ -1,3 +1,7 @@
+### 2.8.0 ###
+
+* Test suite build into Q to allow for automater testing, logging, and alerts to Asana
+
 ### 2.7.6 ###
 
 * Filters Gravity Forms Upload path to avoid AWS S3 integration errors - https://docs.gravityforms.com/gform_upload_path/
