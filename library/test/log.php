@@ -417,8 +417,8 @@ class log extends \Q {
         
         // intro blurb ##
         printf( 
-            '<p>Here are the last 25 entries ( in reverse order ) from the %s Log, you can view the entire file using the link at the bottom, if the file has data.</p>'
-            ,   ucfirst( self::$action )
+            '<p>Here are the last 25 entries in reverse order, if there is data, you can view the entire file using the link at the bottom.</p>'
+            // ,   self::$title
             // ,esc_url( Q_SUPPORT_DOMAIN.'plugin/error-log/' )
             // ,esc_html( __("Documentation", "q-textdomain" ) ) 
         );
