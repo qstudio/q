@@ -119,6 +119,7 @@ class error extends \Q {
 
         // set-up log ##
         log::args([
+            'title'     => 'PHP Error Log',
             'action'    => 'error',
             'file'      => 'error.log'
         ]);
