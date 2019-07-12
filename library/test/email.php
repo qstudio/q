@@ -110,7 +110,8 @@ class email extends \Q {
 
         // set-up log ##
         log::args([
-            'file'  => self::$log_file
+            'title'     => 'SMTP Tracker',
+            'file'      => self::$log_file
         ]);
 
         // run log render ##

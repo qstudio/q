@@ -8,6 +8,7 @@ use q\core\helper as helper;
 class log extends \Q {
     
     public static $defined = false ;
+    public static $title = false ; // test type ##
     public static $action = false ; // test type ##
     public static $file = false ; // helper::get( 'test/logs/email.log' ); // 
     public static $path = false ;
@@ -17,6 +18,7 @@ class log extends \Q {
     public static function args( Array $args = null )
     {
 
+        self::$title = isset( $args['title'] ) ? $args['title'] : 'Email Log'; // helper::get( 'logs/email.log' ); ##
         self::$action = isset( $args['action'] ) ? $args['action'] : 'email'; // helper::get( 'logs/email.log' ); ##
         self::$file = isset( $args['file'] ) ? $args['file'] : 'email.log'; // helper::get( 'logs/email.log' ); ##
         self::$path = isset( $args['path'] ) ? self::get_plugin_path( $args['path'] ) : WP_CONTENT_DIR.'/logs/'; // self::get_plugin_path( 'library/test/logs/' );
@@ -400,7 +402,7 @@ class log extends \Q {
         echo '<div class="wrap q_support_wrap">';
         
         // icon and h2 ##
-        echo '<h2>'.ucfirst( self::$action ).' Log</h2>';
+        echo '<h2>'.self::$title.'</h2>';
 
         // allow logs to filter in extra info ##
         if ( $log_meta = \apply_filters( 'q/test/log/meta/'.self::$action, false ) ) {
