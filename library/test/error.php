@@ -29,7 +29,7 @@ class error extends \Q {
             defined( 'WP_DEBUG_LOG' ) 
             && WP_DEBUG_LOG 
         ){
-            ini_set( 'error_log', WP_CONTENT_DIR . '/plugins/q/library/test/logs/error.log' );
+            ini_set( 'error_log', WP_CONTENT_DIR . '/logs/error.log' );
         }
 
         // helper::log( ini_get('error_log') );
