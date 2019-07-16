@@ -122,7 +122,11 @@ class asana extends \Q {
         // do we have a source to link back to ? ##
         if ( isset( $args['source'] ) ) {
 
-            $content .= '\r\n Delivered from: <a href="'.$args['source'].'">Q Tracking</a>';
+            $content .= '
+            
+            Source: '.$args['source'].'
+            <a href="'.$args['source'].'">OPEN</a>
+            ';
 
         }
 
