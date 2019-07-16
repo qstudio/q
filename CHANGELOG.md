@@ -1,6 +1,10 @@
+### 2.8.2 ###
+
+* Updates to Test controllers for better email and tracking
+
 ### 2.8.1 ###
 
-* scrolling fix
+* jQuery fix to resolve scrolling issue on tab controller
 
 ### 2.8.0 ###
 
