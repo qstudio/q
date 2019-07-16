@@ -119,8 +119,18 @@ class asana extends \Q {
         // content ##
         $content = $args['response'];
 
+        // do we have a source to link back to ? ##
+        if ( isset( $args['source'] ) ) {
+
+            $content .= '\r\n Delivered from: <a href="'.$args['source'].'">Q Tracking</a>';
+
+        }
+
         // allow for faking ##
-        if ( isset( $args['fake'] ) ) {
+        if ( 
+            isset( $args['fake'] ) 
+            && TRUE === $args['fake']
+        ) {
 
             // log ##
             helper::log( 'To: '.$args['email'].' --> Subject: '.$subject.' --> '.$content );
@@ -132,10 +142,10 @@ class asana extends \Q {
 
         // headers --- CLUCKY.. ##
         $headers =  'MIME-Version: 1.0' . "\r\n"; 
-        $headers .= 'From: Web Team<mgurner@greenheart.org>' . "\r\n";
+        $headers .= 'From: Web Team<btoth@greenheart.org>' . "\r\n";
         $headers .= 'Content-Type: text/plain; charset=\"utf-8\"\r\n' . "\r\n"; 
         $headers .= "Reply-To: wordpress@greenheart.org\r\n";
-        $headers .= 'Cc: btoth@greenheart.org' . "\r\n";
+        $headers .= 'Cc: ksmithy@greenheart.org' . "\r\n";
 
         // Create Asana task via email ##
         $email = mail(

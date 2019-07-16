@@ -118,7 +118,7 @@ class controller extends \Q {
                     ),
                     'test' => array(
                         'key' => 'field_q_option_test',
-                        'label' => 'Cron & Logs',
+                        'label' => 'Trackers & Logs',
                         'name' => 'q_option_test',
                         'type' => 'checkbox',
                         'instructions' => '',
