@@ -1,3 +1,7 @@
+### 2.8.1 ###
+
+* scrolling fix
+
 ### 2.8.0 ###
 
 * Test suite build into Q to allow for automater testing, logging, and alerts to Asana

@@ -759,7 +759,7 @@ if ( typeof jQuery !== 'undefined' ) {
             $(this).removeClass('q-tab-current');
             $tabActive.removeClass('q-tab-current').addClass('q-tab-hidden').hide();
         });
-    }(jQuery));
+    });
 
     function q_tab_default(){
 
