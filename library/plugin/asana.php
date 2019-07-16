@@ -111,8 +111,24 @@ class asana extends \Q {
 
         }
 
+        // helper::log( $args );
+
+        // work out subject ##
+        $subject = isset( $args['subject'] ) ? $args['subject'] : 'Q Tracking Error' ; 
+
         // content ##
         $content = $args['response'];
+
+        // allow for faking ##
+        if ( isset( $args['fake'] ) ) {
+
+            // log ##
+            helper::log( 'To: '.$args['email'].' --> Subject: '.$subject.' --> '.$content );
+
+            // return ##
+            return true;
+
+        }
 
         // headers --- CLUCKY.. ##
         $headers =  'MIME-Version: 1.0' . "\r\n"; 
@@ -125,7 +141,7 @@ class asana extends \Q {
         $email = mail(
             
             $args['email'], // 'x+310727860574480@mail.asana.com',
-            'Q Cron Error',
+            $subject,
             $content,
             $headers
 
