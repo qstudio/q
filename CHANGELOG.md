@@ -1,3 +1,7 @@
+### 2.8.5 ###
+
+* Updates to Asana class for task creation
+
 ### 2.8.2 ###
 
 * Updates to Test controllers for better email and tracking
