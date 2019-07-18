@@ -1,3 +1,7 @@
+### 2.8.7 ###
+
+* Added github controller for Cron timeouts
+
 ### 2.8.6 ###
 
 * Updates to Controller set-up
