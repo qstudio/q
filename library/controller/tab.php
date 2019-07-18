@@ -60,6 +60,7 @@ class tab extends \Q {
         $array = \get_field( $args['field'], \get_the_ID() );
 
         // check ##
+        // helper::log( 'field: '.$args['field'] );
         // helper::log( $array );
 
         // kick back ##
@@ -532,6 +533,15 @@ class tab extends \Q {
 
             // helper::log( $row );
 
+            // we need images for a gallery, so bulk if missing ##
+            if ( ! isset( $row['sizes'][ $args['markup']['gallery']['handle']['large'][helper::get_device()] ] ) ) {
+
+                helper::log( 'handle missing: '.$args['markup']['gallery']['handle']['large'][helper::get_device()] );
+
+                continue;
+
+            }
+
             $markup = $args['markup']['gallery']['row'];
 
             $data = [
@@ -671,36 +681,6 @@ if ( typeof jQuery !== 'undefined' ) {
 
     // ready ##
     jQuery(document).ready(function($) {
-
-        // modern browsers hashchange event ##
-        // jQuery( '.q-tab-trigger' ).on( 'click', function( e ) {
-
-        //     console.log( 'Doing close click...' );
-
-        //     $the_hash = q_tab_hash();
-
-        //     if ( $the_hash ) {
-
-        //         console.log( 'hash is: '+$the_hash );
-
-        //         // if clicked on currently open tab, close it ##
-        //         if ( jQuery( "[data-tab-trigger='"+$the_hash+"']" ).hasClass( 'q-tab-current' ) ) {
-
-        //             console.log( 'Clicked on currently open tab, so close and return' );
-
-        //             jQuery( "[data-tab-target='"+$the_hash+"']" ).hide().addClass('q-tab-hidden').removeClass('q-tab-current');
-
-        //             // clear hash - seems drastic ##
-        //             parent.location.hash = ''
-
-        //             // kick back ##
-        //             return true;
-
-        //         }
-
-        //     }
-
-        // });
 
         // modern browsers hashchange event ##
         jQuery( window ).bind( 'hashchange', function( e ) {
@@ -857,11 +837,6 @@ if ( typeof jQuery !== 'undefined' ) {
     public static function get_markup()
     {
 
-        helper::log( 'get_markup is redundant, themes is filter via config' ) ;
-
-        return false;
-
-        /*
         // build defaults ##
         $array = [
             'default'       => '<div class="col-md-10 col-12 wysiwyg page-content">
@@ -916,14 +891,13 @@ if ( typeof jQuery !== 'undefined' ) {
             'content'       => [
                 'wrap'      => '
                                 <div class="col-lg-8 col-md-8 col-xs-12 col-12">
-                                    %program_cta%
                                     <ul class="tab-content" data-scroll-slug="content">
                                         %row%
                                     </ul>
                                 </div>
                                 '
                             ,
-                'cta'       => '<a class="btn btn-sm c-red apply-now" href="'.self::get_purl().'" class="apply r-desktop">Apply Now</a>',
+                // 'cta'       => '<a class="btn btn-sm c-red apply-now" href="'.core::get_purl().'" class="apply r-desktop">Apply Now</a>',
                 'row'       => '<li data-tab-target="%hash%" class="clearfix q-tab-target type-%type%"><h3>%title%</h3>%content%</li>'
             ],
             'text'          => [
@@ -936,9 +910,9 @@ if ( typeof jQuery !== 'undefined' ) {
                                     <div id="%faq%" class="panel-collapse collapse"><div class="wysiwyg panel-body">%content%</div></div>
                                 '
             ],
-            'schedule'    	=> '
+            'script'    	=> '
                                     <div class="wysiwyg">%string%</div>
-                                    <div class="embed embed-schedule">%schedule%</div>
+                                    <div class="embed embed-script">%script%</div>
                                 ',
             'gallery'       => [
                 'wrap'      => '%content%<div class="gallery sly sly-mobile">
@@ -965,11 +939,10 @@ if ( typeof jQuery !== 'undefined' ) {
         ];
 
         // filter ##
-        $array = \apply_filters( 'q/tab/markup/get_default', $array );
+        $array = \apply_filters( 'q/tab/markup/get', $array );
 
         // return ##
         return $array;
-        */
 
     }
 

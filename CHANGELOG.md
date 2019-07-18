@@ -1,3 +1,9 @@
+### 2.8.6 ###
+
+* Updates to Controller set-up
+* Addition of generic tab acf field group
+* Added default tab markup with filter - q_tab can still accept markup from config also
+
 ### 2.8.5 ###
 
 * Updates to Asana class for task creation

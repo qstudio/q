@@ -7,9 +7,9 @@ use q\core\helper as helper;
 use q\core\options as options;
 
 // load it up ##
-\q\hook\construct::run();
+\q\hook\controller::run();
 
-class construct extends \Q {
+class controller extends \Q {
 
     public static function run()
     {
@@ -18,8 +18,6 @@ class construct extends \Q {
         self::load_libraries();
 
     }
-
-
 
 
 

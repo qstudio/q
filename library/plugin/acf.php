@@ -4,6 +4,7 @@ namespace q\plugin;
 
 use q\core\core as core;
 use q\core\helper as helper;
+use q\core\wordpress as wordpress;
 
 // load it up ##
 \q\plugin\acf::run();
@@ -15,6 +16,9 @@ class acf extends \Q {
 
         // add fields ##
         \add_action( 'acf/init', array( get_class(), 'add_fields' ), 1 );
+
+        // filter q/tab/special/script ##
+        \add_filter( 'q/tab/special/script', [ get_class(), 'tab_special_script' ], 10, 2 );
 
         // permalinks from post objects ##
         \add_filter( 'q/meta/cta/generic_cta_url_1', array( get_class(), 'meta_post_object_permalink' ), 2, 10 );
@@ -392,61 +396,343 @@ class acf extends \Q {
                 'description' => '',
             ),
 
-            /*
-            'generic' => array (
-                'key' => 'group_595ebc43b8cc9',
-                'title' => 'Generic',
-                'fields' => array (
-                    array (
-                        'key' => 'field_595ebc7b56b64',
-                        'label' => 'Parent',
-                        'name' => 'generic_parent',
-                        'type' => 'post_object',
+            'tab' => array (
+                'key' => 'group_q_tab',
+                'title' => 'Tabs',
+                'fields' => array(
+                    array(
+                        'key' => 'field_q_tab_enable',
+                        'label' => 'Settings',
+                        'name' => 'q_tab_enable',
+                        'type' => 'radio',
                         'instructions' => '',
-                        'required' => 0,
+                        'required' => 1,
                         'conditional_logic' => 0,
-                        'wrapper' => array (
+                        'wrapper' => array(
                             'width' => '',
                             'class' => '',
                             'id' => '',
                         ),
-                        'post_type' => array (
-                            0 => 'page',
-                        ),
-                        'taxonomy' => array (
+                        'choices' => array(
+                            0 => 'Disabled',
+                            1 => 'Enabled',
                         ),
                         'allow_null' => 0,
-                        'multiple' => 0,
-                        'return_format' => 'id',
-                        'ui' => 1,
+                        'other_choice' => 0,
+                        'save_other_choice' => 0,
+                        'default_value' => 0,
+                        'layout' => 'horizontal',
+                        'return_format' => 'value',
+                    ),
+                    array(
+                        'key' => 'field_q_tab',
+                        'label' => 'Tabs',
+                        'name' => 'q_tab',
+                        'type' => 'repeater',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => array (
+                            array (
+                                array (
+                                    'field' => 'field_q_tab_enable',
+                                    'operator' => '==',
+                                    'value' => '1',
+                                ),
+                            ),
+                        ),
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'collapsed' => 'field_q_tab_title',
+                        'min' => 0,
+                        'max' => 20,
+                        'layout' => 'row',
+                        'button_label' => 'Add Tab',
+                        'sub_fields' => array(
+                            array(
+                                'key' => 'field_q_tab_type',
+                                'label' => 'Content Type',
+                                'name' => 'type',
+                                'type' => 'radio',
+                                'instructions' => '',
+                                'required' => 1,
+                                'conditional_logic' => 0,
+                                'wrapper' => array(
+                                    'width' => '',
+                                    'class' => '',
+                                    'id' => '',
+                                ),
+                                'choices' => array(
+                                    'text' => 'Text',
+                                    'faq' => 'FAQ',
+                                    // 'blog' => 'Blog',
+                                    'gallery' => 'Gallery',
+                                    'special' => 'Special',
+                                ),
+                                'allow_null' => 0,
+                                'other_choice' => 0,
+                                'save_other_choice' => 0,
+                                'default_value' => 'text',
+                                'layout' => 'horizontal',
+                                'return_format' => 'value',
+                            ),
+                            array(
+                                'key' => 'field_q_tab_options',
+                                'label' => 'Special',
+                                'name' => 'special',
+                                'type' => 'select',
+                                'instructions' => '',
+                                'required' => 1,
+                                'conditional_logic' => array(
+                                    array(
+                                        array(
+                                            'field' => 'field_q_tab_type',
+                                            'operator' => '==',
+                                            'value' => 'special',
+                                        ),
+                                    ),
+                                ),
+                                'wrapper' => array(
+                                    'width' => '',
+                                    'class' => '',
+                                    'id' => '',
+                                ),
+                                'choices' => array(
+                                    'script'    => 'Script',
+                                    // 'job'       => 'Job Fairs',
+                                ),
+                                'default_value' => array(
+                                ),
+                                'allow_null' => 0,
+                                'multiple' => 0,
+                                'ui' => 0,
+                                'ajax' => 0,
+                                'return_format' => 'value',
+                                'placeholder' => '',
+                            ),
+                            array(
+                                'key' => 'field_q_tab_title',
+                                'label' => 'Title',
+                                'name' => 'title',
+                                'type' => 'text',
+                                'instructions' => '',
+                                'required' => 1,
+                                'conditional_logic' => 0,
+                                'wrapper' => array(
+                                    'width' => '',
+                                    'class' => '',
+                                    'id' => '',
+                                ),
+                                'default_value' => '',
+                                'placeholder' => '',
+                                'prepend' => '',
+                                'append' => '',
+                                'maxlength' => 30,
+                            ),
+                            array(
+                                'key' => 'field_q_tab_text',
+                                'label' => 'Content',
+                                'name' => 'text',
+                                'type' => 'wysiwyg',
+                                'instructions' => '',
+                                'required' => 1,
+                                'conditional_logic' => array(
+                                    array(
+                                        array(
+                                            'field' => 'field_q_tab_type',
+                                            'operator' => '==',
+                                            'value' => 'text',
+                                        ),
+                                    ),
+                                    array(
+                                        array(
+                                            'field' => 'field_q_tab_type',
+                                            'operator' => '==',
+                                            'value' => 'gallery',
+                                        ),
+                                    ),
+                                    array(
+                                        array(
+                                            'field' => 'field_q_tab_type',
+                                            'operator' => '==',
+                                            'value' => 'special',
+                                        ),
+                                    ),
+                                ),
+                                'wrapper' => array(
+                                    'width' => '',
+                                    'class' => '',
+                                    'id' => '',
+                                ),
+                                'default_value' => '',
+                                'tabs' => 'all',
+                                'toolbar' => 'full',
+                                'media_upload' => 1,
+                                'delay' => 1,
+                                'display_word_limit' => 1,
+                                'word_limit' => '',
+                            ),
+                            array(
+                                'key' => 'field_q_tab_faq',
+                                'label' => 'FAQ',
+                                'name' => 'faq',
+                                'type' => 'repeater',
+                                'instructions' => '',
+                                'required' => 1,
+                                'conditional_logic' => array(
+                                    array(
+                                        array(
+                                            'field' => 'field_q_tab_type',
+                                            'operator' => '==',
+                                            'value' => 'faq',
+                                        ),
+                                    ),
+                                ),
+                                'wrapper' => array(
+                                    'width' => '',
+                                    'class' => '',
+                                    'id' => '',
+                                ),
+                                'collapsed' => 'field_q_tab_faq_title',
+                                'min' => 2,
+                                'max' => 30,
+                                'layout' => 'table',
+                                'button_label' => 'Add FAQ',
+                                'sub_fields' => array(
+                                    array(
+                                        'key' => 'field_q_tab_faq_title',
+                                        'label' => 'Title',
+                                        'name' => 'title',
+                                        'type' => 'text',
+                                        'instructions' => '',
+                                        'required' => 1,
+                                        'conditional_logic' => 0,
+                                        'wrapper' => array(
+                                            'width' => '',
+                                            'class' => '',
+                                            'id' => '',
+                                        ),
+                                        'default_value' => '',
+                                        'placeholder' => '',
+                                        'prepend' => '',
+                                        'append' => '',
+                                        'maxlength' => 200,
+                                    ),
+                                    array(
+                                        'key' => 'field_q_tab_faq_content',
+                                        'label' => 'Content',
+                                        'name' => 'content',
+                                        'type' => 'wysiwyg',
+                                        'instructions' => '',
+                                        'required' => 1,
+                                        'conditional_logic' => 0,
+                                        'wrapper' => array(
+                                            'width' => '',
+                                            'class' => '',
+                                            'id' => '',
+                                        ),
+                                        'default_value' => '',
+                                        'tabs' => 'all',
+                                        'toolbar' => 'basic',
+                                        'media_upload' => 0,
+                                        'delay' => 1,
+                                        'display_word_limit' => 1,
+                                        'word_limit' => '',
+                                    ),
+                                ),
+                            ),
+                            array(
+                                'key' => 'field_q_tab_special_gallery',
+                                'label' => 'Images',
+                                'name' => 'tab_special_gallery',
+                                'type' => 'gallery',
+                                'instructions' => '',
+                                'required' => 1,
+                                'conditional_logic' => array(
+                                    array(
+                                        array(
+                                            'field' => 'field_q_tab_type',
+                                            'operator' => '==',
+                                            'value' => 'gallery',
+                                        ),
+                                    ),
+                                ),
+                                'wrapper' => array(
+                                    'width' => '',
+                                    'class' => '',
+                                    'id' => '',
+                                ),
+                                'min' => 3,
+                                'max' => 12,
+                                'insert' => 'append',
+                                'library' => 'all',
+                                'min_width' => 300,
+                                'min_height' => 300,
+                                'min_size' => '',
+                                'max_width' => '',
+                                'max_height' => '',
+                                'max_size' => 8,
+                                'mime_types' => 'jpg',
+                            ),
+                            array (
+                                'key' => 'field_q_tab_special_script',
+                                'label' => 'Embed Script',
+                                'name' => 'tab_special_script',
+                                'type' => 'textarea',
+                                'instructions' => '',
+                                'required' => 1,
+                                'conditional_logic' => array (
+                                    array (
+                                        array (
+                                            'field' => 'field_q_tab_options',
+                                            'operator' => '==',
+                                            'value' => 'script',
+                                        ),
+                                    ),
+                                ),
+                                'wrapper' => array (
+                                    'width' => '',
+                                    'class' => '',
+                                    'id' => '',
+                                ),
+                                'default_value' => '',
+                                'placeholder' => '',
+                                'maxlength' => '',
+                                'rows' => 4,
+                                'new_lines' => '',
+                            ),
+                        ),
                     ),
                 ),
-                'location' => array (
-                    array (
-                        array (
+                'location' => array(
+                    array(
+                        array(
                             'param' => 'post_type',
                             'operator' => '==',
                             'value' => 'page',
                         ),
                     ),
-                    array( 
+                    array (
                         array (
-                            'param' => 'post_type',
+                            'param' => 'page_template',
                             'operator' => '==',
-                            'value' => 'grant',
+                            'value' => 'page.php',
                         ),
-                    )
+                    ),
                 ),
                 'menu_order' => 0,
-                'position' => 'side',
+                'position' => 'normal',
                 'style' => 'default',
                 'label_placement' => 'top',
                 'instruction_placement' => 'label',
-                'hide_on_screen' => '',
+                'hide_on_screen' => array(
+                    // 0 => 'the_content',
+                ),
                 'active' => 1,
                 'description' => '',
-            )
-            */
+            ),
 
         );
 
@@ -517,6 +803,56 @@ class acf extends \Q {
         // or nada ##
         return false;
 
+    }
+
+
+    
+    
+    /**
+     * Tab Filter - script - wysiwyg + textarea with script
+     * Note: filters run via seperate class method, filters to only run on this current template
+     *
+     * @since   2.0.0
+     * @return  String
+     */
+    public static function tab_special_script( $args, $tabs )
+    {
+
+        if (
+            ! $the_post = wordpress::the_post() 
+        ) {
+
+            helper::log( 'No post object...' );
+
+            return false;
+
+        }
+
+        // start with nada ##
+        $content = '';
+
+        // helper::log( $args );
+
+        // get markup ##
+        $content = $args['markup']['script'];
+
+        // kill ##
+        $content = 
+            $tabs['text'] ? 
+            str_replace( '%string%', $tabs['text'], $content ) : 
+            false ;
+        
+        $content = 
+            $tabs['tab_special_script'] ? 
+            str_replace( '%script%', $tabs['tab_special_script'], $content ) : 
+            false ;
+
+        // test ##
+        // helper::log( $content );
+
+        // kick it back ##
+        return $content;
+ 
     }
 
 

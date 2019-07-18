@@ -13,7 +13,7 @@
  * Plugin Name:     Q
  * Plugin URI:      https://www.qstudio.us
  * Description:     Q is a Development Framework that provides an API to manage libraries, themes, plugins and widgets.
- * Version:         2.8.5
+ * Version:         2.8.6
  * Author:          Q Studio
  * Author URI:      https://www.qstudio.us
  * License:         GPL
@@ -40,7 +40,7 @@ if ( ! class_exists( 'Q' ) ) {
         private static $instance = null;
 
         // Plugin Settings
-        const version = '2.8.5';
+        const version = '2.8.6';
         const text_domain = 'q-textdomain'; // for translation ##
         static $debug = false; // global debuggin ##
         static $device; // current device ##
@@ -180,10 +180,10 @@ if ( ! class_exists( 'Q' ) ) {
 
 
         /**
-         * Check for required classes to build UI features
+         * Check for required breaking dependencies
          * 
          * @return      Boolean 
-         * @since       0.1.0
+         * @since       1.0.0
          */
         public static function has_dependencies()
         {
@@ -239,14 +239,14 @@ if ( ! class_exists( 'Q' ) ) {
             require_once self::get_plugin_path( 'library/test/controller.php' );
 
             // hooks ##
-            require_once self::get_plugin_path( 'library/hook/hook.php' );
+            require_once self::get_plugin_path( 'library/hook/controller.php' );
 
-            // frontend ##
-            require_once self::get_plugin_path( 'library/theme/widget.php' );
-            require_once self::get_plugin_path( 'library/theme/meta.php' ); 
-            // require_once self::get_plugin_path( 'library/theme/template.php' ); // @todo - make this the single template controller and allow plugins to inject rules via filters ##
+            // theme ##
+            require_once self::get_plugin_path( 'library/theme/controller.php' );
+            
+            // controllers ##
             require_once self::get_plugin_path( 'library/controller/controller.php' );
-            require_once self::get_plugin_path( 'library/theme/theme.php' );
+            
 
         }
         
