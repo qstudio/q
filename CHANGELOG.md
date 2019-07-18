@@ -18,7 +18,7 @@
 
 ### 2.8.0 ###
 
-* Test suite build into Q to allow for automater testing, logging, and alerts to Asana
+* Test suite build into Q to allow for automated testing, logging, and alerts to Asana
 
 ### 2.7.6 ###
 
