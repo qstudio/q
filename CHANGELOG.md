@@ -1,3 +1,7 @@
+### 2.8.9 ###
+
+* Changed cache-busting version control to q_theme::version to allow for easier UI udpdates. 
+
 ### 2.8.8 ###
 
 * updated version

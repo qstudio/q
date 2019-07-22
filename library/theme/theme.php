@@ -95,7 +95,7 @@ class theme extends \Q {
     {
 
         // assign values ##
-        self::$plugin_version = self::version ;
+        // self::$plugin_version = self::version ;
 
         // grab the options ##
         self::$options = options::get();
@@ -138,7 +138,7 @@ class theme extends \Q {
             && false === self::$debug 
         ) {
 
-            \wp_register_style( 'q-plugin-css-theme', theme_helper::get( "theme/css/q.theme.css", 'return' ), array(), self::$plugin_version, 'all' );
+            \wp_register_style( 'q-plugin-css-theme', theme_helper::get( "theme/css/q.theme.css", 'return' ), array(), self::version, 'all' );
             \wp_enqueue_style( 'q-plugin-css-theme' );
 
         }
@@ -149,7 +149,7 @@ class theme extends \Q {
         ) {
             
             // add compiled sass file ##
-            \wp_register_style( 'q-plugin-index-scss', helper::get( "theme/scss/index.css", 'return' ), array(), self::$plugin_version, 'all' );
+            \wp_register_style( 'q-plugin-index-scss', helper::get( "theme/scss/index.css", 'return' ), array(), self::version, 'all' );
             \wp_enqueue_style( 'q-plugin-index-scss' );
 
         }
@@ -162,7 +162,7 @@ class theme extends \Q {
             // helper::log( 'Adding q.theme.js' );
 
             // add JS ## -- after all dependencies ##
-            \wp_enqueue_script( 'q-plugin-js-theme', theme_helper::get( "theme/javascript/q.theme.js", 'return' ), array( 'jquery' ), self::$plugin_version );
+            \wp_enqueue_script( 'q-plugin-js-theme', theme_helper::get( "theme/javascript/q.theme.js", 'return' ), array( 'jquery' ), self::version );
             
             // pass variable values defined in parent class ##
             \wp_localize_script( 'q-plugin-js-theme', 'q_theme_js', array(
@@ -202,7 +202,7 @@ class theme extends \Q {
             )
         ) {
 
-            \wp_register_script( 'q-html5', helper::get( "theme/javascript/q.html5.js", 'return' ), array(), self::$plugin_version, 'all' );
+            \wp_register_script( 'q-html5', helper::get( "theme/javascript/q.html5.js", 'return' ), array(), self::version, 'all' );
             \wp_enqueue_script( 'q-html5' );
 
         }
@@ -416,14 +416,14 @@ class theme extends \Q {
 
                 case "css" :
 
-                    \wp_register_style( $handle, $file, '', self::$plugin_version, 'all' );
+                    \wp_register_style( $handle, $file, '', self::version, 'all' );
                     \wp_enqueue_style( $handle );
 
                 break ;
 
                 case "js" :
 
-                    \wp_register_script( $handle, $file, array(), self::$plugin_version, 'all' );
+                    \wp_register_script( $handle, $file, array(), self::version, 'all' );
                     \wp_enqueue_script( $handle );
 
                 break ;
@@ -439,7 +439,7 @@ class theme extends \Q {
 
 
     /*
-    * script enqueuer 
+    * script enqueuer -- loaded from q_theme
     *
     * @since  2.0
     */
@@ -449,22 +449,22 @@ class theme extends \Q {
         if ( isset( self::$options->theme_css ) ) {
 
             // _deprecated -- add theme css ##
-            // \wp_register_style( 'theme-css', \get_stylesheet_directory_uri() . '/style.css', '', self::$plugin_version );
+            // \wp_register_style( 'theme-css', \get_stylesheet_directory_uri() . '/style.css', '', self::version );
             // \wp_enqueue_style( 'theme-css' );
 
             // IE ##
             if ( theme_helper::get( "theme/css/ie.css", "return" ) ) {
          
-                \wp_enqueue_style( 'q-ie', theme_helper::get( "theme/css/ie.css", "return" ), '', self::$plugin_version );
+                \wp_enqueue_style( 'q-ie', theme_helper::get( "theme/css/ie.css", "return" ), '', \q_theme::version );
                 \wp_style_add_data( 'q-ie', 'conditional', 'IE' );
 
             }
 
             // css hierarchy ----
             
-            // theme/css/q.2.desktop.css ##
-            // theme/css/q.2.theme.css ##
-            // theme/q.1.theme.css ##
+            // q_theme/library/theme/css/q.2.desktop.css ##
+            // q_theme/library/theme/css/q.2.theme.css ##
+            // q_theme/library/theme/q.1.theme.css ##
             $handle = "q.".\get_current_blog_id().".".helper::get_device().".css";
             
             // first check if the file exists ##
@@ -472,7 +472,7 @@ class theme extends \Q {
 
                 // helper::log( 'Loading up file: '.$file );
 
-                \wp_register_style( $handle, $file, '', self::$plugin_version );
+                \wp_register_style( $handle, $file, '', \q_theme::version );
                 \wp_enqueue_style( $handle );
 
             } else {
@@ -483,7 +483,7 @@ class theme extends \Q {
 
                     // helper::log( 'Loading up file: '.$file );
     
-                    \wp_register_style( $handle, $file, '', self::$plugin_version );
+                    \wp_register_style( $handle, $file, '', \q_theme::version );
                     \wp_enqueue_style( $handle );
 
                 } else {
@@ -492,17 +492,26 @@ class theme extends \Q {
 
                     $file = theme_helper::get( "theme/css/".$handle, "return" );
 
-                    // helper::log( 'Loading up file: '.$file );
+                    // if we can't find that.. log an error ##
+                    if ( ! $file ) {
 
-                    \wp_register_style( $handle, $file, '', self::$plugin_version );
-                    \wp_enqueue_style( $handle );
+                        helper::log( 'Error: cannot load '.$handle );
+
+                    } else {
+
+                        // helper::log( 'Loading up file: '.$file );
+
+                        \wp_register_style( $handle, $file, '', \q_theme::version );
+                        \wp_enqueue_style( $handle );
+
+                    }
 
                 }
 
             }
 
             // load compiled css from sass modules ##
-            \wp_register_style( 'q-theme-index-scss', theme_helper::get( "theme/scss/index.css", 'return' ), array(), self::$plugin_version, 'all' );
+            \wp_register_style( 'q-theme-index-scss', theme_helper::get( "theme/scss/index.css", 'return' ), array(), \q_theme::version, 'all' );
             \wp_enqueue_style( 'q-theme-index-scss' );
 
         }
@@ -510,7 +519,7 @@ class theme extends \Q {
         // load generic JS from theme/javascript/scripts.js
         if ( isset( self::$options->theme_js ) ) {
 
-            \wp_register_script( 'theme-js', theme_helper::get( "theme/javascript/scripts.js", 'return' ), array( 'jquery' ), self::$plugin_version, true );
+            \wp_register_script( 'theme-js', theme_helper::get( "theme/javascript/scripts.js", 'return' ), array( 'jquery' ), \q_theme::version, true );
             \wp_enqueue_script( 'theme-js' );
 
             // pass variable values defined in parent class ##
@@ -527,7 +536,7 @@ class theme extends \Q {
 
                 // helper::log( 'Loading up file: '.$file );
 
-                \wp_register_script( $handle, $file, array( 'jquery' ), self::$plugin_version, true );
+                \wp_register_script( $handle, $file, array( 'jquery' ), \q_theme::version, true );
                 \wp_enqueue_script( $handle );
 
                 // nonce ##
@@ -536,7 +545,7 @@ class theme extends \Q {
                 // pass variable values defined in parent class ##
                 \wp_localize_script( $handle, 'q_theme_'.\get_current_blog_id(), array(
                     'ajaxurl'           => \admin_url( 'admin-ajax.php', \is_ssl() ? 'https' : 'http' ), /*, 'https' */ ## add 'https' to use secure URL ##
-                    'debug'             => self::$debug,
+                    'debug'             => \q_theme::$debug,
                     'nonce'             => $nonce
                 ));
 
