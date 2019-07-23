@@ -18,7 +18,7 @@ class config extends \Q {
         \add_filter( 'intermediate_image_sizes_advanced', array ( get_class(), 'intermediate_image_sizes_advanced' ) );
 
         // add_image_sizes for all themes ##
-        \add_action( 'init', array( get_class(), 'add_image_sizes' ) );
+        \add_action( 'init', array( get_class(), 'add_image_sizes' ), 1 );
 
         if ( \is_admin() ) {
 
@@ -30,18 +30,9 @@ class config extends \Q {
 
         }
 
-        // make sure properties are loaded when AJAX requests run ##
-        if ( \wp_doing_ajax() ) {
-
-            // self::load_properties();
-
-        }
 
         // remove admin color schemes - silly idea ##
         \remove_action( 'admin_color_scheme_picker', 'admin_color_scheme_picker' );
-
-        // sharelines widget ##
-        // \add_filter( 'q/widget/sharelines/facebook', function() { return '137150683665520'; } ); // APP ID ##
 
     }
 
@@ -120,17 +111,6 @@ class config extends \Q {
         \add_image_size( 'thumb', 194, 97, true ); // small thumb ##
 
     }
-
-
-
-    public static function list_image_sizes()
-    {
-
-        global $_wp_additional_image_sizes; 
-        if( self::$debug ) helper::log( $_wp_additional_image_sizes ); 
-
-    }
-
 
 
 

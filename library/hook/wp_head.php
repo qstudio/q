@@ -499,6 +499,7 @@ class wp_head extends \Q {
     
     
     
+    
     /*
     * add extra classes to html body tag ##
     */

@@ -18,6 +18,9 @@ class aesop extends \Q {
     public static function run()
     {
 
+        // remove empty aesop error ##
+        add_action( 'admin_head', [ get_class(), 'css' ], 10 );
+
         // register taxonomy ##
         \add_action( 'init', array( get_class(), 'register_taxonomy' ), 1 );
         
@@ -47,6 +50,19 @@ class aesop extends \Q {
         \remove_class_action( 'wp_ajax_upgrade_galleries', 'AesopGalleryComponentAdmin', 'upgrade_galleries', 10 );
         \remove_class_action( 'admin_head', 'AesopGalleryComponentAdmin', 'upgrade_click_handle', 10 );
 
+    }
+
+
+    public static function css(){
+
+?>
+    <style>
+        .error.aesop-notice{
+            display: none;
+        }
+    </style>
+<?php
+        
     }
 
 

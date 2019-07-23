@@ -13,7 +13,7 @@
  * Plugin Name:     Q
  * Plugin URI:      https://www.qstudio.us
  * Description:     Q is a Development Framework that provides an API to manage libraries, themes, plugins and widgets.
- * Version:         2.8.9
+ * Version:         2.9.0
  * Author:          Q Studio
  * Author URI:      https://www.qstudio.us
  * License:         GPL
@@ -40,11 +40,57 @@ if ( ! class_exists( 'Q' ) ) {
         private static $instance = null;
 
         // Plugin Settings
-        const version = '2.8.9';
+        const version = '2.9.0';
         const text_domain = 'q-textdomain'; // for translation ##
         static $debug = false; // global debuggin ##
         static $device; // current device ##
         static $locale; // current locale ##
+
+
+        // Template Settings
+        public static
+            $allow_comments = true,
+            $allow_gallery = true,
+            $allow_sidebar = false,
+            $force_post = false, // this allows for a forced post ID ( used in get_header_* methods ) ##
+            $set_force_post = false, // settings for forcing the post ##
+            $get_text = array(),
+            $post_parent = null, // allows for forcing a parent post
+            $the_holder = array(),
+            $the_posts = array(),
+            $the_loop = array(),
+            $the_title = array(),
+            $the_parent = array(),
+            $the_excerpt = array(),
+            $the_content = array(),
+            $the_avatar = array(),
+            $get_post_by_meta = array(),
+            $the_meta = array(),
+            $the_meta_markup = array(),
+            $the_post_meta = array(),
+            $the_post_single = array(),
+            $the_gallery = array(),
+            $the_gallery_or_image = array(),
+            $the_post_thumbnail = array(),
+            $get_events = array(),
+            $the_navigation = array(),
+            $the_nav_menu = array(),
+            $the_landing = array(),
+			$the_search = array(),
+            $the_sidebar = array(),
+            $ordered_posts = array(),
+            $ordered_posts_first = null, // allows for settings the first post to load ##
+            $the_widget_events = array(),
+            $page_contact,
+            $text = array(),
+            $the_related_programs = array(),
+            $the_related_posts = array(),
+            $the_page = array(),
+            $the_render = array(),
+            $the_header_page = array()
+            // $google_tag_manager = false,
+            // $fb_pixel = false
+            ;
 
         /**
          * Creates or returns an instance of this class.
@@ -222,8 +268,7 @@ if ( ! class_exists( 'Q' ) ) {
             require_once self::get_plugin_path( 'library/core/wordpress.php' );
 
             // admin ##
-            require_once self::get_plugin_path( 'library/admin/admin.php' );
-            // require_once self::get_plugin_path( 'library/admin/menu.php' ); 
+            require_once self::get_plugin_path( 'library/admin/controller.php' );
 
             // check for dependencies, required for UI components - admin will still run ##
             if ( ! self::has_dependencies() ) {

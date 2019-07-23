@@ -1959,4 +1959,15 @@ class wordpress extends \Q {
     }
 
 
+
+    public static function list_image_sizes()
+    {
+
+        global $_wp_additional_image_sizes; 
+        if( self::$debug ) helper::log( $_wp_additional_image_sizes ); 
+
+    }
+
+
+
 }

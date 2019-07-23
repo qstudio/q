@@ -6,9 +6,9 @@ use q\core\core as core;
 use q\core\helper as helper;
 
 // load it up ##
-\q\admin\admin::run();
+\q\admin\controller::run();
 
-class admin extends \Q {
+class controller extends \Q {
 
     public static function run()
     {
@@ -21,6 +21,9 @@ class admin extends \Q {
             // set-up admin image sizes ##
             \add_action( "admin_init", array( get_class(), 'admin_setup_images' ) );
                 
+            // add theme support ##
+            \add_action( 'init', array( get_class(), 'add_support' ) );
+                
             // add thumbnails to admin columns ##
             // \add_action( 'admin_init', create_function( '', Q_Admin::add_thumbnail_to( array( 'posts', 'pages' ) ) ) );
 
@@ -30,7 +33,13 @@ class admin extends \Q {
             // filter admin preview link ##
             \add_filter( 'preview_post_link', [ get_class(), 'preview_post_link' ], 10, 2 );
 
+            // Add Filter Hook
+            \add_filter( 'post_mime_types', array( get_class(), 'post_mime_types' ) );
+
         }
+
+        // remove "url" field from comments ##
+        \add_filter( 'comment_form_default_fields', array( get_class(), 'comment_form_default_fields' ) );
 
     }
 
@@ -87,6 +96,28 @@ class admin extends \Q {
         \add_image_size( 'dashboard', 100, 40, true );
         
     }
+
+
+
+
+    
+    /**
+     * Adds Support for shared Q features.
+     *
+     * @since       0.1
+     * @return      void
+     */
+    public static function add_support()
+    {
+
+        // add thumbnails ##
+        \add_theme_support( 'post-thumbnails' );
+
+        // default Post Thumbnail dimensions
+        \set_post_thumbnail_size( 194, 97 );
+
+    }
+
 
 
 
@@ -201,22 +232,31 @@ class admin extends \Q {
 
 
 
+    
+    
     /**
-     * CSS hacks - seem unused
-     * 
-     * @todo        Review
+     * Add filters to WP Media Library
+     *
+     * @since       1.4.2
+     * @return      Array
      */
-    public static function css(){
+    public static function post_mime_types( $post_mime_types )
+    {
 
-?>
-<style>
-    .error.aesop-notice{
-        display: none;
-    }
-</style>
-<?php
+        // select the mime type, here: 'application/pdf'
+        // then we define an array with the label values
+        $post_mime_types['application/pdf'] = array(
+            __( 'PDF' ),
+            __( 'Show PDF' ),
+            \_n_noop( 'PDF <span class="count">(%s)</span>', 'PDFs <span class="count">(%s)</span>' )
+        );
+
+        // then we return the $post_mime_types variable
+        return $post_mime_types;
 
     }
+
+
 
 
 
@@ -421,6 +461,31 @@ class admin extends \Q {
         }
 
     }
+
+
+
+    
+    /**
+     * Filter to remove URL field from comments form
+     *
+     * @since       1.6.1
+     * @param       Array  $fields
+     * @return      Array
+     */
+    public static function comment_form_default_fields( $fields )
+    {
+
+        if ( isset( $fields['url'] ) ) {
+
+            unset($fields['url']);
+
+        }
+
+        // kick it back ##
+        return $fields;
+
+    }
+
 
 
 }

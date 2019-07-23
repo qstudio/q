@@ -6,6 +6,9 @@ use q\core\core as core;
 use q\core\helper as helper;
 use q\core\options as options;
 
+// google ##
+use q\plugin\google as google;
+
 // load it up ##
 \q\theme\ui::run();
 
@@ -119,6 +122,10 @@ class ui extends \Q {
     public static function load_google_web_fonts( $fonts, $use_fallback = true, $debug = false ) 
     {
 
+        // bounce to Google method ##
+        return google::fonts( $fonts, $use_fallback = true, $debug = false );
+
+        /*
         // if debugging, use &lt; and $gt; notation for output as plain text
         // otherwise, use < and > for output as html
         $debug ? $x = array('&lt;', '&gt;') : $x = array('<', '>');
@@ -170,6 +177,9 @@ class ui extends \Q {
             echo $x[0] . '![endif]--' . $x[1] . "\n";
             
         }
+
+        */
+
     }
 
 }
