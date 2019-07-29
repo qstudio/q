@@ -1,3 +1,7 @@
+### 2.9.1 ###
+
+* Added enable logic to tab controller via render arg "enable" => "field"
+
 ### 2.9.0 ###
 
 * Moved additional shared UI and admin configuration into Q controllers 

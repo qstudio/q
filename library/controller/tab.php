@@ -102,6 +102,45 @@ class tab extends \Q {
     }
 
 
+
+    
+
+
+    public static function is_enabled()
+    {
+
+        // check we have all the field data we need ##
+        if (
+            isset( self::$args['enable'] ) // function set to enable disabling ##
+        ) { 
+
+            helper::log( "checking enable status for tabs" );
+            helper::log( "post ID: ".\get_the_ID() );
+            
+            $value = \get_field( self::$args['enable'], \get_the_ID() );
+
+            helper::log( "we got the enable value: ".$value );
+
+            if ( 
+                false === $value
+                || '0' == $value 
+                || ! $value
+            ) {
+        
+                helper::log( "tabs is not enabled" );
+
+                return false;
+
+            }
+
+        }
+
+        // default to yes ##
+        return true;
+
+    }
+
+
     /**
     * Build tab UI navigation
     *
@@ -163,6 +202,17 @@ class tab extends \Q {
             // return false;
 
         }
+
+        // not enabled ##
+        if ( ! self::is_enabled() ) {
+
+            // log ##
+            helper::log( 'Tabs not enabled, so droppping to post_content.' );
+
+            $tabs = false; // clear variable ##
+
+        }
+
 
         // tabs should be an array ##
         if (
