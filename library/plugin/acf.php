@@ -707,13 +707,13 @@ class acf extends \Q {
                     ),
                 ),
                 'location' => array(
-                    array(
-                        array(
-                            'param' => 'post_type',
-                            'operator' => '==',
-                            'value' => 'page',
-                        ),
-                    ),
+                    // array(
+                    //     array(
+                    //         'param' => 'post_type',
+                    //         'operator' => '==',
+                    //         'value' => 'page',
+                    //     ),
+                    // ),
                     array (
                         array (
                             'param' => 'page_template',
