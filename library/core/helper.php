@@ -4,7 +4,10 @@ namespace q\core;
 
 use q\core\core as core;
 // use q\core\helper as helper;
-use q\theme\template as template;
+// use q\theme\template as template;
+
+// Q Device ##
+use q\device\core\core as device;
 
 // load it up ##
 #\q\core\helper::run();
@@ -327,58 +330,76 @@ class helper extends \Q {
     {
 
         // property already loaded ##
-        if ( self::$device ) { return self::$device; }
+        if ( self::$device ) { 
+        
+            // helper::log( '$device set: '.self::$device );
 
-        // check plugin is active ##
-        if ( 
-            function_exists( 'is_plugin_active' ) 
-            && ! \is_plugin_active( "device-theme-switcher/dts_controller.php" ) 
-        ) {
-
-            return self::$device = 'desktop'; // defaults to desktop ##
-
+            return self::$device; 
+        
         }
 
-        // Access the device theme switcher object anywhere in themes or plugins
-        // http://wordpress.org/plugins/device-theme-switcher/installation/
-        global $dts;
+        // we have a new simpler device handler - q_device - check if the class is available ##
+        if ( 
+            class_exists( 'q_device' ) 
+        ) {
 
-        // device check ##
-        if ( is_null ( $dts ) ) {
+            $handle = device::handle();
 
-            $handle = 'desktop';
+        // or use the device-theme-switcher if active ##
+        } else if ( 
 
-        } else {
+            function_exists( 'is_plugin_active' ) 
+            && \is_plugin_active( "device-theme-switcher/dts_controller.php" ) 
 
-            // theme overwrite approved ##
-            if ( ! empty($dts->{$dts->theme_override . "_theme"})) {
+        ) {
 
-                #pr('option 1');
-                $handle = $dts->{$dts->theme_override . "_theme"}["stylesheet"];
+            // Access the device theme switcher object anywhere in themes or plugins
+            // http://wordpress.org/plugins/device-theme-switcher/installation/
+            global $dts;
 
-            // device selected theme loading ##
-            } elseif ( ! empty($dts->{$dts->device . "_theme"})) {
+            // device check ##
+            if ( is_null ( $dts ) ) {
 
-                #pr('option 2');
-                $handle = $dts->{$dts->device . "_theme"}["stylesheet"];
+                $handle = 'desktop';
 
-            // fallback to active theme ##
             } else {
 
-                #pr('option 3');
-                $handle = $dts->active_theme["stylesheet"];
+                // theme overwrite approved ##
+                if ( ! empty($dts->{$dts->theme_override . "_theme"})) {
+
+                    #pr('option 1');
+                    $handle = $dts->{$dts->theme_override . "_theme"}["stylesheet"];
+
+                // device selected theme loading ##
+                } elseif ( ! empty($dts->{$dts->device . "_theme"})) {
+
+                    #pr('option 2');
+                    $handle = $dts->{$dts->device . "_theme"}["stylesheet"];
+
+                // fallback to active theme ##
+                } else {
+
+                    #pr('option 3');
+                    $handle = $dts->active_theme["stylesheet"];
+
+                }
 
             }
 
+            #pr($dts);
+
+            // clean up ##
+            $handle = ( $handle && false !== strpos( $handle, 'desktop' ) ) ? 'desktop' : 'handheld' ;
+
+        // backup to mobile ##
+        } else {
+
+            $handle = 'handheld'; // defaults to mobile ##
+
         }
 
-        #pr($dts);
-
-        // @todo - this is not the right approach ##
-        // trim client prefix "gh-" from device handle ##
-        $handle = ( $handle && false !== strpos( $handle, 'desktop' ) ) ? 'desktop' : 'handheld' ;
-
-        #self::log( 'handle: '.$handle );
+        // check what we have ##
+        // self::log( 'handle: '.$handle );
 
         // set and return the property value ##
         return self::$device = $handle;

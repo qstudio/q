@@ -1,3 +1,8 @@
+### 3.0.0 ###
+
+* Moved all helper logic into main q_helper
+* Added handler for new q_device plugin using Mobile Detect
+
 ### 2.9.2 ###
 
 * Fix to global debug tracker, allowing debugging for plugins to be activated from Q Settings

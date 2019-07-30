@@ -89,7 +89,7 @@ class wp_head extends \Q {
         \add_filter( 'wp_title', array ( get_class(), 'wp_title' ), 10, 2 );
 
         // add body classes ##
-        \add_filter( 'body_class', array ( get_class(), 'body_class' ), 1 );
+        \add_filter( 'body_class', array ( get_class(), 'body_class' ), 15, 1 );
         
     }
     
