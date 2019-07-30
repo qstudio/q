@@ -27,9 +27,6 @@ class controller extends \Q {
             // add thumbnails to admin columns ##
             // \add_action( 'admin_init', create_function( '', Q_Admin::add_thumbnail_to( array( 'posts', 'pages' ) ) ) );
 
-            // remove admin search bar ##
-            \add_action( 'admin_bar_menu', array( get_class(), 'remove_admin_bar_search' ), 999 );     
-
             // filter admin preview link ##
             \add_filter( 'preview_post_link', [ get_class(), 'preview_post_link' ], 10, 2 );
 
@@ -38,6 +35,12 @@ class controller extends \Q {
 
         }
 
+        // remove admin search bar ##
+        \add_action( 'admin_bar_menu', array( get_class(), 'remove_admin_bar_search' ), 999 );   
+
+        // remove admin color schemes - silly idea ##
+        \remove_action( 'admin_color_scheme_picker', 'admin_color_scheme_picker' );
+
         // remove "url" field from comments ##
         \add_filter( 'comment_form_default_fields', array( get_class(), 'comment_form_default_fields' ) );
 
@@ -45,7 +48,9 @@ class controller extends \Q {
 
 
 
-     /**
+
+
+    /**
     * include plugin admin assets
     *
     * @since        0.1.0

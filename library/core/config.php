@@ -21,44 +21,12 @@ class config extends \Q {
         \add_action( 'init', array( get_class(), 'add_image_sizes' ), 1 );
 
         if ( \is_admin() ) {
-
-            // Add Filter Hook
-            \add_filter( 'post_mime_types', array( get_class(), 'post_mime_types' ) );
+            
 
         } else {
 
 
         }
-
-
-        // remove admin color schemes - silly idea ##
-        \remove_action( 'admin_color_scheme_picker', 'admin_color_scheme_picker' );
-
-    }
-
-
-
-
-    
-    /**
-     * Add filters to WP Media Library
-     *
-     * @since       1.4.2
-     * @return      Array
-     */
-    public static function post_mime_types( $post_mime_types )
-    {
-
-        // select the mime type, here: 'application/pdf'
-        // then we define an array with the label values
-        $post_mime_types['application/pdf'] = array(
-            __( 'PDF' ),
-            __( 'Show PDF' ),
-            _n_noop( 'PDF <span class="count">(%s)</span>', 'PDFs <span class="count">(%s)</span>' )
-        );
-
-        // then we return the $post_mime_types variable
-        return $post_mime_types;
 
     }
 

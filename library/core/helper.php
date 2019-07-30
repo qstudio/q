@@ -116,10 +116,11 @@ class helper extends \Q {
     * @param    $return         string      return method ( echo, return, require )
     * @param    $type           string      type of return string ( url, path )
     * @param    $path           string      path prefix
-    * 
+    * @param    $class          string      parent class to reference for location of assets
+    *
     * @since 0.1
     */
-    public static function get( $include = null, $return = 'echo', $type = 'url', $path = "library/" )
+    public static function get( $include = null, $return = 'echo', $type = 'url', $path = "library/", $class = null )
     {
 
         // nothing passed ##
@@ -143,14 +144,14 @@ class helper extends \Q {
             defined( 'Q_CHILD_THEME' )
             && Q_CHILD_THEME
             #&& \is_child_theme() 
-            && file_exists( get_stylesheet_directory().'/'.$path.$include )
+            && file_exists( \get_stylesheet_directory().'/'.$path.$include )
         ) {
 
-            $template = get_stylesheet_directory_uri().'/'.$path.$include; // template URL ##
+            $template = \get_stylesheet_directory_uri().'/'.$path.$include; // template URL ##
             
             if ( 'path' === $type ) { 
 
-                $template = get_stylesheet_directory().'/'.$path.$include;  // template path ##
+                $template = \get_stylesheet_directory().'/'.$path.$include;  // template path ##
 
             }
 
@@ -160,21 +161,44 @@ class helper extends \Q {
 
         // load active theme over plugin ##
         elseif ( 
-            file_exists( get_template_directory().'/'.$path.$include ) 
+            file_exists( \get_template_directory().'/'.$path.$include ) 
         ) { 
 
-            $template = get_template_directory_uri().'/'.$path.$include; // template URL ##
+            $template = \get_template_directory_uri().'/'.$path.$include; // template URL ##
             
             if ( 'path' === $type ) { 
 
-                $template = get_template_directory().'/'.$path.$include;  // template path ##
+                $template = \get_template_directory().'/'.$path.$include;  // template path ##
 
             }
 
             #if ( self::$debug ) self::log( 'parent theme: '.$template );
 
-        // load from Plugin ##
+        // load from extended Plugin ##
         } elseif ( 
+            ! is_null( $class )
+            && file_exists( call_user_func( array( $class, 'get_plugin_path' ), $path.$include ) )
+            // file_exists( self::get_plugin_path( $path.$include ) )
+        ) {
+
+            // helper::log( 'helper::get class: '.$class );
+
+            // $template = self::get_plugin_url( $path.$include ); // plugin URL ##
+            $template = call_user_func( array( $class, 'get_plugin_url' ), $path.$include );
+
+            if ( 'path' === $type ) {
+                
+                // $template = self::get_plugin_path( $path.$include ); // plugin path ##
+                $template = call_user_func( array( $class, 'get_plugin_path' ), $path.$include );
+                
+            } 
+
+            // helper::log( 'extended plugin: '.$template );
+
+        }
+
+        // load from Plugin ##
+         elseif ( 
             file_exists( self::get_plugin_path( $path.$include ) )
         ) {
 

@@ -41,7 +41,7 @@ class options extends \Q {
         // \add_action( 'plugins_loaded', [ get_class(), 'get' ], 1 );
 
         // set debug from Q settings page ---- very late ##
-        \add_action( 'plugins_loaded', [ get_class(), 'debug' ], 10000000 );
+        \add_action( 'plugins_loaded', [ get_class(), 'debug' ], 10 );
 
     }
 
@@ -861,9 +861,9 @@ class options extends \Q {
         // if debug set in code, use that setting first ##
         if ( self::$debug ) { 
         
-            helper::log( 'Debug set to true in code, so respect that...' );
+            // helper::log( 'Debug set to true in code, so respect that...' );
 
-            return true; 
+            return self::$debug; 
         
         }
 
@@ -875,11 +875,18 @@ class options extends \Q {
 
         // check ##
         // helper::log( \get_field( 'q_option_debug', 'option') );
-        // helper::log( $debug );
+        // helper::log( 'debug pulled from options table: '.json_encode( $debug ) );
         // helper::log( 'debug pulled from options table: '. ( 1 == $debug ? 'True' : 'False' ) );
 
         // make a real boolean ##
-        $debug = ( '1' == $debug ? true : false ) ;
+        $debug = ( 
+            ( 
+                '1' == $debug
+                || true === $debug 
+            ) ? 
+            true : 
+            false 
+        ) ;
 
         // check what we got ##
         // helper::log( 'debug set to: '. ( $debug ? 'True' : 'False' ) );
@@ -888,7 +895,7 @@ class options extends \Q {
         self::$debug = $debug;
 
         // kick back something ##
-        return false;
+        return self::$debug;
 
     }
 

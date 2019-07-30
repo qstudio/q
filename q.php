@@ -42,9 +42,9 @@ if ( ! class_exists( 'Q' ) ) {
         // Plugin Settings
         const version = '2.9.1';
         const text_domain = 'q-textdomain'; // for translation ##
-        static $debug = false; // global debuggin ##
+        static $debug = false; // global debugging ##
         static $device; // current device ##
-        static $locale; // current locale ##
+        // static $locale; // current locale -- REQUIRED?? ##
 
 
         // Template Settings
