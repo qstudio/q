@@ -349,13 +349,13 @@ class google extends \Q {
     {
 
         // bulk on localhost ##
-        if ( helper::is_localhost() ) { 
+        // if ( helper::is_localhost() ) { 
         
-            // helper::log( 'Tag Manager skipped, as on localhost...' );
+        //     // helper::log( 'Tag Manager skipped, as on localhost...' );
 
-            // return false; 
+        //     // return false; 
         
-        }
+        // }
 
         // check if consent given to load script ##
         if ( ! generic::consent( 'analytics' ) ) {
@@ -413,13 +413,13 @@ class google extends \Q {
     {
 
         // bulk on localhost ##
-        if ( helper::is_localhost() ) { 
+        // if ( helper::is_localhost() ) { 
                 
-            // helper::log( 'Analytics skipped, as on localhost...' );
+        //     // helper::log( 'Analytics skipped, as on localhost...' );
 
-            // return false; 
+        //     // return false; 
 
-        }
+        // }
 
         // check if consent given to load script ##
         if ( ! generic::consent( 'analytics' ) ) {
@@ -476,13 +476,13 @@ class google extends \Q {
     {
 
         // bulk on localhost ##
-        if ( helper::is_localhost() ) { 
+        // if ( helper::is_localhost() ) { 
         
-            // helper::log( 'Analytics skipped, as on localhost...' );
+        //     // helper::log( 'Analytics skipped, as on localhost...' );
 
-            // return false; 
+        //     // return false; 
         
-        }
+        // }
 
         // check if consent given to load script ##
         if ( ! generic::consent( 'analytics' ) ) {

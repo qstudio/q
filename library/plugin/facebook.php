@@ -176,13 +176,13 @@ class facebook extends \Q {
     {
 
         // bulk on localhost ##
-        if ( helper::is_localhost() ) { 
+        // if ( helper::is_localhost() ) { 
         
-            // helper::log( 'FB pixel not added on localhost' );
+        //     // helper::log( 'FB pixel not added on localhost' );
 
-            // return false; 
+        //     // return false; 
         
-        }
+        // }
 
         // check if consent given to load script ##
         if ( ! generic::consent( 'marketing' ) ) {
@@ -237,13 +237,13 @@ class facebook extends \Q {
     {
 
         // bulk on localhost ##
-        if ( helper::is_localhost() ) { 
+        // if ( helper::is_localhost() ) { 
                 
-            // helper::log( 'Analytics skipped, as on localhost...' );
+        //     // helper::log( 'Analytics skipped, as on localhost...' );
 
-            // return false; 
+        //     // return false; 
 
-        }
+        // }
 
         // check if consent given to load script ##
         if ( ! generic::consent( 'marketing' ) ) {
