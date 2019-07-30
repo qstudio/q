@@ -36,7 +36,7 @@ class controller extends \Q {
         }
 
         // remove admin search bar ##
-        \add_action( 'admin_bar_menu', array( get_class(), 'remove_admin_bar_search' ), 999 );   
+        \add_action( 'admin_bar_menu', array( get_class(), 'admin_bar_menu' ), 999 );   
 
         // remove admin color schemes - silly idea ##
         \remove_action( 'admin_color_scheme_picker', 'admin_color_scheme_picker' );
@@ -271,10 +271,12 @@ class controller extends \Q {
     *
     * @return      void
     */
-    public static function remove_admin_bar_search( $wp_admin_bar )
+    public static function admin_bar_menu( $wp_admin_bar )
     {
 
         $wp_admin_bar->remove_node( 'search' );
+        $wp_admin_bar->remove_node( 'customize' );
+        $wp_admin_bar->remove_node( 'my-account' );
 
     }
 
