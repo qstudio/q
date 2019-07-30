@@ -1,3 +1,7 @@
+### 2.9.2 ###
+
+* Fix to global debug tracker, allowing debugging for plugins to be activated from Q Settings
+
 ### 2.9.1 ###
 
 * Added enable logic to tab controller via render arg "enable" => "field"
