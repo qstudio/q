@@ -1,3 +1,7 @@
+### 3.0.1 ###
+
+* Admin menu bar filters
+
 ### 3.0.0 ###
 
 * Moved all helper logic into main q_helper
