@@ -247,8 +247,4 @@ class core extends \Q {
     }
 
     
-
-    
-
-
 }
