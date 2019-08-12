@@ -460,28 +460,47 @@ class theme extends \Q {
 
             }
 
+            // helper::log( 'Device: '.helper::get_device() );
+
             // css hierarchy ----
             
             // q_theme/library/theme/css/q.2.desktop.css ##
             // q_theme/library/theme/css/q.2.theme.css ##
             // q_theme/library/theme/q.1.theme.css ##
             $handle = "q.".\get_current_blog_id().".".helper::get_device().".css";
+
+            // helper::log( 'Handle: '.$handle );
             
             // first check if the file exists ##
             if ( $file = theme_helper::get( "theme/css/".$handle, "return" ) ) {
 
-                // helper::log( 'Loading up file: '.$file );
+                // helper::log( '#1 : Loading up file: '.$file );
 
                 \wp_register_style( $handle, $file, '', \q_theme::version );
                 \wp_enqueue_style( $handle );
 
+            // // edge-case, we are viewing a tablet and there is no tablet theme.. so fallback to desktop ##
+            // } else if ( 
+            //     'tablet' == $handle
+            //     && ! theme_helper::get( "theme/css/".$handle, "return" )
+            //     && theme_helper::get( "theme/css/q.".\get_current_blog_id().".desktop.css", "return" ) 
+            // ) {
+
+            //     $file = theme_helper::get( "theme/css/q.".\get_current_blog_id().".desktop.css", "return" ) ;
+
+            //     // helper::log( '#2 : Loading up file: '.$file );
+
+            //     \wp_register_style( $handle, $file, '', \q_theme::version );
+            //     \wp_enqueue_style( $handle );
+
+            // check for theme generic or backup ##
             } else {
 
                 $handle = "q.".\get_current_blog_id().".theme.css";
 
                 if ( $file = theme_helper::get( "theme/css/".$handle, "return" ) ) {
 
-                    // helper::log( 'Loading up file: '.$file );
+                    // helper::log( '#3 : Loading up file: '.$file );
     
                     \wp_register_style( $handle, $file, '', \q_theme::version );
                     \wp_enqueue_style( $handle );
@@ -499,7 +518,7 @@ class theme extends \Q {
 
                     } else {
 
-                        // helper::log( 'Loading up file: '.$file );
+                        // helper::log( '#4 : Loading up file: '.$file );
 
                         \wp_register_style( $handle, $file, '', \q_theme::version );
                         \wp_enqueue_style( $handle );
