@@ -31,6 +31,12 @@ class gravityforms extends \Q {
         // move GF to footer ##
         \add_filter( "gform_init_scripts_footer", [ get_class(), "gform_init_scripts_footer" ] );
 
+        // Gravity Form default form settings ##
+        // \add_filter( "gform_pre_render", array( get_class(), "gform_pre_render" ) );
+
+        // fix tab index problem -- REVIEW ##
+        // \add_filter( "gform_tabindex", function() { return 4; });
+
         // remove GF CSS ## - note removed, as causing problems on Docs site, can be added back in on individual site config files ##
         // \add_filter( 'pre_option_rg_gforms_disable_css', '__return_true' );
 
@@ -41,6 +47,7 @@ class gravityforms extends \Q {
         \add_filter( 'gform_upload_path', [ get_class(), 'gform_upload_path' ], 10, 2 );
 
     }
+
 
 
     /**
@@ -57,6 +64,37 @@ class gravityforms extends \Q {
     }
 
 
+
+    /**
+     * Check if GF is installed and active 
+     * 
+     * @since   2.5.0
+     * @return  Boolean
+     */
+    public static function get_form_object( $form_id = null )
+    {
+
+        // sanity ##
+        if ( is_null( $form_id ) ) {
+
+            helper::log( 'No form_id passed' );
+
+            return false;
+
+        }
+
+        if ( ! class_exists( 'GFAPI' ) ) {
+            
+            helper::log( 'GFAPI Class unavailable..' );
+
+            return false;
+
+        }
+
+        // kick back what we find ##
+        return \GFAPI::get_form( $form_id );
+        
+    }
 
     
     public static function gform_upload_path( $path_info, $form_id ) 
@@ -164,6 +202,30 @@ class gravityforms extends \Q {
     }
 
 
+
+    /**
+     * Set default form settings for all Gravity Forms
+     *
+     * @since       1.4.2
+     * @return      Array   $form;
+     */
+    public static function gform_pre_render( $form )
+    {
+
+        #self::log( $form['notifications'] );
+
+        // define form settings ##
+        $form['cssClass'] = 'gf-add-placeholder';
+        $form['descriptionPlacement'] = 'above';
+        $form['enableHoneypot'] = 0;
+
+        // kick it back ##
+        return $form;
+
+    }
+
+
+
     /**
      * Get a Garavity Form by it's title
      *
@@ -226,7 +288,7 @@ class gravityforms extends \Q {
 
 
     /**
-    *
+    * Check if a post has a form assigned in post_meta
     *
     */
     public static function has_form( $args = null )
@@ -324,6 +386,273 @@ class gravityforms extends \Q {
         return $value;
 
     }
+
+
+
+    
+
+    /**
+     * Get all GF entries by search criteria 
+     * 
+     * @link    https://docs.gravityforms.com/api-functions/#get-entries
+     */
+    public static function get_entries( Array $args = null )
+    {
+
+        // we need GF classes to do aynthing, so check ##
+        if ( ! class_exists( 'GFAPI' ) ) {
+
+            helper::log( 'GFAPI Missing, so unable to continue' );
+
+            return false;
+
+        }
+
+        // check we have criteria ##
+        if ( 
+            is_null( $args )
+            || ! is_array( $args )
+            // || ! isset( $args['form'] )
+            // || ! isset( $args['criteria'] )
+        ){
+
+            helper::log( 'Error in passed parameters.' );
+
+            return false;
+
+        }
+
+        // some default values ##
+        $form = isset( $args['form'] ) ? $args['form'] : 0 ;
+        $criteria = isset( $args['criteria'] ) ? $args['criteria'] : [] ;
+        $sorting = isset( $args['sorting'] ) ? $args['sorting'] : [] ;
+        $paging = isset( $args['paging'] ) ? $args['paging'] : array( 'offset' => 0, 'page_size' => 5 ) ; // limit to 5 ##
+        $sorting = isset( $args['count'] ) ? $args['count'] : 0 ; // return total count ##
+
+        // run query ##
+        $get = \GFAPI::get_entries( 
+            $form, 
+            $criteria,
+            $sorting,
+            $paging,
+            $count
+        );
+
+        // check what we got ##
+        if (
+            ! $get
+        ){
+
+            helper::log( 'Search returned nothing..' );
+
+            return false;
+
+        }
+
+        // check what we got ##
+        if (
+            \is_wp_error( $get )
+        ){
+
+            helper::log( $get->get_error_message() );
+
+            return false;
+
+        }
+
+        // check what we have ##
+        // helper::log( $get );
+
+        // kick it back ##
+        return $get; 
+
+    }
+
+
+
+
+    /**
+     * Get one GF entry by id 
+     * 
+     * @link    https://docs.gravityforms.com/api-functions/#get-entry
+     */
+    public static function get_entry( $id = null )
+    {
+
+        // we need GF classes to do aynthing, so check ##
+        if ( ! class_exists( 'GFAPI' ) ) {
+
+            helper::log( 'GFAPI Missing, so unable to continue' );
+
+            return false;
+
+        }
+
+        // sanity ##
+        if ( is_null( $id ) ) {
+
+            helper::log( 'No Entry id passed to method' );
+
+            return false;
+
+        }
+
+        // run query ##
+        $get = \GFAPI::get_entry( 
+            $id
+        );
+
+        // check what we got ##
+        if (
+            ! $get
+        ){
+
+            helper::log( 'Search returned nothing..' );
+
+            return false;
+
+        }
+
+        // check what we got ##
+        if (
+            \is_wp_error( $get )
+        ){
+
+            helper::log( $get->get_error_message() );
+
+            return false;
+
+        }
+
+        // check what we have ##
+        // helper::log( $get );
+
+        // kick it back ##
+        return $get; 
+
+    }
+    
+
+
+    /**
+     * Get Gravity Forms form entry ID from label
+     *
+     * @label       String      $label      The label to find the ID for
+     * @since       0.5
+     * @return      void
+     */
+    public static function get_id_from_label( $label = null, $form = null )
+    {
+
+        // sanity check ##
+        if ( 
+            is_null( $label )
+            // || is_null( $entry )
+            || is_null( $form )
+        ) {
+
+            helper::log( 'Missing parameters' );
+
+            return false;
+
+        }
+
+        #helper::log( $label, 'Label' );
+        #helper::log( self::$gf_form["fields"] );
+        #helper::log( $entry );
+
+        foreach ( $form['fields'] as $field ) {
+
+            #helper::log( $field['label'], 'Field Label' );
+
+            if ( $label == $field['label'] ) {
+
+                // return ID ##
+                #helper::log( $field, 'Form Field' );
+                #helper::log( $field['id'], 'Form Entry ID' );
+                return $field['id'];
+
+            }
+
+        }
+
+        helper::log( 'Nothing found...' );
+
+        // nothing cooking ##
+        return false;
+
+    }
+
+
+
+    
+
+
+
+
+    /**
+     * Return the checked value from a checkbox or multichoice options
+     *
+     * @param		int			$field_id	ID of Gravity Forms field element
+     *
+     * @since		1.4
+     * @return		String		selected value or empty on failure
+     */
+    public static function get_field_value( $field_id = null, $entry = null, $form = null )
+    {
+
+        // sanity check ##
+        if ( 
+            is_null ( $field_id ) 
+        ){
+
+            helper::log( 'Missing field_id' );
+
+            return false;
+
+        }
+
+        // check the $lead ##
+        if ( 
+            is_null ( $entry ) 
+            || is_null ( $form ) 
+        ){
+
+            helper::log( 'Missing entry or form object' );
+
+            return false;
+
+        }
+
+        // check for required class ##
+        if ( 
+            ! class_exists( 'RGFormsModel' ) 
+            || ! class_exists( 'GFCommon' ) 
+        ) {
+
+            helper::log( 'RGFormsModel Class missing' );
+
+            return false;
+
+        }
+
+        #helper::log( $entry["id"] );
+        #helper::log( $form );
+
+        // grab field data ##
+        $field = \GFFormsModel::get_field( $form, $field_id );
+        #helper::log( $field );
+
+        // grab field values ##
+        $field_values = is_object( $field ) ? $field->get_value_export( $entry ) : false;
+
+        #wp_die( pr( $field_values ) );
+
+        // kick it back ##
+        return $field_values;
+
+    }
+
 
 
 
