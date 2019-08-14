@@ -531,6 +531,67 @@ class gravityforms extends \Q {
         return $get; 
 
     }
+
+
+
+    /**
+     * Get all GF entries by search criteria 
+     * 
+     * @link    https://docs.gravityforms.com/api-functions/#get-entries
+     */
+    public static function update_entry( $entry = null )
+    {
+
+        // we need GF classes to do aynthing, so check ##
+        if ( ! class_exists( 'GFAPI' ) ) {
+
+            helper::log( 'GFAPI Missing, so unable to continue' );
+
+            return false;
+
+        }
+
+        // sanity ##
+        if ( is_null( $entry ) ) {
+
+            helper::log( 'No Entry object passed to method' );
+
+            return false;
+
+        }
+
+        // run query ##
+        $update = \GFAPI::update_entry( $entry );
+
+        // check what we got ##
+        if (
+            ! $update
+        ){
+
+            helper::log( 'Failed to update entry..' );
+
+            return false;
+
+        }
+
+        // check what we got ##
+        if (
+            \is_wp_error( $update )
+        ){
+
+            helper::log( $update->get_error_message() );
+
+            return false;
+
+        }
+
+        // check what we have ##
+        helper::log( 'GFAPI::update_entry: '.$update );
+
+        // kick it back ##
+        return $update; 
+
+    }
     
 
 
@@ -559,7 +620,6 @@ class gravityforms extends \Q {
 
         #helper::log( $label, 'Label' );
         #helper::log( self::$gf_form["fields"] );
-        #helper::log( $entry );
 
         foreach ( $form['fields'] as $field ) {
 
