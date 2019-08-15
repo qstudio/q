@@ -1,3 +1,7 @@
+### 3.0.2 ###
+
+* Added additional Gravity Forms wrapper methods
+
 ### 3.0.1 ###
 
 * Admin menu bar filters
