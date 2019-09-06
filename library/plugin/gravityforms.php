@@ -25,6 +25,9 @@ class gravityforms extends \Q {
         // scroll to set point on page, upon submission ##
         // \add_filter( 'gform_confirmation_anchor', array( get_class(), 'gform_confirmation_anchor' ), 10, 0 );
 
+        // add universale filter on Auth.net transactions, adding descirption field to transaction object ##
+        \add_filter('gform_authorizenet_transaction_pre_capture', [ get_class(), 'gform_authorizenet_transaction_pre_capture' ], 10, 5 );
+
         // Gravity Forms spinner ##
         \add_filter( "gform_ajax_spinner_url", [ get_class(), "gform_ajax_spinner_url" ], 10, 2 );
 
@@ -112,6 +115,30 @@ class gravityforms extends \Q {
     
     }
 
+
+
+    public static function gform_authorizenet_transaction_pre_capture( $transaction, $form_data, $config, $form, $entry ) 
+    {
+        
+        // default ##
+        $string = 'Auth.net Flag: ';
+
+        // check if we have a form and form title ##
+        $string .= 
+            ( $form && isset( $form['title'] ) ) ? 
+            $form['title'] : 
+            'Form Title Error' ;
+
+        // add description ##
+        $transaction->description = $string;
+
+        // debug ##
+        helper::log( $transaction );
+
+        // kick it back ##
+        return $transaction;
+
+    }
 
     
     /**
