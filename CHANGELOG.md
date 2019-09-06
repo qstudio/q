@@ -1,3 +1,7 @@
+### 3.0.3 ###
+
+* Added auth.net patch to Gravity Forms Controller to pass descirption key in transaction.
+
 ### 3.0.2 ###
 
 * Added additional Gravity Forms wrapper methods
