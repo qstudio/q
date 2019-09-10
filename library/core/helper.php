@@ -332,9 +332,16 @@ class helper extends \Q {
         // property already loaded ##
         if ( self::$device ) { 
         
-            // helper::log( '$device set: '.self::$device );
+            // helper::log( '$device set to: '.self::$device );
+            
+            // filter ##
+            $string = \apply_filters( 'q/device/handle', self::$device );
 
-            return self::$device; 
+            // log ##
+            // helper::log( '$device filtered to: '.self::$device );
+
+            // kick it back ##
+            return $string; 
         
         }
 
@@ -402,7 +409,16 @@ class helper extends \Q {
         // self::log( 'handle: '.$handle );
 
         // set and return the property value ##
-        return self::$device = $handle;
+        // return self::$device = $handle;
+
+        // filter ##
+        $string = \apply_filters( 'q/device/handle', $handle );
+
+        // log ##
+        // helper::log( '$device filtered to: '.$string );
+
+        // kick it back, setting property ##
+        return self::$device = $string;
 
     }
 

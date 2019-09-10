@@ -1,3 +1,7 @@
+### 3.0.4 ###
+
+* Added filter to helper for Q Device limitation.
+
 ### 3.0.3 ###
 
 * Added auth.net patch to Gravity Forms Controller to pass descirption key in transaction.
