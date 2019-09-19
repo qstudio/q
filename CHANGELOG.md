@@ -1,3 +1,7 @@
+### 3.0.5 ###
+
+* Moved ACF tac config out of Q into theme
+
 ### 3.0.4 ###
 
 * Added filter to helper for Q Device limitation.
