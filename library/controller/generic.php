@@ -313,7 +313,7 @@ class generic extends \Q {
 
         // check we have all the field data we need ##
         if (
-        isset( $args->enable ) // function set to enable disabling ##
+            isset( $args->enable ) // function set to enable disabling ##
         ) {
 
             // convert legacy format to array ##
