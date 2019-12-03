@@ -116,18 +116,66 @@ class gravityforms extends \Q {
     }
 
 
-
+    /**
+     * Append form data to description field
+     * 
+     * Format - Title: XXX | Invoices: 588, CAP, CP19-3475, CP-1903477 | Cust ID: 588 | Pax Name: Null | Pax ID: Null
+     * Inputs - Form_Name: Form ID 9 , Form ID 13, Form ID 10 or 14, Form ID 11 or nothing, Form ID 12 or nothing
+     * 
+     * @method      https://docs.gravityforms.com/gform_authorizenet_transaction_pre_capture/
+     * @uses        rgar - https://docs.gravityforms.com/rgar/
+     */
     public static function gform_authorizenet_transaction_pre_capture( $transaction, $form_data, $config, $form, $entry ) 
     {
         
         // default ##
-        $string = 'Auth.net Flag: ';
+        $string = '';
+        $delimit = ': '; // key : value ##
+        $break = ' | '; // pair breaker ##
 
         // check if we have a form and form title ##
-        $string .= 
+        $title = 'Form'.$delimit. 
             ( $form && isset( $form['title'] ) ) ? 
             $form['title'] : 
-            'Form Title Error' ;
+            'Error' ;
+            
+        // paying who - form ID 9 ##
+        $paying = 'Paying'.$delimit.\rgar( $entry, '9', 'Error' );
+
+        // which program - form ID 13 ##
+        $program = 'Program'.$delimit.\rgar( $entry, '13', 'Error' ); 
+
+        // check for invoices, might be a single or multiple values, seperated by comma ##
+        if ( ! is_null( \rgar( $entry, '10' ) ) ) {
+
+            $invoice = \rgar( $entry, '10' ); // single ##
+
+        } else if ( ! is_null( \rgar( $entry, '14' ) ) ) {
+
+            $invoice = \rgar( $entry, '14' ); // multiple -- risky format, as user-entered ##
+
+        } else {
+
+            $invoice = 'Error';
+
+        }
+        // concat ##
+        $invoices = 'Invoices'.$delimit.$invoice; 
+
+        // pax name - form ID 11 ##
+        $pax_name = 'Pax Name'.$delimit.\rgar( $entry, '11', 'Error' ); 
+
+        // which program - form ID 13 ##
+        $pax_id = 'Pax ID'.$delimit.\rgar( $entry, '12', 'Error' ); 
+
+        // concat values ##
+        $string = 
+            $title.$break. // Form Title ##
+            $paying.$break. // Paying who ##
+            $program.$break. // Program ##
+            $invoices.$break. // Program ##
+            $pax_name.$break. // Pax Name ##
+            $pax_id; // Pax ID ##
 
         // add description ##
         $transaction->description = $string;
