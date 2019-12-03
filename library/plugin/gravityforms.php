@@ -173,7 +173,7 @@ class gravityforms extends \Q {
             $title.$break. // Form Title ##
             $paying.$break. // Paying who ##
             $program.$break. // Program ##
-            $invoices.$break. // Program ##
+            $invoices.$break. // Invoices ##
             $pax_name.$break. // Pax Name ##
             $pax_id; // Pax ID ##
 
