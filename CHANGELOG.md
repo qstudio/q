@@ -1,3 +1,7 @@
+### 3.0.6 ###
+
+* Addition to auth.net Gravity Forms Controller to pass descirption key in transaction.
+
 ### 3.0.5 ###
 
 * Moved ACF tac config out of Q into theme
