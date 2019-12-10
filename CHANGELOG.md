@@ -1,3 +1,7 @@
+### 3.0.7 ###
+
+* Small markup change to the tab.php controller file to render proper bootstrap panel markup
+
 ### 3.0.6 ###
 
 * Addition to auth.net Gravity Forms Controller to pass descirption key in transaction.
