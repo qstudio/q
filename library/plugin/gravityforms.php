@@ -181,7 +181,8 @@ class gravityforms extends \Q {
         $transaction->description = $string;
 
         // debug ##
-        helper::log( $transaction );
+        helper::log( 'Auth.net $transaction->description: ---------------' );
+        helper::log( $transaction->description );
 
         // kick it back ##
         return $transaction;

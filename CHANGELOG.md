@@ -1,3 +1,7 @@
+### 3.0.7 ###
+
+* Added lookup comment for transaction debugging.
+
 ### 3.0.6 ###
 
 * Addition to auth.net Gravity Forms Controller to pass descirption key in transaction.
