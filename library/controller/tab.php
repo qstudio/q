@@ -956,8 +956,8 @@ if ( typeof jQuery !== 'undefined' ) {
             'faq'           => [
                 'wrap'      => '<div class="panel-group panel-group-default">%row%</div>',
                 'row'       => '
-                                    <h5 data-toggle="collapse" data-target="#%faq%" class="panel-heading">%title%</h5>
-                                    <div id="%faq%" class="panel-collapse collapse"><div class="wysiwyg panel-body">%content%</div></div>
+                                    <div class="panel panel-default"><h5 data-toggle="collapse" data-target="#%faq%" class="panel-heading">%title%</h5>
+                                    <div id="%faq%" class="panel-collapse collapse"><div class="wysiwyg panel-body">%content%</div></div></div>
                                 '
             ],
             'script'    	=> '

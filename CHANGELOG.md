@@ -1,6 +1,7 @@
 ### 3.0.7 ###
 
 * Added lookup comment for transaction debugging.
+* Small markup change to the tab.php controller file to render proper bootstrap panel markup
 
 ### 3.0.6 ###
 
