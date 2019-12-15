@@ -888,6 +888,7 @@ if ( typeof jQuery !== 'undefined' ) {
     {
 
         // build defaults ##
+        /* REVERTED Q-TAB TO ORIGINAL STATE 11-15-19 - Benny*/
         $array = [
             'default'       => '<div class="col-md-10 col-12 wysiwyg page-content">
                                     %string%
@@ -956,8 +957,8 @@ if ( typeof jQuery !== 'undefined' ) {
             'faq'           => [
                 'wrap'      => '<div class="panel-group panel-group-default">%row%</div>',
                 'row'       => '
-                                    <div class="panel panel-default"><h5 data-toggle="collapse" data-target="#%faq%" class="panel-heading">%title%</h5>
-                                    <div id="%faq%" class="panel-collapse collapse"><div class="wysiwyg panel-body">%content%</div></div></div>
+                                    <h5 data-toggle="collapse" data-target="#%faq%" class="panel-heading">%title%</h5>
+                                    <div id="%faq%" class="panel-collapse collapse"><div class="wysiwyg panel-body">%content%</div></div>
                                 '
             ],
             'script'    	=> '
