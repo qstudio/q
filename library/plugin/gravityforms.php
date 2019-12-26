@@ -26,7 +26,11 @@ class gravityforms extends \Q {
         // \add_filter( 'gform_confirmation_anchor', array( get_class(), 'gform_confirmation_anchor' ), 10, 0 );
 
         // add universale filter on Auth.net transactions, adding descirption field to transaction object ##
-        \add_filter('gform_authorizenet_transaction_pre_capture', [ get_class(), 'gform_authorizenet_transaction_pre_capture' ], 10, 5 );
+        // \add_filter('gform_authorizenet_transaction_pre_capture', [ get_class(), 'gform_authorizenet_transaction_pre_capture' ], 10, 5 );
+
+        // NOTE - global action hook, only for testing ##
+        // once data is confirmed, comment out and enable gform_authorizenet_transaction_pre_capture filter above ##
+        \add_action( 'gform_after_submission', [ get_class(), 'gform_authorizenet_transaction_pre_capture' ], 10, 2 );
 
         // Gravity Forms spinner ##
         \add_filter( "gform_ajax_spinner_url", [ get_class(), "gform_ajax_spinner_url" ], 10, 2 );
@@ -125,48 +129,70 @@ class gravityforms extends \Q {
      * @method      https://docs.gravityforms.com/gform_authorizenet_transaction_pre_capture/
      * @uses        rgar - https://docs.gravityforms.com/rgar/
      */
-    public static function gform_authorizenet_transaction_pre_capture( $transaction, $form_data, $config, $form, $entry ) 
+    // public static function gform_authorizenet_transaction_pre_capture( $transaction, $form_data, $config, $form, $entry ) 
+    public static function gform_authorizenet_transaction_pre_capture( $entry, $form ) 
     {
         
         // default ##
         $string = '';
         $delimit = ': '; // key : value ##
         $break = ' | '; // pair breaker ##
+        $error = 'Error'; // no valid data returned ##
+        $length_max = 255; // max length ##
+        $length_warning = '#CUT#';
 
         // check if we have a form and form title ##
         $title = 'Form'.$delimit. 
             ( $form && isset( $form['title'] ) ) ? 
             $form['title'] : 
-            'Error' ;
+            $error ;
             
-        // paying who - form ID 9 ##
-        $paying = 'Paying'.$delimit.\rgar( $entry, '9', 'Error' );
+        // paying type - form ID 9 ##
+        $paying = 'Type'.$delimit.ucfirst( \rgar( $entry, '9', $error ) );
 
         // which program - form ID 13 ##
-        $program = 'Program'.$delimit.\rgar( $entry, '13', 'Error' ); 
+        // $program = 'Program'.$delimit.\rgar( $entry, '13', $error ); // single string format ## 
+        $program_field = \RGFormsModel::get_field( $form, '13' );
+        $program_value = is_object( $program_field ) ? $program_field->get_value_export( $entry ) : $error ;
+        $program = 'Programs'.$delimit.$program_value; 
 
-        // check for invoices, might be a single or multiple values, seperated by comma ##
-        if ( ! is_null( \rgar( $entry, '10' ) ) ) {
+        // check for invoices, might be a single or multiple values, seperated by comma ## 
+        $invoice = $error;
+        $pax_id = $error;
+        
+        // multiple ##
+        if ( 'multiple' == ( \rgar( $entry, '9' ) ) ) {
 
-            $invoice = \rgar( $entry, '10' ); // single ##
+            // $invoice = \rgar( $entry, '14' ); // multiple -- risky format, as user-entered -- OLD METHOD ##
+            // helper::log( 'Multiple Invoices' );
+            $invoiceid_field = \RGFormsModel::get_field( $form, '22' );
+            $invoiceid_value = is_object( $invoiceid_field ) ? $invoiceid_field->get_value_export( $entry ) : $error ;
 
-        } else if ( ! is_null( \rgar( $entry, '14' ) ) ) {
+            // concat ##
+            $invoices = 'Invoices'.$delimit.$invoiceid_value; 
 
-            $invoice = \rgar( $entry, '14' ); // multiple -- risky format, as user-entered ##
+            // Multiple pax IDS - field 21 ( list ) ##
+            // $pax_id = 'Pax ID'.$delimit.\rgar( $entry, '21', $error ); 
+            $paxid_field = \RGFormsModel::get_field( $form, '21' );
+            $paxid_value = is_object( $paxid_field ) ? $paxid_field->get_value_export( $entry ) : $error ;
+
+            $pax_id = 'Pax IDs'.$delimit.$paxid_value; 
 
         } else {
 
-            $invoice = 'Error';
+            // helper::log( 'Single Invoice' );
+            $invoice = \rgar( $entry, '10' ); // single value ##
+
+            // concat ##
+            $invoices = 'Invoice'.$delimit.$invoice; 
+
+            // pax ID - field 12 ( string ) ##
+            $pax_id = 'Pax ID'.$delimit.\rgar( $entry, '12', $error ); 
 
         }
-        // concat ##
-        $invoices = 'Invoices'.$delimit.$invoice; 
 
         // pax name - form ID 11 ##
-        $pax_name = 'Pax Name'.$delimit.\rgar( $entry, '11', 'Error' ); 
-
-        // which program - form ID 13 ##
-        $pax_id = 'Pax ID'.$delimit.\rgar( $entry, '12', 'Error' ); 
+        // $pax_name = 'Pax Name'.$delimit.\rgar( $entry, '11', $error ); 
 
         // concat values ##
         $string = 
@@ -174,10 +200,27 @@ class gravityforms extends \Q {
             $paying.$break. // Paying who ##
             $program.$break. // Program ##
             $invoices.$break. // Invoices ##
-            $pax_name.$break. // Pax Name ##
+            // $pax_name.$break. // Pax Name ##
             $pax_id; // Pax ID ##
 
-        // add description ##
+        // if we are testing this, without AUTH.net integration, we need to create the test object and property ##
+        if ( 
+            !isset( $transaction )
+            || ! is_object( $transaction ) 
+        ) {
+
+            $transaction = new \stdClass();
+            $transaction->description = ''; // empty prop ##
+
+        }
+
+        // check the string length, to see if we need to warn about a truncate ##
+        $string = 
+            ( strlen( $string ) > $length_max ) ? // string is too long ##
+            substr( $string, 0, ( $length_max - strlen( $length_warning ) ) ) . $length_warning : // truncate and add warning ##
+            $string ; // pass full string ##
+
+        // add to description field ##
         $transaction->description = $string;
 
         // debug ##
