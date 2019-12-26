@@ -25,12 +25,12 @@ class gravityforms extends \Q {
         // scroll to set point on page, upon submission ##
         // \add_filter( 'gform_confirmation_anchor', array( get_class(), 'gform_confirmation_anchor' ), 10, 0 );
 
-        // add universale filter on Auth.net transactions, adding descirption field to transaction object ##
-        // \add_filter('gform_authorizenet_transaction_pre_capture', [ get_class(), 'gform_authorizenet_transaction_pre_capture' ], 10, 5 );
+        // add universal filter on Auth.net transactions, adding description field to transaction object ##
+        \add_filter('gform_authorizenet_transaction_pre_capture', [ get_class(), 'gform_authorizenet_transaction_pre_capture' ], 10, 5 );
 
         // NOTE - global action hook, only for testing ##
         // once data is confirmed, comment out and enable gform_authorizenet_transaction_pre_capture filter above ##
-        \add_action( 'gform_after_submission', [ get_class(), 'gform_authorizenet_transaction_pre_capture' ], 10, 2 );
+        // \add_action( 'gform_after_submission', [ get_class(), 'gform_authorizenet_transaction_pre_capture' ], 10, 2 );
 
         // Gravity Forms spinner ##
         \add_filter( "gform_ajax_spinner_url", [ get_class(), "gform_ajax_spinner_url" ], 10, 2 );
@@ -123,14 +123,13 @@ class gravityforms extends \Q {
     /**
      * Append form data to description field
      * 
-     * Format - Title: XXX | Invoices: 588, CAP, CP19-3475, CP-1903477 | Cust ID: 588 | Pax Name: Null | Pax ID: Null
-     * Inputs - Form_Name: Form ID 9 , Form ID 13, Form ID 10 or 14, Form ID 11 or nothing, Form ID 12 or nothing
+     * Format - FORMTITLE | Type: Single | Programs: CAP | Invoices: 588, CAP, CP19-3475, CP-1903477 | Pax ID: 302
      * 
      * @method      https://docs.gravityforms.com/gform_authorizenet_transaction_pre_capture/
      * @uses        rgar - https://docs.gravityforms.com/rgar/
      */
-    // public static function gform_authorizenet_transaction_pre_capture( $transaction, $form_data, $config, $form, $entry ) 
-    public static function gform_authorizenet_transaction_pre_capture( $entry, $form ) 
+    public static function gform_authorizenet_transaction_pre_capture( $transaction, $form_data, $config, $form, $entry ) // auth filter ##
+    // public static function gform_authorizenet_transaction_pre_capture( $entry, $form ) // earlier, gf filter for testing ##
     {
         
         // default ##
@@ -205,7 +204,7 @@ class gravityforms extends \Q {
 
         // if we are testing this, without AUTH.net integration, we need to create the test object and property ##
         if ( 
-            !isset( $transaction )
+            ! isset( $transaction )
             || ! is_object( $transaction ) 
         ) {
 

@@ -1,3 +1,7 @@
+### 3.0.8 ###
+
+* Refinement of auth.net Gravity Forms filter, with additional early test filter.
+
 ### 3.0.7 ###
 
 * Added lookup comment for transaction debugging.
