@@ -1,3 +1,7 @@
+### 3.0.9 ###
+
+* Added admin option to switch SCSS components and controller to theme to include assets
+
 ### 3.0.8 ###
 
 * Refinement of auth.net Gravity Forms filter, with additional early test filter.

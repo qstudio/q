@@ -134,7 +134,10 @@ class theme extends \Q {
         // helper::log( 'debug set to: '. ( true === self::$debug ? 'True' : 'False' ) );
 
         if ( 
-            isset( self::$options->plugin_css ) 
+            ( 
+                isset( self::$options->plugin_css ) 
+                && 1 == self::$options->plugin_css
+            )
             && false === self::$debug 
         ) {
 
@@ -145,6 +148,7 @@ class theme extends \Q {
 
         if ( 
             isset( self::$options->plugin_css ) 
+            && 1 == self::$options->plugin_css
             // && false === self::$debug 
         ) {
             
@@ -155,7 +159,10 @@ class theme extends \Q {
         }
 
         if ( 
-            isset( self::$options->plugin_js ) 
+            (
+                isset( self::$options->plugin_js ) 
+                && 1 == self::$options->plugin_js
+            )
             && false === self::$debug 
         ) {
 
@@ -446,7 +453,12 @@ class theme extends \Q {
     public static function wp_enqueue_scripts_theme() 
     {
 
-        if ( isset( self::$options->theme_css ) ) {
+        if ( 
+            isset( self::$options->theme_css ) 
+            && 1 == self::$options->theme_css
+        ) {
+
+            // helper::log( 'Running CSS...' );
 
             // _deprecated -- add theme css ##
             // \wp_register_style( 'theme-css', \get_stylesheet_directory_uri() . '/style.css', '', self::version );
@@ -514,7 +526,7 @@ class theme extends \Q {
                     // if we can't find that.. log an error ##
                     if ( ! $file ) {
 
-                        helper::log( 'Error: cannot load '.$handle );
+                        // helper::log( 'Error: cannot load '.$handle );
 
                     } else {
 
@@ -529,14 +541,65 @@ class theme extends \Q {
 
             }
 
-            // load compiled css from sass modules ##
-            \wp_register_style( 'q-theme-index-scss', theme_helper::get( "theme/scss/index.css", 'return' ), array(), \q_theme::version, 'all' );
-            \wp_enqueue_style( 'q-theme-index-scss' );
+        }
+
+        // Q Check if we need to include SCSS Modules 
+        // based on binary switch per install found in Q Settings self::$options->theme_css_scss ##
+        if ( 
+            isset( self::$options->theme_scss ) 
+            && 1 == self::$options->theme_scss    
+        ) {
+
+            // helper::log( 'Running SCSS...' );
+
+            // IE ##
+            if ( theme_helper::get( "theme/scss/ie.css", "return" ) ) {
+         
+                \wp_enqueue_style( 'q-ie-scss', theme_helper::get( "theme/scss/ie.css", "return" ), '', \q_theme::version );
+                \wp_style_add_data( 'q-ie-scss', 'conditional', 'IE' );
+
+            }
+
+            // q_theme/library/theme/scss/q.2.index.css ##
+            // q_theme/library/theme/scss/q.1.index.css ##
+            $handle = "q.".\get_current_blog_id().".index.css";
+
+            if ( $file = theme_helper::get( "theme/scss/".$handle, "return" ) ) {
+
+                // helper::log( 'Loading up file: '.$file );
+
+                \wp_register_style( $handle, $file, '', \q_theme::version, 'all' );
+                \wp_enqueue_style( $handle );
+
+            } else {
+
+                $handle = "q.1.index.css";
+
+                $file = theme_helper::get( "theme/scss/".$handle, "return" );
+
+                // if we can't find that.. log an error ##
+                if ( ! $file ) {
+
+                    // helper::log( 'Error: cannot load '.$handle );
+
+                } else {
+
+                    // helper::log( '#4 : Loading up file: '.$file );
+
+                    \wp_register_style( $handle, $file, '', \q_theme::version, 'all' );
+                    \wp_enqueue_style( $handle );
+
+                }
+
+            }
 
         }
 
         // load generic JS from theme/javascript/scripts.js
-        if ( isset( self::$options->theme_js ) ) {
+        if ( 
+            isset( self::$options->theme_js ) 
+            && 1 == self::$options->theme_js
+        ) {
 
             \wp_register_script( 'theme-js', theme_helper::get( "theme/javascript/scripts.js", 'return' ), array( 'jquery' ), \q_theme::version, true );
             \wp_enqueue_script( 'theme-js' );
@@ -577,6 +640,5 @@ class theme extends \Q {
         }
 
     }
-
 
 }

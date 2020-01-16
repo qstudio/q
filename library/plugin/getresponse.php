@@ -206,7 +206,7 @@ class getresponse extends \Q {
             || ! self::get() 
         ){
 
-            helper::log( 'Missing or corrupt config' );
+            // helper::log( 'Missing or corrupt config' );
 
             return false;
 
