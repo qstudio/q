@@ -1,3 +1,7 @@
+### 3.0.9 ###
+
+* Added admin option to switch SCSS components and controller to theme to include assets
+
 ### 3.0.8 ###
 
 * More changes to Gravity Forms filter.
