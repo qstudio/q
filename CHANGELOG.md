@@ -1,5 +1,10 @@
 ### 3.0.8 ###
 
+* More changes to Gravity Forms filter.
+
+
+### 3.0.8 ###
+
 * Refinement of auth.net Gravity Forms filter, with additional early test filter.
 
 ### 3.0.7 ###
