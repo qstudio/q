@@ -164,18 +164,23 @@ class gravityforms extends \Q {
 
             // $invoice = \rgar( $entry, '14' ); // multiple -- risky format, as user-entered -- OLD METHOD ##
             // helper::log( 'Multiple Invoices' );
-            $invoiceid_field = \RGFormsModel::get_field( $form, '22' );
-            $invoiceid_value = is_object( $invoiceid_field ) ? $invoiceid_field->get_value_export( $entry ) : $error ;
+            /* I'M KEEPING THE LOGIC TREE TO EASILY INCORPORATE LIST FIELDS AGAIN IF WE WANT TO USE THEM - BEN 1/18/20 */
+
+            #$invoiceid_field = \RGFormsModel::get_field( $form, '22' ); /* USE FOR LIST FIELD */
+            $invoice = \rgar( $entry, '10' ); // single value ##
+            #$invoiceid_value = is_object( $invoiceid_field ) ? $invoiceid_field->get_value_export( $entry ) : $error ;
 
             // concat ##
-            $invoices = 'Invoices'.$delimit.$invoiceid_value; 
+            #$invoices = 'Invoices'.$delimit.$invoiceid_value; 
+            $invoices = 'Invoices'.$delimit.$invoice; 
 
             // Multiple pax IDS - field 21 ( list ) ##
             // $pax_id = 'Pax ID'.$delimit.\rgar( $entry, '21', $error ); 
-            $paxid_field = \RGFormsModel::get_field( $form, '21' );
-            $paxid_value = is_object( $paxid_field ) ? $paxid_field->get_value_export( $entry ) : $error ;
+            #$paxid_field = \RGFormsModel::get_field( $form, '21' );  /* USE FOR LIST FIELD */
+            #$paxid_value = is_object( $paxid_field ) ? $paxid_field->get_value_export( $entry ) : $error ; /* USE FOR LIST FIELD */
 
-            $pax_id = 'Pax IDs'.$delimit.$paxid_value; 
+            #$pax_id = 'Pax IDs'.$delimit.$paxid_value; 
+            $pax_id = 'Pax ID'.$delimit.\rgar( $entry, '12', $error ); 
 
         } else {
 
