@@ -605,6 +605,7 @@ class options extends \Q {
                             'brandbar'  => 'Global Brand Bar',
                             'promo'     => 'Promotion',
                             'consent'   => 'Consent System',
+                            'ticker'    => 'Breaking News Ticker',
                         ),
                         'allow_custom' => 0,
                         'default_value' => array(

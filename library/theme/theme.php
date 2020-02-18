@@ -153,7 +153,9 @@ class theme extends \Q {
         ) {
             
             // add compiled sass file ##
-            \wp_register_style( 'q-plugin-index-scss', helper::get( "theme/scss/index.css", 'return' ), array(), self::version, 'all' );
+           # \wp_register_style( 'q-plugin-index-scss', helper::get( "theme/scss/index.css", 'return' ), array(), self::version, 'all' );
+           # EDIT 1/11/20 - Placing the index file in the CSS folder means not maintaining separate image & assets folders for CSS
+            \wp_register_style( 'q-plugin-index-scss', helper::get( "theme/css/index.css", 'return' ), array(), self::version, 'all' );
             \wp_enqueue_style( 'q-plugin-index-scss' );
 
         }
@@ -564,8 +566,10 @@ class theme extends \Q {
             // q_theme/library/theme/scss/q.1.index.css ##
             $handle = "q.".\get_current_blog_id().".index.css";
 
-            if ( $file = theme_helper::get( "theme/scss/".$handle, "return" ) ) {
+           # if ( $file = theme_helper::get( "theme/scss/".$handle, "return" ) ) {
+           # EDIT 1/11/20 - Placing the index file in the CSS folder means not maintaining separate image & assets folders for CSS
 
+            if ( $file = theme_helper::get( "theme/css/".$handle, "return" ) ) {
                 // helper::log( 'Loading up file: '.$file );
 
                 \wp_register_style( $handle, $file, '', \q_theme::version, 'all' );
@@ -575,7 +579,10 @@ class theme extends \Q {
 
                 $handle = "q.1.index.css";
 
-                $file = theme_helper::get( "theme/scss/".$handle, "return" );
+                #$file = theme_helper::get( "theme/scss/".$handle, "return" );
+                # EDIT 1/11/20 - Placing the index file in the CSS folder means not maintaining separate image & assets folders for CSS
+
+                $file = theme_helper::get( "theme/css/".$handle, "return" );
 
                 // if we can't find that.. log an error ##
                 if ( ! $file ) {

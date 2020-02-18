@@ -1,3 +1,7 @@
+### 3.0.95 ###
+
+* Added admin option for Q Brand Bar : Breaking News ticker 
+
 ### 3.0.9 ###
 
 * Added admin option to switch SCSS components and controller to theme to include assets
