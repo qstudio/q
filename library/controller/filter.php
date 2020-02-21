@@ -217,11 +217,11 @@ if ( typeof jQuery !== 'undefined' ) {
         
         hash = hash || window.location.hash.substring(1) ;
 
-        // console.log( hash );
+        console.log( 'q_filter:q_load_content:' + hash );
 
         if ( hash.indexOf('filter') !== 1 ) {
 
-           //console.log( 'Nothing cooking..' );
+           console.log( 'Nothing cooking..' );
 
             return 'all';
 
@@ -244,7 +244,7 @@ if ( typeof jQuery !== 'undefined' ) {
         }
 
         if( typeof hash !== 'undefined' && hash !== null && hash !== '' ) {
-            // console.dir( hash );
+            console.dir( hash );
             return hash;
         } else { 
             return false; 
@@ -278,13 +278,13 @@ if ( typeof jQuery !== 'undefined' ) {
 
             for( x=0; x<val.length; x++ ) { //return only matched criteria or 'all' for each data-type
             
-                // console.log(results);
+                 console.log(results);
                 var d_type = 'data-' + filter_class_types[x];
-                // console.log(d_type);
+                 console.log(d_type);
                 var d_val = val[x];
-                // console.log(d_val);
+                 console.log(d_val);
                 
-                // set <select> option ##
+                 set <select> option ##
                 q_select_option( filter_class_types[x], d_val );
 
                 //if we have results loop through and shrink them
@@ -308,7 +308,7 @@ if ( typeof jQuery !== 'undefined' ) {
                 // if not establish initial set of filter results ##
                 } else {
 
-                   //console.log( 'doing that...' );
+                   console.log( 'doing that...' );
 
                     if( d_val == 'all' ) { 
 
@@ -329,7 +329,7 @@ if ( typeof jQuery !== 'undefined' ) {
 
            //console.log( 'doing other...' );
 
-            // console.log( 'Val: '+val );
+             console.log( 'Val: '+val );
 
             // set <select> option ##
             q_select_option( filter_class_types, val );
@@ -357,14 +357,23 @@ if ( typeof jQuery !== 'undefined' ) {
             }
              
         });
+
+        $leadership = jQuery('ul.team-branch').first();
+        console.log( $leadership );
+        console.log( 'end of do load: is visible? ' + $leadership.is(":visible") );
+
     }
             
     function q_load_content( hash_val, scroll ){
 
         scroll = scroll || false ;
 
-        // console.log( 'q_load_content' );
+        console.log( 'q_load_content' );
 
+        // Is hidden yet?
+        $leadership = jQuery('ul.team-branch').first();
+        console.log( $leadership );
+        console.log( 'is visible? ' + $leadership.is(":visible") );
         // HIDE EVERYTHING ##
         jQuery( '.filter-no-results' ).removeClass('shown').addClass('hidden').hide(0);
         jQuery( '.modal-data' ).removeClass('shown').addClass('hidden').hide(0);
@@ -440,13 +449,13 @@ if ( typeof jQuery !== 'undefined' ) {
                 
                 if ( window[value] ) {
         
-                    // console.log( 'calling callback from filter js: '+value );
+                     console.log( 'calling callback from filter js: '+value );
         
                     window[value]();
         
                 } else {
         
-                    // console.log( 'callback not available: '+value );
+                     console.log( 'callback not available: '+value );
         
                 }
         

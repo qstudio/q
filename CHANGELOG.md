@@ -1,3 +1,7 @@
+### 3.0.99 ###
+
+* add logging on filter as well
+
 ### 3.0.98 ###
 
 * added delay to q select pageload
