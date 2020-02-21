@@ -326,7 +326,7 @@ if ( typeof jQuery !== 'undefined' ) {
         // modern browsers 
         jQuery( window ).bind( 'hashchange', function( e ) {
 
-            // console.log( 'Doing hash change...' );
+            console.log( 'Doing hash change...' );
 
             // hash ##
             q_select_hash();
@@ -341,7 +341,7 @@ if ( typeof jQuery !== 'undefined' ) {
     // bind change event to select  ##
     jQuery( document ).on( 'change', 'select#q-select', function(e){
         
-        // console.log( 'Select change..' );
+         console.log( 'Select change..' );
 
         $value = jQuery(this).val();
 
@@ -396,10 +396,10 @@ function q_select( $args )
     // save args to global var ##
     $q_select_args = $args;
 
-    // console.dir( $q_select_args );
+    console.dir( $q_select_args );
 
     $hash = window.location.hash.substring(1);
-    // console.log( 'hash is: '+$hash );
+    console.log( 'q_select - hash is: '+$hash );
 
     // we should not run on page load when a modal is open ##
     if ( $hash.toLowerCase().indexOf( 'modal' ) >= 0 ) { 
@@ -434,7 +434,7 @@ function q_select_hash()
 
     if ( ! $q_select_hash_value ) {
 
-        // console.log( 'hash is not a filter' );
+        console.log( 'hash is not a filter' );
 
         $q_select_hash_value = false;
 
@@ -458,7 +458,7 @@ function q_select_change()
         || false == $q_select_hash_value
     ) {
 
-        // console.log( 'Missing args' );
+        console.log( 'Missing args' );
 
         return false;
 
@@ -496,18 +496,18 @@ function q_select_default()
 
     if ( false == $q_select_args ) {
 
-        // console.log( 'Missing args' );
+        console.log( 'Missing args' );
 
         return false;
 
     }
 
-    // console.log( 'q_select: default: ' +$q_select_args.default );
-    // console.log( 'hash is now..: '+$q_select_hash_value );
+    console.log( 'q_select: default: ' +$q_select_args.default );
+    console.log( 'hash is now..: '+$q_select_hash_value );
 
     if ( $q_select_hash_value ) {
 
-        // console.log( 'No default setting if hash value set.' );
+        console.log( 'No default setting if hash value set.' );
 
         return false;
 

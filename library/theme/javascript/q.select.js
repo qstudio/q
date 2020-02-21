@@ -211,7 +211,7 @@ function q_select_change( scroll = false )
         || false == $q_select_hash_value
     ) {
 
-        // console.log( 'Missing args' );
+        console.log( 'Q select hash value ' + 'Missing args' );
 
         return false;
 
@@ -247,13 +247,13 @@ Set-up select and elements based on defined default
 function q_select_default()
 {
 
-    if ( false == $q_select_args ) {
+   if ( false == $q_select_args ) {
 
-        // console.log( 'Missing args' );
+         console.log( ' q_select_default Missing args' );
 
         return false;
 
-    }
+    } else { console.log( $q_select_args);}
 
     // console.log( 'q_select: default: ' +$q_select_args.default );
     // console.log( 'hash is now..: '+$q_select_hash_value );

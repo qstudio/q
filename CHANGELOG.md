@@ -1,3 +1,7 @@
+### 3.0.96 ###
+
+* Q Select issue is not reproducible in local environment, pushing new version to temp enable javascript logging throughout q select JS
+
 ### 3.0.95 ###
 
 * Added admin option for Q Brand Bar : Breaking News ticker 
