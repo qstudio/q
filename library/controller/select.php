@@ -553,13 +553,17 @@ function q_select_get_url() {
 ?>
 <script>
 jQuery(document).ready(function() {
-
-    jQuery(document).ready(function() {
+    setTimeout(function(){ 
+        //jQuery(document).ready(function() { this is interesting but hacky
         
-        // load up select engine ##
-        if ( typeof q_select === 'function') q_select(<?php echo json_encode( self::$args ); ?>);
-    
-    });
+            // load up select engine ##
+            if ( typeof q_select === 'function') q_select(<?php echo json_encode( self::$args ); ?>);
+        
+        //});       
+
+
+     }, 50); //50 millisecond delay replaces nested document ready
+
 
 });
 </script>

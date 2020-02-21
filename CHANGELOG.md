@@ -1,6 +1,7 @@
-### 3.0.96 ###
+### 3.0.98 ###
 
-* Q Select issue is not reproducible in local environment, pushing new version to temp enable javascript logging throughout q select JS
+* added delay to q select pageload
+
 
 ### 3.0.95 ###
 

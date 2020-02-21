@@ -3,7 +3,7 @@
 **Tags:** Q, theme, framework, developers   
 **Requires at least:** 4.0.0  
 **Tested up to:** 5.0.0  
-**Stable tag:** 3.0.97  
+**Stable tag:** 3.0.98  
 **License:** GPL2  
 
 Q WordPress Development Framework
