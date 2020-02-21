@@ -1,6 +1,8 @@
-### 3.0.99 ###
 
-* add logging on filter as well
+
+### 3.1.0 ###
+
+* Clearing the slate for this select issue
 
 ### 3.0.98 ###
 

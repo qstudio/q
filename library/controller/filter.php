@@ -284,7 +284,7 @@ if ( typeof jQuery !== 'undefined' ) {
                 var d_val = val[x];
                  console.log(d_val);
                 
-                 set <select> option ##
+                //set <select> option ##
                 q_select_option( filter_class_types[x], d_val );
 
                 //if we have results loop through and shrink them
