@@ -460,6 +460,12 @@ function q_select_change()
 
         console.log( 'Missing args' );
 
+        /* temp logging */
+        $leadership = jQuery('ul.team-branch').first();
+        console.log( $leadership );
+        console.log( 'end of do load: is visible? ' + $leadership.is(":visible") );
+        //end
+
         return false;
 
     }
@@ -480,8 +486,20 @@ function q_select_change()
     // hide all ##
     jQuery( 'div.q-select > *' ).hide(0);   
 
+    //temp
+    console.log( 'hiding all');
+    $leadership = jQuery('ul.team-branch').first();
+    console.log( $leadership );
+    console.log( 'end of do load: is visible? ' + $leadership.is(":visible") );
+
+
     // show selected meta group ##
     jQuery( "div.q-select [data-select='" + $q_select_hash_value + "']").show(0);
+    console.log( 'showing');
+    $leadership = jQuery('ul.team-branch').first();
+    console.log( $leadership );
+    console.log( 'end of do load: is visible? ' + $leadership.is(":visible") );
+
 
     // change option value ##
     jQuery( '#q-select').find('option[value="'+ $q_select_hash_value +'"]').prop('selected', 'selected');
