@@ -483,6 +483,12 @@ function q_select_change()
         
     }
 
+    //temp
+    console.log( 'before hiding all');
+    $leadership = jQuery('ul.team-branch').first();
+    console.log( $leadership );
+    console.log( 'q select about to hide: is visible? ' + $leadership.is(":visible") );
+
     // hide all ##
     jQuery( 'div.q-select > *' ).hide(0);   
 
@@ -492,6 +498,7 @@ function q_select_change()
     console.log( $leadership );
     console.log( 'end of do load: is visible? ' + $leadership.is(":visible") );
 
+    console.log( 'this is the one - should be showing last q-select:' + $q_select_hash_value );
 
     // show selected meta group ##
     jQuery( "div.q-select [data-select='" + $q_select_hash_value + "']").show(0);
