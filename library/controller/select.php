@@ -458,12 +458,12 @@ function q_select_change()
         || false == $q_select_hash_value
     ) {
 
-        console.log( 'Missing args' );
+        // console.log( 'Missing args' );
 
         /* temp logging */
-        $leadership = jQuery('ul.team-branch').first();
-        console.log( $leadership );
-        console.log( 'end of do load: is visible? ' + $leadership.is(":visible") );
+        // $leadership = jQuery('ul.team-branch').first();
+        // console.log( $leadership );
+        // console.log( 'end of do load: is visible? ' + $leadership.is(":visible") );
         //end
 
         return false;
@@ -484,29 +484,28 @@ function q_select_change()
     }
 
     //temp
-    console.log( 'before hiding all');
+    // console.log( 'before hiding all');
     $leadership = jQuery('ul.team-branch').first();
-    console.log( $leadership );
-    console.log( 'q select about to hide: is visible? ' + $leadership.is(":visible") );
+    // console.log( $leadership );
+    // console.log( 'q select about to hide: is visible? ' + $leadership.is(":visible") );
 
     // hide all ##
     jQuery( 'div.q-select > *' ).hide(0);   
 
     //temp
-    console.log( 'hiding all');
+    // console.log( 'hiding all');
     $leadership = jQuery('ul.team-branch').first();
     console.log( $leadership );
-    console.log( 'end of do load: is visible? ' + $leadership.is(":visible") );
+    // console.log( 'end of do load: is visible? ' + $leadership.is(":visible") );
 
-    console.log( 'this is the one - should be showing last q-select:' + $q_select_hash_value );
+    // console.log( 'this is the one - should be showing last q-select:' + $q_select_hash_value );
 
     // show selected meta group ##
     jQuery( "div.q-select [data-select='" + $q_select_hash_value + "']").show(0);
-    console.log( 'showing');
+    // console.log( 'showing');
     $leadership = jQuery('ul.team-branch').first();
-    console.log( $leadership );
-    console.log( 'end of do load: is visible? ' + $leadership.is(":visible") );
-
+    // console.log( $leadership );
+    // console.log( 'end of do load: is visible? ' + $leadership.is(":visible") );
 
     // change option value ##
     jQuery( '#q-select').find('option[value="'+ $q_select_hash_value +'"]').prop('selected', 'selected');
@@ -521,18 +520,18 @@ function q_select_default()
 
     if ( false == $q_select_args ) {
 
-        console.log( 'Missing args' );
+        // console.log( 'Missing args' );
 
         return false;
 
     }
 
-    console.log( 'q_select: default: ' +$q_select_args.default );
-    console.log( 'hash is now..: '+$q_select_hash_value );
+    // console.log( 'q_select: default: ' +$q_select_args.default );
+    // console.log( 'hash is now..: '+$q_select_hash_value );
 
     if ( $q_select_hash_value ) {
 
-        console.log( 'No default setting if hash value set.' );
+        // console.log( 'No default setting if hash value set.' );
 
         return false;
 
