@@ -1,4 +1,6 @@
+### 3.1.3 ###
 
+* Versioning
 
 ### 3.1.0 ###
 
@@ -7,7 +9,6 @@
 ### 3.0.98 ###
 
 * added delay to q select pageload
-
 
 ### 3.0.95 ###
 

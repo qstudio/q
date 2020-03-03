@@ -326,7 +326,7 @@ if ( typeof jQuery !== 'undefined' ) {
         // modern browsers 
         jQuery( window ).bind( 'hashchange', function( e ) {
 
-            console.log( 'Doing hash change...' );
+            // console.log( 'Doing hash change...' );
 
             // hash ##
             q_select_hash();
@@ -341,7 +341,7 @@ if ( typeof jQuery !== 'undefined' ) {
     // bind change event to select  ##
     jQuery( document ).on( 'change', 'select#q-select', function(e){
         
-         console.log( 'Select change..' );
+        //  console.log( 'Select change..' );
 
         $value = jQuery(this).val();
 
@@ -396,10 +396,10 @@ function q_select( $args )
     // save args to global var ##
     $q_select_args = $args;
 
-    console.dir( $q_select_args );
+    // console.dir( $q_select_args );
 
     $hash = window.location.hash.substring(1);
-    console.log( 'q_select - hash is: '+$hash );
+    // console.log( 'q_select - hash is: '+$hash );
 
     // we should not run on page load when a modal is open ##
     if ( $hash.toLowerCase().indexOf( 'modal' ) >= 0 ) { 
@@ -434,7 +434,7 @@ function q_select_hash()
 
     if ( ! $q_select_hash_value ) {
 
-        console.log( 'hash is not a filter' );
+        // console.log( 'hash is not a filter' );
 
         $q_select_hash_value = false;
 
@@ -485,7 +485,7 @@ function q_select_change()
 
     //temp
     // console.log( 'before hiding all');
-    $leadership = jQuery('ul.team-branch').first();
+    // $leadership = jQuery('ul.team-branch').first();
     // console.log( $leadership );
     // console.log( 'q select about to hide: is visible? ' + $leadership.is(":visible") );
 
@@ -494,8 +494,8 @@ function q_select_change()
 
     //temp
     // console.log( 'hiding all');
-    $leadership = jQuery('ul.team-branch').first();
-    console.log( $leadership );
+    // $leadership = jQuery('ul.team-branch').first();
+    // console.log( $leadership );
     // console.log( 'end of do load: is visible? ' + $leadership.is(":visible") );
 
     // console.log( 'this is the one - should be showing last q-select:' + $q_select_hash_value );
@@ -503,7 +503,7 @@ function q_select_change()
     // show selected meta group ##
     jQuery( "div.q-select [data-select='" + $q_select_hash_value + "']").show(0);
     // console.log( 'showing');
-    $leadership = jQuery('ul.team-branch').first();
+    // $leadership = jQuery('ul.team-branch').first();
     // console.log( $leadership );
     // console.log( 'end of do load: is visible? ' + $leadership.is(":visible") );
 
@@ -585,9 +585,7 @@ jQuery(document).ready(function() {
         
         //});       
 
-
      }, 50); //50 millisecond delay replaces nested document ready
-
 
 });
 </script>

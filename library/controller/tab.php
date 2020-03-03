@@ -114,12 +114,12 @@ class tab extends \Q {
             isset( self::$args['enable'] ) // function set to enable disabling ##
         ) { 
 
-            helper::log( "checking enable status for tabs" );
-            helper::log( "post ID: ".\get_the_ID() );
+            // helper::log( "checking enable status for tabs" );
+            // helper::log( "post ID: ".\get_the_ID() );
             
             $value = \get_field( self::$args['enable'], \get_the_ID() );
 
-            helper::log( "we got the enable value: ".$value );
+            // helper::log( "we got the enable value: ".$value );
 
             if ( 
                 false === $value
@@ -127,7 +127,7 @@ class tab extends \Q {
                 || ! $value
             ) {
         
-                helper::log( "tabs is not enabled" );
+                // helper::log( "tabs is not enabled" );
 
                 return false;
 
@@ -196,7 +196,7 @@ class tab extends \Q {
         ) {
 
             // log ##
-            helper::log( 'No tabs found for this post - return all post content' );
+            // helper::log( 'No tabs found for this post - return all post content' );
 
             // return ##
             // return false;
@@ -207,7 +207,7 @@ class tab extends \Q {
         if ( ! self::is_enabled() ) {
 
             // log ##
-            helper::log( 'Tabs not enabled, so droppping to post_content.' );
+            // helper::log( 'Tabs not enabled, so droppping to post_content.' );
 
             $tabs = false; // clear variable ##
 
