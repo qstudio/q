@@ -1,3 +1,7 @@
+### 3.1.4 ###
+
+* Added Brand Bar admin controls
+
 ### 3.1.3 ###
 
 * Versioning

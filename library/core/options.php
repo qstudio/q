@@ -603,9 +603,9 @@ class options extends \Q {
                         ),
                         'choices' => array(
                             'brandbar'  => 'Global Brand Bar',
-                            'promo'     => 'Promotion',
+                            // 'promo'     => 'Promotion',
                             'consent'   => 'Consent System',
-                            'ticker'    => 'Breaking News Ticker',
+                            'ticker'    => 'News Ticker',
                         ),
                         'allow_custom' => 0,
                         'default_value' => array(
@@ -617,6 +617,63 @@ class options extends \Q {
                         'return_format' => 'value',
                         'save_custom' => 0,
                     ),
+
+                    array(
+                        'key' => 'field_q_option_plugin_ticker_title',
+                        'label' => 'Ticker Title',
+                        'name' => 'q_option_plugin_ticker_title',
+                        'type' => 'text',
+                        'instructions' => 'Add short Ticker Title here ( Max 60 Chars )',
+                        'required' => 1,
+                        'conditional_logic' => array (
+                            array (
+                                array (
+                                    'field' => 'field_q_option_plugin',
+                                    'operator' => '==',
+                                    'value' => 'ticker',
+                                ),
+                            ),
+                        ),
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => 'Coronavirus Update',
+                        'placeholder' => '',
+                        'prepend' => '',
+                        'append' => '',
+                        'maxlength' => '60',
+                        'readonly' => 0,
+                        'disabled' => 0,
+                    ),
+
+                    array(
+                        'key' => 'field_q_option_plugin_ticker_url',
+                        'label' => 'Ticker URL',
+                        'name' => 'q_option_plugin_ticker_url',
+                        'type' => 'url',
+                        'instructions' => 'Enter the full URL',
+                        'required' => 1,
+                        'conditional_logic' => array (
+                            array (
+                                array (
+                                    'field' => 'field_q_option_plugin',
+                                    'operator' => '==',
+                                    'value' => 'ticker',
+                                ),
+                            ),
+                        ),
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'default_value' => 'https://greenheart.org/blog/exchange/coronavirus-update/',
+                        'placeholder' => '',
+                    ),
+
+
                 ),
                 'location' => array(
                     array(
