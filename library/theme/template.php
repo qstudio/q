@@ -224,12 +224,6 @@ class template {
     */
     public static function native_template_include( $template ) {
         
-        // if ( ! core::is_site( "public" ) ) {
-            
-        //     return $template;
-            
-        // }
-
         $template = self::get_default_template( $template );
 
         if ( 

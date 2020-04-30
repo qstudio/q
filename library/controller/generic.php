@@ -19,8 +19,6 @@ class generic extends \Q {
     public static function run()
     {
 
-        // CORS header ##
-        // \add_action( 'init', [ get_class(), 'add_cors_http_header' ] );
 
     }
 
@@ -555,22 +553,6 @@ class generic extends \Q {
 
     }
 
-
-
-
-    public static function add_cors_http_header()
-    {
-
-        // club login status ##
-        if ( core::is_site( "club" ) ) {
-
-            return false;
-
-        }
-
-        header( "Access-Control-Allow-Origin: ".\get_site_url( '2', '/', 'https' ) );
-
-    }
 
 
 

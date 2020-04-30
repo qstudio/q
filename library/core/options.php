@@ -807,7 +807,7 @@ class options extends \Q {
 
         }
 
-        // grab teh global object ##
+        // grab the global object ##
         global $wpdb;
 
         // run the query ##
