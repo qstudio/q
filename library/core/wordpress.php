@@ -408,7 +408,7 @@ class wordpress extends \Q {
         );
 
         // merge in global $wp_query variables ? ( required for archive pages ) ##
-        if ( $args->query_vars ) {
+        if ( isset( $args->query_vars ) ) {
 
             // grab all global wp_query args ##
             global $wp_query;
@@ -421,9 +421,9 @@ class wordpress extends \Q {
         }
 
         // merge in global $wp_query variables ? ( required for archive pages ) ##
-        if ( $args->search ) {
+        if ( isset( $args->search ) ) {
 
-            // self::log( 'searching...' );
+            // helper::log( 'searching...' );
 
             $posts_args['post_type'] = isset( $args->post_type ) ? $args->post_type : 'any' ;
             #$posts_args['posts_per_page'] = 100; // get them all ##
@@ -442,8 +442,7 @@ class wordpress extends \Q {
         // weird WPE hack - to reduce the returned array to the size of $args->limit ##
         if ( -1 != $args->limit && $q_query->post_count > $args->limit ) {
 
-            // self::log( "splicing.." );
-            #array_splice( $q_query->posts, 2 );
+            // helper::log( "splicing.." );
             $get_posts = array_slice( $q_query->posts, 0, $args->limit, true );
 
         } else {
@@ -517,10 +516,8 @@ class wordpress extends \Q {
             }
 
             // pagination ##
-            // self::log( 'pagination: '.$args->pagination );
-            #pr( $posts_args['posts_per_page'], 'posts_per_page' );
-            #pr( $q_query->post_count, 'post_count' );
-            if ( $args->pagination ) {
+            
+            if ( isset( $args->pagination ) ) {
 
                 // self::log( 'Adding pagination..' );
                 

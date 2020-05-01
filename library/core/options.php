@@ -29,8 +29,6 @@ class options extends \Q {
         // add fields ##
         \add_action( 'acf/init', array( get_class(), 'add_fields' ), 1 );
 
-        // @todo - add caching to get options call, which is bust when the options page is visited -- is this really more effecient?? ##
-
         // example how to inject extra options in libraries select API ##
         // \add_filter( 'acf/load_field/name=q_option_library', [ get_class(), 'filter_acf_library' ], 10, 1 );
 

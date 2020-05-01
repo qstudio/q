@@ -29,9 +29,16 @@ class controller extends \Q {
     private static function load_libraries()
     {
 
+        // widgets == @TODO, should be filter for q_theme_x settings and global controller ##
         require_once self::get_plugin_path( 'library/theme/widget.php' );
+
+        // meta controller ##
         require_once self::get_plugin_path( 'library/theme/meta.php' ); 
-        // require_once self::get_plugin_path( 'library/theme/template.php' ); // @todo - make this the single template controller and allow plugins to inject rules via filters ##
+        
+        // template controller, allows plugins to inject rules via filters ##
+        require_once self::get_plugin_path( 'library/theme/template.php' ); 
+
+        // add assets based on Q settings ##
         require_once self::get_plugin_path( 'library/theme/theme.php' );
 
     }
