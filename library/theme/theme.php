@@ -276,13 +276,11 @@ class theme extends \Q {
                 \the_row(); 
 
                 // properties ##
+                // external libraries are saved in an array with "type", "title", "version" and "url" ##
                 $type = \get_sub_field('type');
                 $title = \get_sub_field('title');
                 $version = \get_sub_field('version');
                 $url = \get_sub_field('url');
-
-                // external libraries are saved in an array with "type", "title", "version" and "url" ##
-                // foreach( self::$options->external as $key ) {
 
                 // helper::log( 'working External: '.$title );
 
@@ -364,7 +362,7 @@ class theme extends \Q {
 
             // template hierarchy ##
 
-            // check for minified file in Q Theme ##
+            // Debugging, so load non-minified version from q_theme library ##
             if ( 
                 self::$debug
                 && theme_helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' )
@@ -383,7 +381,7 @@ class theme extends \Q {
 
                 // helper::log( 'Adding '.$type_dir.'/'.$type[1].'.min.'.$type_ext.' from Q Theme' );
 
-            // check for non-minified version in Q Theme, if debugging ##
+            // check for non-minified version in Q library, if debugging ##
             } else if ( 
                 self::$debug
                 && helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' ) 
@@ -623,26 +621,55 @@ class theme extends \Q {
             // first check if the file exists ##
             if ( $file = theme_helper::get( "theme/javascript/".$handle, "return" ) ) {
 
-                // helper::log( 'Loading up file: '.$file );
+                // helper::log( '#1 Loading up file: '.$file );
 
                 \wp_register_script( $handle, $file, array( 'jquery' ), \q_theme::version, true );
                 \wp_enqueue_script( $handle );
 
-                // nonce ##
-                $nonce = \wp_create_nonce( 'q-'.\get_current_blog_id().'-nonce' );
-
-                // pass variable values defined in parent class ##
-                \wp_localize_script( $handle, 'q_theme_'.\get_current_blog_id(), array(
-                    'ajaxurl'           => \admin_url( 'admin-ajax.php', \is_ssl() ? 'https' : 'http' ), /*, 'https' */ ## add 'https' to use secure URL ##
-                    'debug'             => \q_theme::$debug,
-                    'nonce'             => $nonce
-                ));
-
             } else {
 
-                #helper::log( "Cannot locate file: theme/javascript/".$handle );
+                $handle = "q.".\get_current_blog_id().".theme.js";
+
+                if ( $file = theme_helper::get( "theme/javascript/".$handle, "return" ) ) {
+
+                    // helper::log( '#2 Loading up file: '.$file );
+    
+                    \wp_register_script( $handle, $file, array( 'jquery' ), \q_theme::version, true );
+                    \wp_enqueue_script( $handle );
+
+                } else {
+
+                    $handle = "q.1.theme.js";
+
+                    $file = theme_helper::get( "theme/javascript/".$handle, "return" );
+
+                    // if we can't find that.. log an error ##
+                    if ( ! $file ) {
+
+                        // helper::log( 'Error: cannot load '.$handle );
+
+                    } else {
+
+                        // helper::log( '#3 : Loading up file: '.$file );
+
+                        \wp_register_script( $handle, $file, array( 'jquery' ), \q_theme::version, true );
+                        \wp_enqueue_script( $handle );
+
+                    }
+
+                }
 
             }
+
+            // nonce ##
+            $nonce = \wp_create_nonce( 'q-'.\get_current_blog_id().'-nonce' );
+
+            // pass variable values defined in parent class ##
+            \wp_localize_script( $handle, 'q_theme_'.\get_current_blog_id(), array(
+                'ajaxurl'           => \admin_url( 'admin-ajax.php', \is_ssl() ? 'https' : 'http' ), /*, 'https' */ ## add 'https' to use secure URL ##
+                'debug'             => \q_theme::$debug,
+                'nonce'             => $nonce
+            ));
 
         }
 
