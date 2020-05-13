@@ -24,7 +24,7 @@ class switch_theme extends \Q {
             
         if ( \is_admin() ) { // make sure this is only loaded up in the admin ##
             
-            \add_action( 'switch_theme', array ( $this, 'switch_theme' ), 1 );
+            \add_action( 'switch_theme', array ( get_class(), 'switch_theme' ), 1 );
             
         }
         

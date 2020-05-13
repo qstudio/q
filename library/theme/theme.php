@@ -152,11 +152,9 @@ class theme extends \Q {
             // && false === self::$debug 
         ) {
             
-            // add compiled sass file ##
-           # \wp_register_style( 'q-plugin-index-scss', helper::get( "theme/scss/index.css", 'return' ), array(), self::version, 'all' );
-           # EDIT 1/11/20 - Placing the index file in the CSS folder means not maintaining separate image & assets folders for CSS
-            \wp_register_style( 'q-plugin-index-scss', helper::get( "theme/css/index.css", 'return' ), array(), self::version, 'all' );
-            \wp_enqueue_style( 'q-plugin-index-scss' );
+            // @TODO - what is this file?? ##
+            \wp_register_style( 'q-plugin-index-css', helper::get( "theme/css/index.css", 'return' ), array(), self::version, 'all' );
+            \wp_enqueue_style( 'q-plugin-index-css' );
 
         }
 
@@ -460,10 +458,6 @@ class theme extends \Q {
 
             // helper::log( 'Running CSS...' );
 
-            // _deprecated -- add theme css ##
-            // \wp_register_style( 'theme-css', \get_stylesheet_directory_uri() . '/style.css', '', self::version );
-            // \wp_enqueue_style( 'theme-css' );
-
             // IE ##
             if ( theme_helper::get( "theme/css/ie.css", "return" ) ) {
          
@@ -472,79 +466,61 @@ class theme extends \Q {
 
             }
 
-            // helper::log( 'Device: '.helper::get_device() );
+            // css hierarchy ---- ##
 
-            // css hierarchy ----
+            // track ##
+            $found = false;
+
+            // minified - .min - version used based on debugging setting - local OR global ##
+            $min = ( true === \q_theme::$debug ) ? '' : '.min' ;
             
-            // q_theme/library/theme/css/q.2.desktop.css ##
-            // q_theme/library/theme/css/q.2.theme.css ##
-            // q_theme/library/theme/q.1.theme.css ##
-            $handle = "q.".\get_current_blog_id().".".helper::get_device().".css";
+            // handle ##
+            $handle = 'q-theme-css';
 
-            // helper::log( 'Handle: '.$handle );
-            
-            // first check if the file exists ##
-            if ( $file = theme_helper::get( "theme/css/".$handle, "return" ) ) {
+            // array for files ##
+            $files = [];
 
-                // helper::log( '#1 : Loading up file: '.$file );
+            // q_theme/library/theme/css/q.2.desktop.css ## network site + device
+            $files[] = "q.".\get_current_blog_id().".".helper::get_device()."$min.css";
 
-                \wp_register_style( $handle, $file, '', \q_theme::version );
-                \wp_enqueue_style( $handle );
+            // q_theme/library/theme/css/q.2.theme.css ## network site + all devices
+            $files[] = "q.".\get_current_blog_id().".theme$min.css";
 
-            // // edge-case, we are viewing a tablet and there is no tablet theme.. so fallback to desktop ##
-            // } else if ( 
-            //     'tablet' == $handle
-            //     && ! theme_helper::get( "theme/css/".$handle, "return" )
-            //     && theme_helper::get( "theme/css/q.".\get_current_blog_id().".desktop.css", "return" ) 
-            // ) {
+            // q_theme/library/theme/q.1.desktop.css ## all network sites + device
+            $files[] = "q.".\get_current_blog_id().".".helper::get_device()."$min.css";
 
-            //     $file = theme_helper::get( "theme/css/q.".\get_current_blog_id().".desktop.css", "return" ) ;
+            // q_theme/library/theme/q.1.theme.css ## all networks + all devices
+            $files[] = "q.1.theme$min.css";
 
-            //     // helper::log( '#2 : Loading up file: '.$file );
+            // loop over all files in priority, loading whichever is found first ##
+            foreach( $files as $file ) {
 
-            //     \wp_register_style( $handle, $file, '', \q_theme::version );
-            //     \wp_enqueue_style( $handle );
+                // file exists check ##
+                if ( $uri = theme_helper::get( "theme/css/".$file, "return" ) ) {
 
-            // check for theme generic or backup ##
-            } else {
+                    // helper::log( 'Loading up file: '.$file );
 
-                $handle = "q.".\get_current_blog_id().".theme.css";
-
-                if ( $file = theme_helper::get( "theme/css/".$handle, "return" ) ) {
-
-                    // helper::log( '#3 : Loading up file: '.$file );
-    
-                    \wp_register_style( $handle, $file, '', \q_theme::version );
+                    \wp_register_style( $handle, $uri, '', \q_theme::version );
                     \wp_enqueue_style( $handle );
 
-                } else {
+                    // update tracker ##
+                    $found = true;
 
-                    $handle = "q.1.theme.css";
-
-                    $file = theme_helper::get( "theme/css/".$handle, "return" );
-
-                    // if we can't find that.. log an error ##
-                    if ( ! $file ) {
-
-                        // helper::log( 'Error: cannot load '.$handle );
-
-                    } else {
-
-                        // helper::log( '#4 : Loading up file: '.$file );
-
-                        \wp_register_style( $handle, $file, '', \q_theme::version );
-                        \wp_enqueue_style( $handle );
-
-                    }
+                    // kick out ##
+                    return true;
 
                 }
 
             }
 
+            // no asset found, so note this ##
+            if ( ! $found  ) helper::log( 'Error loading CSS Asset' );
+
         }
 
         // Q Check if we need to include SCSS Modules 
         // based on binary switch per install found in Q Settings self::$options->theme_css_scss ##
+        // can be loaded in addition or alone from standard CSS 
         if ( 
             isset( self::$options->theme_scss ) 
             && 1 == self::$options->theme_scss    
@@ -560,43 +536,55 @@ class theme extends \Q {
 
             }
 
-            // q_theme/library/theme/scss/q.2.index.css ##
-            // q_theme/library/theme/scss/q.1.index.css ##
-            $handle = "q.".\get_current_blog_id().".index.css";
+            // css hierarchy ---- ##
 
-           # if ( $file = theme_helper::get( "theme/scss/".$handle, "return" ) ) {
-           # EDIT 1/11/20 - Placing the index file in the CSS folder means not maintaining separate image & assets folders for CSS
+            // track ##
+            $found = false;
 
-            if ( $file = theme_helper::get( "theme/css/".$handle, "return" ) ) {
-                // helper::log( 'Loading up file: '.$file );
+            // minified - .min - version used based on debugging setting - local OR global ##
+            $min = ( true === \q_theme::$debug ) ? '' : '.min' ;
+            
+            // handle ##
+            $handle = 'q-theme-scss';
 
-                \wp_register_style( $handle, $file, '', \q_theme::version, 'all' );
-                \wp_enqueue_style( $handle );
+            // array for files ##
+            $files = [];
 
-            } else {
+            // q_theme/library/theme/css/q.scss.2.desktop.css ## network site + device
+            $files[] = "q.scss.".\get_current_blog_id().".".helper::get_device()."$min.css";
 
-                $handle = "q.1.index.css";
+            // q_theme/library/theme/css/q.scss.2.theme.css ## network site + all devices
+            $files[] = "q.scss.".\get_current_blog_id().".theme$min.css";
 
-                #$file = theme_helper::get( "theme/scss/".$handle, "return" );
-                # EDIT 1/11/20 - Placing the index file in the CSS folder means not maintaining separate image & assets folders for CSS
+            // q_theme/library/theme/q.scss.1.desktop.css ## all network sites + device
+            $files[] = "q.scss.1.".helper::get_device()."$min.css";
 
-                $file = theme_helper::get( "theme/css/".$handle, "return" );
+            // q_theme/library/theme/q.scss.theme.css ## all networks + all devices
+            $files[] = "q.scss.theme$min.css";
 
-                // if we can't find that.. log an error ##
-                if ( ! $file ) {
+            // loop over all files in priority, loading whichever is found first ##
+            foreach( $files as $file ) {
 
-                    // helper::log( 'Error: cannot load '.$handle );
+                // file exists check ##
+                if ( $uri = theme_helper::get( "theme/css/".$file, "return" ) ) {
 
-                } else {
+                    // helper::log( 'Loading up file: '.$file );
 
-                    // helper::log( '#4 : Loading up file: '.$file );
-
-                    \wp_register_style( $handle, $file, '', \q_theme::version, 'all' );
+                    \wp_register_style( $handle, $uri, '', \q_theme::version );
                     \wp_enqueue_style( $handle );
+
+                    // update tracker ##
+                    $found = true;
+
+                    // kick out ##
+                    return true;
 
                 }
 
             }
+
+            // no asset found, so note this ##
+            if ( ! $found  ) helper::log( 'Error loading SCSS Asset' );
 
         }
 
@@ -666,7 +654,7 @@ class theme extends \Q {
 
             // pass variable values defined in parent class ##
             \wp_localize_script( $handle, 'q_theme_'.\get_current_blog_id(), array(
-                'ajaxurl'           => \admin_url( 'admin-ajax.php', \is_ssl() ? 'https' : 'http' ), /*, 'https' */ ## add 'https' to use secure URL ##
+                'ajaxurl'           => \admin_url( 'admin-ajax.php', \is_ssl() ? 'https' : 'http' ), 
                 'debug'             => \q_theme::$debug,
                 'nonce'             => $nonce
             ));

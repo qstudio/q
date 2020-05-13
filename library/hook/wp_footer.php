@@ -25,7 +25,7 @@ class wp_footer extends \Q {
             
         if ( is_admin() ) { // make sure this is only loaded up in the admin ##
             
-            \add_action( 'wp_footer', array ( $this, 'wp_footer' ) );
+            \add_action( 'wp_footer', array ( get_class(), 'wp_footer' ) );
             
         }
         
