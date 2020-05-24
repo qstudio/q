@@ -6,7 +6,7 @@ namespace q\core;
 use q\core\helper as helper;
 use q\theme\template as template;
 use q\theme\ui as ui;
-use q\theme\theme\template\generic\generic as theme;
+use q\theme\theme\ui\generic as theme;
 
 // load it up ##
 #\q\core\wordpress::run();

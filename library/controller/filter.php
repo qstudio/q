@@ -5,7 +5,7 @@ namespace q\controller;
 use q\core\core as core;
 use q\core\helper as helper;
 use q\core\config as config;
-// use q\theme\theme\template\generic\generic as generic;
+// use q\theme\theme\ui\generic as generic;
 // use q\controller\generic as q_generic;
 use q\theme\ui as ui;
 use q\controller\javascript as javascript;
