@@ -288,6 +288,10 @@ class wordpress extends \Q {
         
         }
 
+        // Parse incoming $args into an array and merge it with $defaults - caste to object ##
+        $args = \wp_parse_args( $args, \q_theme::$the_content_open );
+        // $args = ( object )$args_array;
+
         // helper::log( $args );
 
         // set-up new array ##

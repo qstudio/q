@@ -47,50 +47,50 @@ if ( ! class_exists( 'Q' ) ) {
         // static $locale; // current locale -- REQUIRED?? ##
 
 
-        // Template Settings
-        public static
-            $allow_comments = true,
-            $allow_gallery = true,
-            $allow_sidebar = false,
-            $force_post = false, // this allows for a forced post ID ( used in get_header_* methods ) ##
-            $set_force_post = false, // settings for forcing the post ##
-            $get_text = array(),
-            $post_parent = null, // allows for forcing a parent post
-            $the_holder = array(),
-            $the_posts = array(),
-            $the_loop = array(),
-            $the_title = array(),
-            $the_parent = array(),
-            $the_excerpt = array(),
-            $the_content = array(),
-            $the_avatar = array(),
-            $get_post_by_meta = array(),
-            $the_meta = array(),
-            $the_meta_markup = array(),
-            $the_post_meta = array(),
-            $the_post_single = array(),
-            $the_gallery = array(),
-            $the_gallery_or_image = array(),
-            $the_post_thumbnail = array(),
-            $get_events = array(),
-            $the_navigation = array(),
-            $the_nav_menu = array(),
-            $the_landing = array(),
-			$the_search = array(),
-            $the_sidebar = array(),
-            $ordered_posts = array(),
-            $ordered_posts_first = null, // allows for settings the first post to load ##
-            $the_widget_events = array(),
-            $page_contact,
-            $text = array(),
-            $the_related_programs = array(),
-            $the_related_posts = array(),
-            $the_page = array(),
-            $the_render = array(),
-            $the_header_page = array()
-            // $google_tag_manager = false,
-            // $fb_pixel = false
-            ;
+        // // Template Settings
+        // public static
+        //     $allow_comments = true,
+        //     $allow_gallery = true,
+        //     $allow_sidebar = false,
+        //     $force_post = false, // this allows for a forced post ID ( used in get_header_* methods ) ##
+        //     $set_force_post = false, // settings for forcing the post ##
+        //     $get_text = array(),
+        //     $post_parent = null, // allows for forcing a parent post
+        //     $the_holder = array(),
+        //     $the_posts = array(),
+        //     $the_loop = array(),
+        //     $the_title = array(),
+        //     $the_parent = array(),
+        //     $the_excerpt = array(),
+        //     $the_content = array(),
+        //     $the_avatar = array(),
+        //     $get_post_by_meta = array(),
+        //     $the_meta = array(),
+        //     $the_meta_markup = array(),
+        //     $the_post_meta = array(),
+        //     $the_post_single = array(),
+        //     $the_gallery = array(),
+        //     $the_gallery_or_image = array(),
+        //     $the_post_thumbnail = array(),
+        //     $get_events = array(),
+        //     $the_navigation = array(),
+        //     $the_nav_menu = array(),
+        //     $the_landing = array(),
+		// 	$the_search = array(),
+        //     $the_sidebar = array(),
+        //     $ordered_posts = array(),
+        //     $ordered_posts_first = null, // allows for settings the first post to load ##
+        //     $the_widget_events = array(),
+        //     $page_contact,
+        //     $text = array(),
+        //     $the_related_programs = array(),
+        //     $the_related_posts = array(),
+        //     $the_page = array(),
+        //     $the_render = array(),
+        //     $the_header_page = array()
+        //     // $google_tag_manager = false,
+        //     // $fb_pixel = false
+        //     ;
 
         /**
          * Creates or returns an instance of this class.
