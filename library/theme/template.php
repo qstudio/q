@@ -278,12 +278,12 @@ class template {
         
         // look for default template - in q_theme
         $template =  
-            helper::get( 'theme/template/'.self::$default_template, 'return', 'path' ) ? 
-            self::$default_template = helper::get( 'theme/template/'.self::$default_template, 'return', 'path' ) : 
+            helper::get( 'theme/view/'.self::$default_template, 'return', 'path' ) ? 
+            self::$default_template = helper::get( 'theme/view/'.self::$default_template, 'return', 'path' ) : 
             $template ;
 
         // filter ##
-        $template = \apply_filters( 'q/template/default', $template );
+        $template = \apply_filters( 'q/view/default', $template );
 
         // return ##
         return $template;
@@ -336,7 +336,7 @@ class template {
         // filter in external custom templates ##
         // We also need to format the templates to what WP expects [ 'file.php' => 'Name', ]; ##
         self::$custom_templates = 
-            self::format_custom_templates( \apply_filters( 'q/templates/custom', self::$custom_templates )
+            self::format_custom_templates( \apply_filters( 'q/view/custom', self::$custom_templates )
         );
         
         // merge into known list ##
@@ -372,7 +372,7 @@ class template {
         // filter in external custom templates ##
         // We also need to format the templates to what WP expects [ 'file.php' => 'Name', ]; ##
         self::$custom_templates = 
-            self::format_custom_templates( \apply_filters( 'q/templates/custom', self::$custom_templates )
+            self::format_custom_templates( \apply_filters( 'q/view/custom', self::$custom_templates )
         );
 
         // Now add our template to the list of templates by merging our templates
@@ -443,7 +443,7 @@ class template {
 
         // filter in external custom templates ##
         // remember that the format has changed ##
-        self::$custom_templates = \apply_filters( 'q/templates/custom', self::$custom_templates );
+        self::$custom_templates = \apply_filters( 'q/view/custom', self::$custom_templates );
 
         // Return default template if we don't have a custom one defined
         if ( ! isset( self::$custom_templates[ $_wp_page_template ] ) ) {
@@ -466,7 +466,7 @@ class template {
         // look for file - fallback to default if not found ##
         if ( 
             $file = helper::get( 
-                'theme/template/'.$_wp_page_template, 
+                'theme/view/'.$_wp_page_template, 
                 'return', 
                 'path',
                 'library/', // standard base library path ##
@@ -524,7 +524,7 @@ class template {
 
         // filter in external native templates ##
         // remember that the format has changed ##
-        self::$native_templates = \apply_filters( 'q/templates/native', self::$native_templates );
+        self::$native_templates = \apply_filters( 'q/view/native', self::$native_templates );
 
         if ( 
             // ! is_array( self::$native_templates )
@@ -559,14 +559,14 @@ class template {
                     // helper::log( 'function matched: '.$item["function"] );
 
                     if ( 
-                        $template = helper::get( 'theme/template/'.$item["template"], 
+                        $template = helper::get( 'theme/view/'.$item["template"], 
                             'return', 
                             'path',
                             'library/', // standard base library path ##
                             $class // variable class ##
                         ) ) {
                         
-                        // $template = helper::get( 'theme/template/'.$item["template"], 'return', 'path' );
+                        // $template = helper::get( 'theme/view/'.$item["template"], 'return', 'path' );
 
                         // helper::log( 'New template loaded: '.$item["template"] );
 
