@@ -6,8 +6,6 @@ use q\core\core as core;
 use q\core\helper as helper;
 use q\core\config as config;
 use q\theme\ui as ui;
-// use q\theme\core\options as options;
-// use q\theme\theme\template as template; // @todo -- what ??
 use q\controller\minifier as minifier;
 use q\controller\css as css;
 
@@ -87,7 +85,7 @@ class generic extends \Q {
             // helper::log( 'is_tax()' );
 
             if (
-            ! $array = \get_field( $args->fields, \get_queried_object()  )
+                ! $array = \get_field( $args->fields, \get_queried_object()  )
             ){
 
                 helper::log( 'ACF returned no fields for taxonomy fields: '.$args->fields );
@@ -111,7 +109,7 @@ class generic extends \Q {
 
             //  get value stored for selected repeater row from ACF ##
             if (
-            ! $array = \get_field( $args->fields, $post )
+                ! $array = \get_field( $args->fields, $post )
             ){
 
                 helper::log( 'ACF returned no fields for post_meta: '.$args->fields );
@@ -123,7 +121,7 @@ class generic extends \Q {
         }
 
         // check ##
-        #helper::log( $array );
+        // helper::log( $array );
 
         // check for custom handler ##
         if (
@@ -160,7 +158,8 @@ class generic extends \Q {
         // prefix markup ##
         if ( isset( $args->wrapper['open'] ) ) {
 
-            echo $args->wrapper['open'];
+            // echo $args->wrapper['open'];
+            echo \apply_filters( 'q/generic/render/open/'.$args->fields, $args->wrapper['open'] );
 
         }
 
@@ -168,9 +167,10 @@ class generic extends \Q {
         foreach( $data as $array ) {
 
             // grab the markup template ##
-            // note, this could be passed as a string - single value for all devices - or as an array with a key for each device - fallback index is "all" ##
+            // note, this could be passed as a string - single value for all devices - or as an array with a key for each device
+            // fallback index is "all" ##
             if (
-            is_array( $args->markup )
+                is_array( $args->markup )
             ){
 
                 // check if device key exists ##
@@ -213,6 +213,9 @@ class generic extends \Q {
 
             }
 
+            // filter ##
+            $markup = \apply_filters( 'q/generic/render/markup/'.$args->fields, $markup );
+
             // final check ##
             #helper::log( $markup );
 
@@ -224,7 +227,7 @@ class generic extends \Q {
         // append markup ##
         if ( isset( $args->wrapper['close'] ) ) {
 
-            echo $args->wrapper['close'];
+            echo \apply_filters( 'q/generic/render/close/'.$args->fields, $args->wrapper['close'] );
 
         }
 

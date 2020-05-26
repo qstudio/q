@@ -19,6 +19,7 @@ class meta extends \Q {
         $markup_tracker = array(),
         $markup_group = '',
         $pre_filter = false, // presume that all values are not pre_filter ##
+        $filter = [], // filters for external pre-processing ##
         $filtered = false,
         $return = false,
         $logger = false
@@ -58,7 +59,7 @@ class meta extends \Q {
         // Parse incoming $args into an array and merge it with $defaults ##
         $args = \wp_parse_args( $args, \q_theme::$the_meta );
 
-        #self::log( $args );
+        self::log( $args );
 
         // last sanity check ##
         if ( 
@@ -107,15 +108,15 @@ class meta extends \Q {
 
             // open wrapper ##
             $wrapper_open = self::wrapper( array ( 
-                'action' => 'wrapper-open', 
-                'class' => 'meta meta-'.$args['group'].' '.( is_array( $args['class'] ) ? implode( ' ', $args['class'] ) : $args['class'] ), 
-                'tag' => 'div' //NOTE - I changed the default wrapper from ul to div - BEN
+                'action'    => 'wrapper-open', 
+                'class'     => 'meta meta-'.$args['group'].' '.( is_array( $args['class'] ) ? implode( ' ', $args['class'] ) : $args['class'] ), 
+                'tag'       => 'div' 
             ) );
 
             // close wrapper ##
             $wrapper_close = self::wrapper( array ( 
-                'action' => 'wrapper-close', 
-                'tag' => 'div' 
+                'action'    => 'wrapper-close', 
+                'tag'       => 'div' 
             ) );
 
             // compile ##
@@ -167,6 +168,9 @@ class meta extends \Q {
 
         // holder ##
         #self::$return = '';
+
+        // get relevant post ##
+        $post = isset( $args['post'] ) ? $args['post'] : \get_the_ID();
 
         // helper::log( isset( $args['post'] ) ? $args['post'] : '1- No post passed...' );
 
@@ -226,7 +230,7 @@ class meta extends \Q {
                     'name'      => $field['name'],
                     'type'      => $field["type"],
                     'label'     => $field["label"],
-                    'post'      => isset( $args['post'] ) ? $args['post'] : \get_the_ID(), // allows for passing a post ID, defaults to current ##
+                    'post'      => $post, // allows for passing a post ID, defaults to current ##
                     'required'  => $field['required']
                 );
 
@@ -246,7 +250,7 @@ class meta extends \Q {
         self::log( 'renderer called here: 1' );
 
         // add completed marked-up field groups ##
-        self::markup_render();
+        self::markup_render( $args, $post );
 
         // kick it back ##
         if ( 
@@ -262,6 +266,7 @@ class meta extends \Q {
         } else {
 
             self::log( 'failed to return markup...' );
+            
             return false;
 
         }
@@ -505,7 +510,7 @@ class meta extends \Q {
     * @since       1.0.1
     * @return      string   HTML
     */
-    public static function format_value( Array $array = null, $args = null )
+    public static function format_value( Array $array = null, Array $args = null )
     {
 
         // Parse incoming $array into an array and merge it with $defaults - caste to object ##
@@ -515,13 +520,16 @@ class meta extends \Q {
         $field = $array->name;
 
         // filtering ##
-        $filter = array();
+        // $filter = array();
 
-        // build top level generic filter ##
-        $filter['type'] = 'q/meta/'.$array->type;
+        // build top level generic "type" filter ##
+        self::$filter['type'] = 'q/meta/'.$array->type;
+
+        // build meta group filter ##
+        self::$filter['group'] = 'q/meta/'.$args['group'];
 
         // build specific filter for single field ##
-        $filter['field'] = 'q/meta/'.$args['group'].'/'.$field;
+        self::$filter['field'] = 'q/meta/'.$args['group'].'/'.$field;
 
         #self::log( $filter );
 
@@ -610,7 +618,7 @@ class meta extends \Q {
         $pre_filtered = $array->value;
 
         // try to apply a filter ##
-        $array->value = self::filter( $array, $args, $filter, $pre_filtered );
+        $array->value = self::filter( $array, $args, self::$filter, $pre_filtered );
 
         // if filter worked, we can skip straight to markup ##
         if ( 
@@ -801,7 +809,7 @@ class meta extends \Q {
     }
 
 
-    public static function filter( $array = null, $args, $filter = null, $pre_filtered )
+    public static function filter( $array = null, $pre_filtered )
     {
 
         // field filter tracker ##
@@ -810,8 +818,8 @@ class meta extends \Q {
 
         // we need an array ##
         if ( 
-            is_null( $filter ) 
-            || ! is_array( $filter ) 
+            is_null( self::$filter ) 
+            || ! is_array( self::$filter ) 
         ) {
 
            #self::log( '$filter \q_theme error.' );
@@ -824,17 +832,17 @@ class meta extends \Q {
         #self::log( 'Checking filter: '.$filter );
         #self::log( 'Filter value: '.$pre_filtered );
 
-        if( \has_filter( $filter['type'] ) ) {
+        if( \has_filter( self::$filter['type'] ) ) {
 
             // filter - if available  ##
-            $array->value = \apply_filters( $filter['type'], $pre_filtered, $array, $args );
+            $array->value = \apply_filters( self::$filter['type'], $pre_filtered, $array, $args );
 
             #self::log( 'NEW Value: '.$array->value );
 
-        } else if( \has_filter( $filter['field'] ) ) {
+        } else if( \has_filter( self::$filter['field'] ) ) {
 
             // filter - if available  ##
-            $array->value = \apply_filters( $filter['field'], $pre_filtered, $array, $args );
+            $array->value = \apply_filters( self::$filter['field'], $pre_filtered, $array, $args );
 
             #self::log( 'NEW Value: '.$array->value );
 
@@ -1196,8 +1204,23 @@ class meta extends \Q {
     * @return   Mixed
     * @since    2.0.0
     */
-    public static function markup_cleanup()
+    public static function markup_cleanup( Array $args = null, $post = null )
     {
+
+        // helper::log('markup_cleanup pre filter...');
+        // helper::log( 'Filter: '.self::$filter['group'] );
+        // helper::log( self::$markup );
+        // helper::log( $args['markup'] );
+        // helper::log( $post );
+
+        if( \has_filter( self::$filter['group'] ) ) {
+
+            // filter - if available  ##
+            $array->value = \apply_filters( self::$filter['group'], self::$markup, $array, $post );
+
+            #self::log( 'NEW Value: '.$array->value );
+
+        }
 
         if ( 
             isset( self::$markup[self::$markup_group]['template'] )
@@ -1328,7 +1351,7 @@ class meta extends \Q {
     * @return   Mixed
     * @since    2.0.0
     */
-    public static function markup_render()
+    public static function markup_render( Array $args = null, $post = null )
     {
 
         #self::log( 'markup: '.self::$markup[self::$markup_group]['template'] );
@@ -1364,7 +1387,7 @@ class meta extends \Q {
         }
         
         // clean-up unused placeholder values and reject if markup template is unchanged ##
-        if ( ! self::markup_cleanup() ) {
+        if ( ! self::markup_cleanup( $args, $post ) ) {
 
             self::log( 'cleanup rejected markup.' );
 
