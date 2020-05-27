@@ -34,7 +34,7 @@ class controller extends \Q {
 
         // meta controller ##
         require_once self::get_plugin_path( 'library/theme/meta.php' ); 
-        require_once self::get_plugin_path( 'library/theme/field.php' ); 
+        // require_once self::get_plugin_path( 'library/theme/field.php' ); 
 
         // template controller, allows plugins to inject rules via filters ##
         require_once self::get_plugin_path( 'library/theme/template.php' ); 

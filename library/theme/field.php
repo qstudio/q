@@ -10,13 +10,14 @@ class field extends \Q {
 
     protected static
 
-        $output = null,
-        $args = null,
-        $fields = null,
-        $markup = null, // store local version of passed markup ##
-        $log = null, // tracking array for feedback ##
-        $acf_fields = null, // fields grabbed by acf function ##
-        // $markup = null, // $markup passed from calling method ##
+        // default args to merge with passed array ##
+        $args = [
+            'config'            => [
+                'run'           => true, // don't run this item ##
+                'debug'         => false, // don't debug this item ##
+                'return'        => 'echo' // default to echo return string ##
+            ],
+        ],
 
         // frontend pre-processor callbacks ##
         $callbacks = [
@@ -61,64 +62,82 @@ class field extends \Q {
             
             // requires additional lookup and handle ##
             'img', 
-        ]
+        ],
+
+        $output = null, // return string ##
+        $fields = null, // field names and values ##
+        $markup = null, // store local version of passed markup ##
+        $log = null, // tracking array for feedback ##
+        // $debug = null, // debugging option ##
+        $acf_fields = null // fields grabbed by acf function ##
 
     ;
 
 
     /**
-     * Get fields
-     * 
-     * Accepts: 
-     * 
-     * - Template with placeholders 
-     * - groups of fields with markup rules
-     * - skip [array] - fields to jump over ##
-     * - handles repeater fields, WP Post_objects and can be extended with filters ##
-     * - filters output before formatting q/field/before/GROUP ( $fields, $args ) ##
-     * - filters output after formatting q/field/after/GROUP ( $fields, $args ) ##
-     * - filters each field - q/field/GROUP/FIELD/ ( $value, $fields, $args ) ##
+     * Render fields based on passed $args
      * 
      */
-    public static function get( Array $args = array() ){
+    public static function render( Array $args ){
 
-        // @todo -- validate passed args ##
-        // self::validate();
+        // // assign properties with initial filters ##
+        // self::assign( $args );
 
-        // assign properties ##
-        self::assign( $args );
+        // validate passed args ##
+        if ( ! self::validate( $args ) ) {
 
-        // Get all ACF fields for this post ##
-        if ( ! self::get_acf_fields() ) {
+            self::log();
 
-             return false;
+            return false;
 
         }
+
+        // // Get all ACF fields for this post ##
+        // if ( ! self::get_acf_fields() ) {
+
+        //      return false;
+
+        // }
 
         // get field names from passed $args ##
         if ( ! self::get_fields() ) {
 
+            self::log();
+
             return false;
 
         }
 
-        // remove skipped fields, if defined ##
-        self::skip();
+        // // remove skipped fields, if defined ##
+        // self::skip();
 
-        // if group specified, get only fields from this group ##
-        self::get_group();
+        // // if group specified, get only fields from this group ##
+        // self::get_group();
 
         // check if feature is enabled ##
-        if ( ! self::is_enabled() ) {
+        // if ( ! self::is_enabled() ) {
 
-            return false;
+        //      return false;
 
-        }    
+        // }    
 
-        // Filter $fields before starting ## 
+        // helper::log( self::$fields );
+
+        // Filter things before starting ## 
         // This allows us to convert values - for example from an int to an array of objects ##
-        self::filter([ 'property' => 'fields', 'filter' => 'q/field/before/fields/'.self::$args['group'] ]); // pass ( $fields, $args, $output ) ##
-        self::filter([ 'property' => 'args', 'filter' => 'q/field/before/args/'.self::$args['group'] ]); // pass ( $fields, $args, $output ) ##
+        // self::filter([ 'property' => 'fields', 'filter' => 'q/field/before/fields/'.self::$args['group'] ]); // pass ( $fields, $args, $output ) ##
+
+        // // filter fields ##
+        // self::$fields = self::filter([ 
+        //     'parameters'    => [ self::$fields, self::$args ], // pass ( $fields, $args ) as single array ##
+        //     'filter'        => 'q/field/before/fields/'.self::$args['group'], // filter handle ##
+        // ]); 
+
+        // // filter $args now that we have fields data from ACF ##
+        // self::$args = self::filter([ 
+        //     'parameters'    => [ self::$fields, self::$args ], // pass ( $fields, $args ) as single array ##
+        //     'filter'        => 'q/field/before/args/'.self::$args['group'], // filter handle ##
+        // ]); 
 
         // Now we can loop over each field, running callbacks, formatting, removing placeholders in markup
         self::fields();
@@ -135,27 +154,140 @@ class field extends \Q {
 
         // Filter $output last thing ## 
         // This allows us to do any post formatting changes ##
-        self::filter([ 'property' => 'output', 'filter' => 'q/field/output/'.self::$args['group'] ]); // pass ( $fields, $args, $output ) ##
+        // self::filter([ 'property' => 'output', 'filter' => 'q/field/output/'.self::$args['group'] ]); // pass ( $fields, $args, $output ) ##
+        // self::$output = self::filter([ 
+        //     'parameters'    => [ self::$fields, self::$args, self::$output ], // pass ( $fields, $args ) as single array ##
+        //     'filter'        => 'q/field/output/'.self::$args['group'], // filter handle ##
+        // ]); 
 
         // optional logging to show removals and stats ##
-        // self::log();
+        self::log();
 
-        // Return data to calling method ##
-        return self::$output;
+        // return or echo ##
+        return self::return();
+
+    }
+
+
+    protected static function validate( Array $args ) {
+
+        // checks on required fields in $args array ##
+        /*
+        We needs:
+        - fields // array ##
+        - group
+        - markup  // array ##
+            - template
+        */
+        if (
+            ! isset( $args )
+            || ! is_array( $args )
+            || ! isset( $args['fields'] )
+            || ! is_array( $args['fields'] )
+            || ! isset( $args['group'] )
+            || ! isset( $args['markup'] )
+            || ! is_array( $args['markup'] )
+            || ! isset( $args['markup']['template'] )
+        ){
+
+            self::$log['error'][] = 'Missing required args in Group, so stopping here.. ';
+
+            return false;
+
+        }
+
+        // helper::log( $args['config'] );
+
+        // assign properties with initial filters ##
+        $args = self::assign( $args );
+
+        // helper::log( $args['config'] );
+
+        // check if module asked to run $args['config']['run']
+        if ( 
+            // isset( $args['config']['run'] )
+            // && 
+            false === $args['config']['run']
+        ){
+
+            self::$log['notice'][] = 'config->run defined as false for Group: '.$args['group'].', so stopping here.. ';
+
+            return false;
+
+        }
+
+        // helper::log( 'Passed second validation' );
+
+        // // check if feature is enabled ##
+        // if ( ! self::is_enabled() ) {
+
+        //     return false;
+
+        // }    
+
+        // helper::log( 'Passed third validation' );
+
+        // ok - should be good ##
+        return true;
 
     }
 
 
 
+
+    /**
+     * Assign class properties with initial filters, merging in passed $args from calling method
+     */
     protected static function assign( Array $args = null ) {
 
-        self::$args = $args;
+        // apply global filter to $args - specific calls should be controlled by parameters included directly ##
+        self::$args = self::filter([
+             'filter'        => 'q/field/args',
+             'parameters'    => self::$args,
+             'return'        => self::$args
+        ]);
+
+        // grab all passed args and merge with defaults ##
+        self::$args = self::parse_args( $args, self::$args );
+        
+        // test ##
+        // helper::log( self::$args );
+
+        // grab args->markup ##
         self::$markup = $args['markup'];
+
+        // return args for validation ##
+        return self::$args;
 
     }
 
 
+    /**
+     * Recursive pass args 
+     * 
+     * @link    https://mekshq.com/recursive-wp-parse-args-wordpress-function/
+     */
+    protected static function parse_args( &$a, $b ) {
 
+        $a = (array) $a;
+        $b = (array) $b;
+        $result = $b;
+        
+        foreach ( $a as $k => &$v ) {
+            if ( is_array( $v ) && isset( $result[ $k ] ) ) {
+                $result[ $k ] = self::parse_args( $v, $result[ $k ] );
+            } else {
+                $result[ $k ] = $v;
+            }
+        }
+
+        return $result;
+
+    }
+     
+
+
+    
     /**
      * Work passed field data into rendering format
      */
@@ -167,19 +299,33 @@ class field extends \Q {
             || ! is_array( self::$fields ) 
         ) {
 
-            helper::log( 'Error in $fields array' );
+            self::$log['error'][] = 'Error in $fields array';
 
             return false;
 
         }
 
-        // // helper::log( self::$fields );
+        // filter $args now that we have fields data from ACF ##
+        self::$args = self::filter([ 
+            'parameters'    => [ 'fields' => self::$fields, 'args' => self::$args ], // pass ( $fields, $args ) as single array ##
+            'filter'        => 'q/field/before/args/'.self::$args['group'], // filter handle ##
+            'return'        => self::$args
+        ]); 
+
+        // filter all fields before processing ##
+        self::$fields = self::filter([ 
+            'parameters'    => [ 'fields' => self::$fields, 'args' => self::$args ], // pass ( $fields, $args ) as single array ##
+            'filter'        => 'q/field/before/fields/'.self::$args['group'], // filter handle ##
+            'return'        => self::$fields
+        ]); 
+
+        // self::$log['debug'] = self::$fields;
 
         // start loop ##
         foreach ( self::$fields as $field => $value ) {
 
-            // helper::log( 'Working field: '.$field .' With Value:' );
-            // helper::log( $value );
+            // self::$log['debug'] = 'Working field: '.$field .' With Value:';
+            // self::$log['debug'] = $value;
 
             // check field has a value ##
             if ( 
@@ -187,7 +333,7 @@ class field extends \Q {
                 || is_null( $value )
             ) {
 
-                helper::log( 'Field: '.$field.' has no value, check for data issues.' );
+                self::$log['notice'][] = 'Field: '.$field.' has no value, check for data issues.';
 
                 continue;
 
@@ -207,37 +353,15 @@ class field extends \Q {
 
         }
 
-    }
-
-
-
-    /**
-     * Get ACF Fields
-     */
-    protected static function get_acf_fields(){
-
-        // @todo -- option to pass post ID to function ##
-
-        // get fields ##
-        $array = \get_fields();
-
-        // sanity ##
-        if ( 
-            ! $array 
-            || ! is_array( $array )
-        ) {
-
-            helper::log( 'This post has no ACF field data or corrupt data returned' );
-
-            return false;
-
-        }
-
-        // helper::log( $acf_fields );
-
-        return self::$acf_fields = $array;
+        // filter all fields ##
+        self::$fields = self::filter([ 
+            'parameters'    => [ 'fields' => self::$fields, 'args' => self::$args ], // pass ( $fields, $args ) as single array ##
+            'filter'        => 'q/field/after/fields/'.self::$args['group'], // filter handle ##
+            'return'        => self::$fields
+        ]); 
 
     }
+
 
 
 
@@ -253,11 +377,18 @@ class field extends \Q {
             || ! isset( self::$args['fields'] )
         ) {
 
-            helper::log( 'Error in passed parameter "fields"' );
+            self::$log['error'][] = 'Error in passed parameter "fields"';
 
             return false;
 
         }
+
+        // Get all ACF fields for this post ##
+        if ( ! self::get_acf_fields() ) {
+
+            return false;
+
+       }
 
         // helper::log( $args[ 'fields' ] );
 
@@ -270,7 +401,7 @@ class field extends \Q {
             || ! is_array( $array )
         ) {
 
-            helper::log( 'Error extracting field list from passed data' );
+            self::$log['error'][] = 'Error extracting field list from passed data';
 
             return false;
 
@@ -278,10 +409,73 @@ class field extends \Q {
 
         // helper::log( $array );
 
-        // return and assign class property ##
-        return self::$fields = $array;
+        // assign class property ##
+        self::$fields = $array;
+
+        // check if feature is enabled ##
+        if ( ! self::is_enabled() ) {
+
+            return false;
+
+       }    
+
+        // remove skipped fields, if defined ##
+        self::skip();
+
+        // if group specified, get only fields from this group ##
+        self::get_group();
+
+        // we should do a check if $fields is empty after all the filtering ##
+        if ( 
+            0 == count( self::$fields ) 
+        ) {
+
+            self::$log['notice'][] = 'Fields array is empty, so nothing to process...';
+
+            return false;
+
+        }
+
+        // positive ##
+        return true;
 
     }
+
+
+
+    /**
+     * Get ACF Fields
+     */
+    protected static function get_acf_fields(){
+
+        // option to pass post ID to function ##
+        // this can be passed as an arg ##
+        $post = 
+            isset( $args['post'] ) ? 
+            $args['post'] : 
+            \get_the_ID() ;
+
+        // get fields ##
+        $array = \get_fields( $post );
+
+        // sanity ##
+        if ( 
+            ! $array 
+            || ! is_array( $array )
+        ) {
+
+            self::$log['notice'][] = 'Post: '.$post.' has no ACF field data or corrupt data returned';
+
+            return false;
+
+        }
+
+        // helper::log( $acf_fields );
+
+        return self::$acf_fields = $array;
+
+    }
+
 
 
     protected static function skip(){
@@ -292,7 +486,7 @@ class field extends \Q {
             || ! is_array( self::$args )
         ) {
 
-            helper::log( 'Error in passed $args' );
+            self::$log['error'][] = 'Error in passed $args';
 
             return false;
 
@@ -318,9 +512,11 @@ class field extends \Q {
         if ( 
             ! self::$args 
             || ! is_array( self::$args )
+            || ! self::$fields
+            || ! is_array( self::$fields )
         ) {
 
-            helper::log( 'Error in passed self::$args' );
+            self::$log['error'][] = 'Error in passed $args or $fields';
 
             return false;
 
@@ -355,16 +551,18 @@ class field extends \Q {
             || ! is_array( self::$args )
         ) {
 
-            helper::log( 'Error in passed self::$args' );
+            self::$log['error'][] = 'Error in passed self::$args';
 
             return false;
 
         }
 
         // check for enabled flag - if none, return true ##
-        if ( ! isset( self::$args['enable'] ) ) {
+        if ( 
+            ! isset( self::$fields[self::$args['enable']] ) 
+        ) {
 
-            helper::log( 'No enable check defined in this group.' );
+            self::$log['notice'][] = 'No enable check defined in Group: '.self::$args['group'];
 
             return true;
 
@@ -373,13 +571,20 @@ class field extends \Q {
         // helper::log( 'We are looking for field: '.self::$args['enable'] );
 
         // kick back ##
-        if ( 1 == self::$fields[self::$args['enable']] ) {
+        if ( 
+            isset( self::$fields[self::$args['enable']] )
+            && 1 == self::$fields[self::$args['enable']] 
+        ) {
+
+            self::$log['notice'][] = 'Field Group: '.self::$args['group'].' Enabled, continue';
 
             // helper::log( self::$args['enable'] .' == 1' );
 
             return true;
 
         }
+
+        self::$log['notice'][] = 'Field Group: '.self::$args['group'].' NOT Enabled, stopping.';
 
         // helper::log( self::$args['enable'] .' != 1' );
 
@@ -400,35 +605,15 @@ class field extends \Q {
         if ( 
             ! $args 
             || ! is_array( $args )
+            || ! isset( $args['filter'] )
+            || ! isset( $args['parameters'] )
+            || ! is_array( $args['parameters'] )
+            || ! isset( $args['return'] )
         ) {
 
-            helper::log( 'Error in passed self::$args' );
+            self::$log['error'][] = 'Error in passed self::$args';
 
             return 'Error';
-
-        }
-
-        // assign return in case of missing filter ##
-        switch ( $args['property'] ) {
-
-            case 'args' :
-
-                 $return = self::$args;
-
-            break ;
-
-            case 'output' :
-    
-                $return = self::$output;
-
-            break ;
-
-            case 'fields' :
-            default :
-
-                $return = self::$fields;
-
-            break ;
 
         }
 
@@ -437,39 +622,20 @@ class field extends \Q {
             // helper::log( 'Running Filter: '.$args['filter'] );
 
             // run filter ##
-            $return = \apply_filters( $args['filter'], self::$fields, self::$args, self::$output );
+            $return = \apply_filters( $args['filter'], $args['parameters'] );
 
             // check return ##
             // helper::log( $return );
 
-        }
+        } else {
 
-        // assign value back to selected property ##
-        switch ( $args['property'] ) {
-
-            case 'args' :
-
-                self::$args = $return;
-
-            break ;
-
-            case 'output' :
-
-                self::$output = $return;
-
-            break ;
-
-            case 'fields' :
-            default :
-
-                self::$fields = $return;
-
-            break ;
+            // helper::log( 'No matching filter found: '.$args['filter'] );
+            $return = $args['return']; 
 
         }
 
         // return true ##
-        return true;
+        return $return;
 
     }
 
@@ -484,7 +650,7 @@ class field extends \Q {
         // sanity ##
         if ( is_null( $field ) ) {
 
-            helper::log( 'No field value passed to method.' );
+            self::$log['error'][] = 'No field value passed to method.';
 
             return false;
 
@@ -493,7 +659,7 @@ class field extends \Q {
         // sanity ##
         if ( is_null( $value ) ) {
 
-            helper::log( 'No value passed to method.' );
+            self::$log['error'][] = 'No value passed to method.';
 
             return false;
 
@@ -508,7 +674,7 @@ class field extends \Q {
             || ! \is_array( $formats ) 
         ) {
 
-            helper::log( 'No formats allowed in plugin' );
+            self::$log['error'][] = 'No formats allowed in plugin or array corrupt';
 
             return false;
 
@@ -540,7 +706,7 @@ class field extends \Q {
             || is_null( $format )
         ) {
 
-            helper::log( 'Error in parameters passed to apply_format, $value returned empty and field removed from $fields' );
+            self::$log['error'][] = 'Error in parameters passed to apply_format, $value returned empty and field removed from $fields';
 
             // this item needs to be removed from self::$fields
             self::remove_field( $field );
@@ -558,7 +724,7 @@ class field extends \Q {
             || ! is_callable( array( __CLASS__, $format ) )
         ){
 
-            helper::log( 'handler wrong - class: '.__CLASS__.' / method: '.$format );
+            self::$log['error'][] = 'handler wrong - class: '.__CLASS__.' / method: '.$format;
 
             // this item needs to be removed from self::$fields
             self::remove_field( $field );
@@ -610,7 +776,7 @@ class field extends \Q {
             || is_null( $field )
         ) {
 
-            helper::log( 'Error in parameters passed to check_format' );
+            self::$log['error'][] = 'Error in parameters passed to check_format';
 
             return false;
 
@@ -636,7 +802,7 @@ class field extends \Q {
 
             if ( ! function_exists( $format_value['type'] ) ) {
 
-                helper::log( 'Function not found: '.$format_value['type'] );
+                self::$log['error'][] = 'Function not found: '.$format_value['type'];
 
                 continue;
 
@@ -665,7 +831,7 @@ class field extends \Q {
         // note use of default type if no match found ##
         if ( false === $tracker ) {
 
-            helper::log( 'No valid value type found for field: '.$field.' so assigned: '.$return );
+            self::$log['notice'][] = 'No valid value type found for field: '.$field.' so assigned: '.$return;
 
         }
 
@@ -685,6 +851,8 @@ class field extends \Q {
      */
     public static function format_text( $value = null, $field = null )
     {
+
+        // helper::log( $value );
 
         return \apply_filters( 'q/field/format/text/'.self::$args['group'].'/'.$field, $value );
 
@@ -721,6 +889,10 @@ class field extends \Q {
 
         // helper::log( $value );
 
+        // @todo - and array of arrays containing named indexes ( not WP_Post Objects ) needs to be be marked up as a block, like an Object ##
+        // ---------
+        // ---------
+
         // check how many items are in array and format ##
         $count = 0;
 
@@ -740,7 +912,7 @@ class field extends \Q {
             if ( self::format( $key_field, $key ) ) {
 
                 // format ran ok ##
-                helper::log( 'format ran ok.. so now we can update markup for field: '.$field );
+                // helper::log( 'format ran ok.. so now we can update markup for field: '.$field );
                 self::set_markup( $field, $count );
 
             }
@@ -779,7 +951,7 @@ class field extends \Q {
 
         if ( ! $value instanceof \WP_Post ) {
 
-            helper::log( 'Object is not of type WP_Post, so emptied, $value returned empty and field removed from $fields' );
+            self::$log['notice'][] = 'Object is not of type WP_Post, so emptied, $value returned empty and field removed from $fields';
 
             // this item needs to be removed from self::$fields
             self::remove_field( $field, 'Removed by format_object because Object format is not allowed in $formats' );
@@ -882,7 +1054,7 @@ class field extends \Q {
         // sanity ##
         if ( is_null( $field ) ) {
 
-            helper::log( 'No field value passed to method.' );
+            self::$log['error'][] = 'No field value passed to method.';
 
             return $value;
 
@@ -891,7 +1063,7 @@ class field extends \Q {
         // sanity ##
         if ( is_null( $value ) ) {
 
-            helper::log( 'No value passed to method.' );
+            self::$log['error'][] = 'No value passed to method.';
 
             return $value;
 
@@ -906,7 +1078,7 @@ class field extends \Q {
             || ! \is_array( $callbacks ) 
         ) {
 
-            helper::log( 'No callbacks allowed in plugin' );
+            self::$log['error'][] = 'No callbacks allowed in plugin';
 
             return $value;
 
@@ -928,7 +1100,7 @@ class field extends \Q {
             ! is_array ( self::$args['callback'] ) 
         ) {
 
-            helper::log( 'Error in callbacks format - not Array' );
+            self::$log['error'][] = 'Error in callbacks format - not Array';
 
             return $value;
 
@@ -952,7 +1124,7 @@ class field extends \Q {
         // Check we have a real field value to work with ##
         if ( ! $field_value ) {
 
-            helper::log( 'No field value found, stopping callback' );
+            self::$log['notice'][] = 'No field value found, stopping callback';
 
             return $value;
 
@@ -974,7 +1146,7 @@ class field extends \Q {
         // check if field callback is listed in the allowed array of callbacks ##
         if ( ! array_key_exists( $method, $callbacks ) ) {
 
-            helper::log( 'Cannot find callback: '.$method );
+            self::$log['notice'][] = 'Cannot find callback: '.$method;
 
             return $value;
 
@@ -987,7 +1159,7 @@ class field extends \Q {
             ! is_callable( $method )
         ){
 
-            helper::log( 'Method is not callable: '.$method );
+            self::$log['notice'][] = 'Method is not callable: '.$method;
 
             return $value;
 
@@ -1011,7 +1183,7 @@ class field extends \Q {
         // Opps ##
         if ( ! $data ) {
 
-            helper::log( 'Method returned bad data..' );
+            self::$log['notice'][] = 'Method returned bad data..';
 
             return $value;
 
@@ -1041,6 +1213,37 @@ class field extends \Q {
 
     }
 
+
+
+    protected static function return() {
+
+        // filter output ##
+        self::$output = self::filter([ 
+            'parameters'    => [ // pass ( $fields, $args, $output ) as single array ##
+                'fields'    => self::$fields, 
+                'args'      => self::$args, 
+                'output'    => self::$output ], 
+            'filter'        => 'q/field/output/'.self::$args['group'], // filter handle ##
+            'return'        => self::$output
+        ]); 
+
+        // helper::log( self::$output );
+
+        // either return or echo ##
+        if ( 'echo' === self::$args['config']['return'] ) {
+
+            echo self::$output;
+
+            return true;
+
+        } else {
+
+            return self::$output;
+
+        }
+
+    }
+
     
 
     /**
@@ -1065,7 +1268,7 @@ class field extends \Q {
             // we only want string values here -- so check and remove, as required ##
             if ( ! \is_string( $value ) ) {
 
-                helper::log( 'The value of: '.$key.' is not a string' );
+                self::$log['notice'][] = 'The value of: '.$key.' is not a string';
 
                 unset( self::$fields[$key] );
 
@@ -1087,7 +1290,7 @@ class field extends \Q {
             $placeholders = self::get_placeholders( $string ) 
         ) {
 
-            helper::log( count( $placeholders ) .' placeholders found in formatted string - these will be removed' );
+            self::$log['notice'][] = count( $placeholders ) .' placeholders found in formatted string - these will be removed';
 
             // helper::log( $placeholders );
 
@@ -1101,13 +1304,23 @@ class field extends \Q {
         }
 
         // filter ##
-        $string = \apply_filters( 'q/field/markup/'.self::$args['group'], $string );
+        // $string = \apply_filters( 'q/field/markup/'.self::$args['group'], $string );
+        $string = self::filter([ 
+            'parameters'    => [ 'string' => $string ], // pass ( $string ) as single array ##
+            'filter'        => 'q/field/markup/'.self::$args['group'], // filter handle ##
+            'return'        => $string
+        ]); 
 
         // check ##
         // helper::log( $string );
 
         // apply to class property ##
         self::$output = $string;
+
+        // self::$output = self::filter([ 
+        //     'parameters'    => [ self::$fields, self::$args, self::$output ], // pass ( $fields, $args ) as single array ##
+        //     'filter'        => 'q/field/output/'.self::$args['group'], // filter handle ##
+        // ]); 
 
         // return ##
         return true;
@@ -1128,7 +1341,7 @@ class field extends \Q {
             || is_null( $count )
         ) {
 
-            helper::log( 'No field value or count iterator passed to method.' );
+            self::$log['error'][] = 'No field value or count iterator passed to method.';
 
             return false;
 
@@ -1140,7 +1353,7 @@ class field extends \Q {
         // look for required markup ##
         if ( ! isset( self::$markup[$field] ) ) {
 
-            helper::log( 'Field: '.$field.' does not have required markup defined in $args -- markup => '.$field );
+            self::$log['notice'][] = 'Field: '.$field.' does not have required markup defined in $args -- markup => '.$field;
 
             // bale if not found ##
             return false;
@@ -1170,7 +1383,7 @@ class field extends \Q {
             ! self::get_placeholder( $placeholder )
         ) {
 
-            helper::log( 'Placeholder: '.$placeholder.' is not in the passed markup template' );
+            self::$log['notice'][] = 'Placeholder: '.$placeholder.' is not in the passed markup template';
 
             return false;
 
@@ -1184,7 +1397,7 @@ class field extends \Q {
             ! $placeholders = self::get_placeholders( self::$markup[$field] ) 
         ) {
 
-            helper::log( 'No placeholders found in passed string' );
+            self::$log['notice'][] = 'No placeholders found in passed string';
 
             return false;
 
@@ -1244,7 +1457,7 @@ class field extends \Q {
             || is_null( $value ) 
         ) {
 
-            helper::log( 'No field or value passed to method.' );
+            self::$log['error'][] = 'No field or value passed to method.';
 
             return false;
 
@@ -1258,7 +1471,7 @@ class field extends \Q {
         self::$log['fields']['added'][$field] = 
             ! is_null( $message ) ? 
             $message : 
-            'Added by '.\debug_backtrace()[1]['function'] ;
+            self::backtrace() ;
 
         // positive ##
         return true;
@@ -1276,7 +1489,7 @@ class field extends \Q {
         // sanity ##
         if ( is_null( $field ) ) {
 
-            helper::log( 'No field value passed to method.' );
+            self::$log['error'][] = 'No field value passed to method.';
 
             return false;
 
@@ -1289,7 +1502,7 @@ class field extends \Q {
         self::$log['fields']['removed'][$field] = 
             ! is_null( $message ) ? 
             $message : 
-            'Removed by '.\debug_backtrace()[1]['function'] ;
+            self::backtrace() ;
 
         // positive ##
         return true;
@@ -1351,7 +1564,7 @@ class field extends \Q {
         // sanity ##
         if ( is_null( $string ) ) {
 
-            helper::log( 'No string value passed to method.' );
+            self::$log['error'][] = 'No string value passed to method.';
 
             return false;
 
@@ -1365,7 +1578,7 @@ class field extends \Q {
             $needle != substr( $string, -1 ) // returns last character ##
         ) {
 
-            helper::log( 'Placeholder is not correctly formatted - missing % at start or end of passed string.' );
+            self::$log['notice'][] = 'Placeholder is not correctly formatted - missing % at start or end of passed string.';
 
             return false;
 
@@ -1383,7 +1596,7 @@ class field extends \Q {
         self::$log['placeholder']['removed'][$string] = 
             ! is_null( $message ) ? 
             $message : 
-            'Removed by '.\debug_backtrace()[1]['function'] ;
+            self::backtrace() ;
 
         // positive ##
         return true;
@@ -1391,10 +1604,41 @@ class field extends \Q {
     }
 
 
+    /**
+     * Logging function
+     * 
+     */
+    protected static function log( Array $args = null ){
 
-    protected static function log(){
+        if (
+            ! isset( self::$args['config']['debug'] )
+            || false === self::$args['config']['debug']
+        ) {
 
-        helper::log( self::$log );
+            helper::log( 'Debugging is turned off for Field Group: '.$args['group'] );
+
+            return false;
+
+        }   
+
+        // option to debug only specific fields ##
+        $return = 
+            (
+                isset( $args['field'] )
+                && isset( self::$log[ $args['field'] ] ) 
+            ) ?
+            self::$log[ $args['field'] ] :
+            self::$log ;
+
+        // log to log ##
+        helper::log( $return );
+
+    }
+
+
+    protected static function backtrace(){
+
+        return \debug_backtrace()[1]['function'];
 
     }
 

@@ -291,6 +291,9 @@ if ( ! class_exists( 'Q' ) ) {
             
             // controllers ##
             require_once self::get_plugin_path( 'library/controller/controller.php' );
+
+            // modules ##
+            require_once self::get_plugin_path( 'library/module/controller.php' );
             
 
         }
