@@ -10,90 +10,16 @@ use q\module\field as field;
 use q\module\field\core as core;
 use q\module\field\filter as filter;
 use q\module\field\format as format;
-use q\module\field\get as get;
+use q\module\field\fields as fields;
 use q\module\field\log as log;
 use q\module\field\markup as markup;
 use q\module\field\output as output;
+use q\module\field\type as type;
 use q\module\field\ui as ui;
 
 class format extends field {
 
     
-    /**
-     * Work passed field data into rendering format
-     */
-    public static function fields(){
-
-        // check we have fields to loop over ##
-        if ( 
-            ! self::$fields
-            || ! is_array( self::$fields ) 
-        ) {
-
-            self::$log['error'][] = 'Error in $fields array';
-
-            return false;
-
-        }
-
-        // filter $args now that we have fields data from ACF ##
-        self::$args = filter::apply([ 
-            'parameters'    => [ 'fields' => self::$fields, 'args' => self::$args ], // pass ( $fields, $args ) as single array ##
-            'filter'        => 'q/field/before/args/'.self::$args['group'], // filter handle ##
-            'return'        => self::$args
-        ]); 
-
-        // filter all fields before processing ##
-        self::$fields = filter::apply([ 
-            'parameters'    => [ 'fields' => self::$fields, 'args' => self::$args ], // pass ( $fields, $args ) as single array ##
-            'filter'        => 'q/field/before/fields/'.self::$args['group'], // filter handle ##
-            'return'        => self::$fields
-        ]); 
-
-        // self::$log['debug'] = self::$fields;
-
-        // start loop ##
-        foreach ( self::$fields as $field => $value ) {
-
-            // self::$log['debug'] = 'Working field: '.$field .' With Value:';
-            // self::$log['debug'] = $value;
-
-            // check field has a value ##
-            if ( 
-                ! $value 
-                || is_null( $value )
-            ) {
-
-                self::$log['notice'][] = 'Field: '.$field.' has no value, check for data issues.';
-
-                continue;
-
-            }
-
-            // Callback methods on specified fields ##
-            // Note - field includes a list of standard callbacks, which can be extended via the filter q/field/callbacks/get ##
-            $value = core::callbacks( $field, $value );
-
-            // helper::log( 'After callback -- field: '.$field .' With Value:' );
-            // helper::log( $value );
-
-            // Format each field value based on type ( int, string, array, WP_Post Object ) ##
-            // each item is filtered as looped over -- q/field/format/GROUP/FIELD - ( $args, $fields ) ##
-            // results are saved back to the self::$fields array in String format ##
-            self::field( $field, $value );
-
-        }
-
-        // filter all fields ##
-        self::$fields = filter::apply([ 
-            'parameters'    => [ 'fields' => self::$fields, 'args' => self::$args ], // pass ( $fields, $args ) as single array ##
-            'filter'        => 'q/field/after/fields/'.self::$args['group'], // filter handle ##
-            'return'        => self::$fields
-        ]); 
-
-    }
-
-
    
     /**
      * Check allowed formats based on passed $value, format and return a string ready for markup  
@@ -345,7 +271,7 @@ class format extends field {
         // array of arrays containing named indexes ( not WP_Post Objects ) needs to be be marked up as a block, like an Object ##
 
         // add check to see if array is a collection of array - as exported by repeater fields ##
-        if ( self::is_repeater( $value, $field ) ) {
+        if ( 'repeater' == core::field_type( $field ) ) {
 
             // helper::log( 'Array is a repeater' );
 
@@ -435,39 +361,7 @@ class format extends field {
     }
 
 
-    /**
-     * Check if an array was produced by a repeater field
-     * 
-     * @return  boolean
-     */
-    public static function is_repeater( $array = null, $field ){
 
-        // helper::log( 'Checking if Field: "'.$field.'" is a repeater array' );
-
-        if ( 
-            $key = core::array_search( 'key', 'field_frontpage_feature', self::$args['fields'] )
-        ){
-
-            // helper::log( self::$args['fields'][$key]['type'] );
-
-            if ( 
-                isset( self::$args['fields'][$key]['type'] )
-                && 'repeater' == self::$args['fields'][$key]['type'] 
-            ) {
-
-                // helper::log( 'Field: "'.$field.'" is a repeater array!!' );
-                self::$log['notice'][] = 'Field: "'.$field.'" is a repeater_array';
-
-                return true;
-
-            }
-
-        }
-        
-        // kick it back ##
-        return false;
-
-    }
 
     /**
      * Format Object values ##
@@ -511,7 +405,7 @@ class format extends field {
 
 
     /**
-     * Format
+     * Format WP_Post Objects
      */
     public static function format_object_wp_post( Object $value = null, $field = null ){
 
@@ -556,8 +450,10 @@ class format extends field {
                     break ;
 
                     case 'img' :
-
-                        $string = self::format_type_img( $value->ID, $field );
+                        
+                        // get post_thumbnail ID ##
+                        $img_id = \get_post_thumbnail_id( $value->ID );
+                        $string = type::img( $img_id, $field );
 
                     break ;
 
@@ -576,36 +472,6 @@ class format extends field {
 
     }
 
-
-
-    
-    /**
-     * Image type handler 
-     *  
-     * 
-     * @todo - add srcset check
-     * @todo - placeholder fallback
-     * @todo - what about different image methods ??
-     **/ 
-    public static function format_type_img( $value = null, $field = null ){
-
-        // check and assign ##
-        $handle = 
-            isset( self::$args['img']['handle'][$field] ) ?
-            self::$args['img']['handle'][$field] :
-            \apply_filters( 'q/field/format/img/handle', 'medium' ); ;
-
-        // helper::log( 'Image handle: '.$handle );
-
-        // get image ##
-        $string = \get_the_post_thumbnail_url( $value, $handle );
-
-        // helper::log( 'Image string: '.$string );
-
-        // kick back ##
-        return $string;
-
-    }
 
 
 

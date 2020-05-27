@@ -10,7 +10,7 @@ use q\module\field as field;
 use q\module\field\core as core;
 use q\module\field\filter as filter;
 use q\module\field\format as format;
-use q\module\field\get as get;
+use q\module\field\fields as fields;
 use q\module\field\log as log;
 use q\module\field\markup as markup;
 use q\module\field\output as output;

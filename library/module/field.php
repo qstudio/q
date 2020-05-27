@@ -20,6 +20,9 @@ class field extends \Q {
                 'debug'         => false, // don't debug this item ##
                 'return'        => 'echo' // default to echo return string ##
             ],
+            'filter'        => [
+                'img'           => 'srcset' // apply srcset handlers to all images ## 
+            ]      
         ],
 
         // frontend pre-processor callbacks to update field values ##
@@ -95,8 +98,9 @@ class field extends \Q {
 
         require_once self::get_plugin_path( 'library/module/field/filter.php' );
         require_once self::get_plugin_path( 'library/module/field/core.php' );
-        require_once self::get_plugin_path( 'library/module/field/get.php' );
+        require_once self::get_plugin_path( 'library/module/field/fields.php' );
         require_once self::get_plugin_path( 'library/module/field/format.php' );
+        require_once self::get_plugin_path( 'library/module/field/type.php' );
         require_once self::get_plugin_path( 'library/module/field/markup.php' );
         require_once self::get_plugin_path( 'library/module/field/ui.php' );
         require_once self::get_plugin_path( 'library/module/field/output.php' );

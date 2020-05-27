@@ -10,7 +10,7 @@ use q\module\field as field;
 use q\module\field\core as core;
 use q\module\field\filter as filter;
 use q\module\field\format as format;
-use q\module\field\get as get;
+use q\module\field\fields as fields;
 use q\module\field\log as log;
 use q\module\field\markup as markup;
 use q\module\field\output as output;
@@ -372,5 +372,44 @@ class core extends field {
         return true;
 
     }
+
+
+
+    
+    /**
+     * Try to get field type from passed key and field name
+     * 
+     * @return  boolean
+     */
+    public static function field_type( $field ){
+
+        // helper::log( 'Checking Type of Field: "'.$field.'"' );
+
+        if ( 
+            $key = self::array_search( 'key', 'field_'.$field, self::$args['fields'] )
+        ){
+
+            // helper::log( self::$args['fields'][$key] );
+
+            if ( 
+                isset( self::$args['fields'][$key]['type'] )
+            ) {
+
+                // helper::log( 'Field: "'.$field.'" is Type: "'.self::$args['fields'][$key]['type'].'"' );
+
+                self::$log['notice'][] = 'Field: "'.$field.'" is Type: "'.self::$args['fields'][$key]['type'].'"';
+
+                return self::$args['fields'][$key]['type'];
+
+            }
+
+        }
+        
+        // kick it back ##
+        return false;
+
+    }
+
+
      
 }
