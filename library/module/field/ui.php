@@ -27,7 +27,7 @@ class ui extends field {
         // validate passed args ##
         if ( ! core::validate( $args ) ) {
 
-            log::write();
+            log::render();
 
             return false;
 
@@ -36,7 +36,7 @@ class ui extends field {
         // get field names from passed $args ##
         if ( ! get::fields() ) {
 
-            log::write();
+            log::render();
 
             return false;
 
@@ -50,7 +50,7 @@ class ui extends field {
         markup::template();
 
         // optional logging to show removals and stats ##
-        log::write();
+        log::render(/*[ 'field' => 'notice' ]*/);
 
         // return or echo ##
         return output::return();

@@ -2,17 +2,9 @@
 
 namespace q\module;
 
-// use q\core\core as core;
+// Q helper ##
 use q\core\helper as helper;
-// use q\core\config as config;
-
-// use q\module\field\core as core;
-// use q\module\field\validate as validate;
-// use q\module\field\filter as filter;
-use q\module\field\ui as ui;
-// use q\module\field\format as format;
-// use q\module\field\fields as fields;
-// use q\module\field\output as output;
+use q\module\field\format as format;
 
 // load it up ##
 \q\module\field::run();
@@ -30,18 +22,19 @@ class field extends \Q {
             ],
         ],
 
-        // frontend pre-processor callbacks ##
+        // frontend pre-processor callbacks to update field values ##
         $callbacks = [
             'get_posts'         => [ // standard WP get_posts()
                 'class'         => 'global', // global scope to allow for namespacing ##
                 'method'        => '\get_posts()',
                 'args'          => [] // default - can be edited via global and specific filters ##
-            ]
+            ],
         ],
 
         // value formatters ##
         $formats = [
-            'array'             => [ // Arrays could be collection of WP Post Objects OR text - so check ##
+            // Arrays could be collection of WP Post Objects OR repeater block - so check ##
+            'array'             => [
                 'type'          => 'is_array',
                 'method'        => 'format_array'
             ],
@@ -79,7 +72,6 @@ class field extends \Q {
         $fields = null, // field names and values ##
         $markup = null, // store local version of passed markup ##
         $log = null, // tracking array for feedback ##
-        // $debug = null, // debugging option ##
         $acf_fields = null // fields grabbed by acf function ##
 
     ;
@@ -109,14 +101,6 @@ class field extends \Q {
         require_once self::get_plugin_path( 'library/module/field/ui.php' );
         require_once self::get_plugin_path( 'library/module/field/output.php' );
         require_once self::get_plugin_path( 'library/module/field/log.php' );
-
-    }
-
-
-
-    public static function render( Array $args = null ){
-
-        ui::render( $args );
 
     }
 

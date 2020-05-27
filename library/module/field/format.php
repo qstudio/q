@@ -164,7 +164,7 @@ class format extends field {
             self::$log['error'][] = 'Error in parameters passed to apply_format, $value returned empty and field removed from $fields';
 
             // this item needs to be removed from self::$fields
-            self::remove_field( $field );
+            core::remove_field( $field );
 
              // we do not return the $value either ##
             return false;
@@ -182,7 +182,7 @@ class format extends field {
             self::$log['error'][] = 'handler wrong - class: '.__CLASS__.' / method: '.$format;
 
             // this item needs to be removed from self::$fields
-            self::remove_field( $field );
+            core::remove_field( $field );
 
             // we do not return the $value either ##
             return false; 
@@ -263,7 +263,7 @@ class format extends field {
 
             }
 
-            // helper::log( 'function exists: '.$item['function'] );
+            // helper::log( 'function exists: '.$format_value['type'] );
 
             // boolean check ## is_TYPE === true
             if ( 
@@ -331,7 +331,7 @@ class format extends field {
      * Format Array values
      * These need to be looped over and each value passed back into the format() process
      * 
-     * Array data "MUST" come from a repeater
+     * Array data "SHOULD" come from a repeater
      * which has one single %placeholder% and markup in a property with a name matching key to the field name
      * we need to update the template based on number of array items and defined markup with numbered values ##
      * 
@@ -342,38 +342,45 @@ class format extends field {
         // allow filtering early ##
         $value = \apply_filters( 'q/field/format/array/'.self::$args['group'].'/'.$field, $value );
 
-        // helper::log( $value );
+        // array of arrays containing named indexes ( not WP_Post Objects ) needs to be be marked up as a block, like an Object ##
 
-        // @todo - and array of arrays containing named indexes ( not WP_Post Objects ) needs to be be marked up as a block, like an Object ##
-        // ---------
-        // ---------
+        // add check to see if array is a collection of array - as exported by repeater fields ##
+        if ( self::is_repeater( $value, $field ) ) {
 
-        // check how many items are in array and format ##
-        $count = 0;
+            // helper::log( 'Array is a repeater' );
 
-        // we need to loop over the array and check what each the value of each key using self::format()
-        // Formats that are not registered in self::$formats will be removed ## 
-        foreach( $value as $key ) {
+            self::format_array_repeater( $value, $field );
 
-            // helper::log( $key );
+        } else {
 
-            // create a new, named and numbered field based on field_COUNT -- empty value ##
-            $key_field = $field.'__'.$count;
-            self::set_field( $key_field, '' );
+            // check how many items are in array and format ##
+            $count = 0;
 
-            // Format each field value based on type ( int, string, array, WP_Post Object ) ##
-            // each item is filtered as looped over -- q/field/format/GROUP/FIELD - ( $args, $fields ) ##
-            // results are saved back to the self::$fields array in String format ##
-            if ( self::field( $key_field, $key ) ) {
+            // we need to loop over the array and check what each the value of each key using self::format()
+            // Formats that are not registered in self::$formats will be removed ## 
+            foreach( $value as $key ) {
 
-                // format ran ok ##
-                // helper::log( 'format ran ok.. so now we can update markup for field: '.$field );
-                markup::set_markup( $field, $count );
+                // helper::log( $key );
+
+                // create a new, named and numbered field based on field_COUNT -- empty value ##
+                $key_field = $field.'__'.$count;
+                core::set_field( $key_field, '' );
+
+                // Format each field value based on type ( int, string, array, WP_Post Object ) ##
+                // each item is filtered as looped over -- q/field/format/GROUP/FIELD - ( $args, $fields ) ##
+                // results are saved back to the self::$fields array in String format ##
+                if ( self::field( $key_field, $key ) ) {
+
+                    // format ran ok ##
+                    // helper::log( 'format ran ok.. so now we can update markup for field: '.$field );
+                    markup::set_markup( $field, $count );
+
+                }
+
+                // iterate count ##
+                $count ++ ;
 
             }
-
-            // iterate count ##
-            $count ++ ;
 
         }
 
@@ -381,7 +388,7 @@ class format extends field {
         markup::remove_placeholder( '%'.$field.'%' );
 
         // delete sending field ##
-        self::remove_field( $field, 'Removed by format_array after working' );
+        core::remove_field( $field, 'Removed by format_array after working' );
 
         // checkout markup ##
         // helper::log( self::$markup['template'] );
@@ -392,6 +399,75 @@ class format extends field {
     }
 
 
+
+    public static function format_array_repeater( $value = null, $field = null )
+    {
+
+        // helper::log( 'Formatting repeater array...' );
+        // helper::log( $value );
+
+        // check how many items are in array and format ##
+        $count = 0;
+
+        // loop over array of arrays, work inner keys and values ## 
+        foreach( $value as $r1 => $v1 ) {
+
+            foreach( $v1 as $r2 => $v2 ) {
+
+                // helper::log( 'Working "'.$r2.'" Key value: "'.$v2.'"' );
+
+                // create a new, named and numbered field based on field_COUNT__row_key ##
+                $key_field = $field.'__'.$count.'__'.$r2;
+                core::set_field( $key_field, $v2 );
+
+            }
+
+            // format ran ok ##
+            markup::set_markup( $field, $count );
+
+            // iterate count ##
+            $count ++ ;
+
+        }
+
+        return true;
+
+    }
+
+
+    /**
+     * Check if an array was produced by a repeater field
+     * 
+     * @return  boolean
+     */
+    public static function is_repeater( $array = null, $field ){
+
+        // helper::log( 'Checking if Field: "'.$field.'" is a repeater array' );
+
+        if ( 
+            $key = core::array_search( 'key', 'field_frontpage_feature', self::$args['fields'] )
+        ){
+
+            // helper::log( self::$args['fields'][$key]['type'] );
+
+            if ( 
+                isset( self::$args['fields'][$key]['type'] )
+                && 'repeater' == self::$args['fields'][$key]['type'] 
+            ) {
+
+                // helper::log( 'Field: "'.$field.'" is a repeater array!!' );
+                self::$log['notice'][] = 'Field: "'.$field.'" is a repeater_array';
+
+                return true;
+
+            }
+
+        }
+        
+        // kick it back ##
+        return false;
+
+    }
 
     /**
      * Format Object values ##
@@ -410,84 +486,22 @@ class format extends field {
             // pass to WP formatter ##
             $value = self::format_object_wp_post( $value, $field );
 
-        // @todo - ad more formats here ... ##
+        // @todo - add more formats here ... ##
 
         } else {
 
             self::$log['notice'][] = 'Object is not of type WP_Post, so emptied, $value returned empty and field removed from $fields';
 
             // this item needs to be removed from self::$fields
-            self::remove_field( $field, 'Removed by format_object because Object format is not allowed in $formats' );
+            core::remove_field( $field, 'Removed by format_object because Object format is not allowed in $formats' );
 
             // we do not return the $value either ##
             return false; 
 
         }
 
-        /*
-        // now, we need to create some new $fields based on each value in self::$wp_post_fields ##
-        foreach( self::$wp_post_fields as $wp_post_field ) {
-            
-            // let's auto-assign some values - then hand create the rest ##
-            if ( $value->$wp_post_field ) {
-
-                self::set_field( $field.'__'.$wp_post_field, $value->$wp_post_field );
-
-            // hand created ##
-            } else {
-
-                // get categories ##
-                $categories = \get_the_category( $value->ID );
-
-                switch( $wp_post_field ) {
-
-                    case 'permalink' :
-
-                        $string = \get_permalink( $value->ID );
-
-                    break ;
-
-                    case 'category_name' :
-
-                        $string = $categories[0]->name;
-
-                    break ;
-
-                    case 'img' :
-
-                        // we need a valid handle here ## might need to think about this more later ##
-                        if ( ! isset( self::$args['img']['handle'][$field] ) ) {
-
-                            // helper::log( 'Img requires a matching img->handle->$field reference - defaulting to "medium"' );
-
-                        }
-
-                        // check and assign ##
-                        $handle = 
-                            isset( self::$args['img']['handle'][$field] ) ?
-                            self::$args['img']['handle'][$field] :
-                            \apply_filters( 'q/field/format/img/handle', 'medium' ); ;
-
-                        // helper::log( 'Image handle: '.$handle );
-
-                        // get image ##
-                        $string = \get_the_post_thumbnail_url( $value->ID, $handle );
-
-                    break ;
-
-                }
-
-                // assign field and value ##
-                // self::$fields[$field.'__'.$wp_post_field] = $string;
-                self::set_field( $field.'__'.$wp_post_field, $string );
-
-            }
-
-        }
-        */
-
         // delete sending field ##
-        self::remove_field( $field, 'Removed by format_object after working' );
+        core::remove_field( $field, 'Removed by format_object after working' );
 
         // return false will delete the passed field ##
         return true;
@@ -519,7 +533,7 @@ class format extends field {
             // let's auto-assign some values - then hand create the rest ##
             if ( $value->$wp_post_field ) {
 
-                self::set_field( $field.'__'.$wp_post_field, $value->$wp_post_field );
+                core::set_field( $field.'__'.$wp_post_field, $value->$wp_post_field );
 
             // hand created ##
             } else {
@@ -543,23 +557,7 @@ class format extends field {
 
                     case 'img' :
 
-                        // we need a valid handle here ## might need to think about this more later ##
-                        if ( ! isset( self::$args['img']['handle'][$field] ) ) {
-
-                            // helper::log( 'Img requires a matching img->handle->$field reference - defaulting to "medium"' );
-
-                        }
-
-                        // check and assign ##
-                        $handle = 
-                            isset( self::$args['img']['handle'][$field] ) ?
-                            self::$args['img']['handle'][$field] :
-                            \apply_filters( 'q/field/format/img/handle', 'medium' ); ;
-
-                        // helper::log( 'Image handle: '.$handle );
-
-                        // get image ##
-                        $string = \get_the_post_thumbnail_url( $value->ID, $handle );
+                        $string = self::format_type_img( $value->ID, $field );
 
                     break ;
 
@@ -567,7 +565,7 @@ class format extends field {
 
                 // assign field and value ##
                 // self::$fields[$field.'__'.$wp_post_field] = $string;
-                self::set_field( $field.'__'.$wp_post_field, $string );
+                core::set_field( $field.'__'.$wp_post_field, $string );
 
             }
 
@@ -575,6 +573,37 @@ class format extends field {
 
         // kick back ##
         return true;
+
+    }
+
+
+
+    
+    /**
+     * Image type handler 
+     *  
+     * 
+     * @todo - add srcset check
+     * @todo - placeholder fallback
+     * @todo - what about different image methods ??
+     **/ 
+    public static function format_type_img( $value = null, $field = null ){
+
+        // check and assign ##
+        $handle = 
+            isset( self::$args['img']['handle'][$field] ) ?
+            self::$args['img']['handle'][$field] :
+            \apply_filters( 'q/field/format/img/handle', 'medium' ); ;
+
+        // helper::log( 'Image handle: '.$handle );
+
+        // get image ##
+        $string = \get_the_post_thumbnail_url( $value, $handle );
+
+        // helper::log( 'Image string: '.$string );
+
+        // kick back ##
+        return $string;
 
     }
 
@@ -592,76 +621,5 @@ class format extends field {
     }
 
 
-
-
-
-    
-    /**
-     * Add $field from self:$fields array
-     * 
-     */
-    public static function set_field( string $field = null, string $value = null, string $message = null ) {
-
-        // sanity ##
-        if ( 
-            is_null( $field )
-            || is_null( $value ) 
-        ) {
-
-            self::$log['error'][] = 'No field or value passed to method.';
-
-            return false;
-
-        }
-
-        // add field to array ##
-        // @todo - perhaps more validation required ##
-        self::$fields[$field] = $value;
-
-        // track removal ##
-        self::$log['fields']['added'][$field] = 
-            ! is_null( $message ) ? 
-            $message : 
-            log::backtrace() ;
-
-        // positive ##
-        return true;
-
-    }
-
-
-
-    /**
-     * Remove $field from self:$fields array
-     * 
-     */
-    public static function remove_field( string $field = null, string $message = null ) {
-
-        // sanity ##
-        if ( is_null( $field ) ) {
-
-            self::$log['error'][] = 'No field value passed to method.';
-
-            return false;
-
-        }
-
-        // remove from array ##
-        unset( self::$fields[$field] );
-
-        // track removal ##
-        self::$log['fields']['removed'][$field] = 
-            ! is_null( $message ) ? 
-            $message : 
-            log::backtrace() ;
-
-        // positive ##
-        return true;
-
-    }
-
-
-    
-    
 
 }

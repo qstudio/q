@@ -284,6 +284,93 @@ class core extends field {
 
     }
 
-     
 
+
+    public static function array_search( $field, $value, $array ) {
+
+        foreach ( $array as $key => $val ) {
+        
+            if ( $val[$field] === $value ) {
+        
+                return $key;
+        
+            }
+        
+        }
+        
+        return null;
+
+    }
+
+
+
+    
+
+    
+    /**
+     * Add $field from self:$fields array
+     * 
+     */
+    public static function set_field( string $field = null, string $value = null, string $message = null ) {
+
+        // sanity ##
+        if ( 
+            is_null( $field )
+            || is_null( $value ) 
+        ) {
+
+            self::$log['error'][] = 'No field or value passed to method.';
+
+            return false;
+
+        }
+
+        // helper::log( 'Adding field: '.$field );
+
+        // add field to array ##
+        // @todo - perhaps more validation required ##
+        self::$fields[$field] = $value;
+
+        // track removal ##
+        self::$log['fields']['added'][$field] = 
+            ! is_null( $message ) ? 
+            $message : 
+            log::backtrace() ;
+
+        // positive ##
+        return true;
+
+    }
+
+
+
+    /**
+     * Remove $field from self:$fields array
+     * 
+     */
+    public static function remove_field( string $field = null, string $message = null ) {
+
+        // sanity ##
+        if ( is_null( $field ) ) {
+
+            self::$log['error'][] = 'No field value passed to method.';
+
+            return false;
+
+        }
+
+        // remove from array ##
+        unset( self::$fields[$field] );
+
+        // track removal ##
+        self::$log['fields']['removed'][$field] = 
+            ! is_null( $message ) ? 
+            $message : 
+            log::backtrace() ;
+
+        // positive ##
+        return true;
+
+    }
+     
 }

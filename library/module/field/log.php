@@ -22,7 +22,7 @@ class log extends field {
      * Logging function
      * 
      */
-    public static function write( Array $args = null ){
+    public static function render( Array $args = null ){
 
         if (
             ! isset( self::$args['config']['debug'] )
@@ -52,7 +52,9 @@ class log extends field {
 
     public static function backtrace(){
 
-        return \debug_backtrace()[1]['function'];
+        // helper::log( \debug_backtrace() );
+
+        return \debug_backtrace()[2]['function'];
 
     }
 

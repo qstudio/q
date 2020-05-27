@@ -41,9 +41,9 @@ class get extends field {
 
             return false;
 
-       }
+        }
 
-        // helper::log( $args[ 'fields' ] );
+        // helper::log( self::$args[ 'fields' ] );
 
         // get field names from passes $args ##
         $array = array_column( self::$args[ 'fields' ], 'name' );
@@ -65,6 +65,12 @@ class get extends field {
         // assign class property ##
         self::$fields = $array;
 
+        // remove skipped fields, if defined ##
+        self::skip();
+
+        // if group specified, get only fields from this group ##
+        self::get_group();
+
         // check if feature is enabled ##
         if ( ! self::is_enabled() ) {
 
@@ -72,11 +78,7 @@ class get extends field {
 
        }    
 
-        // remove skipped fields, if defined ##
-        self::skip();
-
-        // if group specified, get only fields from this group ##
-        self::get_group();
+        // helper::log( self::$fields );
 
         // we should do a check if $fields is empty after all the filtering ##
         if ( 
@@ -128,6 +130,70 @@ class get extends field {
         return self::$acf_fields = $array;
 
     }
+
+
+
+
+    public static function is_enabled()
+    {
+
+        // sanity ##
+        if ( 
+            ! self::$args 
+            || ! is_array( self::$args )
+        ) {
+
+            self::$log['error'][] = 'Error in passed self::$args';
+
+            return false;
+
+        }
+
+        /*
+        self::$fields => Array
+        (
+            [0] => frontpage_feature_enable
+            [1] => frontpage_feature
+        )
+         */
+
+        // helper::log( self::$fields );
+        // helper::log( 'We are looking for field: '.self::$args['enable'] );
+
+        // check for enabled flag - if none, return true ##
+        if ( 
+            ! isset( self::$fields[self::$args['enable']] )
+        ) {
+
+            self::$log['notice'][] = 'No enable check defined in Group: "'.self::$args['group'].'"';
+
+            return true;
+
+        }
+
+        // kick back ##
+        if ( 
+            isset( self::$fields[self::$args['enable']] )
+            && 1 == self::$fields[self::$args['enable']] 
+        ) {
+
+            self::$log['notice'][] = 'Field Group: "'.self::$args['group'].'" Enabled, continue';
+
+            // helper::log( self::$args['enable'] .' == 1' );
+
+            return true;
+
+        }
+
+        self::$log['notice'][] = 'Field Group: "'.self::$args['group'].'" NOT Enabled, stopping.';
+
+        // helper::log( self::$args['enable'] .' != 1' );
+
+        // negative ##
+        return false;
+
+    }
+
 
 
 
@@ -192,64 +258,6 @@ class get extends field {
         return true;
 
     }
-
-
-
-
-
-    public static function is_enabled()
-    {
-
-        // sanity ##
-        if ( 
-            ! self::$args 
-            || ! is_array( self::$args )
-        ) {
-
-            self::$log['error'][] = 'Error in passed self::$args';
-
-            return false;
-
-        }
-
-        // check for enabled flag - if none, return true ##
-        if ( 
-            ! isset( self::$fields[self::$args['enable']] ) 
-        ) {
-
-            self::$log['notice'][] = 'No enable check defined in Group: '.self::$args['group'];
-
-            return true;
-
-        }
-
-        // helper::log( 'We are looking for field: '.self::$args['enable'] );
-
-        // kick back ##
-        if ( 
-            isset( self::$fields[self::$args['enable']] )
-            && 1 == self::$fields[self::$args['enable']] 
-        ) {
-
-            self::$log['notice'][] = 'Field Group: '.self::$args['group'].' Enabled, continue';
-
-            // helper::log( self::$args['enable'] .' == 1' );
-
-            return true;
-
-        }
-
-        self::$log['notice'][] = 'Field Group: '.self::$args['group'].' NOT Enabled, stopping.';
-
-        // helper::log( self::$args['enable'] .' != 1' );
-
-        // negative ##
-        return false;
-
-    }
-
-
-
 
 
 }
