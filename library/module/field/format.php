@@ -122,7 +122,7 @@ class format extends field {
 
         // Check if there are any allowed formats ##
         // Also runs filters to add custom formats ##
-        $formats = self::get_formats();
+        $formats = self::get_allowed();
 
         if ( 
             ! $formats
@@ -136,10 +136,10 @@ class format extends field {
         }
 
         // Now check the format of $value - Array requires repeat check on each row ##
-        $format = self::get_format( $value, $field );
+        $format = self::get( $value, $field );
 
         // now try to format value ##
-        $return = self::apply_format( $value, $field, $format );
+        $return = self::apply( $value, $field, $format );
 
         // self::$fields should all be String values by now, ready for markup ##
         return $return;
@@ -151,7 +151,7 @@ class format extends field {
      * Allow text field to be filtered ##
      * 
      */
-    public static function apply_format( $value = null, String $field = null, String $format = null )
+    public static function apply( $value = null, String $field = null, String $format = null )
     {
 
         // sanity ##
@@ -161,7 +161,7 @@ class format extends field {
             || is_null( $format )
         ) {
 
-            self::$log['error'][] = 'Error in parameters passed to apply_format, $value returned empty and field removed from $fields';
+            self::$log['error'][] = 'Error in parameters passed to "apply", $value returned empty and field removed from $fields';
 
             // this item needs to be removed from self::$fields
             core::remove_field( $field );
@@ -200,7 +200,7 @@ class format extends field {
             // helper::log( 'Handler method returned bad OR empty data for Field: '.$field );
 
             // this item needs to be removed from self::$fields
-            // self::remove_field( $field, 'Removed by apply_format due to bad or empty data' );
+            // self::remove_field( $field, 'Removed by "apply" due to bad or empty data' );
 
             return false; // we do not return the $value either ##
 
@@ -222,7 +222,7 @@ class format extends field {
      * Get format of $field $value from defined list of allowed formats ##
      * 
      */
-    public static function get_format( $value = null, $field = null )
+    public static function get( $value = null, $field = null )
     {
 
         // sanity ##
@@ -238,7 +238,7 @@ class format extends field {
         }
 
         // get formats ##
-        $formats = self::get_formats();
+        $formats = self::get_allowed();
         // helper::log( $formats );
 
         // tracker, if we find a match ##
@@ -613,7 +613,7 @@ class format extends field {
      * Get allowed fomats with filter ##
      * 
      */
-    public static function get_formats()
+    public static function get_allowed()
     {
 
         return \apply_filters( 'q/field/formats/get', self::$formats );
