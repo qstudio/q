@@ -98,6 +98,7 @@ class field extends \Q {
 
         require_once self::get_plugin_path( 'library/module/field/filter.php' );
         require_once self::get_plugin_path( 'library/module/field/core.php' );
+        require_once self::get_plugin_path( 'library/module/field/callback.php' );
         require_once self::get_plugin_path( 'library/module/field/fields.php' );
         require_once self::get_plugin_path( 'library/module/field/format.php' );
         require_once self::get_plugin_path( 'library/module/field/type.php' );

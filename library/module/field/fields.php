@@ -6,7 +6,10 @@ namespace q\module\field;
 use q\core\helper as helper;
 // use q\core\config as config;
 
+// parent ##
 use q\module\field as field;
+
+use q\module\field\callback as callback;
 use q\module\field\core as core;
 use q\module\field\filter as filter;
 use q\module\field\format as format;
@@ -314,7 +317,7 @@ class fields extends field {
 
             // Callback methods on specified fields ##
             // Note - field includes a list of standard callbacks, which can be extended via the filter q/field/callbacks/get ##
-            $value = core::callbacks( $field, $value );
+            $value = callback::field( $field, $value );
 
             // helper::log( 'After callback -- field: '.$field .' With Value:' );
             // helper::log( $value );
