@@ -510,10 +510,12 @@ class template {
     */
     public static function add_native_templates( $template ) {
 
+        // helper::log( 'Native: '.$template );
+
         // check tracker ##
         if ( self::track() ) {
 
-            // helper::log( 'Template already defined: '.self::track('get') );
+            helper::log( 'Template already defined: '.self::track('get') );
 
             return self::track('get');
 
@@ -550,38 +552,48 @@ class template {
              
             // helper::log( 'template: '.$item["template"].' / rule: '.$item["function"].' / class: '.$class );
 
-            if ( function_exists( $item["function"] ) ) {
+            if ( ! function_exists( $item["function"] ) ) {
 
-                // helper::log( 'function exists: '.$item['function'] );
+                // nothing cooking -- kick back orginal ##
+                // return $template;
+                continue;
 
-                if ( TRUE === call_user_func_array( $item["function"], array( $item["argument"] ) ) ) {
+            }
 
-                    // helper::log( 'function matched: '.$item["function"] );
+            // helper::log( 'function exists: '.$item['function'] );
 
-                    if ( 
-                        $template = helper::get( 'theme/view/'.$item["template"], 
-                            'return', 
-                            'path',
-                            'library/', // standard base library path ##
-                            $class // variable class ##
-                        ) ) {
-                        
-                        // $template = helper::get( 'theme/view/'.$item["template"], 'return', 'path' );
+            if ( 
+                FALSE === call_user_func_array( $item["function"], array( $item["argument"] ) ) 
+            ) {
 
-                        // helper::log( 'New template loaded: '.$item["template"] );
+                // nothing cooking -- kick back orginal ##
+                // return $template;
+                continue;
 
-                        // add global ##
-                        $GLOBALS['q_template'] = $item["template"];
+            }
 
-                        // update tracker ##
-                        self::track( 'set', $template );
+            // helper::log( 'function matched: '.$item["function"] );
 
-                        // kick it back ##
-                        return $template;
+            if ( 
+                $template = helper::get( 'theme/view/'.$item["template"], 
+                    'return', 
+                    'path',
+                    'library/', // standard base library path ##
+                    $class // variable class ##
+                ) ) {
+                
+                // $template = helper::get( 'theme/view/'.$item["template"], 'return', 'path' );
 
-                    }
+                // helper::log( 'New template loaded: '.$item["template"] );
 
-                }
+                // add global ##
+                $GLOBALS['q_template'] = $item["template"];
+
+                // update tracker ##
+                self::track( 'set', $template );
+
+                // kick it back ##
+                return $template;
 
             }
 
