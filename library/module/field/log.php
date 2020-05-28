@@ -24,12 +24,14 @@ class log extends field {
      */
     public static function render( Array $args = null ){
 
+        // helper::log( $args );
+
         if (
             ! isset( self::$args['config']['debug'] )
             || false === self::$args['config']['debug']
         ) {
 
-            // helper::log( 'Debugging is turned off for Field Group: '.$args['group'] );
+            helper::log( 'Debugging is turned off for Field Group: "'.$args['group'].'"' );
 
             return false;
 
@@ -38,10 +40,10 @@ class log extends field {
         // option to debug only specific fields ##
         $return = 
             (
-                isset( $args['field'] )
-                && isset( self::$log[ $args['field'] ] ) 
+                isset( $args['debug'] )
+                && isset( self::$log[ $args['debug'] ] ) 
             ) ?
-            self::$log[ $args['field'] ] :
+            self::$log[ $args['debug'] ] :
             self::$log ;
 
         // log to log ##
