@@ -23,11 +23,22 @@ class markup extends field {
      * find all placeholders in self::$markup['template'] and replace with matching values in self::$fields
      * 
      */
-    public static function template(){
+    public static function prepare(){
 
-        // sanity checks @todo ##
+        // sanity checks ##
+        if (
+            ! isset( self::$fields )
+            || ! is_array( self::$fields )
+            || ! isset( self::$markup['template'] )
+        ) {
 
-        // check we have what we need ##
+            self::$log['error'][] = 'The value of: '.$key.' is not a string';
+
+            return false;
+
+        }
+
+        // test ##
         // helper::log( self::$fields );
         // helper::log( self::$markup['template'] );
 
@@ -236,7 +247,7 @@ class markup extends field {
 
         if ( ! preg_match_all('~\%(\w+)\%~', $string, $matches ) ) {
 
-            self::$log['notice'][] = 'No placeholders found in string.';
+            self::$log['notice'][] = 'No extra placeholders found in string to clean up - good!.';
 
             return false;
 

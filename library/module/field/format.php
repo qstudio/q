@@ -90,7 +90,7 @@ class format extends field {
             self::$log['error'][] = 'Error in parameters passed to "apply", $value returned empty and field removed from $fields';
 
             // this item needs to be removed from self::$fields
-            core::remove_field( $field );
+            fields::remove( $field );
 
              // we do not return the $value either ##
             return false;
@@ -108,7 +108,7 @@ class format extends field {
             self::$log['error'][] = 'handler wrong - class: '.__CLASS__.' / method: '.$format;
 
             // this item needs to be removed from self::$fields
-            core::remove_field( $field );
+            fields::remove( $field );
 
             // we do not return the $value either ##
             return false; 
@@ -271,7 +271,7 @@ class format extends field {
         // array of arrays containing named indexes ( not WP_Post Objects ) needs to be be marked up as a block, like an Object ##
 
         // add check to see if array is a collection of array - as exported by repeater fields ##
-        if ( 'repeater' == core::field_type( $field ) ) {
+        if ( 'repeater' == fields::get_type( $field ) ) {
 
             // helper::log( 'Array is a repeater' );
 
@@ -290,7 +290,7 @@ class format extends field {
 
                 // create a new, named and numbered field based on field_COUNT -- empty value ##
                 $key_field = $field.'__'.$count;
-                core::set_field( $key_field, '' );
+                fields::set( $key_field, '' );
 
                 // Format each field value based on type ( int, string, array, WP_Post Object ) ##
                 // each item is filtered as looped over -- q/field/format/GROUP/FIELD - ( $args, $fields ) ##
@@ -314,7 +314,7 @@ class format extends field {
         markup::remove_placeholder( '%'.$field.'%' );
 
         // delete sending field ##
-        core::remove_field( $field, 'Removed by format_array after working' );
+        fields::remove( $field, 'Removed by format_array after working' );
 
         // checkout markup ##
         // helper::log( self::$markup['template'] );
@@ -343,8 +343,8 @@ class format extends field {
                 // helper::log( 'Working "'.$r2.'" Key value: "'.$v2.'"' );
 
                 // create a new, named and numbered field based on field_COUNT__row_key ##
-                $key_field = $field.'__'.$count.'__'.$r2;
-                core::set_field( $key_field, $v2 );
+                // $key_field = $field.'__'.$count.'__'.$r2;
+                fields::set( $field.'__'.$count.'__'.$r2, $v2 );
 
             }
 
@@ -387,7 +387,7 @@ class format extends field {
             self::$log['notice'][] = 'Object is not of type WP_Post, so emptied, $value returned empty and field removed from $fields';
 
             // this item needs to be removed from self::$fields
-            core::remove_field( $field, 'Removed by format_object because Object format is not allowed in $formats' );
+            fields::remove( $field, 'Removed by format_object because Object format is not allowed in $formats' );
 
             // we do not return the $value either ##
             return false; 
@@ -395,7 +395,7 @@ class format extends field {
         }
 
         // delete sending field ##
-        core::remove_field( $field, 'Removed by format_object after working' );
+        fields::remove( $field, 'Removed by format_object after working' );
 
         // return false will delete the passed field ##
         return true;
@@ -427,7 +427,7 @@ class format extends field {
             // let's auto-assign some values - then hand create the rest ##
             if ( $value->$wp_post_field ) {
 
-                core::set_field( $field.'__'.$wp_post_field, $value->$wp_post_field );
+                fields::set( $field.'__'.$wp_post_field, $value->$wp_post_field );
 
             // hand created ##
             } else {
@@ -461,7 +461,7 @@ class format extends field {
 
                 // assign field and value ##
                 // self::$fields[$field.'__'.$wp_post_field] = $string;
-                core::set_field( $field.'__'.$wp_post_field, $string );
+                fields::set( $field.'__'.$wp_post_field, $string );
 
             }
 

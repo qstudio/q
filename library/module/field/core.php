@@ -24,15 +24,15 @@ class core extends field {
         if (
             ! isset( $args )
             || ! is_array( $args )
-            || ! isset( $args['fields'] )
-            || ! is_array( $args['fields'] )
+            // || ! isset( $args['fields'] )
+            // || ! is_array( $args['fields'] )
             || ! isset( $args['group'] )
             || ! isset( $args['markup'] )
             || ! is_array( $args['markup'] )
             || ! isset( $args['markup']['template'] )
         ){
 
-            self::$log['error'][] = 'Missing required args in Group, so stopping here.. ';
+            self::$log['error'][] = 'Error -> Missing required args, so stopping here.. ';
 
             return false;
 
@@ -112,8 +112,6 @@ class core extends field {
         return $result;
 
     }
-
-
     
 
 
@@ -131,111 +129,6 @@ class core extends field {
         }
         
         return null;
-
-    }
-
-
-
-    /**
-     * Add $field from self:$fields array
-     * 
-     */
-    public static function set_field( string $field = null, string $value = null, string $message = null ) {
-
-        // sanity ##
-        if ( 
-            is_null( $field )
-            || is_null( $value ) 
-        ) {
-
-            self::$log['error'][] = 'No field or value passed to method.';
-
-            return false;
-
-        }
-
-        // helper::log( 'Adding field: '.$field );
-
-        // add field to array ##
-        // @todo - perhaps more validation required ##
-        self::$fields[$field] = $value;
-
-        // track removal ##
-        self::$log['fields']['added'][$field] = 
-            ! is_null( $message ) ? 
-            $message : 
-            log::backtrace() ;
-
-        // positive ##
-        return true;
-
-    }
-
-
-
-    /**
-     * Remove $field from self:$fields array
-     * 
-     */
-    public static function remove_field( string $field = null, string $message = null ) {
-
-        // sanity ##
-        if ( is_null( $field ) ) {
-
-            self::$log['error'][] = 'No field value passed to method.';
-
-            return false;
-
-        }
-
-        // remove from array ##
-        unset( self::$fields[$field] );
-
-        // track removal ##
-        self::$log['fields']['removed'][$field] = 
-            ! is_null( $message ) ? 
-            $message : 
-            log::backtrace() ;
-
-        // positive ##
-        return true;
-
-    }
-
-
-
-    
-    /**
-     * Try to get field type from passed key and field name
-     * 
-     * @return  boolean
-     */
-    public static function field_type( $field ){
-
-        // helper::log( 'Checking Type of Field: "'.$field.'"' );
-
-        if ( 
-            $key = self::array_search( 'key', 'field_'.$field, self::$args['fields'] )
-        ){
-
-            // helper::log( self::$args['fields'][$key] );
-
-            if ( 
-                isset( self::$args['fields'][$key]['type'] )
-            ) {
-
-                // helper::log( 'Field: "'.$field.'" is Type: "'.self::$args['fields'][$key]['type'].'"' );
-
-                self::$log['notice'][] = 'Field: "'.$field.'" is Type: "'.self::$args['fields'][$key]['type'].'"';
-
-                return self::$args['fields'][$key]['type'];
-
-            }
-
-        }
-        
-        // kick it back ##
-        return false;
 
     }
 

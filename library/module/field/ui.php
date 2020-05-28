@@ -46,7 +46,7 @@ class ui extends field {
         fields::prepare();
 
         // Prepare template markup ##
-        markup::template();
+        markup::prepare();
 
         // optional logging to show removals and stats ##
         log::render(/*[ 'field' => 'notice' ]*/);

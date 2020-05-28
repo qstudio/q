@@ -4,6 +4,7 @@ namespace q\module\field;
 
 // use q\core\core as core;
 use q\core\helper as helper;
+use q\plugin\acf as acf;
 // use q\core\config as config;
 
 // parent ##
@@ -16,8 +17,8 @@ use q\module\field\format as format;
 use q\module\field\fields as fields;
 use q\module\field\log as log;
 use q\module\field\markup as markup;
-use q\module\field\output as output;
-use q\module\field\ui as ui;
+// use q\module\field\output as output;
+// use q\module\field\ui as ui;
 
 class fields extends field {
 
@@ -30,10 +31,10 @@ class fields extends field {
         if ( 
             is_null( self::$args ) 
             || ! is_array( self::$args )
-            || ! isset( self::$args['fields'] )
+            // || ! isset( self::$args['fields'] )
         ) {
 
-            self::$log['error'][] = 'Error in passed parameter "fields"';
+            self::$log['error'][] = 'Error in passed parameter $args';
 
             return false;
 
@@ -41,6 +42,13 @@ class fields extends field {
 
         // Get all ACF fields for this post ##
         if ( ! self::get_acf_fields() ) {
+
+            return false;
+
+        }
+
+        // get all fields defined in this group -- pass to $args['fields'] ##
+        if ( ! self::get_group_fields() ) {
 
             return false;
 
@@ -95,6 +103,42 @@ class fields extends field {
         }
 
         // positive ##
+        return true;
+
+    }
+
+
+
+    public static function get_group_fields(){
+
+        // assign variable ##
+        $group = self::$args['group'];
+
+        // try to get fields ##
+        $array = acf::get_fields( $group );
+
+        // helper::log( $array );
+
+        if ( 
+            ! $array
+            || ! \is_array( $array )
+        ) {
+
+            self::$log['error'][] = 'No valid ACF field group returned for Group: "'.$group.'"';
+
+            return false;
+
+        }
+
+        // filter ##
+        $array = \apply_filters( 'q/module/field/fields/get/'.$group, $array );
+
+        // assign to class property ##
+        self::$args['fields'] = $array;
+
+        // helper::log( $array[0] );
+
+        // return
         return true;
 
     }
@@ -164,11 +208,13 @@ class fields extends field {
         // helper::log( 'We are looking for field: '.self::$args['enable'] );
 
         // check for enabled flag - if none, return true ##
+        // we also take one guess at the field name -- if it's not passed in config ##
         if ( 
-            ! isset( self::$fields[self::$args['enable']] )
+            ! isset( self::$args['enable'] )
+            && ! isset( self::$fields[self::$args['group'].'_enable'] )
         ) {
 
-            self::$log['notice'][] = 'No enable check defined in Group: "'.self::$args['group'].'"';
+            self::$log['notice'][] = 'No enable defined in $args or enable field found for Group: "'.self::$args['group'].'"';
 
             return true;
 
@@ -176,8 +222,15 @@ class fields extends field {
 
         // kick back ##
         if ( 
-            isset( self::$fields[self::$args['enable']] )
-            && 1 == self::$fields[self::$args['enable']] 
+            // isset( self::$fields[self::$args['enable']] )
+            // && 
+            // 1 == self::$fields[self::$args['enable']] 
+            (
+                isset( self::$args['enable'] )
+                && 1 == self::$fields[self::$args['enable']]
+            )
+            || 
+            1 == self::$fields[self::$args['group'].'_enable']
         ) {
 
             self::$log['notice'][] = 'Field Group: "'.self::$args['group'].'" Enabled, continue';
@@ -335,6 +388,175 @@ class fields extends field {
             'filter'        => 'q/field/after/fields/'.self::$args['group'], // filter handle ##
             'return'        => self::$fields
         ]); 
+
+    }
+
+
+
+    
+    /**
+     * Add $field from self:$fields array
+     * 
+     */
+    public static function set( string $field = null, string $value = null, string $message = null ) {
+
+        // sanity ##
+        if ( 
+            is_null( $field )
+            || is_null( $value ) 
+        ) {
+
+            self::$log['error'][] = 'No field or value passed to method.';
+
+            return false;
+
+        }
+
+        // helper::log( 'Adding field: '.$field );
+
+        // add field to array ##
+        // @todo - perhaps more validation required ##
+        self::$fields[$field] = $value;
+
+        // track removal ##
+        self::$log['fields']['added'][$field] = 
+            ! is_null( $message ) ? 
+            $message : 
+            log::backtrace() ;
+
+        // positive ##
+        return true;
+
+    }
+
+
+
+    /**
+     * Remove $field from self:$fields array
+     * 
+     */
+    public static function remove( string $field = null, string $message = null ) {
+
+        // sanity ##
+        if ( is_null( $field ) ) {
+
+            self::$log['error'][] = 'No field value passed to method.';
+
+            return false;
+
+        }
+
+        // remove from array ##
+        unset( self::$fields[$field] );
+
+        // track removal ##
+        self::$log['fields']['removed'][$field] = 
+            ! is_null( $message ) ? 
+            $message : 
+            log::backtrace() ;
+
+        // positive ##
+        return true;
+
+    }
+
+
+
+    
+    /**
+     * Try to get field type from passed key and field name
+     * 
+     * @return  boolean
+     */
+    public static function get_type( $field ){
+
+        // helper::log( 'Checking Type of Field: "'.$field.'"' );
+
+        if ( 
+            $key = core::array_search( 'key', 'field_'.$field, self::$args['fields'] )
+        ){
+
+            // helper::log( self::$args['fields'][$key] );
+
+            if ( 
+                isset( self::$args['fields'][$key]['type'] )
+            ) {
+
+                // helper::log( 'Field: "'.$field.'" is Type: "'.self::$args['fields'][$key]['type'].'"' );
+
+                self::$log['notice'][] = 'Field: "'.$field.'" is Type: "'.self::$args['fields'][$key]['type'].'"';
+
+                return self::$args['fields'][$key]['type'];
+
+            }
+
+        }
+        
+        // kick it back ##
+        return false;
+
+    }
+
+
+
+    /**
+     * Try to get field type from passed key and field name
+     * 
+     * @return  boolean
+     */
+    public static function get_callback( $field ){
+
+        // helper::log( 'Checking Type of Field: "'.$field.'"' );
+
+        if ( 
+            ! $key = core::array_search( 'key', 'field_'.$field, self::$args['fields'] )
+        ){
+
+            self::$log['error'][] = 'failed to find Field: "'.$field.'" data in controller self::$fields';
+
+            // helper::log( 'Error - failed to find Field: "'.$field.'" data in controller self::$fields' );
+
+            return false;
+
+        }
+
+        // helper::log( self::$args['fields'][$key] );
+
+        if ( 
+            ! isset( self::$args['fields'][$key]['callback'] )
+        ) {
+
+            // helper::log( 'Field: "'.$field.'" has no callback defined' );
+
+            self::$log['notice'][] = 'Field: "'.$field.'" has no callback defined';
+
+            return false;
+
+        }
+
+        // ok - we have a callback, let's check it's formatted correctly ##
+        // we need a "method" ##
+        // "args" are optional.. I guess, but surely we'd send the field value to the passed method.. or perhaps not ##
+        if ( 
+            ! is_array( self::$args['fields'][$key]['callback'] )
+            || ! isset( self::$args['fields'][$key]['callback']['method'] )
+        ) {
+
+            // helper::log( 'Field: "'.$field.'" has a callback, but it is not correctly formatted - not an array or missing "method" key' );
+
+            self::$log['error'][] = 'Field: "'.$field.'" has a callback, but it is not correctly formatted - not an array or missing "method" key';
+
+            return false;
+
+        }
+
+        // ok - we must be good now ##
+
+        // helper::log( 'Field: "'.$field.'" has a callback - sending back to caller' );
+
+        self::$log['notice'][] = 'Field: "'.$field.'" has a callback - sending back to caller';
+
+        return self::$args['fields'][$key]['callback'];
 
     }
 

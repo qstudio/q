@@ -30,6 +30,9 @@ class construct extends \Q {
     private static function load_libraries()
     {
 
+        // filter ##
+        // require_once self::get_plugin_path( 'library/module/filter.php' );
+
         // field ##
         require_once self::get_plugin_path( 'library/module/field.php' );
 
