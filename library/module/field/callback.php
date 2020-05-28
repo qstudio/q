@@ -120,13 +120,19 @@ class callback extends field {
         }
 
         // checks over ##
-        // helper::log( 'Field: '.$field.' has a valid callback: '.$method);
+        // helper::log( 'Field: "'.$field.'" has a valid callback: "'.$method.'"');
 
-        // filter callback specific to this field ##
-        $callbacks = \apply_filters( 
-            'q/field/callbacks/'.$method.'/'.$field, 
-            $callbacks 
-        );
+        // $filter = 'q/field/callback/field/before/'.$method.'/'.$field;
+        // helper::log( 'Filter: '.$filter );
+
+        // filter field callback value ( $args ) before callback ##
+        $args = filter::apply([ 
+            'parameters'    => [ 'args' => $args, 'field' => $field, 'value' => $value, 'fields' => self::$fields ], // params ##
+            'filter'        => 'q/field/callback/field/before/'.$method.'/'.$field, // filter handle ##
+            'return'        => $args
+        ]); 
+
+        // helper::log( $args );
 
         // run callback using original value of field ##
         $data = call_user_func (

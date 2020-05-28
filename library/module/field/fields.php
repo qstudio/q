@@ -131,7 +131,13 @@ class fields extends field {
         }
 
         // filter ##
-        $array = \apply_filters( 'q/module/field/fields/get/'.$group, $array );
+        // $array = \apply_filters( 'q/field/fields/get/'.$group, $array );
+
+        $array = filter::apply([ 
+            'parameters'    => [ 'fields' => $array ], // pass ( $fields ) as single array ##
+            'filter'        => 'q/field/fields/get_group_fields/'.$group, // filter handle ##
+            'return'        => $array
+        ]); 
 
         // assign to class property ##
         self::$args['fields'] = $array;
@@ -337,14 +343,14 @@ class fields extends field {
         // filter $args now that we have fields data from ACF ##
         self::$args = filter::apply([ 
             'parameters'    => [ 'fields' => self::$fields, 'args' => self::$args ], // pass ( $fields, $args ) as single array ##
-            'filter'        => 'q/field/before/args/'.self::$args['group'], // filter handle ##
+            'filter'        => 'q/field/fields/prepare/before/args/'.self::$args['group'], // filter handle ##
             'return'        => self::$args
         ]); 
 
         // filter all fields before processing ##
         self::$fields = filter::apply([ 
             'parameters'    => [ 'fields' => self::$fields, 'args' => self::$args ], // pass ( $fields, $args ) as single array ##
-            'filter'        => 'q/field/before/fields/'.self::$args['group'], // filter handle ##
+            'filter'        => 'q/field/fields/prepare/before/fields/'.self::$args['group'], // filter handle ##
             'return'        => self::$fields
         ]); 
 
@@ -368,15 +374,29 @@ class fields extends field {
 
             }
 
-            // Callback methods on specified fields ##
+            // filter field before callback ##
+            $field = filter::apply([ 
+                'parameters'    => [ 'field' => $field, 'value' => $value, 'args' => self::$args, 'fields' => self::$fields ], // params
+                'filter'        => 'q/field/fields/prepare/before/callback/'.self::$args['group'].'/'.$field, // filter handle ##
+                'return'        => $field
+            ]); 
+
+            // Callback methods on specified field ##
             // Note - field includes a list of standard callbacks, which can be extended via the filter q/field/callbacks/get ##
             $value = callback::field( $field, $value );
 
             // helper::log( 'After callback -- field: '.$field .' With Value:' );
             // helper::log( $value );
 
+            // filter field before format ##
+            $field = filter::apply([ 
+                'parameters'    => [ 'field' => $field, 'value' => $value, 'args' => self::$args, 'fields' => self::$fields ], // params
+                'filter'        => 'q/field/fields/prepare/before/format/'.self::$args['group'].'/'.$field, // filter handle ##
+                'return'        => $field
+            ]); 
+
             // Format each field value based on type ( int, string, array, WP_Post Object ) ##
-            // each item is filtered as looped over -- q/field/format/GROUP/FIELD - ( $args, $fields ) ##
+            // each item is filtered as looped over -- q/field/field/GROUP/FIELD - ( $args, $fields ) ##
             // results are saved back to the self::$fields array in String format ##
             format::field( $field, $value );
 
@@ -385,7 +405,7 @@ class fields extends field {
         // filter all fields ##
         self::$fields = filter::apply([ 
             'parameters'    => [ 'fields' => self::$fields, 'args' => self::$args ], // pass ( $fields, $args ) as single array ##
-            'filter'        => 'q/field/after/fields/'.self::$args['group'], // filter handle ##
+            'filter'        => 'q/field/fields/prepare/after/fields/'.self::$args['group'], // filter handle ##
             'return'        => self::$fields
         ]); 
 
@@ -552,10 +572,21 @@ class fields extends field {
 
         // ok - we must be good now ##
 
+        // assign to var ##
+        $callback = self::$args['fields'][$key]['callback'];
+
         // helper::log( 'Field: "'.$field.'" has a callback - sending back to caller' );
 
         self::$log['notice'][] = 'Field: "'.$field.'" has a callback - sending back to caller';
 
+        // filter ##
+        $callback = filter::apply([ 
+            'parameters'    => [ 'callback' => $callback, 'field' => $field, 'args' => self::$args, 'fiekds' => self::$fields ], // params ##
+            'filter'        => 'q/field/fields/get_callback/'.self::$args['group'].'/'.$field, // filter handle ##
+            'return'        => $callback
+        ]); 
+
+        // return ##
         return self::$args['fields'][$key]['callback'];
 
     }
