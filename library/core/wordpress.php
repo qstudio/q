@@ -688,8 +688,11 @@ class wordpress extends \Q {
         // image ##
         if ( \has_post_thumbnail( $the_post->ID ) ) {
 
+            // handle might not be an array based on devices ##
+            $handle = is_array( $args->handle ) ? $args->handle[helper::get_device()] : $args->handle ;
+
             // show small image, linking to larger image ##
-            $img_src = \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), $args->handle[helper::get_device()] ); 
+            $img_src = \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), $args->handle ); 
             $object->src = $img_src[0]; // take first array item ##
 
             #if ( self::attachment_exists( get_post_thumbnail_id( $the_post->ID ) ) ) {
@@ -725,10 +728,13 @@ class wordpress extends \Q {
         }
 
         // content ##
-        $object->content = 
+        $object->excerpt = 
             self::excerpt_from_id( $the_post->ID, $args->length ) ? 
             self::excerpt_from_id( $the_post->ID, $args->length ) : 
             \get_bloginfo( 'description' ) ;
+
+        // content ##
+        $object->content = \apply_filters( 'q/wordpress/get_post_loop', $the_post->post_content );
 
         // date ##
         $object->date = \get_the_date( $args->date_format, $the_post->ID ); 

@@ -31,7 +31,7 @@ class log extends field {
             || false === self::$args['config']['debug']
         ) {
 
-            helper::log( 'Debugging is turned off for Field Group: "'.$args['group'].'"' );
+            // helper::log( 'Debugging is turned off for Field Group: "'.$args['group'].'"' );
 
             return false;
 
