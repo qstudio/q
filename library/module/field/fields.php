@@ -40,6 +40,8 @@ class fields extends field {
 
         }
 
+		// helper::log( self::$args['post'] );
+
         // Get all ACF fields for this post ##
         if ( ! self::get_acf_fields() ) {
 
@@ -159,12 +161,16 @@ class fields extends field {
         // option to pass post ID to function ##
         // this can be passed as an arg ##
         $post = 
-            isset( $args['post'] ) ? 
-            $args['post'] : 
-            \get_the_ID() ;
+            isset( self::$args['post'] ) ? 
+            self::$args['post'] : 
+			\get_the_ID() ;
+			
+		// helper::log( 'Post: '.$post );
 
         // get fields ##
-        $array = \get_fields( $post );
+		$array = \get_fields( $post );
+		
+		// helper::log( $array );
 
         // sanity ##
         if ( 
@@ -577,7 +583,7 @@ class fields extends field {
 
         // helper::log( 'Field: "'.$field.'" has a callback - sending back to caller' );
 
-        self::$log['notice'][] = 'Field: "'.$field.'" has a callback - sending back to caller';
+        self::$log['notice'][] = 'Field: "'.$field.'" has callback: "'.$callback['method'].'" sending back to caller';
 
         // filter ##
         $callback = filter::apply([ 

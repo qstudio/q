@@ -31,8 +31,8 @@ class ui extends field {
 
             return false;
 
-        }
-
+		}
+		
         // get field names from passed $args ##
         if ( ! fields::get() ) {
 
