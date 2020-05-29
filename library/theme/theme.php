@@ -565,6 +565,8 @@ class theme extends \Q {
             // loop over all files in priority, loading whichever is found first ##
             foreach( $files as $file ) {
 
+				if ( $found ) break;
+
                 // file exists check ##
                 if ( $uri = theme_helper::get( "theme/css/".$file, "return" ) ) {
 
@@ -577,7 +579,7 @@ class theme extends \Q {
                     $found = true;
 
                     // kick out ##
-                    return true;
+                    // return true;
 
                 }
 
@@ -603,51 +605,63 @@ class theme extends \Q {
                 'debug'             => self::$debug
             ));
 
-            // load site/device.css - re: theme/javascript/q.1.desktop.js
-            $handle = "q.".\get_current_blog_id().".".helper::get_device().".js";
+
+			// JS hierarchy ---- ##
+
+            // track ##
+            $found = false;
+
+            // minified - .min - version used based on debugging setting - local OR global ##
+            $min = ( true === \q_theme::$debug ) ? '' : '.min' ;
             
-            // first check if the file exists ##
-            if ( $file = theme_helper::get( "theme/javascript/".$handle, "return" ) ) {
+            // handle ##
+            $handle = 'q-theme-js';
 
-                // helper::log( '#1 Loading up file: '.$file );
+            // array for files ##
+            $files = [];
 
-                \wp_register_script( $handle, $file, array( 'jquery' ), \q_theme::version, true );
-                \wp_enqueue_script( $handle );
+            // q_theme/library/theme/javascript/q.2.desktop.js ## network site + device
+            $files[] = "q.".\get_current_blog_id().".".helper::get_device()."$min.js";
 
-            } else {
+            // q_theme/library/theme/javascript/q.2.theme.js ## network site + all devices
+            $files[] = "q.".\get_current_blog_id().".theme$min.js";
 
-                $handle = "q.".\get_current_blog_id().".theme.js";
+            // q_theme/library/theme/javascript/q.1.desktop.js ## all network sites + device
+            $files[] = "q.1.".helper::get_device()."$min.js";
 
-                if ( $file = theme_helper::get( "theme/javascript/".$handle, "return" ) ) {
+            // q_theme/library/theme/javascript/q.1.theme.js ## all networks + all devices
+            $files[] = "q.1.theme$min.js";
 
-                    // helper::log( '#2 Loading up file: '.$file );
-    
-                    \wp_register_script( $handle, $file, array( 'jquery' ), \q_theme::version, true );
+            // loop over all files in priority, loading whichever is found first ##
+            foreach( $files as $file ) {
+
+				// helper::log( 'Loading up file: '.$file );
+
+				if ( $found ) break;
+
+                // file exists check ##
+                if ( $uri = theme_helper::get( "theme/javascript/".$file, "return" ) ) {
+
+                    // helper::log( 'Loading up file: '.$file );
+
+                    // \wp_register_style( $handle, $uri, '', \q_theme::version );
+					// \wp_enqueue_style( $handle );
+					
+					\wp_register_script( $handle, $uri, array( 'jquery' ), \q_theme::version, true );
                     \wp_enqueue_script( $handle );
 
-                } else {
+                    // update tracker ##
+                    $found = true;
 
-                    $handle = "q.1.theme.js";
-
-                    $file = theme_helper::get( "theme/javascript/".$handle, "return" );
-
-                    // if we can't find that.. log an error ##
-                    if ( ! $file ) {
-
-                        // helper::log( 'Error: cannot load '.$handle );
-
-                    } else {
-
-                        // helper::log( '#3 : Loading up file: '.$file );
-
-                        \wp_register_script( $handle, $file, array( 'jquery' ), \q_theme::version, true );
-                        \wp_enqueue_script( $handle );
-
-                    }
+                    // kick out ##
+                    // return true;
 
                 }
 
             }
+
+            // no asset found, so note this ##
+            if ( ! $found ) helper::log( 'Error loading JS Asset' );
 
             // nonce ##
             $nonce = \wp_create_nonce( 'q-'.\get_current_blog_id().'-nonce' );
