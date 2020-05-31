@@ -17,7 +17,7 @@ class config extends \Q {
     {
 
         // filter intermediate image sizes ##
-        \add_filter( 'intermediate_image_sizes_advanced', [ get_class(), 'intermediate_image_sizes_advanced' ] );
+        // \add_filter( 'intermediate_image_sizes_advanced', [ get_class(), 'intermediate_image_sizes_advanced' ] );
 
         // add_image_sizes for all themes ##
         \add_action( 'init', [ get_class(), 'add_image_sizes' ], 1 );
@@ -178,6 +178,23 @@ class config extends \Q {
             // do not fall back to wp_page_menu()
             'fallback_cb'       => false,
             'container'         => false,
+		];
+		
+		// navigation ---------
+        $array['the_pagination']  = [
+			'item'             		=> '<li class="%li_class%%active-class%">%item%</li>',
+			'markup'             	=> '<div class="row row justify-content-center mt-5 mb-5"><ul class="pagination">%content%</ul></div>',
+			'end_size'				=> 'desktop' == helper::get_device() ? 0 : 0,
+			'mid_size'				=> 'desktop' == helper::get_device() ? 4 : 0,
+			'prev_text'				=> 'desktop' == helper::get_device() ? '&lsaquo; '.\__('Previous', 'q-textdomain' ) : '&lsaquo;',
+			'next_text'				=> 'desktop' == helper::get_device() ? \__('Next', 'q-textdomain' ).' &rsaquo;' : '&rsaquo;', 
+			'first_text'			=> '&laquo; '.\__('First', 'q-textdomain' ),
+			'last_text'				=> \__('Last', 'q-textdomain' ).' &raquo',
+			'li_class'				=> 'page-item',
+			'class_link_item'		=> 'page-link',
+			'class_link_first' 		=> 'page-link page-first d-none d-md-block',
+			'class_link_last' 		=> 'page-link page-last d-none d-md-block'
+            // 'posts_per_page'        => 10 // controlled from query args ##
         ];
 
         // landing ---------
@@ -352,11 +369,8 @@ class config extends \Q {
     {
 
         // generic ##
-        \add_image_size( 'icon', 80, 80, false ); // icon ##
-        \add_image_size( 'thumb', 270, 9999, false ); // small thumb ##
-
-        // generic ##
-        \add_image_size( 'thumb', 194, 97, true ); // small thumb ##
+        \add_image_size( 'icon', 80, 80, true ); // icon ##
+        \add_image_size( 'thumb', 250, 250, true ); // small thumb ##
 
     }
 

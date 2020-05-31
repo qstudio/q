@@ -104,15 +104,18 @@ class core extends \Q {
 		// helper::log( $args );
 		// helper::log( $array );
 		
+		// return array ##
 		if ( isset( $args['return'] ) && 'return' == $args['return'] ) {
 
 			// filter ##
-			$array = \apply_filters( 'q/wordpress/'.$method, $array, $args );
+			$array = \apply_filters( 'q/theme/get/array/'.$method, $array, $args );
 			
+			// kick back ##
 			return $array ;
 
 		}
 
+		// no markup passed ##
 		if ( ! isset( $args['markup'] ) ) {
 
 			helper::log( 'Missing "markup", returning false.' );
@@ -121,10 +124,11 @@ class core extends \Q {
 
 		}
 
+		// markup ##
 		$string = markup::apply( $args['markup'], $array );
 
 		// filter ##
-        $string = \apply_filters( 'q/wordpress/'.$method, $string, $args );
+        $string = \apply_filters( 'q/theme/get/string/'.$method, $string, $args );
 
 		// test ##
 		// helper::log( $string );

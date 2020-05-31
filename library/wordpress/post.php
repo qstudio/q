@@ -413,12 +413,7 @@ class post extends \Q {
             if ( isset( $args->pagination ) ) {
 
                 // helper::log( 'Adding pagination..' );
-                navigation::the_pagination( $q_query );
-				
-                // \q\controller\navigation::the_pagination_old([
-                //      'posts_per_page'	=> $posts_args['posts_per_page'],
-                //      'post_count'		=> $q_query->found_posts
-                // ]);
+                navigation::the_pagination([ 'query' => $q_query ]);
 
             }
 

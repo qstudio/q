@@ -6,7 +6,7 @@ use q\core\config as config;
 use q\core\helper as helper;
 // use q\theme\template as template;
 // use q\theme\ui as ui;
-// use q\theme\markup as markup;
+use q\theme\markup as markup;
 use q\wordpress\post as wp_post;
 use q\theme\core as ui_core;
 
@@ -488,9 +488,11 @@ class core extends \Q {
         // kick back results ##
         return $posts;
 
-    }
+	}
+	
 
 
+	
 
     /**
      * Get Pagination links
@@ -498,79 +500,99 @@ class core extends \Q {
      * @since       1.0.2
      * @return      String      HTML
      */
-    public static function get_pagination( $args = array() )
+    public static function get_the_pagination( $args = array() )
     {
 
-        #pr( $args, 'pagination args' );
+		// global arg validator ##
+		if ( ! $args = ui_core::prepare_args( $args ) ){ 
+		
+			help::log( 'Bailing..' ); 
+		
+			return false; 
+		
+		}
 
-        // grab some global variables ##
-        global $wp_query, $wp_rewrite;
+		if ( 
+			isset( $args['query'] )
+		) {
 
-        // work out paging ##
-        $wp_query->query_vars['paged'] > 1 ? 
-            $current = $wp_query->query_vars['paged'] : 
-            $current = 1;
+			$query = $args['query'];
+
+		// grab some global variables ##
+		} else {
+			
+			global $wp_query;
+			$query = $wp_query;
+
+		}
+
+		// no query, no pagination ##
+		if ( ! $query ) {
+
+			helper::log( 'Nada to query...' );
+
+			return false;
+
+		}
+
+		// get config ##
+		$config = config::get('the_pagination');
+		// helper::log( $config );
 
         // work out total ##
-        $total =
-            // \is_search() && isset( $args["posts_per_page"] ) && isset( $args["post_count"] ) ?
-            // intval( $args["posts_per_page"] / $args["post_count"] ) :
-            intval( $wp_query->found_posts / ( $args["posts_per_page"] ? $args["posts_per_page"] : 20 ) );
+		$total = $query->max_num_pages;
 
-        // helper::log( $total );
-        // helper::log( $wp_query->found_posts );
-        // helper::log( 'device handle: '.self::get_device() );
-        // helper::log( $current );
-
-        // pagination url ##
-        $base_url = \get_site_url( \get_current_blog_id() ).'?s='.\get_search_query().'&paged=';
-
-        // prepare first item ##
-        $first = '<a class="page-numbers page-first pagelink-1 pagelink" rel="1" href="'.$base_url.'1">&laquo; First</a>';
-
-        // prepae last item ##
-        $last = '<a class="page-numbers page-last pagelink pagelink-'.$total.'" href="'.$base_url.$total.'">Last &raquo;</a>';
-
-        // build array to query from ##
-        $array = array(
-            'base'                  => @\add_query_arg('paged','%#%'),
-            'format'                => '',
-            'total'                 => $total,
-            'current'               => $current,
+		// args to query WP ##
+		$paginate_args = [
+			// 'base'         			=> str_replace( 999999999, '%#%', \esc_url( \get_pagenum_link( 999999999 ) ) ),
+			'base'                  => @\add_query_arg('paged','%#%'),
+			'format'       			=> '?paged=%#%',
+			'total'        			=> $total,
+			'current'      			=> max( 1, \get_query_var( 'paged' ) ),
+			'type'         			=> 'array',
             'show_all'              => false,
-            'end_size'		        => 'desktop' == helper::get_device() ? 0 : 0,
-            'mid_size'		        => 'desktop' == helper::get_device() ? 4 : 0,
-            'type'                  => 'plain',
-            'prev_text'             => 
-                                        'desktop' == helper::get_device() ? 
-                                        '&lsaquo; '.__('Previous', 'q-textdomain' ) : 
-                                        '&lsaquo; '.__('Previous', 'q-textdomain' ) , 
-            'next_text'             => 
-                                        'desktop' == helper::get_device() ? 
-                                        __('Next', 'q-textdomain' ).' &rsaquo;' : 
-                                        __('Next', 'q-textdomain' ).' &rsaquo;' , 
-            'first'                 => 'desktop' == helper::get_device() ? false : $first,
-            'last'                  => 'desktop' == helper::get_device() ? false : $last,
-        );
+            'end_size'		        => $config['end_size'], 
+            'mid_size'		        => $config['mid_size'],
+            'prev_text'             => $config['prev_text'],
+            'next_text'             => $config['next_text'],                   
+		];
 
-        #pr( $wp_query->max_num_pages );
+		// optionally add search query var ##
+		if( ! empty( $query->query_vars['s'] ) ) {
 
-        // using permalinks ##
-        #if( $wp_rewrite->using_permalinks() ) {
-            #$array['base'] = user_trailingslashit( trailingslashit( remove_query_arg( 's', get_pagenum_link( 1 ) ) ) . 'page/%#%/', 'paged' );
-        #}
+			$paginate_args['add_args'] = array( 's' => \get_query_var( 's' ) );
+			
+		}
 
-        // add search query var ##
-        if( ! empty($wp_query->query_vars['s']) ) {
-            $array['add_args'] = array( 's' => \get_query_var( 's' ) );
-        }
+		// filter args ##
+		$paginate_args = \apply_filters( 'q/wordpress/get_pagination/args', $paginate_args );
 
-        #pr( $array );
+		// get links from WP ##
+		$paginate_links = \paginate_links( $paginate_args );
+
+		// test ##
+        // helper::log( $pages );
+
+		// empty array ##
+		$array = [];
+
+		// prepare first item ##
+		$array[] = '<li class="'.$config['li_class'].'"><a class="'.$config['class_link_first'].'" rel="1" href="?paged=1">'.$config['first_text'].'</a></li>';
+
+		// merge pagination into links ##
+		$array = array_merge( $array, $paginate_links ) ;
+
+		// prepare last item ##
+		$array[] = '<li class="'.$config['li_class'].'"><a class="'.$config['class_link_last'].'" rel="'.$total.'" href="?paged='.$total.'">'.$config['last_text'].'</a></li>';
+
+		// test ##
+        // helper::log( $array );
 
         // kick back array ##
         return $array;
 
 	}
+	
 	
 
 
