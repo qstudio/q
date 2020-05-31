@@ -89,7 +89,7 @@ class scroll extends \Q {
             $row['slug'] = $key;
             $row['title'] = $value;
 
-            $rows .= generic::markup( self::$args['markup_row'], $row );
+            $rows .= markup::apply( self::$args['markup_row'], $row );
 
         }
 

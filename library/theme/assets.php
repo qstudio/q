@@ -11,9 +11,9 @@ use q\core\wordpress as wordpress;
 use q\theme\core\helper as theme_helper;
 
 // load it up ##
-\q\theme\theme::run();
+\q\theme\assets::run();
 
-class theme extends \Q {
+class assets extends \Q {
 
     // public static $plugin_version;
     public static $plugin_version;
@@ -52,7 +52,7 @@ class theme extends \Q {
         }
 
         // load templates ##
-        self::load_libraries();
+        // self::load_libraries();
 
     }
 
@@ -114,7 +114,7 @@ class theme extends \Q {
     {
 
         // ui ##
-        require_once self::get_plugin_path( 'library/theme/ui.php' );
+        // require_once self::get_plugin_path( 'library/theme/ui.php' );
 
     }
 
@@ -146,17 +146,17 @@ class theme extends \Q {
 
         }
 
-        if ( 
-            isset( self::$options->plugin_css ) 
-            && 1 == self::$options->plugin_css
-            // && false === self::$debug 
-        ) {
+        // if ( 
+        //     isset( self::$options->plugin_css ) 
+        //     && 1 == self::$options->plugin_css
+        //     // && false === self::$debug 
+        // ) {
             
-            // @TODO - what is this file?? ##
-            \wp_register_style( 'q-plugin-index-css', helper::get( "theme/css/index.css", 'return' ), array(), self::version, 'all' );
-            \wp_enqueue_style( 'q-plugin-index-css' );
+        //     // @TODO - what is this file?? ##
+        //     \wp_register_style( 'q-plugin-index-css', helper::get( "theme/css/index.css", 'return' ), array(), self::version, 'all' );
+        //     \wp_enqueue_style( 'q-plugin-index-css' );
 
-        }
+        // }
 
         if ( 
             (

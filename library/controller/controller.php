@@ -5,12 +5,11 @@ namespace q\controller;
 use q\core\core as core;
 use q\core\helper as helper;
 use q\core\options as options;
-// use q\core\wordpress as wordpress;
 
 // load it up ##
-\q\controller\construct::run();
+\q\controller\controller::run();
 
-class construct extends \Q {
+class controller extends \Q {
 
     // public static $plugin_version;
     public static $plugin_version;
@@ -21,18 +20,6 @@ class construct extends \Q {
 
         // load templates ##
         self::load_properties();
-
-        // if ( ! \is_admin() ) {
-
-        //     // plugin css / js -- includes defaults and resets and snippets from controllers ##
-        //     \add_action( 'wp_enqueue_scripts', array( get_class(), 'wp_enqueue_scripts_plugin' ), 1 );
-
-        //     // plugins and enhanecments ##
-        //     \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_general' ), 2 );
-
-        //     // theme css / js -- theme assets loaded by q_theme ##
-
-        // }
 
         // load templates ##
         self::load_libraries();
@@ -67,9 +54,6 @@ class construct extends \Q {
     private static function load_libraries()
     {
 
-        // ui ##
-        // require_once self::get_plugin_path( 'library/theme/ui.php' );
-
         // render engines ##
         require_once self::get_plugin_path( 'library/controller/javascript.php' );
         require_once self::get_plugin_path( 'library/controller/css.php' );
@@ -82,7 +66,9 @@ class construct extends \Q {
 
         // UI controllers ##
         require_once self::get_plugin_path( 'library/controller/navigation.php' );
-        require_once self::get_plugin_path( 'library/controller/generic.php' );
+		// require_once self::get_plugin_path( 'library/controller/generic.php' );
+		require_once self::get_plugin_path( 'library/controller/consent.php' );
+		require_once self::get_plugin_path( 'library/controller/fields.php' );
 
         // UI / JS / AJAX features ##
         require_once self::get_plugin_path( 'library/controller/modal.php' );

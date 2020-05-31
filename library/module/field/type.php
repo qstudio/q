@@ -3,7 +3,7 @@
 namespace q\module\field;
 
 use q\core\helper as helper;
-use q\core\wordpress as q_wordpress;
+use q\wordpress\post as wp_post;
 
 // Q Field Classes ##
 use q\module\field as field;
@@ -58,7 +58,7 @@ class type extends field {
             $alt = 
                 \get_post_meta( $value, '_wp_attachment_image_alt', true ) ?
                 \get_post_meta( $value, '_wp_attachment_image_alt', true ) :
-                q_wordpress::excerpt_from_id( $value, 100 );
+                wp_post::excerpt_from_id( $value, 100 );
 
             // markup tag attributes ##
             $srcset = '" srcset="'.\esc_attr($srcset).'"'; 

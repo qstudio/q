@@ -6,7 +6,7 @@ use q\core\core as core;
 use q\core\helper as helper;
 use q\core\options as options;
 use q\core\wordpress as wordpress;
-use q\controller\generic as generic;
+use q\controller\consent as consent;
 
 // load it up ##
 \q\plugin\linkedin::run();
@@ -112,7 +112,7 @@ class linkedin extends \Q {
         // }
 
         // check if consent given to load script ##
-        if ( ! generic::consent( 'marketing' ) ) {
+        if ( ! consent::given( 'marketing' ) ) {
 
             // helper::log( 'Marketing NOT allowed...' );
 
@@ -173,7 +173,7 @@ class linkedin extends \Q {
         // }
 
         // check if consent given to load script ##
-        if ( ! generic::consent( 'marketing' ) ) {
+        if ( ! consent::given( 'marketing' ) ) {
 
             // helper::log( 'Marketing NOT allowed...' );
 

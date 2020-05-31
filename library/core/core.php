@@ -2,22 +2,11 @@
 
 namespace q\core;
 
-// use q\core\core as core;
+use q\core\core as core;
 use q\core\helper as helper;
 use q\theme\template as template;
 
-// load it up ##
-#\q\core\core::run();
-
 class core extends \Q {
-
-    public static function run()
-    {
-
-
-    }
-
-
 
 
     /**
@@ -224,25 +213,47 @@ class core extends \Q {
     }
 
 
+	
 
     /**
-     * Add http:// if it's not in the URL?
-     *
-     * @param string $url
-     * @return string
-     * @link    http://stackoverflow.com/questions/2762061/how-to-add-http-if-its-not-exists-in-the-url
+     * Recursive pass args 
+     * 
+     * @link    https://mekshq.com/recursive-wp-parse-args-wordpress-function/
      */
-    public static function add_http( $url = null ) {
+    public static function parse_args( &$args, $defaults ) {
 
-        if ( is_null ( $url ) ) { return false; }
-
-        if ( ! preg_match("~^(?:f|ht)tps?://~i", $url ) ) {
-
-            $url = "http://" . $url;
-
+        $args = (array) $args;
+        $defaults = (array) $defaults;
+        $result = $defaults;
+        
+        foreach ( $args as $k => &$v ) {
+            if ( is_array( $v ) && isset( $result[ $k ] ) ) {
+                $result[ $k ] = self::parse_args( $v, $result[ $k ] );
+            } else {
+                $result[ $k ] = $v;
+            }
         }
 
-        return $url;
+        return $result;
+
+    }
+    
+
+
+
+    public static function array_search( $field, $value, $array ) {
+
+        foreach ( $array as $key => $val ) {
+        
+            if ( $val[$field] === $value ) {
+        
+                return $key;
+        
+            }
+        
+        }
+        
+        return null;
 
     }
 

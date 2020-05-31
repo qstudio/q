@@ -5,7 +5,7 @@ namespace q\plugin;
 use q\core\core as core;
 use q\core\helper as helper;
 use q\core\options as options;
-use q\controller\generic as generic;
+use q\controller\consent as consent;
 use q\core\wordpress as wordpress;
 
 // load it up ##
@@ -358,7 +358,7 @@ class google extends \Q {
         // }
 
         // check if consent given to load script ##
-        if ( ! generic::consent( 'analytics' ) ) {
+        if ( ! consent::given( 'analytics' ) ) {
 
             // helper::log( 'Analytics NOT allowed...' );
 
@@ -422,7 +422,7 @@ class google extends \Q {
         // }
 
         // check if consent given to load script ##
-        if ( ! generic::consent( 'analytics' ) ) {
+        if ( ! consent::given( 'analytics' ) ) {
 
             // helper::log( 'Analytics NOT allowed...' );
 
@@ -485,7 +485,7 @@ class google extends \Q {
         // }
 
         // check if consent given to load script ##
-        if ( ! generic::consent( 'analytics' ) ) {
+        if ( ! consent::given( 'analytics' ) ) {
 
             // helper::log( 'Analytics NOT allowed...' );
 

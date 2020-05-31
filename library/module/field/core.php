@@ -2,12 +2,12 @@
 
 namespace q\module\field;
 
-// use q\core\core as core;
+use q\core\core as q_core;
 use q\core\helper as helper;
 // use q\core\config as config;
 
 use q\module\field as field;
-use q\module\field\core as core;
+// use q\module\field\core as core;
 use q\module\field\filter as filter;
 use q\module\field\format as format;
 use q\module\field\fields as fields;
@@ -18,6 +18,7 @@ use q\module\field\ui as ui;
 
 class core extends field {
 
+	
     public static function validate( Array $args ) {
 
         // checks on required fields in $args array ##
@@ -75,7 +76,7 @@ class core extends field {
         ]);
 
         // grab all passed args and merge with defaults ##
-        self::$args = core::parse_args( $args, self::$args );
+        self::$args = q_core::parse_args( $args, self::$args );
         
         // test ##
         // helper::log( self::$args );
@@ -85,50 +86,6 @@ class core extends field {
 
         // return args for validation ##
         return self::$args;
-
-    }
-
-
-
-    /**
-     * Recursive pass args 
-     * 
-     * @link    https://mekshq.com/recursive-wp-parse-args-wordpress-function/
-     */
-    public static function parse_args( &$a, $b ) {
-
-        $a = (array) $a;
-        $b = (array) $b;
-        $result = $b;
-        
-        foreach ( $a as $k => &$v ) {
-            if ( is_array( $v ) && isset( $result[ $k ] ) ) {
-                $result[ $k ] = self::parse_args( $v, $result[ $k ] );
-            } else {
-                $result[ $k ] = $v;
-            }
-        }
-
-        return $result;
-
-    }
-    
-
-
-
-    public static function array_search( $field, $value, $array ) {
-
-        foreach ( $array as $key => $val ) {
-        
-            if ( $val[$field] === $value ) {
-        
-                return $key;
-        
-            }
-        
-        }
-        
-        return null;
 
     }
 

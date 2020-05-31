@@ -13,7 +13,7 @@
  * Plugin Name:     Q
  * Plugin URI:      https://www.qstudio.us
  * Description:     Q is a Development Framework that provides an API to manage libraries, themes, plugins and widgets.
- * Version:         3.1.4
+ * Version:         4.0.1
  * Author:          Q Studio
  * Author URI:      https://www.qstudio.us
  * License:         GPL
@@ -40,57 +40,13 @@ if ( ! class_exists( 'Q' ) ) {
         private static $instance = null;
 
         // Plugin Settings
-        const version = '3.1.4';
+        const version = '4.0.1';
         const text_domain = 'q-textdomain'; // for translation ##
         static $debug = false; // global debugging ##
-        static $device = false; // current device ##
-        // static $locale; // current locale -- REQUIRED?? ##
-
-
-        // // Template Settings
-        // public static
-        //     $allow_comments = true,
-        //     $allow_gallery = true,
-        //     $allow_sidebar = false,
-        //     $force_post = false, // this allows for a forced post ID ( used in get_header_* methods ) ##
-        //     $set_force_post = false, // settings for forcing the post ##
-        //     $get_text = array(),
-        //     $post_parent = null, // allows for forcing a parent post
-        //     $the_holder = array(),
-        //     $the_posts = array(),
-        //     $the_loop = array(),
-        //     $the_title = array(),
-        //     $the_parent = array(),
-        //     $the_excerpt = array(),
-        //     $the_content = array(),
-        //     $the_avatar = array(),
-        //     $get_post_by_meta = array(),
-        //     $the_meta = array(),
-        //     $the_meta_markup = array(),
-        //     $the_post_meta = array(),
-        //     $the_post_single = array(),
-        //     $the_gallery = array(),
-        //     $the_gallery_or_image = array(),
-        //     $the_post_thumbnail = array(),
-        //     $get_events = array(),
-        //     $the_navigation = array(),
-        //     $the_nav_menu = array(),
-        //     $the_landing = array(),
-		// 	$the_search = array(),
-        //     $the_sidebar = array(),
-        //     $ordered_posts = array(),
-        //     $ordered_posts_first = null, // allows for settings the first post to load ##
-        //     $the_widget_events = array(),
-        //     $page_contact,
-        //     $text = array(),
-        //     $the_related_programs = array(),
-        //     $the_related_posts = array(),
-        //     $the_page = array(),
-        //     $the_render = array(),
-        //     $the_header_page = array()
-        //     // $google_tag_manager = false,
-        //     // $fb_pixel = false
-        //     ;
+		static $device = false; // current device ##
+		
+        /// Theme Settings
+		// public static $config = []; // shared config array ##
 
         /**
          * Creates or returns an instance of this class.
@@ -261,11 +217,13 @@ if ( ! class_exists( 'Q' ) ) {
         {
 
             // core ##
-            require_once self::get_plugin_path( 'library/core/helper.php' );
-            require_once self::get_plugin_path( 'library/core/config.php' );
-            require_once self::get_plugin_path( 'library/core/core.php' );
-            require_once self::get_plugin_path( 'library/core/options.php' );
-            require_once self::get_plugin_path( 'library/core/wordpress.php' );
+            require_once self::get_plugin_path( 'library/core/controller.php' );
+			
+			// wordpress
+			require_once self::get_plugin_path( 'library/wordpress/controller.php' );
+
+			// theme ##
+            require_once self::get_plugin_path( 'library/theme/controller.php' );
 
             // admin ##
             require_once self::get_plugin_path( 'library/admin/controller.php' );
@@ -286,9 +244,6 @@ if ( ! class_exists( 'Q' ) ) {
             // hooks ##
             require_once self::get_plugin_path( 'library/hook/controller.php' );
 
-            // theme ##
-            require_once self::get_plugin_path( 'library/theme/controller.php' );
-            
             // controllers ##
             require_once self::get_plugin_path( 'library/controller/controller.php' );
 

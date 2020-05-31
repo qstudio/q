@@ -553,7 +553,7 @@ class snippets extends \Q {
     {
 
         // try to load up parent ##
-        if ( ! $object = wordpress::get_parent( $args ) ) { return false; }
+        if ( ! $object = wordpress::get_the_parent( $args ) ) { return false; }
 
 ?>
         <ul class="widget widget-parent">

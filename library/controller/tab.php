@@ -5,7 +5,10 @@ namespace q\controller;
 use q\core\core as core;
 use q\core\helper as helper;
 use q\core\config as config;
-use q\core\wordpress as wordpress;
+// use q\core\wordpress as wordpress;
+use q\theme\ui as ui;
+use q\wordpress\ui as wp_ui;
+use q\wordpress\core as wp_core;
 use q\plugin\acf as acf;
 use q\controller\generic as generic;
 use q\controller\javascript as javascript;
@@ -558,7 +561,7 @@ class tab extends \Q {
         // secure ##
         if ( self::is_secure() ) {
 
-            return wordpress::get_the_password_form();
+            return ui::the_password_form();
 
         }
 

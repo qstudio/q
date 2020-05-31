@@ -4,7 +4,7 @@ namespace q\plugin;
 
 use q\core\core as core;
 use q\core\helper as helper;
-use q\core\wordpress as wordpress;
+use q\wordpress\post as wp_post;
 
 // load it up ##
 \q\plugin\twitter::run();
@@ -30,7 +30,7 @@ class twitter extends \Q {
     {
 
         // check we can get a post object ##
-        if ( ! $the_post = wordpress::the_post() ) { 
+        if ( ! $the_post = wp_post::the_post() ) { 
         
             // helper::log( 'No post object' );
 
@@ -53,7 +53,7 @@ class twitter extends \Q {
         // get all the data we need ##
         $array = [];
         // $array['title'] = $the_post->post_title;
-        // $array['description'] = wordpress::excerpt_from_id( $the_post->post_title, 200 );
+        // $array['description'] = wp_post::excerpt_from_id( $the_post->post_title, 200 );
         // $array['image'] = \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), 'large' );
         $array['card'] = 'summary_large_image';
 

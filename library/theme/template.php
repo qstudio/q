@@ -543,18 +543,20 @@ class template {
 
             // we need to include the 'class' parameter, if the templates has this defined by an extended plugin ##
             $class = 
-            (
-                isset( $item['class'] )
-                && ! is_null( $item['class'] )
-            ) ?
-            $item['class'] :
-            null ;
+				(
+					isset( $item['class'] )
+					&& ! is_null( $item['class'] )
+				) ?
+				$item['class'] :
+				null ;
              
             // helper::log( 'template: '.$item["template"].' / rule: '.$item["function"].' / class: '.$class );
 
             if ( ! function_exists( $item["function"] ) ) {
 
-                // nothing cooking -- kick back orginal ##
+				// nothing cooking -- kick back orginal ##
+				// helper::log( 'function DOES NOT exists: '.$item['function'] );
+
                 // return $template;
                 continue;
 

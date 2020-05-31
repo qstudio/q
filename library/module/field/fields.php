@@ -2,7 +2,7 @@
 
 namespace q\module\field;
 
-// use q\core\core as core;
+use q\core\core as core;
 use q\core\helper as helper;
 use q\plugin\acf as acf;
 // use q\core\config as config;
@@ -11,7 +11,7 @@ use q\plugin\acf as acf;
 use q\module\field as field;
 
 use q\module\field\callback as callback;
-use q\module\field\core as core;
+// use q\module\field\core as core;
 use q\module\field\filter as filter;
 use q\module\field\format as format;
 use q\module\field\fields as fields;

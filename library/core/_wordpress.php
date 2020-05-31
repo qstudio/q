@@ -6,7 +6,10 @@ namespace q\core;
 use q\core\helper as helper;
 use q\theme\template as template;
 use q\theme\ui as ui;
-use q\theme\theme\ui\generic as theme;
+use q\controller\generic as generic;
+
+// Q Theme ##
+// use q\theme\theme\ui\generic as theme;
 
 // load it up ##
 #\q\core\wordpress::run();
@@ -387,7 +390,7 @@ class wordpress extends \Q {
     }
 
 
-        /**
+	/**
      * Get Main Posts Loop
      *
      * @since       1.0.2
@@ -400,7 +403,11 @@ class wordpress extends \Q {
         // Parse incoming $args into an array and merge it with $defaults - caste to object ##
         $args_array = \wp_parse_args( $args, \is_search() ? \q_theme::$the_search : \q_theme::$the_posts );
         $args = ( object )$args_array;
-        // self::log( $args );
+		// helper::log( $args );
+		
+		// we need $args->controller and $args->method for this to work ##
+		$args->controller = "\\q\\theme\\theme\\controller\\{$args->template}";
+		$args->method = "the_{$args->template}_loop";
 
         // pagination ##
         $paged = \get_query_var( 'paged' ) ? \get_query_var( 'paged' ) : 1 ;
@@ -479,14 +486,14 @@ class wordpress extends \Q {
                 // iterate the post loop ##
                 \setup_postdata( $post );
 
-                #pr( $post->ID );
+                // helper::log( $post->ID );
 
                 // add post ID to passed args ##
                 $args_array['post'] = $post->ID;
 
                 // check if method exists in 'q_theme' ##
                 if (
-                    method_exists( $args->view, $args->method )
+                    method_exists( $args->controller, $args->method )
                     // && is_callable( array( "\q\theme\theme\view\{$args->template}\{$args->template}", "the_{$args->template}_loop" ) )
                 ) {
 
@@ -494,13 +501,13 @@ class wordpress extends \Q {
 
                     // call template method ##
                     call_user_func (
-                            array( $args->view, $args->method )
+                            array( $args->controller, $args->method )
                         ,   (array)$args_array
                     );
 
                 } else {
 
-                    helper::log ( "Method Missing : {$args->view}::{$args->method}" );
+                    helper::log ( "Method Missing : {$args->controller}::{$args->method}" );
 
                 }
 
@@ -684,7 +691,8 @@ class wordpress extends \Q {
         // do we have a real image ##
         $has_src = true;
         $object->src = '';
-
+		
+		/*
         // image ##
         if ( \has_post_thumbnail( $the_post->ID ) ) {
 
@@ -692,7 +700,10 @@ class wordpress extends \Q {
             $handle = is_array( $args->handle ) ? $args->handle[helper::get_device()] : $args->handle ;
 
             // show small image, linking to larger image ##
-            $img_src = \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), $args->handle ); 
+			$img_src = \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), $args->handle ); 
+			
+			// helper::log( $img_src );
+
             $object->src = $img_src[0]; // take first array item ##
 
             #if ( self::attachment_exists( get_post_thumbnail_id( $the_post->ID ) ) ) {
@@ -718,7 +729,8 @@ class wordpress extends \Q {
             $src_array = \wp_get_attachment_image_src( $src, $args->handle[helper::get_device()] );
             $object->src = $src_array[0];
 
-        }
+		}
+		*/
 
         // backup ##
         if ( ! $has_src ) {
@@ -1537,7 +1549,7 @@ class wordpress extends \Q {
      * Get Post object by post_meta query
      *
      * @since       1.0.4
-     * @return      Object      WP post object
+     * @return      Object      $args
      */
     public static function get_post_by_meta( $args = array() )
     {
@@ -1673,297 +1685,618 @@ class wordpress extends \Q {
         // kick back array ##
         return $array;
 
-    }
+	}
+	
 
 
-
+	
     /**
-     * back to parent button, for deep sitting pages
-     *
-     * @since       1.0.1
-     * @return      string   HTML
-     */
-    public static function get_parent( $args = array() )
-    {
-
-        // sanity check ##
-        if ( $args == new \stdClass() ) { return false; }
-
-        #self::log( $args );
-
-        // set-up new object ##
-        $object = new \stdClass;
-
-        $post = \get_post( $args->ID );
-
-        #self::log( $post );
-
-        // check we got a result ##
-        if ( $post ) {
-
-            $object->text = __( "View More", 'q-textdomain' );
-            $object->url = \get_permalink( $post->ID );
-            $object->slug = $post->post_name;
-            $object->title = $post->post_title;
-
-            #self::log( $object );
-
-            // kick back object ##
-            return $object;
-
-        }
-
-        // nada ##
-        return false;
-
-    }
-
-
-
-    /**
-     * Search for and print translateable text string
+     * Generic H1 title tag
      *
      * @param       Array       $args
      * @since       1.3.0
      * @return      String
      */
-    public static function get_text( $string = null, $post = null )
-    {
+    public static function the_title( Array $args = null ) {
 
-        // sanity check ##
-        if ( is_null( $string ) ) { return false; }
+		// Parse incoming $args into an array and merge it with $defaults - caste to object ##
+        $args = \wp_parse_args( $args, \q_theme::$the_parent );
 
-        // get the key ##
-        $key = strtolower( str_replace(' ', '_', $string ) ); // Replaces all spaces with underscore ##
-        $key = preg_replace('/[^A-Za-z0-9\_]/', '', $key ); // Removes special chars ##
+		// merge any default args with any pass args ##
+		if ( 
+			is_null( $args )
+			|| ! is_array( $args )
+		) {
 
-        // test the key ##
-        #pr( $key );
+			helper::log( 'Error in passed $args' );
 
-        // grab post and check for meta keys ##
-        if ( $the_post = self::the_post( $post ) ) {
+			return false;
 
-            // fields found ##
-            if( \have_rows('template_cta') ) {
+		}
 
-                // loop through the rows of data
-                while ( \have_rows('template_cta') ) :
+		// get post ##
+		if ( 
+			isset( $args['post'] ) 
+			&& $args['post'] instanceof \WP_Post
+		) {
 
-                    // set-up the row ##
-                    \the_row();
+			$the_post = $args['post'];
 
-                    // display a sub field value
-                    $text_key = \get_sub_field( 'key' );
-                    $text_value = \get_sub_field( 'value' );
+		} else {
 
-                    // try to match key ##
-                    if ( $key == $text_key ) {
+			$the_post = self::the_post();
 
-                        #pr( $text_value );
-                        return $text_value;
+		}
 
-                    }
+		// last check ##
+		if ( ! $the_post ) {
 
-                endwhile;
+			helper::log( 'Error with post object, validate.' );
 
-            }
+			return false;
 
-        }
+		}
 
-        // still here - so check for a translated string ##
-        if ( array_key_exists( $key, self::$text ) ) {
+        // helper::log( $args );
 
-            return self::$text[$key];
+        // set-up new array ##
+		$array = [];
 
-        }
+        // type ##
+        $type = 'page';
 
-        // still here - echo the original string passed ##
-        return $string;
+        // get the title ##
+        if (
+            \is_home() )
+        {
 
-    }
+            $the_post = \get_option( 'page_for_posts' );
+            // helper::log( 'Loading home title: '.$the_post );
 
+            // type ##
+            $type = 'is_home';
 
-    /**
-    * Get Video URL from oEmbed field in ACF
-    *
-    * @since		1.4.5
-    * @return		String		Video URL
-    */
-    public static function get_video_thumbnail_uri( $video_uri = null )
-    {
+            // add the title ##
+			$array['title'] = \get_the_title( $the_post );
+			// $array['permalink'] = \get_permalink( $the_post );
 
-        $thumbnail_uri = '';
+        } else if (
 
-        // determine the type of video and the video id
-        if ( ! $video = self::parse_video_uri( $video_uri ) ) { return false; }
+            \is_404()
 
-        // get youtube thumbnail
-        if ( $video['type'] == 'youtube' ) {
-            $thumbnail_uri = 'https://img.youtube.com/vi/' . $video['id'] . '/mqdefault.jpg';
-        }
+        ){
 
-        // get vimeo thumbnail
-        if( $video['type'] == 'vimeo' ) {
+            // type ##
+            $type = 'is_404';
 
-            $thumbnail_uri = self::get_vimeo_thumbnail_uri( $video['id'] );
+            // helper::log('Loading archive title');
+			$array['title'] = \__('Oops! It looks like you\'re lost');
+			// $array['permalink'] = \get_permalink( \get_site_option( 'page_on_front' ) );
 
-        // get wistia thumbnail
-        } else if( $video['type'] == 'wistia' ) {
+        } else if (
 
-            $thumbnail_uri = self::get_wistia_thumbnail_uri( $video_uri );
+            \is_search()
 
-        // get default/placeholder thumbnail ##
-        } else if( ! $thumbnail_uri || \is_wp_error( $thumbnail_uri ) ) {
+        ){
 
-            return false;
+            // helper::log( 'is_search' );
 
-        }
+            // type ##
+            $type = 'is_search';
 
-        //return thumbnail uri
-        return $thumbnail_uri;
+            // helper::log('Loading archive title');
+			$array['title'] = \sprintf( 'Search results for "%s"', $_GET['s'] );
+			// $array['permalink'] = \get_permalink( \get_site_option( 'page_on_front' ) );
 
-    }
+        } else if (
 
+                \is_author()
+                || \is_tax()
+                || \is_category()
+                || \is_archive()
 
-    /**
-    * Parse the video uri/url to determine the video type/source and the video id
-    *
-    * @since		1.4.5
-    * @return		Array
-    */
-    public static function parse_video_uri( $url ) {
+        ) {
 
-        // Parse the url
-        $parse = parse_url( $url );
+            // type ##
+            $type = 'is_archive';
 
-        // Set blank variables
-        $video_type = '';
-        $video_id = '';
-
-        // Url is http://youtu.be/xxxx
-        if ( $parse['host'] == 'youtu.be' ) {
-
-            $video_type = 'youtube';
-            $video_id = ltrim( $parse['path'],'/' );
-
-        }
-
-        // Url is http://www.youtube.com/watch?v=xxxx
-        // or http://www.youtube.com/watch?feature=player_embedded&v=xxx
-        // or http://www.youtube.com/embed/xxxx
-        if ( ( $parse['host'] == 'youtube.com' ) || ( $parse['host'] == 'www.youtube.com' ) ) {
-
-            $video_type = 'youtube';
-
-            parse_str( $parse['query'] );
-
-            $video_id = $v;
-
-            if ( !empty( $feature ) )
-                $video_id = end( explode( 'v=', $parse['query'] ) );
-
-            if ( strpos( $parse['path'], 'embed' ) == 1 )
-                $video_id = end( explode( '/', $parse['path'] ) );
-
-        }
-
-        // Url is http://www.vimeo.com
-        if ( ( $parse['host'] == 'vimeo.com' ) || ( $parse['host'] == 'www.vimeo.com' ) ) {
-
-            $video_type = 'vimeo';
-            $video_id = ltrim( $parse['path'],'/' );
-
-        }
-
-        $host_names = explode(".", $parse['host'] );
-        $rebuild = ( ! empty( $host_names[1] ) ? $host_names[1] : '') . '.' . ( ! empty($host_names[2] ) ? $host_names[2] : '');
-
-        // Url is an oembed url wistia.com ##
-        if ( ( $rebuild == 'wistia.com' ) || ( $rebuild == 'wi.st.com' ) ) {
-
-            $video_type = 'wistia';
-
-            if ( strpos( $parse['path'], 'medias' ) == 1 ) {
-
-                $video_id = end( explode( '/', $parse['path'] ) );
-
-            }
-
-        }
-
-        // If recognised type return video array
-        if ( ! empty( $video_type ) ) {
-
-            return array(
-                'type' => $video_type,
-                'id' => $video_id
-            );
+            // helper::log('Loading archive title');
+			$array['title'] = \get_the_archive_title();
+			// $array['permalink'] = \get_permalink( \get_site_option( 'page_on_front' ) );
 
         } else {
 
-            return false;
+			$type = 'is_single';
+
+            // helper::log('Loading post title');
+
+            $the_post = $the_post->ID;
+
+            // add the title ##
+			$array['title'] = \get_the_title( $the_post );
+			// $array['permalink'] = \get_permalink( $the_post );
 
         }
 
+        // filter ##
+        $array['title'] = \apply_filters( 'q/wordpres/the_title', $array['title'], $the_post, $type );
+
+        // helper::log( $array );
+		
+		if ( isset( $args['return'] ) && 'return' == $args['return'] ) {
+			
+			return $array ;
+
+		}
+
+		if ( ! isset( $args['markup'] ) ) {
+
+			helper::log( 'Missing "markup", returning false.' );
+
+			return false;
+
+		}
+
+		$string = generic::markup( $args['markup'], $array );
+
+		// helper::log( $string );
+
+		// echo ##
+		echo $string ;
+
+		// stop ##
+		return true;
+
     }
+
+
+
+
+	/**
+     * link to parent, works for single WP Post or page objects
+     *
+     * @since       1.0.1
+     * @return      string   HTML
+     */
+    public static function the_parent( Array $args = null ) {
+
+		// Parse incoming $args into an array and merge it with $defaults - caste to object ##
+        $args = \wp_parse_args( $args, \q_theme::$the_parent );
+
+		// merge any default args with any pass args ##
+		if ( 
+			is_null( $args )
+			|| ! is_array( $args )
+		) {
+
+			helper::log( 'Error in passed $args' );
+
+			return false;
+
+		}
+
+		// get post ##
+		if ( 
+			isset( $args['post'] ) 
+			&& $args['post'] instanceof \WP_Post
+		) {
+
+			$the_post = $args['post'];
+
+		} else {
+
+			$the_post = self::the_post();
+
+		}
+
+		// last check ##
+		if ( ! $the_post ) {
+
+			helper::log( 'Error with post object, validate.' );
+
+			return false;
+
+		}
+
+        // helper::log( $args );
+
+        // set-up new array ##
+		$array = [];
+		
+		// pages might have a parent
+		if ( 
+			'page' === \get_post_type( $the_post ) 
+			&& $the_post->post_parent
+		) {
+
+			// $array['text'] = __( "View More", 'q-textdomain' );
+            $array['permalink'] = \get_permalink( $object->ID );
+            $array['slug'] = $object->post_name;
+            $array['title'] = $object->post_title;
+
+		// is singular post ##
+		} elseif ( \is_single( $the_post ) ) {
+
+			// helper::log( 'Get category title..' );
+
+			// $args->ID = $the_post->post_parent;
+			if ( 
+				! $array = self::get_the_category([ 'post' => $the_post ])
+			){
+
+				return false;
+
+			}
+
+
+		}
+
+        // helper::log( $array );
+		
+		if ( isset( $args['return'] ) && 'return' == $args['return'] ) {
+			
+			return $array ;
+
+		}
+
+		if ( ! isset( $args['markup'] ) ) {
+
+			helper::log( 'Missing "markup", returning false.' );
+
+			return false;
+
+		}
+
+		$string = generic::markup( $args['markup'], $array );
+
+		// helper::log( $string );
+
+		// echo ##
+		echo $string ;
+
+		// stop ##
+		return true;
+
+	}
+
 
 
     /**
-    * Takes a Vimeo video/clip ID and calls the Vimeo API v2 to get the large thumbnail URL.
-    *
-    * @since		1.4.5
-    * @return		String		Video Thumbnail Src
-    */
-    public static function get_vimeo_thumbnail_uri( $clip_id = null )
-    {
+	 * Helper Method to get parent
+	 */
+	public static function get_the_parent( Array $args = null ){
 
-        // sanity check ##
-        if ( is_null( $clip_id ) ) return false;
+		// we want to return ##
+		$args['return'] = 'return';
 
-        $vimeo_api_uri = 'http://vimeo.com/api/v2/video/' . $clip_id . '.php';
-        $vimeo_response = \wp_remote_get( $vimeo_api_uri );
+		// bounce on, and return array ##
+		return \apply_filters( 'q/wordpress/get_the_parent', self::the_parent( $args ) );
 
-        if( \is_wp_error( $vimeo_response ) ) {
-
-            return $vimeo_response;
-
-        } else {
-
-            $vimeo_response = unserialize( $vimeo_response['body'] );
-            return $vimeo_response[0]['thumbnail_large'];
-
-        }
-
-    }
+	}
 
 
-    /**
-    * Takes a wistia oembed url and gets the video thumbnail url.
-    *
-    * @since		1.4.5
-    * @return		String		Video Thumbnail Src
-    */
-    public static function get_wistia_thumbnail_uri( $video_uri = null )
-    {
+	
 
-        // sanity check ##
-        if ( is_null( $video_uri ) ) return false;
 
-        $wistia_api_uri = 'http://fast.wistia.com/oembed?url=' . $video_uri;
-        $wistia_response = \wp_remote_get( $wistia_api_uri );
+	public static function the_category( Array $args = null ) {
 
-        if( \is_wp_error( $wistia_response ) ) {
+		if ( 
+			is_null( $args )
+		) {
 
-            return $wistia_response;
+			helper::log( 'Error in passed $args' );
 
-        } else {
+			return false;
 
-            $wistia_response = json_decode( $wistia_response['body'], true );
-            return $wistia_response['thumbnail_url'];
+		}
 
-        }
+		// get post ##
+		if ( 
+			isset( $args['post'] ) 
+			&& $args['post'] instanceof \WP_Post
+		) {
 
-    }
+			$the_post = $args['post'];
+
+		} else {
+
+			$the_post = self::the_post();
+
+		}
+
+		// last check ##
+		if ( ! $the_post ) {
+
+			helper::log( 'Error with post object, validate.' );
+
+			return false;
+
+		}
+
+		// try and get_post_categories ##
+		if ( 
+			! $get_the_category = \get_the_category( $the_post->ID )
+		){
+
+			helper::log( 'No categories found for Post: '.$the_post->post_title );
+
+			return false;
+
+		}
+
+		// we only want the first array item ##
+		$category = $get_the_category[0];
+
+		// test ##
+		// helper::log( $category );
+
+		// categories ##
+		if (
+			! is_object( $category )
+			|| ! $category instanceof \WP_Term
+		) {
+
+			helper::log( 'Error in returned category' );
+
+			return false;
+
+		}
+
+		$array['permalink'] = \get_category_link( $category );
+		$array['slug'] = $category->slug;
+		$array['title'] = $category->cat_name;
+
+		// helper::log( $array );
+
+		if ( isset( $args['return'] ) && 'return' == $args['return'] ) {
+			
+			return $array ;
+
+		}
+
+		if ( ! isset( $args['markup'] ) ) {
+
+			helper::log( 'Missing "markup", returning false.' );
+
+			return false;
+
+		}
+
+		$string = generic::markup( $args['markup'], $array );
+
+		// helper::log( $string );
+
+		// echo ##
+		echo $string ;
+
+		// stop ##
+		return true;
+
+	}
+
+
+
+	/**
+	 * Helper Method to get category
+	 */
+	public static function get_the_category( Array $args = null ){
+
+		// we want to return ##
+		$args['return'] = 'return';
+
+		// bounce on, and return array ##
+		return \apply_filters( 'q/wordpress/get_the_category', self::the_category( $args ) );
+
+	}
+
+
+
+
+	public static function the_author( Array $args = null ) {
+
+		if ( 
+			is_null( $args )
+		) {
+
+			helper::log( 'Error in passed $args' );
+
+			return false;
+
+		}
+
+		// get post ##
+		if ( 
+			isset( $args['post'] ) 
+			&& $args['post'] instanceof \WP_Post
+		) {
+
+			$the_post = $args['post'];
+
+		} else {
+
+			$the_post = self::the_post();
+
+		}
+
+		// last check ##
+		if ( ! $the_post ) {
+
+			helper::log( 'Error with post object, validate.' );
+
+			return false;
+
+		}
+
+		// get author ##
+		$author = $the_post->post_author;
+		$authordata = \get_userdata( $author );
+
+		// validate ##
+		if (
+			! $authordata
+		) {
+
+			helper::log( 'Error in returned author data' );
+
+			return false;
+
+		}
+
+		// get author name ##
+		$author_name = $authordata && isset( $authordata->display_name ) ? $authordata->display_name : 'Author' ;
+
+		// assign values ##
+		$array['permalink'] = \esc_url( \get_author_posts_url( $author ) );
+		$array['slug'] = $authordata->user_login;
+		$array['title'] = $author_name;
+
+		// helper::log( $array );
+
+		if ( isset( $args['return'] ) && 'return' == $args['return'] ) {
+			
+			return $array ;
+
+		}
+
+		if ( ! isset( $args['markup'] ) ) {
+
+			helper::log( 'Missing "markup", returning false.' );
+
+			return false;
+
+		}
+
+		$string = generic::markup( $args['markup'], $array );
+
+		// helper::log( $string );
+
+		// echo ##
+		echo $string ;
+
+		// stop ##
+		return true;
+
+	}
+
+
+
+	/**
+	 * Helper Method to get the author
+	 */
+	public static function get_the_author( Array $args = null ){
+
+		// we want to return ##
+		$args['return'] = 'return';
+
+		// bounce on, and return array ##
+		return \apply_filters( 'q/wordpress/get_the_author', self::the_author( $args ) );
+
+	}
+
+
+
+
+	public static function the_date( Array $args = null ) {
+
+		if ( 
+			is_null( $args )
+		) {
+
+			helper::log( 'Error in passed $args' );
+
+			return false;
+
+		}
+
+		// get post ##
+		if ( 
+			isset( $args['post'] ) 
+			&& $args['post'] instanceof \WP_Post
+		) {
+
+			$the_post = $args['post'];
+
+		} else {
+
+			$the_post = self::the_post();
+
+		}
+
+		// last check ##
+		if ( ! $the_post ) {
+
+			helper::log( 'Error with post object, validate.' );
+
+			return false;
+
+		}
+
+		// get author ##
+		$author = $the_post->post_author;
+		$authordata = \get_userdata( $author );
+
+		// validate ##
+		if (
+			! $authordata
+		) {
+
+			helper::log( 'Error in returned author data' );
+
+			return false;
+
+		}
+
+		// get author name ##
+		$author_name = $authordata && isset( $authordata->display_name ) ? $authordata->display_name : 'Author' ;
+
+		// assign values ##
+		$array['permalink'] = \esc_url( \get_author_posts_url( $author ) );
+		$array['slug'] = $authordata->user_login;
+		$array['title'] = $author_name;
+
+		// helper::log( $array );
+
+		if ( isset( $args['return'] ) && 'return' == $args['return'] ) {
+			
+			return $array ;
+
+		}
+
+		if ( ! isset( $args['markup'] ) ) {
+
+			helper::log( 'Missing "markup", returning false.' );
+
+			return false;
+
+		}
+
+		$string = generic::markup( $args['markup'], $array );
+
+		// helper::log( $string );
+
+		// echo ##
+		echo $string ;
+
+		// stop ##
+		return true;
+
+	}
+
+
+
+	/**
+	 * Helper Method to get the author
+	 */
+	public static function get_the_data( Array $args = null ){
+
+		// we want to return ##
+		$args['return'] = 'return';
+
+		// bounce on, and return array ##
+		return \apply_filters( 'q/wordpress/get_the_date', self::the_date( $args ) );
+
+	}
+
 
 
 

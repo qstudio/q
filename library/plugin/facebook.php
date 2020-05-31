@@ -5,9 +5,9 @@ namespace q\plugin;
 use q\core\core as core;
 use q\core\helper as helper;
 use q\core\options as options;
-use q\core\wordpress as wordpress;
-use q\theme\ui as ui;
-use q\controller\generic as generic;
+use q\wordpress\post as wp_post;
+use q\theme\markup as markup;
+use q\controller\consent as consent;
 
 // load it up ##
 \q\plugin\facebook::run();
@@ -111,7 +111,7 @@ class facebook extends \Q {
     {
 
         // check we can get a post object ##
-        if ( ! $the_post = wordpress::the_post() ) { 
+        if ( ! $the_post = wp_post::the_post() ) { 
         
             // helper::log( 'No post object' );
 
@@ -136,16 +136,16 @@ class facebook extends \Q {
         $array['title'] = $the_post->post_title;
 
         // get the excerpt ##
-        $string = wordpress::excerpt_from_id( $the_post->ID, 200 );
+        $string = wp_post::excerpt_from_id( $the_post->ID, 200 );
 
         // clean up ##
-        $string = ui::rip_tags( $string );
+        $string = markup::rip_tags( $string );
 
         // replacements ##
         $string = str_replace( "\"", "'", $string );
 
         // keep it all to size ##
-        // $string = ui::chop( $string, 200 );
+        // $string = markup::chop( $string, 200 );
 
         $array['description'] = $string;
         $array['image'] = 
@@ -185,7 +185,7 @@ class facebook extends \Q {
         // }
 
         // check if consent given to load script ##
-        if ( ! generic::consent( 'marketing' ) ) {
+        if ( ! consent::given( 'marketing' ) ) {
 
             // helper::log( 'Marketing NOT allowed...' );
 
@@ -246,7 +246,7 @@ class facebook extends \Q {
         // }
 
         // check if consent given to load script ##
-        if ( ! generic::consent( 'marketing' ) ) {
+        if ( ! consent::given( 'marketing' ) ) {
 
             // helper::log( 'Marketing NOT allowed...' );
 
@@ -307,7 +307,7 @@ class facebook extends \Q {
         }
 
         // we need a post to share, so let's see if we have one ##
-        if ( ! $the_post = wordpress::the_post() ) { 
+        if ( ! $the_post = wp_post::the_post() ) { 
         
             helper::log( 'No post object found.' );
 
@@ -365,7 +365,7 @@ if ( typeof jQuery !== 'undefined' ) {
                 $fb_link = get_permalink( $the_post->ID );
                 $fb_picture = \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), 'square-small' );
                 $fb_caption = \esc_js( \get_post_meta( \get_post_thumbnail_id( $the_post->ID ), '_wp_attachment_image_alt', true));
-                $fb_description = \esc_js( wordpress::excerpt_from_id( $the_post->ID ));
+                $fb_description = \esc_js( wp_post::excerpt_from_id( $the_post->ID ));
                     
 ?>
                 FB.ui (
