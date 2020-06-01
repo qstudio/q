@@ -2,11 +2,11 @@
 
 namespace q\plugin;
 
-use q\core\core as core;
-use q\core\helper as helper;
-use q\core\options as options;
+use q\core;
+use q\core\helper as h;
+// use q\core\options as options;
 use q\controller\consent as consent;
-use q\core\wordpress as wordpress;
+// use q\core\wordpress as wordpress;
 
 // load it up ##
 \q\plugin\google::run();
@@ -29,8 +29,8 @@ class google extends \Q {
 
         } else {
 
-            // add fields to Q settings ##
-            \add_filter( 'q/core/options/add_field/analytics', [ get_class(), 'filter_acf_analytics' ], 10, 1 );
+			// add fields to Q settings ##
+			\add_filter( 'q/plugin/acf/add_field_groups/q_option_analytics', [ get_class(), 'filter_acf_fields' ], 10, 1 );
 
         }
 
@@ -38,11 +38,11 @@ class google extends \Q {
 
 
 
-    public static function filter_acf_analytics( $array ) 
+    public static function filter_acf_fields( $array ) 
     {
 
         // test ##
-        // helper::log( $array );
+        // h::log( $array );
 
         // lets add our fields ##
         array_push( $array['fields'], [
@@ -54,11 +54,6 @@ class google extends \Q {
             'instructions' => 'Enter the complete Google Analytics snippet',
             'required' => 0,
             'conditional_logic' => 0,
-            'wrapper' => array(
-                'width' => '',
-                'class' => '',
-                'id' => '',
-            ),
             'default_value' => '',
             'placeholder' => '',
             'maxlength' => '',
@@ -76,11 +71,6 @@ class google extends \Q {
             'instructions' => 'Enter the complete Google Tag Manager snippet',
             'required' => 0,
             'conditional_logic' => 0,
-            'wrapper' => array(
-                'width' => '',
-                'class' => '',
-                'id' => '',
-            ),
             'default_value' => '',
             'placeholder' => '',
             'maxlength' => '',
@@ -111,7 +101,7 @@ class google extends \Q {
             
         ]);
 
-        // helper::log( $array['fields'] );
+        // h::log( $array['fields'] );
 
         // kick it back, as it's a filter ##
         return $array;
@@ -139,7 +129,7 @@ class google extends \Q {
             );
     
         // check ##
-        // helper::log( $url );
+        // h::log( $url );
 
         // add script ##
         \wp_register_script( 'google-recaptcha', $url, [], '2.0', false );
@@ -166,14 +156,14 @@ class google extends \Q {
             is_null( $args )
         ){
 
-            helper::log( 'Args empty..' );
+            h::log( 'Args empty..' );
 
             // nada ##
             return false;
 
         }
 
-        // helper::log( $args );
+        // h::log( $args );
 
         // load count ##
         $load_count = isset( $args['load_count'] ) ? intval( $args['load_count'] ) : 1 ; 
@@ -275,14 +265,14 @@ class google extends \Q {
 
         #<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"type="text/javascript"></script>
 
-        #helper::log( 'adding Google Maps assets...' );
+        #h::log( 'adding Google Maps assets...' );
 
         \wp_register_script('google-maps', 'https://maps.googleapis.com/maps/api/js?key='.GOOGLE_MAPS_V3_API_KEY, false, '3');
         \wp_enqueue_script('google-maps');
 
         \wp_enqueue_script( 'acf-google-maps',  self::get_plugin_url( 'library/theme/javascript/acf-google-maps.js' ), array( 'jquery' ), self::version, true );
 
-        \wp_register_style( 'q-map-css', helper::get( "theme/css/q.map.css", 'return' ), '', self::version, 'all' );
+        \wp_register_style( 'q-map-css', h::get( "theme/css/q.map.css", 'return' ), '', self::version, 'all' );
         \wp_enqueue_style( 'q-map-css' );
 
     }
@@ -293,14 +283,14 @@ class google extends \Q {
 
         // get location ##
         $location = \get_field( $args['field'] );
-        #helper::log( $location );
+        #h::log( $location );
 
         if( 
             ! empty( $location ) 
             && is_array( $location )
         ) {
 
-            #helper::log( 'rending G Map..' );
+            #h::log( 'rending G Map..' );
 
 ?>
         <div class="acf-map <?php echo $args['class']; ?>">
@@ -349,9 +339,9 @@ class google extends \Q {
     {
 
         // bulk on localhost ##
-        // if ( helper::is_localhost() ) { 
+        // if ( h::is_localhost() ) { 
         
-        //     // helper::log( 'Tag Manager skipped, as on localhost...' );
+        //     // h::log( 'Tag Manager skipped, as on localhost...' );
 
         //     // return false; 
         
@@ -360,7 +350,7 @@ class google extends \Q {
         // check if consent given to load script ##
         if ( ! consent::given( 'analytics' ) ) {
 
-            // helper::log( 'Analytics NOT allowed...' );
+            // h::log( 'Analytics NOT allowed...' );
 
             // kick out ##
             return false;
@@ -370,14 +360,14 @@ class google extends \Q {
         // grab the options ##
         // $q_options = options::get();
 
-        #helper::log( $q_options );
+        #h::log( $q_options );
 
         // bulk if no options found ##
         if ( 
-            ! options::get( 'google_tag_manager' )
+            ! core\option::get( 'google_tag_manager' )
         ) {
 
-            // helper::log( 'Error: Options missing...' );
+            // h::log( 'Error: Options missing...' );
 
             return false;
 
@@ -387,7 +377,7 @@ class google extends \Q {
         // if ( ! isset( $q_options->google_tag_manager ) ) { 
 
         //     // Log ##
-        //     // helper::log( 'Google Tag Manager not defined' );
+        //     // h::log( 'Google Tag Manager not defined' );
 
         //     // kick off ##
         //     return false; 
@@ -395,7 +385,7 @@ class google extends \Q {
         // }
 
         // kick it back, cleanly... ##
-        echo options::get( 'google_tag_manager' );
+        echo core\option::get( 'google_tag_manager' );
         
     }
 
@@ -413,9 +403,9 @@ class google extends \Q {
     {
 
         // bulk on localhost ##
-        // if ( helper::is_localhost() ) { 
+        // if ( h::is_localhost() ) { 
                 
-        //     // helper::log( 'Analytics skipped, as on localhost...' );
+        //     // h::log( 'Analytics skipped, as on localhost...' );
 
         //     // return false; 
 
@@ -424,7 +414,7 @@ class google extends \Q {
         // check if consent given to load script ##
         if ( ! consent::given( 'analytics' ) ) {
 
-            // helper::log( 'Analytics NOT allowed...' );
+            // h::log( 'Analytics NOT allowed...' );
 
             // kick out ##
             return false;
@@ -434,14 +424,14 @@ class google extends \Q {
         // grab the options ##
         // $q_options = options::get();
 
-        #helper::log( $q_options );
+        #h::log( $q_options );
 
         // bulk if no options found ##
         if ( 
-            ! options::get( 'google_tag_manager_noscript' )
+            ! core\option::get( 'google_tag_manager_noscript' )
         ) {
 
-            // helper::log( 'Error: Options missing...' );
+            // h::log( 'Error: Options missing...' );
 
             return false;
 
@@ -451,7 +441,7 @@ class google extends \Q {
         // if ( ! isset( $q_options->google_tag_manager_noscript ) ) { 
 
         //     // Log ##
-        //     // helper::log( 'Google Tag Manager No Script not defined' );
+        //     // h::log( 'Google Tag Manager No Script not defined' );
 
         //     // kick off ##
         //     return false; 
@@ -459,7 +449,7 @@ class google extends \Q {
         // }
 
         // kick it back, cleanly... ##
-        echo options::get( 'google_tag_manager_noscript' );
+        echo core\option::get( 'google_tag_manager_noscript' );
 
     }
 
@@ -476,9 +466,9 @@ class google extends \Q {
     {
 
         // bulk on localhost ##
-        // if ( helper::is_localhost() ) { 
+        // if ( h::is_localhost() ) { 
         
-        //     // helper::log( 'Analytics skipped, as on localhost...' );
+        //     // h::log( 'Analytics skipped, as on localhost...' );
 
         //     // return false; 
         
@@ -487,33 +477,33 @@ class google extends \Q {
         // check if consent given to load script ##
         if ( ! consent::given( 'analytics' ) ) {
 
-            // helper::log( 'Analytics NOT allowed...' );
+            // h::log( 'Analytics NOT allowed...' );
 
             // kick out ##
             return false;
 
         }
 
-        // helper::log( options::get( 'google_analytics' ) );
+        // h::log( options::get( 'google_analytics' ) );
 
         // grab the options ##
         // $q_options = options::get();
 
-        #helper::log( $q_options );
+        #h::log( $q_options );
 
         // bulk if no options found ##
         if ( 
-            ! options::get( 'google_analytics' )
+            ! core\option::get( 'google_analytics' )
         ) {
 
-            // helper::log( 'Error: Options missing...' );
+            // h::log( 'Error: Options missing...' );
 
             return false;
 
         }
 
         // kick it back, cleanly... ##
-        echo options::get( 'google_analytics' );
+        echo core\option::get( 'google_analytics' );
 
     }
 

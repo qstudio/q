@@ -2,7 +2,7 @@
 
 namespace q\core;
 
-use q\core\core as core;
+// use q\core;
 // use q\core\helper as helper;
 // use q\theme\template as template;
 
@@ -326,7 +326,7 @@ class helper extends \Q {
     * @since       0.1
     * @return      string      Device slug
     */
-    public static function get_device()
+    public static function device()
     {
 
         // property already loaded ##

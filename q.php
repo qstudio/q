@@ -219,11 +219,11 @@ if ( ! class_exists( 'Q' ) ) {
             // core ##
             require_once self::get_plugin_path( 'library/core/controller.php' );
 			
-			// wordpress
+			// wordpress --- @TODO move into UI ##
 			require_once self::get_plugin_path( 'library/wordpress/controller.php' );
 
 			// theme ##
-            require_once self::get_plugin_path( 'library/theme/controller.php' );
+            require_once self::get_plugin_path( 'library/ui/controller.php' );
 
             // admin ##
             require_once self::get_plugin_path( 'library/admin/controller.php' );
@@ -245,10 +245,10 @@ if ( ! class_exists( 'Q' ) ) {
             require_once self::get_plugin_path( 'library/hook/controller.php' );
 
             // controllers ##
-            require_once self::get_plugin_path( 'library/controller/controller.php' );
+            // require_once self::get_plugin_path( 'library/controller/controller.php' );
 
             // modules ##
-            require_once self::get_plugin_path( 'library/module/controller.php' );
+            // require_once self::get_plugin_path( 'library/module/controller.php' );
             
 
         }

@@ -3,17 +3,15 @@
 namespace q\wordpress;
 
 // Q ##
-use q\core\config as config;
-use q\core\helper as helper;
-use q\theme\template as template;
-use q\controller\navigation as navigation;
-use q\wordpress\core as wp_core;
-use q\theme\markup as markup;
-use q\theme\ui as ui;
-use q\theme\core as ui_core;
+use q\core;
+use q\core\helper as h;
+// use q\theme\template as template;
+// use q\controller\navigation as navigation;
+// use q\wordpress as wp;
+use q\ui;
 
 // Q Theme ##
-use q\theme\theme\controller\fourzerofour as fourzerofour;
+use q\theme\ui\controller\fourzerofour as fourzerofour;
 
 class post extends \Q {
 
@@ -105,9 +103,9 @@ class post extends \Q {
     public static function get_the_title( Array $args = null ) {
 
 		// global arg validator ##
-		if ( ! $args = ui_core::prepare_args( $args ) ){ return false; }
+		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
 
-        // helper::log( $args );
+        // h::log( $args );
 
         // set-up new array ##
 		$array = [];
@@ -121,7 +119,7 @@ class post extends \Q {
         {
 
             $the_post = \get_option( 'page_for_posts' );
-            // helper::log( 'Loading home title: '.$the_post );
+            // h::log( 'Loading home title: '.$the_post );
 
             // type ##
             $type = 'is_home';
@@ -139,7 +137,7 @@ class post extends \Q {
             // type ##
             $type = 'is_404';
 
-            // helper::log('Loading archive title');
+            // h::log('Loading archive title');
 			$array['title'] = \__('Oops! It looks like you\'re lost');
 			// $array['permalink'] = \get_permalink( \get_site_option( 'page_on_front' ) );
 
@@ -149,12 +147,12 @@ class post extends \Q {
 
         ){
 
-            // helper::log( 'is_search' );
+            // h::log( 'is_search' );
 
             // type ##
             $type = 'is_search';
 
-            // helper::log('Loading archive title');
+            // h::log('Loading archive title');
 			$array['title'] = \sprintf( 'Search results for "%s"', $_GET['s'] );
 			// $array['permalink'] = \get_permalink( \get_site_option( 'page_on_front' ) );
 
@@ -170,7 +168,7 @@ class post extends \Q {
             // type ##
             $type = 'is_archive';
 
-            // helper::log('Loading archive title');
+            // h::log('Loading archive title');
 			$array['title'] = \get_the_archive_title();
 			// $array['permalink'] = \get_permalink( \get_site_option( 'page_on_front' ) );
 
@@ -178,7 +176,7 @@ class post extends \Q {
 
 			$type = 'is_single';
 
-            // helper::log('Loading post title');
+            // h::log('Loading post title');
 
             // $the_post = $the_post->ID;
 
@@ -189,7 +187,7 @@ class post extends \Q {
         }
 
 		// return ##
-		return ui_core::prepare_return( $args, $array );
+		return ui\method::prepare_return( $args, $array );
 
 	}
 	
@@ -205,7 +203,7 @@ class post extends \Q {
     {
 
         // global arg validator ##
-		if ( ! $args = ui_core::prepare_args( $args ) ){ 
+		if ( ! $args = ui\method::prepare_args( $args ) ){ 
 		
 			help::log( 'Bailing..' ); 
 		
@@ -219,19 +217,19 @@ class post extends \Q {
         // get the post ##
         if ( \is_home() ) {
 
-            // helper::log('Loading home excerpt');
+            // h::log('Loading home excerpt');
 
-            $array['content'] = self::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ) );
+            $array['content'] = excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ) );
 
         } else if (
             \is_author()
         ) {
 
-            // helper::log('Loading author excerpt');
+            // h::log('Loading author excerpt');
 
             $array['content'] =
                 \get_the_author_meta( 'description' ) ?
-                markup::chop( nl2br( \get_the_author_meta( 'description' ), intval( $args['limit'] ) ) ) :
+                ui\markup::chop( nl2br( \get_the_author_meta( 'description' ), intval( $args['limit'] ) ) ) :
                 self::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ) );
 
         } else if (
@@ -240,24 +238,24 @@ class post extends \Q {
             || \is_archive()
         ) {
 
-            // helper::log('Loading category excerpt');
-            // helper::log( category_description() );
+            // h::log('Loading category excerpt');
+            // h::log( category_description() );
 
             $array['content'] =
                 \category_description() ?
-                markup::chop( nl2br( \category_description(), intval( $args['limit'] ) ) ) :
+                ui\markup::chop( nl2br( \category_description(), intval( $args['limit'] ) ) ) :
                 self::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ) );
 
         } else {
 
-            // helper::log('Loading other excerpt');
+            // h::log('Loading other excerpt');
 
-            $array['content'] = self::excerpt_from_id( self::the_post(), intval( $args['limit'] ) );
+            $array['content'] = self::excerpt_from_id( self::get(), intval( $args['limit'] ) );
 
 		}
 		
 		 // return ##
-		 return ui_core::prepare_return( $args, $array );
+		 return ui\method::prepare_return( $args, $array );
 
 	}
 
@@ -272,12 +270,12 @@ class post extends \Q {
     public static function get_posts( $args = array() )
     {
 
-        // helper::log( $args );
+        // h::log( $args );
 
 		// global arg validator ##
-		if ( ! $args = ( object ) ui_core::prepare_args( $args ) ){ return false; }
+		if ( ! $args = ( object ) ui\method::prepare_args( $args ) ){ return false; }
 
-		// helper::log( $args );
+		// h::log( $args );
 		
 		// we need $args->controller and $args->method for this to work ##
 		$args->controller = "\\q\\theme\\theme\\controller\\{$args->template}";
@@ -301,33 +299,33 @@ class post extends \Q {
             // merge all args together ##
             $posts_args = array_merge( $wp_query->query_vars, $posts_args );
 
-            // helper::log( array( 'added query vars' => $posts_args ) );
+            // h::log( array( 'added query vars' => $posts_args ) );
 
         }
 
         // merge in global $wp_query variables ? ( required for archive pages ) ##
         if ( isset( $args->search ) ) {
 
-            // helper::log( 'searching...' );
+            // h::log( 'searching...' );
 
             $posts_args['post_type'] = isset( $args->post_type ) ? $args->post_type : 'any' ;
             #$posts_args['posts_per_page'] = 100; // get them all ##
 
         }
 
-        // helper::log( $posts_args );
+        // h::log( $posts_args );
 
         // set-up main query ##
         $q_query = new \WP_Query( $posts_args );
 
-        // helper::log( $q_query->request );
-        // helper::log( $q_query->found_posts );
-        // helper::log( $q_query->post_count );
+        // h::log( $q_query->request );
+        // h::log( $q_query->found_posts );
+        // h::log( $q_query->post_count );
 
         // weird WPE hack - to reduce the returned array to the size of $args->limit ##
         if ( -1 != $args->limit && $q_query->post_count > $args->limit ) {
 
-            // helper::log( "splicing.." );
+            // h::log( "splicing.." );
             $get_posts = array_slice( $q_query->posts, 0, $args->limit, true );
 
         } else {
@@ -360,7 +358,7 @@ class post extends \Q {
                 // iterate the post loop ##
                 \setup_postdata( $post );
 
-                // helper::log( $post->ID );
+                // h::log( $post->ID );
 
                 // add post ID to passed args ##
                 $args_array['post'] = $post->ID;
@@ -368,10 +366,10 @@ class post extends \Q {
                 // check if method exists in 'q_theme' ##
                 if (
                     method_exists( $args->controller, $args->method )
-                    // && is_callable( array( "\q\theme\theme\view\{$args->template}\{$args->template}", "the_{$args->template}_loop" ) )
+                    // && is_callable( array( "\q\theme\ui\view\{$args->template}\{$args->template}", "the_{$args->template}_loop" ) )
                 ) {
 
-					// helper::log ( "Post loop from: {$args->controller}::{$args->method}" );
+					// h::log ( "Post loop from: {$args->controller}::{$args->method}" );
 
                     #pr( $args_array );
 
@@ -383,7 +381,7 @@ class post extends \Q {
 
                 } else {
 
-					helper::log ( "Method Missing : {$args->controller}::{$args->method} -- using default" );
+					h::log ( "Method Missing : {$args->controller}::{$args->method} -- using default" );
 					
 					// call template method ##
                     call_user_func (
@@ -412,7 +410,7 @@ class post extends \Q {
             
             if ( isset( $args->pagination ) ) {
 
-                // helper::log( 'Adding pagination..' );
+                // h::log( 'Adding pagination..' );
                 navigation::the_pagination([ 'query' => $q_query ]);
 
             }
@@ -576,12 +574,12 @@ class post extends \Q {
         if ( \has_post_thumbnail( $the_post->ID ) ) {
 
             // handle might not be an array based on devices ##
-            $handle = is_array( $args->handle ) ? $args->handle[helper::get_device()] : $args->handle ;
+            $handle = is_array( $args->handle ) ? $args->handle[h::device()] : $args->handle ;
 
             // show small image, linking to larger image ##
 			$img_src = \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), $args->handle ); 
 			
-			// helper::log( $img_src );
+			// h::log( $img_src );
 
             $object->src = $img_src[0]; // take first array item ##
 
@@ -605,7 +603,7 @@ class post extends \Q {
 
         ) {
 
-            $src_array = \wp_get_attachment_image_src( $src, $args->handle[helper::get_device()] );
+            $src_array = \wp_get_attachment_image_src( $src, $args->handle[h::device()] );
             $object->src = $src_array[0];
 
 		}
@@ -614,7 +612,7 @@ class post extends \Q {
         // backup ##
         if ( ! $has_src ) {
 
-            $object->src = $args->holder[helper::get_device()];
+            $object->src = $args->holder[h::device()];
 
         }
 
@@ -660,10 +658,10 @@ class post extends \Q {
 
         if ( ! \has_post_thumbnail( $the_post->ID ) ) { return false; }
 
-        // self::log( 'Handle: '.$args->handle[self::get_device()] );
+        // self::log( 'Handle: '.$args->handle[self::device()] );
 
         // show small image, linking to larger image ##
-        $object->src = \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), $args->handle[helper::get_device()] );
+        $object->src = \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), $args->handle[h::device()] );
         $img_alt = \get_post_meta( \get_post_thumbnail_id( $the_post->ID ), '_wp_attachment_image_alt', true);
         $object->alt = ( $img_alt ? $img_alt : \get_the_title() ) ;
 
@@ -706,7 +704,7 @@ class post extends \Q {
 
         // meta_query to exclude certain sub pages from desktop on screen sub navigation ##
         $meta_query = array(); // nada ##
-        if ( helper::get_device() == 'desktop' ) {
+        if ( 'desktop' == h::device() ) {
 
             $meta_query =
                 array(

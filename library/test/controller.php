@@ -2,11 +2,9 @@
 
 namespace q\test;
 
-// use q\core\core as core;
-use q\core\options as options;
-use q\core\helper as helper;
-
-// use q\test\email as email ;
+use q\core;
+use q\core\helper as h;
+use q\plugin; 
 
 // load it up ##
 \q\test\controller::run();
@@ -18,8 +16,8 @@ class controller extends \Q {
     public static function run()
     {
 
-        // add fields ##
-        \add_action( 'acf/init', array( get_class(), 'add_fields' ), 1 );
+        // add ACF fields ##
+        \add_action( 'acf/init', function() { plugin\acf::add_field_groups( self::add_field_groups() ); }, 1 );
 
         // check if the test suite is activated via Q settings ##
         if ( ! self::check() ) {
@@ -45,40 +43,40 @@ class controller extends \Q {
 
     
 
-    /**
-    * Add ACF Fields
-    *
-    * @since    2.0.0
-    */
-    public static function add_fields()
-    {
+    // /**
+    // * Add ACF Fields
+    // *
+    // * @since    2.0.0
+    // */
+    // public static function add_fields()
+    // {
 
-        // get all field groups ##
-        $groups = self::get_fields();
+    //     // get all field groups ##
+    //     $groups = self::get_fields();
 
-        if ( 
-            ! $groups 
-            || ! is_array( $groups )
-        ) {
+    //     if ( 
+    //         ! $groups 
+    //         || ! is_array( $groups )
+    //     ) {
 
-            helper::log( 'No groups to load.' );
+    //         h::log( 'No groups to load.' );
 
-            return false;
+    //         return false;
 
-        }
+    //     }
 
-        // loop over gruops ##
-        foreach( $groups as $key => $value ) {
+    //     // loop over gruops ##
+    //     foreach( $groups as $key => $value ) {
 
-            // helper::log( 'filter: q/core/options/add_field/'.$key );
-            // helper::log( $value );
+    //         // h::log( 'filter: q/core/options/add_field/'.$key );
+    //         // h::log( $value );
 
-            // load them all up ##
-            \acf_add_local_field_group( $value );
+    //         // load them all up ##
+    //         \acf_add_local_field_group( $value );
 
-        }
+    //     }
 
-    }
+    // }
 
 
     /**
@@ -87,13 +85,13 @@ class controller extends \Q {
     * @since    2.0.0
     * @return   Mixed
     */
-    public static function get_fields( $group = null )
+    public static function add_field_groups()
     {
 
         // define field groups - exported from ACF ##
         $groups = array (
 
-            'test'   => array(
+            'q_option_test'   => array(
                 'key' => 'group_q_option_test',
                 'title' => 'Testing Options',
                 'fields' => array(
@@ -130,7 +128,7 @@ class controller extends \Q {
                             'id' => '',
                         ),
                         'choices' => array(
-                            'email'     => 'SMTP Tracker',
+                            // 'email'     => 'SMTP Tracker',
                             'error'     => 'PHP Errors',
                             // 'url'   => 'URL',
                         ),
@@ -165,33 +163,8 @@ class controller extends \Q {
 
         );
 
-        // helper::log( $groups );
-
-        // filter fields ##
-        $groups = \apply_filters( 'q/test/controller/get_fields', $groups );
-
-        // check if we are returning a single set or all groups ##
-        if ( is_null( $group ) ) {
-
-            #helper::log( 'Returning all groups.' );
-
-            return $groups;
-
-        } elseif ( 
-            isset( $group ) 
-            && is_array( $groups )
-            && array_key_exists( $group, $groups )
-            && array_key_exists( 'fields', $groups[$group] )
-        ) {
-
-            #helper::log( 'returning fields in group: '.$group );
-
-            return $groups[$group]['fields'];
-
-        }
-
-        // nothing cooking ##
-        return false;
+		// h::log( $groups );
+		return $groups;
 
     }
 
@@ -202,23 +175,23 @@ class controller extends \Q {
     public static function check()
     {
 
-        // helper::log( 'Checking if test suite is active' );
-        // helper::log( options::get( 'test' ) );
+        // h::log( 'Checking if test suite is active' );
+        // h::log( core\option::get( 'test' ) );
 
         if (
-            options::get( 'test' )
-            && ! empty( options::get( 'test' ) )
-            && is_object( options::get( 'test' ) )
+            core\option::get( 'test' )
+            && ! empty( core\option::get( 'test' ) )
+            && is_object( core\option::get( 'test' ) )
         ) {
 
-            // helper::log( 'test suite options active' );
+            // h::log( 'test suite options active' );
 
             // seems good ##
             return true;
         
         }
 
-        // helper::log( 'test suite options inactive' );
+        // h::log( 'test suite options inactive' );
 
         // inactive ##
         return false;    
@@ -236,7 +209,7 @@ class controller extends \Q {
     public static function admin_enqueue_scripts() {
 
         // add JS ## -- after all dependencies ##
-        \wp_enqueue_script( 'q-test-admin-js', helper::get( "test/admin.js", 'return' ), array( 'jquery' ), self::version );
+        \wp_enqueue_script( 'q-test-admin-js', h::get( "test/admin.js", 'return' ), array( 'jquery' ), self::version );
 
         // nonce ##
         $nonce = \wp_create_nonce( 'q-test-nonce' );
@@ -267,10 +240,10 @@ class controller extends \Q {
         // Asana controller ##
         require_once self::get_plugin_path( 'library/plugin/asana.php' );
 
-        // helper::log( options::get( 'test' ) );
+        // h::log( options::get( 'test' ) );
 
         // these are loaded conditionally, via check to stored settings Q Options ##
-        foreach ( options::get( 'test' ) as $key => $value ) {
+        foreach ( core\option::get( 'test' ) as $key => $value ) {
             
             // check if file exists ##
             if ( file_exists( self::get_plugin_path( "library/test/{$key}.php" ) ) ) {

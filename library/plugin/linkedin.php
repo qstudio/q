@@ -2,11 +2,11 @@
 
 namespace q\plugin;
 
-use q\core\core as core;
-use q\core\helper as helper;
-use q\core\options as options;
-use q\core\wordpress as wordpress;
-use q\controller\consent as consent;
+use q\core;
+use q\core\helper as h;
+// use q\core\options as options;
+// use q\core\wordpress as wordpress;
+use q\controller\consent as consent; // @todo ##
 
 // load it up ##
 \q\plugin\linkedin::run();
@@ -27,7 +27,7 @@ class linkedin extends \Q {
         } else {
 
             // add fields to Q settings ##
-            \add_filter( 'q/core/options/add_field/analytics', [ get_class(), 'filter_acf_analytics' ], 10, 1 );
+            \add_filter( 'q/plugin/acf/add_field_groups/q_option_analytics', [ get_class(), 'filter_acf_fields' ], 10, 1 );
 
         }
 
@@ -35,11 +35,11 @@ class linkedin extends \Q {
 
 
 
-    public static function filter_acf_analytics( $array ) 
+    public static function filter_acf_fields( $array ) 
     {
 
         // test ##
-        // helper::log( $array );
+        // h::log( $array );
 
         // lets add our fields ##
         array_push( $array['fields'], [
@@ -84,7 +84,7 @@ class linkedin extends \Q {
             'new_lines' => '',
         ]);
 
-        // helper::log( $array['fields'] );
+        // h::log( $array['fields'] );
 
         // kick it back, as it's a filter ##
         return $array;
@@ -103,9 +103,9 @@ class linkedin extends \Q {
     {
 
         // bulk on localhost ##
-        // if ( helper::is_localhost() ) { 
+        // if ( h::is_localhost() ) { 
         
-        //     // helper::log( 'FB pixel not added on localhost' );
+        //     // h::log( 'FB pixel not added on localhost' );
 
         //     // return false; 
         
@@ -114,7 +114,7 @@ class linkedin extends \Q {
         // check if consent given to load script ##
         if ( ! consent::given( 'marketing' ) ) {
 
-            // helper::log( 'Marketing NOT allowed...' );
+            // h::log( 'Marketing NOT allowed...' );
 
             // kick out ##
             return false;
@@ -122,16 +122,16 @@ class linkedin extends \Q {
         }
 
         // grab the options ##
-        // $q_options = options::get();
+        // $q_options = core\option::get();
 
-        // helper::log( $q_options );
+        // h::log( $q_options );
 
         // bulk if no options found ##
         if ( 
-            ! options::get( 'linkedin' )
+            ! core\option::get( 'linkedin' )
         ) {
 
-            // helper::log( 'Error: Options missing...' );
+            // h::log( 'Error: Options missing...' );
 
             return false;
 
@@ -141,14 +141,14 @@ class linkedin extends \Q {
         // // check if we have tag_manager defined in config ##
         // if ( ! isset( $q_options->linkedin ) ) {
 
-        //     // helper::log( 'linkedin Pixel not defined in config' );
+        //     // h::log( 'linkedin Pixel not defined in config' );
 
         //     return false;
 
         // }
 
         // kick it back, cleanly... ##
-        echo options::get( 'linkedin' );
+        echo core\option::get( 'linkedin' );
 
     }
 
@@ -164,9 +164,9 @@ class linkedin extends \Q {
     {
 
         // bulk on localhost ##
-        // if ( helper::is_localhost() ) { 
+        // if ( h::is_localhost() ) { 
                 
-        //     // helper::log( 'Analytics skipped, as on localhost...' );
+        //     // h::log( 'Analytics skipped, as on localhost...' );
 
         //     // return false; 
 
@@ -175,7 +175,7 @@ class linkedin extends \Q {
         // check if consent given to load script ##
         if ( ! consent::given( 'marketing' ) ) {
 
-            // helper::log( 'Marketing NOT allowed...' );
+            // h::log( 'Marketing NOT allowed...' );
 
             // kick out ##
             return false;
@@ -183,16 +183,16 @@ class linkedin extends \Q {
         }
 
         // grab the options ##
-        // $q_options = options::get();
+        // $q_options = core\option::get();
 
-        #helper::log( $q_options );
+        #h::log( $q_options );
 
         // bulk if no options found ##
         if ( 
-            ! options::get( 'linkedin_noscript' )
+            ! core\option::get( 'linkedin_noscript' )
         ) {
 
-            // helper::log( 'Error: Options missing...' );
+            // h::log( 'Error: Options missing...' );
 
             return false;
 
@@ -202,7 +202,7 @@ class linkedin extends \Q {
         // if ( ! isset( $q_options->linkedin_noscript ) ) { 
 
         //     // Log ##
-        //     // helper::log( 'linkedin No Script not defined' );
+        //     // h::log( 'linkedin No Script not defined' );
 
         //     // kick off ##
         //     return false; 
@@ -210,7 +210,7 @@ class linkedin extends \Q {
         // }
 
         // kick it back, cleanly... ##
-        echo options::get( 'linkedin_noscript' );
+        echo core\option::get( 'linkedin_noscript' );
 
     }
 

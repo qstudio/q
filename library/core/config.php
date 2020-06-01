@@ -2,11 +2,11 @@
 
 namespace q\core;
 
-use q\core\core as core;
-use q\core\helper as helper;
+use q\core as core;
+use q\core\helper as h;
 
 // Q Theme Config ##
-use q\theme\core\config as theme_config;
+use q\theme as theme;
 
 // load it up ##
 \q\core\config::run();
@@ -57,11 +57,11 @@ class config extends \Q {
 
         // holder images ##
         $array['the_holder']  = [
-            'the_posts'             => helper::get( "theme/css/images/holder/desktop_the_posts.svg", 'return' ),
-            'the_avatar'            => helper::get( "theme/css/images/holder/desktop_the_avatar.svg", 'return' ),
-            'template_header'       => helper::get_device() == 'desktop' ?
-                                        helper::get( "theme/css/images/holder/desktop_header.svg", 'return' ) :
-                                        helper::get( "theme/css/images/holder/handheld_header.svg", 'return' )
+            'the_posts'             => h::get( "theme/css/images/holder/desktop_the_posts.svg", 'return' ),
+            'the_avatar'            => h::get( "theme/css/images/holder/desktop_the_avatar.svg", 'return' ),
+            'template_header'       => h::device() == 'desktop' ?
+                                        h::get( "theme/css/images/holder/desktop_header.svg", 'return' ) :
+                                        h::get( "theme/css/images/holder/handheld_header.svg", 'return' )
 		];
 
         // get_posts() ##
@@ -75,8 +75,8 @@ class config extends \Q {
             'query_vars'            => false,
             'search'				=> false, // ? include in search ?? ##
             'holder'                => array ( 
-                                        'desktop'   => helper::get( "theme/css/images/holder/desktop-list-post.svg", 'return' ),
-                                        'handheld'  => helper::get( "theme/css/images/holder/handheld-list-post.svg", 'return' )
+                                        'desktop'   => h::get( "theme/css/images/holder/desktop-list-post.svg", 'return' ),
+                                        'handheld'  => h::get( "theme/css/images/holder/handheld-list-post.svg", 'return' )
                                     ),
             'handle'                => array( 
                                         'desktop'   => 'desktop-list-post',
@@ -99,7 +99,7 @@ class config extends \Q {
         // the_post_single() ##
         $array['the_post_single']  = [
             'allow_comments'        => $array['allow_comments'], // allow comments ##
-            'pagination'            => ( helper::get_device() == 'desktop' ) ? false : true, // next / home / back links ##
+            'pagination'            => ( h::device() == 'desktop' ) ? false : true, // next / home / back links ##
         ];
 
         // the_post_meta() ##
@@ -184,10 +184,10 @@ class config extends \Q {
         $array['the_pagination']  = [
 			'item'             		=> '<li class="%li_class%%active-class%">%item%</li>',
 			'markup'             	=> '<div class="row row justify-content-center mt-5 mb-5"><ul class="pagination">%content%</ul></div>',
-			'end_size'				=> 'desktop' == helper::get_device() ? 0 : 0,
-			'mid_size'				=> 'desktop' == helper::get_device() ? 4 : 0,
-			'prev_text'				=> 'desktop' == helper::get_device() ? '&lsaquo; '.\__('Previous', 'q-textdomain' ) : '&lsaquo;',
-			'next_text'				=> 'desktop' == helper::get_device() ? \__('Next', 'q-textdomain' ).' &rsaquo;' : '&rsaquo;', 
+			'end_size'				=> 'desktop' == h::device() ? 0 : 0,
+			'mid_size'				=> 'desktop' == h::device() ? 4 : 0,
+			'prev_text'				=> 'desktop' == h::device() ? '&lsaquo; '.\__('Previous', 'q-textdomain' ) : '&lsaquo;',
+			'next_text'				=> 'desktop' == h::device() ? \__('Next', 'q-textdomain' ).' &rsaquo;' : '&rsaquo;', 
 			'first_text'			=> '&laquo; '.\__('First', 'q-textdomain' ),
 			'last_text'				=> \__('Last', 'q-textdomain' ).' &raquo',
 			'li_class'				=> 'page-item',
@@ -226,13 +226,13 @@ class config extends \Q {
         $array['the_related_posts']  = [
             'title_length'          => 60, // title length ##
             'holder'                => $array['the_holder']["the_posts"], // holder image - same as $the_posts
-            'handle'                => 'thumbnail' // image size to use -- @todo make device aware with self::get_device() ##
+            'handle'                => 'thumbnail' // image size to use -- @todo make device aware with h::device() ##
         ];
 
         // the_page ##
         $array['the_page']  = [
-            'holder'                => ( helper::get_device() == 'desktop' ) ? '1440x480' : '1440x480', // holder image ##
-            'handle'                => helper::get_device().'-single' // image size to use ##
+            'holder'                => ( h::device() == 'desktop' ) ? '1440x480' : '1440x480', // holder image ##
+            'handle'                => h::device().'-single' // image size to use ##
 		];
 		
 		// return ##
@@ -263,34 +263,34 @@ class config extends \Q {
 		// @todo -- 
 
 		// merge filtered data into default data ##
-		$config = core::parse_args( $filter_config, $config );
+		$config = core\method::parse_args( $filter_config, $config );
 
 		// now, check if we are looking for a specific field ##
 		if ( 
 			is_null( $field ) 
 		) {
 
-			// helper::log( 'Getting all data' );
+			// h::log( 'Getting all data' );
 
 			// kick back ##
 			return $data;
 
 		}
 
-		// helper::log( 'Looking for specific Field: "'.$field.'"' );
+		// h::log( 'Looking for specific Field: "'.$field.'"' );
 
 		// check if field is set ##
 		if ( 
 			! isset( $config[$field] ) 
 		){
 
-			helper::log( 'No matching config found for Field: "'.$field.'"' );
+			h::log( 'No matching config found for Field: "'.$field.'"' );
 
 			return false;
 
 		}
 
-		// helper::log( 'Returning config data for Field: "'.$field.'"' );
+		// h::log( 'Returning config data for Field: "'.$field.'"' );
 
 		// get field data ##
 		$field_data = $config[$field];
@@ -301,14 +301,14 @@ class config extends \Q {
 		// merge filtered data into default data ##
 		// $field_data = core::parse_args( $filter_field_data, $field_data );
 
-		// helper::log( $field_data );
+		// h::log( $field_data );
 
 		// // filter via q_theme, if set - and merge is new and different values ##
 		// if ( \class_exists( 'q\theme\core\config' ) ) {
 
 		// 	$theme_config = theme_config::get( $field ) ;
 
-		// 	// helper::log( $theme_config );
+		// 	// h::log( $theme_config );
 
 		// 	// merge ##
 		// 	$data = core::parse_args( $theme_config, $data );
@@ -318,7 +318,7 @@ class config extends \Q {
 		// merge ##
 		// $data = core::parse_args( $theme_config, $data );
 
-		// helper::log( $data );
+		// h::log( $data );
 
 		// final filter ##
 		// $data = \apply_filters( 'q/config/get/'.$field, $data );

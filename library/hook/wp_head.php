@@ -16,13 +16,13 @@
 
 namespace q\hook;
 
-use q\core\core as core;
-use q\core\helper as helper;
-use q\core\options as options;
+use q\core;
+use q\core\helper as h;
+// use q\core\options as options;
 // use q\core\wordpress as wordpress;
-use q\wordpress\post as wp_post;
-
-use q\theme\markup as markup;
+use q\ui;
+use q\wordpress as wp;
+// use q\theme\markup as markup;
 
 // load it up ##
 \q\hook\wp_head::run();
@@ -220,7 +220,7 @@ class wp_head extends \Q {
             if ( $meta_desc = \get_post_meta( $id, "metadescription", true ) ) {
                 
                 #pr( '1' );
-                $meta_desc = wp_post::excerpt_from_id( \get_the_ID(), $length, '', '' );
+                $meta_desc = wp\post::excerpt_from_id( \get_the_ID(), $length, '', '' );
                 
             } else if ( $meta_desc = \get_post_meta ( $id, 'template_meta_description', true ) ) {
                 
@@ -230,7 +230,7 @@ class wp_head extends \Q {
             } else { 
                 
                 #pr( '3' );
-                $meta_desc = wp_post::excerpt_from_id( $id, $length );
+                $meta_desc = wp\post::excerpt_from_id( $id, $length );
                 
             }
         }
@@ -238,19 +238,19 @@ class wp_head extends \Q {
         #wp_die( $meta_desc );
         
         // fall-back ##
-        if ( ! $meta_desc ) { $meta_desc = wp_post::excerpt_from_id( $id, $length ); }
+        if ( ! $meta_desc ) { $meta_desc = wp\post::excerpt_from_id( $id, $length ); }
 
         // extra fall-back ##
         if ( ! $meta_desc ) { $meta_desc = \get_the_title( $id ); }
 
         // clean up ## 
-        $meta_desc = markup::rip_tags($meta_desc);
+        $meta_desc = ui\markup::rip_tags($meta_desc);
 
         // replacements ##
         $meta_desc = str_replace( "\"", "'", $meta_desc );
 
         // keep it all to size ##
-        $meta_desc = markup::chop( $meta_desc, $length );
+        $meta_desc = ui\markup::chop( $meta_desc, $length );
 
         // apply filters ##
         $meta_desc = \apply_filters( 'q/simple_seo/meta_description', $meta_desc );
@@ -302,7 +302,7 @@ class wp_head extends \Q {
 
         #Q_Control::log( $q_options );
         
-        $q_options = options::get();
+        $q_options = core\option::get();
 
         $webmasters = $q_options["google_webmasters"];
 
@@ -342,9 +342,9 @@ class wp_head extends \Q {
      */
     public static function favicon(){
 
-        #if ( $file = helper::get( 'favicon.png' ) ) { // load from parent ##
+        #if ( $file = h::get( 'favicon.png' ) ) { // load from parent ##
 
-        // helper::log( 'Adding favicon...' );
+        // h::log( 'Adding favicon...' );
 
 ?>
         <link rel="icon" type="image/png" href="<?php echo \get_site_url( '1' ); ?>/favicon.png" /><!-- Major Browsers -->
@@ -355,9 +355,13 @@ class wp_head extends \Q {
     }
 
 
+
     /**
      * Google Analytics tracking code ##
+	 * 
+	 * __deprecated
      */
+	/*
     public static function google_analytics() {
         
         #global $q_options; // load framework options ##
@@ -368,7 +372,7 @@ class wp_head extends \Q {
         // grab the options ##
         #$q_options = $q_options_class->options_get();
 
-        $q_options = options::get();
+        $q_options = core\option::get();
 
         #Q_Control::log( $q_options );
         
@@ -389,7 +393,7 @@ class wp_head extends \Q {
         }
         
     }
-
+	*/
 
     
 
@@ -409,7 +413,7 @@ class wp_head extends \Q {
         
         $page_title = $title;
 
-        // helper::log( $page_title );
+        // h::log( $page_title );
             
         // get site desription ##
         $site_description = \get_bloginfo( 'description' );
@@ -461,7 +465,7 @@ class wp_head extends \Q {
                 // && $term->parent > 0 
             ) {
 
-                // helper::log( 'Archive title' );
+                // h::log( 'Archive title' );
 
                 // just use the term name ##
                 $page_title = $term->name.' '.$sep.' ';
@@ -489,7 +493,7 @@ class wp_head extends \Q {
         // add paging number, if paged ##
         $page_title .= ( 2 <= $paged || 2 <= $page ) ? ' | ' . sprintf( __( 'Page %s' ), max( $paged, $page ) ) : '' ;
 
-        // helper::log( $page_title );
+        // h::log( $page_title );
 
         // filter ##
         $page_title = \apply_filters( 'q/hook/wp_head/wp_title', $page_title );

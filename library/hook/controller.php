@@ -2,9 +2,9 @@
 
 namespace q\hook;
 
-use q\core\core as core;
-use q\core\helper as helper;
-use q\core\options as options;
+use q\core;
+use q\core\helper as h;
+// use q\core\options as options;
 
 // load it up ##
 \q\hook\controller::run();

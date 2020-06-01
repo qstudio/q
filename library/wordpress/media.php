@@ -12,7 +12,7 @@ use q\controller\generic as generic;
 use q\wordpress\core as wp_core;
 
 // Q Theme ##
-// use q\theme\theme\ui\generic as theme;
+// use q\theme\ui\ui\generic as theme;
 
 // load it up ##
 #\q\wordpress\media::run();

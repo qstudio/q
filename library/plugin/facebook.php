@@ -2,12 +2,12 @@
 
 namespace q\plugin;
 
-use q\core\core as core;
-use q\core\helper as helper;
-use q\core\options as options;
-use q\wordpress\post as wp_post;
-use q\theme\markup as markup;
-use q\controller\consent as consent;
+use q\core;
+use q\core\helper as h;
+// use q\core\options as options;
+use q\wordpress as wp;
+use q\ui;
+use q\controller\consent as consent; // @todo
 
 // load it up ##
 \q\plugin\facebook::run();
@@ -31,7 +31,7 @@ class facebook extends \Q {
         } else {
 
             // add fields to Q settings ##
-            \add_filter( 'q/core/options/add_field/analytics', [ get_class(), 'filter_acf_analytics' ], 10, 1 );
+            \add_filter( 'q/plugin/acf/add_field_groups/q_option_analytics', [ get_class(), 'filter_acf_fields' ], 10, 1 );
 
         }
 
@@ -39,14 +39,13 @@ class facebook extends \Q {
 
 
 
-    
 
-
-    public static function filter_acf_analytics( $array ) 
+    public static function filter_acf_fields( $array ) 
     {
 
-        // test ##
-        // helper::log( $array );
+		// test ##
+		// h::log( 'Filter: "q/plugin/acf/add_field_groups/analytics"' );
+        // h::log( $array );
 
         // lets add our fields ##
         array_push( $array['fields'], [
@@ -91,7 +90,7 @@ class facebook extends \Q {
             'new_lines' => '',
         ]);
 
-        // helper::log( $array['fields'] );
+        // h::log( $array['fields'] );
 
         // kick it back, as it's a filter ##
         return $array;
@@ -111,9 +110,9 @@ class facebook extends \Q {
     {
 
         // check we can get a post object ##
-        if ( ! $the_post = wp_post::the_post() ) { 
+        if ( ! $the_post = wp\post::get() ) { 
         
-            // helper::log( 'No post object' );
+            // h::log( 'No post object' );
 
             return false; 
         
@@ -125,7 +124,7 @@ class facebook extends \Q {
             && ! \is_page()
         ) { 
         
-            // helper::log( 'Not a single post or page query' );
+            // h::log( 'Not a single post or page query' );
 
             return false; 
         
@@ -136,10 +135,10 @@ class facebook extends \Q {
         $array['title'] = $the_post->post_title;
 
         // get the excerpt ##
-        $string = wp_post::excerpt_from_id( $the_post->ID, 200 );
+        $string = wp\post::excerpt_from_id( $the_post->ID, 200 );
 
         // clean up ##
-        $string = markup::rip_tags( $string );
+        $string = ui\markup::rip_tags( $string );
 
         // replacements ##
         $string = str_replace( "\"", "'", $string );
@@ -152,7 +151,7 @@ class facebook extends \Q {
             \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), 'large' ) ?
             \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), 'large' )[0] :
             false ;
-        // helper::log( $array['image'] );
+        // h::log( $array['image'] );
         $array['url'] = \get_the_permalink( $the_post->ID );
 
 ?>
@@ -176,9 +175,9 @@ class facebook extends \Q {
     {
 
         // bulk on localhost ##
-        // if ( helper::is_localhost() ) { 
+        // if ( h::is_localhost() ) { 
         
-        //     // helper::log( 'FB pixel not added on localhost' );
+        //     // h::log( 'FB pixel not added on localhost' );
 
         //     // return false; 
         
@@ -187,7 +186,7 @@ class facebook extends \Q {
         // check if consent given to load script ##
         if ( ! consent::given( 'marketing' ) ) {
 
-            // helper::log( 'Marketing NOT allowed...' );
+            // h::log( 'Marketing NOT allowed...' );
 
             // kick out ##
             return false;
@@ -197,14 +196,14 @@ class facebook extends \Q {
         // grab the options ##
         // $q_options = options::get();
 
-        // helper::log( options::get( 'facebook_pixel' ) );
+        // h::log( options::get( 'facebook_pixel' ) );
 
         // bulk if no options found ##
         if ( 
-            ! options::get( 'facebook_pixel' )
+            ! core\option::get( 'facebook_pixel' )
         ) {
 
-            // helper::log( 'Error: Options missing...' );
+            // h::log( 'Error: Options missing...' );
 
             return false;
 
@@ -214,14 +213,14 @@ class facebook extends \Q {
         // // check if we have tag_manager defined in config ##
         // if ( ! isset( $q_options->facebook_pixel ) ) {
 
-        //     // helper::log( 'Facebook Pixel not defined in config' );
+        //     // h::log( 'Facebook Pixel not defined in config' );
 
         //     return false;
 
         // }
 
         // kick it back, cleanly... ##
-        echo options::get( 'facebook_pixel' );
+        echo core\option::get( 'facebook_pixel' );
 
     }
 
@@ -237,9 +236,9 @@ class facebook extends \Q {
     {
 
         // bulk on localhost ##
-        // if ( helper::is_localhost() ) { 
+        // if ( h::is_localhost() ) { 
                 
-        //     // helper::log( 'Analytics skipped, as on localhost...' );
+        //     // h::log( 'Analytics skipped, as on localhost...' );
 
         //     // return false; 
 
@@ -248,7 +247,7 @@ class facebook extends \Q {
         // check if consent given to load script ##
         if ( ! consent::given( 'marketing' ) ) {
 
-            // helper::log( 'Marketing NOT allowed...' );
+            // h::log( 'Marketing NOT allowed...' );
 
             // kick out ##
             return false;
@@ -258,14 +257,14 @@ class facebook extends \Q {
         // grab the options ##
         // $q_options = options::get();
 
-        #helper::log( $q_options );
+        #h::log( $q_options );
 
         // bulk if no options found ##
         if ( 
-            ! options::get( 'facebook_pixel_noscript' )  
+            ! core\option::get( 'facebook_pixel_noscript' )  
         ) {
 
-            // helper::log( 'Error: Options missing...' );
+            // h::log( 'Error: Options missing...' );
 
             return false;
 
@@ -275,7 +274,7 @@ class facebook extends \Q {
         // if ( ! isset( $q_options->facebook_pixel_noscript ) ) { 
 
         //     // Log ##
-        //     // helper::log( 'Facebook Pixel No Script not defined' );
+        //     // h::log( 'Facebook Pixel No Script not defined' );
 
         //     // kick off ##
         //     return false; 
@@ -283,7 +282,7 @@ class facebook extends \Q {
         // }
 
         // kick it back, cleanly... ##
-        echo options::get( 'facebook_pixel_noscript' );
+        echo core\option::get( 'facebook_pixel_noscript' );
 
     }
 
@@ -300,16 +299,16 @@ class facebook extends \Q {
             || ! apply_filters( 'q/plugin/facebook/app_id', false ) // we also need to check for FB config ##
         ) {
 
-            helper::log( 'Missing config.' );
+            h::log( 'Missing config.' );
 
             return false;
 
         }
 
         // we need a post to share, so let's see if we have one ##
-        if ( ! $the_post = wp_post::the_post() ) { 
+        if ( ! $the_post = wp\post::get() ) { 
         
-            helper::log( 'No post object found.' );
+            h::log( 'No post object found.' );
 
             return false; 
         
