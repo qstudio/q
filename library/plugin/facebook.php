@@ -5,7 +5,7 @@ namespace q\plugin;
 use q\core;
 use q\core\helper as h;
 // use q\core\options as options;
-use q\wordpress as wp;
+use q\ui\wordpress as wp;
 use q\ui;
 use q\controller\consent as consent; // @todo
 
@@ -110,7 +110,7 @@ class facebook extends \Q {
     {
 
         // check we can get a post object ##
-        if ( ! $the_post = wp\post::get() ) { 
+        if ( ! $the_post = wp\get::the_post() ) { 
         
             // h::log( 'No post object' );
 
@@ -306,7 +306,7 @@ class facebook extends \Q {
         }
 
         // we need a post to share, so let's see if we have one ##
-        if ( ! $the_post = wp\post::get() ) { 
+        if ( ! $the_post = wp\get::the_post() ) { 
         
             h::log( 'No post object found.' );
 

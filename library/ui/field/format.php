@@ -2,25 +2,12 @@
 
 namespace q\ui\field;
 
-// use q\core\core as core;
-use q\core\helper as helper;
-// use q\core\config as config;
+use q\core;
+use q\core\helper as h;
+use q\ui;
 
-use q\ui\field as field;
-use q\ui\field\core as core;
-use q\ui\field\filter as filter;
-use q\ui\field\format as format;
-use q\ui\field\fields as fields;
-use q\ui\field\log as log;
-use q\ui\field\markup as markup;
-use q\ui\field\output as output;
-use q\ui\field\type as type;
-use q\ui\field\ui as ui;
+class format extends ui\field {
 
-class format extends field {
-
-    
-   
     /**
      * Check allowed formats based on passed $value, format and return a string ready for markup  
      * 

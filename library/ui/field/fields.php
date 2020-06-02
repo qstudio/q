@@ -7,16 +7,7 @@ use q\core\helper as h;
 use q\plugin;
 use q\module;
 use q\ui;
-
-// use q\ui\field\callback as callback;
-// // use q\ui\field\core as core;
-// use q\ui\field\filter as filter;
-// use q\ui\field\format as format;
-// use q\ui\field\fields as fields;
-// use q\ui\field\log as log;
-// use q\ui\field\markup as markup;
-// use q\ui\field\output as output;
-// use q\ui\field\ui as ui;
+use q\ui\field;
 
 class fields extends ui\field {
 
@@ -395,7 +386,7 @@ class fields extends ui\field {
 
             // Callback methods on specified field ##
             // Note - field includes a list of standard callbacks, which can be extended via the filter q/field/callbacks/get ##
-            $value = ui\field\callback::field( $field, $value );
+            $value = field\callback::field( $field, $value );
 
             // helper::log( 'After callback -- field: '.$field .' With Value:' );
             // helper::log( $value );
@@ -410,7 +401,7 @@ class fields extends ui\field {
             // Format each field value based on type ( int, string, array, WP_Post Object ) ##
             // each item is filtered as looped over -- q/field/field/GROUP/FIELD - ( $args, $fields ) ##
             // results are saved back to the self::$fields array in String format ##
-            ui\field\format::field( $field, $value );
+            field\format::field( $field, $value );
 
         }
 
@@ -454,7 +445,7 @@ class fields extends ui\field {
         self::$log['fields']['added'][$field] = 
             ! is_null( $message ) ? 
             $message : 
-            ui\field\log::backtrace() ;
+            field\log::backtrace() ;
 
         // positive ##
         return true;
@@ -485,7 +476,7 @@ class fields extends ui\field {
         self::$log['fields']['removed'][$field] = 
             ! is_null( $message ) ? 
             $message : 
-            ui\field\log::backtrace() ;
+            field\log::backtrace() ;
 
         // positive ##
         return true;

@@ -5,6 +5,7 @@ namespace q\ui\field;
 use q\core;
 use q\core\helper as h;
 use q\ui;
+use q\ui\field;
 
 class markup extends ui\field {
 
@@ -313,7 +314,7 @@ class markup extends ui\field {
         self::$log['placeholder']['removed'][$string] = 
             ! is_null( $message ) ? 
             $message : 
-            ui\field\log::backtrace() ;
+            log::backtrace() ;
 
         // positive ##
         return true;

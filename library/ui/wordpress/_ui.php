@@ -1,63 +1,16 @@
 <?php
 
-namespace q\ui;
+namespace q\wordpress;
 
-use q\core; // core functions, options files ##
-use q\core\helper as h; // helper shortcut ##
-use q\ui\wordpress as wp; // wordpress
-use q\plugin; // plugins ## 
-use q\ui; // template, ui, markup... ##
+// use q\core\core as core;
+use q\core\helper as helper;
+use q\theme\template as template;
+use q\theme\markup as markup;
+use q\wordpress\post as wp_post;
+use q\wordpress\core as wp_core;
+use q\wordpress\media as wp_media;
 
-class render extends \Q {
-
-
-	/**
-     * Open .content HTML
-     *
-     * @since       1.0.2
-     * @return      string   HTML
-     */
-    public static function the_content_open( $args = array() )
-    {
-
-		// global arg validator ##
-		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
-
-        // set-up new array ##
-		$array = [];
-
-        // grab classes ##
-        $array['classes'] = wp\get::body_class( $args );
-
-        // return ##
-		return ui\method::prepare_return( $args, $array );
-
-	}
-
-	
-
-	/**
-     * Open .content HTML
-     *
-     * @since       1.0.2
-     * @return      string   HTML
-     */
-    public static function the_content_close( $args = array() )
-    {
-
-		// global arg validator ##
-		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
-
-        // set-up new array -- nothing really to do ##
-		$array = [];
-
-        // return ##
-		return ui\method::prepare_return( $args, $array );
-
-	}
-
-
-
+class ui extends \Q {
 
 	
     /**
@@ -69,7 +22,7 @@ class render extends \Q {
     {
 
         // pass to get_posts ##
-        return wp\get::the_posts( $args );
+        return wp_post::get_posts( $args );
 
     }
 
@@ -84,12 +37,12 @@ class render extends \Q {
     public static function the_post_loop( $args = array() )
     {
 
-        // h::log( $args );
+        // helper::log( $args );
 
         // grab object with post_loop data ##
-        if ( ! $object = wp\get::the_post_loop( $args ) ) { 
+        if ( ! $object = wp_post::get_post_loop( $args ) ) { 
 		
-			h::log( 'Error in $object returned from get\the_post_loop' );
+			helper::log( 'Error in $object returned from get_post_loop' );
 
 			return false; 
 		
@@ -104,7 +57,7 @@ class render extends \Q {
 ?>
         <li class="the-post-loop">
 
-            <div class="blog-wrapper equal-item use_wrap posts<?php echo $class; if ( 'handheld' != h::get_device() ) echo ' whole'; ?>">
+            <div class="blog-wrapper equal-item use_wrap posts<?php echo $class; if ( 'handheld' != helper::get_device() ) echo ' whole'; ?>">
 <?php
 
                 // auto ##
@@ -146,10 +99,110 @@ class render extends \Q {
      */
     public static function the_title( Array $args = null ) {
 
-		// bounce on to getter and return value || echo ##
-		return wp\get::the_title( $args );
+		// global arg validator ##
+		if ( ! $args = wp_core::prepare_args( $args ) ){ return false; }
+
+        // helper::log( $args );
+
+        // set-up new array ##
+		$array = [];
+
+        // type ##
+        $type = 'page';
+
+        // get the title ##
+        if (
+            \is_home() )
+        {
+
+            $the_post = \get_option( 'page_for_posts' );
+            // helper::log( 'Loading home title: '.$the_post );
+
+            // type ##
+            $type = 'is_home';
+
+            // add the title ##
+			$array['title'] = \get_the_title( $the_post );
+			// $array['permalink'] = \get_permalink( $the_post );
+
+        } else if (
+
+            \is_404()
+
+        ){
+
+            // type ##
+            $type = 'is_404';
+
+            // helper::log('Loading archive title');
+			$array['title'] = \__('Oops! It looks like you\'re lost');
+			// $array['permalink'] = \get_permalink( \get_site_option( 'page_on_front' ) );
+
+        } else if (
+
+            \is_search()
+
+        ){
+
+            // helper::log( 'is_search' );
+
+            // type ##
+            $type = 'is_search';
+
+            // helper::log('Loading archive title');
+			$array['title'] = \sprintf( 'Search results for "%s"', $_GET['s'] );
+			// $array['permalink'] = \get_permalink( \get_site_option( 'page_on_front' ) );
+
+        } else if (
+
+                \is_author()
+                || \is_tax()
+                || \is_category()
+                || \is_archive()
+
+        ) {
+
+            // type ##
+            $type = 'is_archive';
+
+            // helper::log('Loading archive title');
+			$array['title'] = \get_the_archive_title();
+			// $array['permalink'] = \get_permalink( \get_site_option( 'page_on_front' ) );
+
+        } else {
+
+			$type = 'is_single';
+
+            // helper::log('Loading post title');
+
+            $the_post = $the_post->ID;
+
+            // add the title ##
+			$array['title'] = \get_the_title( $the_post );
+			// $array['permalink'] = \get_permalink( $the_post );
+
+        }
+
+		// return ##
+		return wp_core::prepare_return( $args, $array );
 
     }
+
+
+
+	/**
+	 * Helper Method to get title
+	 */
+	public static function get_the_title( Array $args = null ){
+
+		// we want to return ##
+		$args['return'] = 'return';
+
+		// bounce on, and return array ##
+		return self::the_title( $args );
+
+	}
+
 
 
 
@@ -163,15 +216,15 @@ class render extends \Q {
     public static function the_parent( Array $args = null ) {
 
 		// global arg validator ##
-		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
+		if ( ! $args = wp_core::prepare_args( $args ) ){ return false; }
 
         // set-up new array ##
 		$array = [];
 		
 		// pages might have a parent
 		if ( 
-			'page' === \get_post_type( $args['post'] ) 
-			&& $args['post']->post_parent
+			'page' === \get_post_type( $the_post ) 
+			&& $the_post->post_parent
 		) {
 
 			// $array['text'] = __( "View More", 'q-textdomain' );
@@ -180,13 +233,13 @@ class render extends \Q {
             $array['title'] = $object->post_title;
 
 		// is singular post ##
-		} elseif ( \is_single( $args['post'] ) ) {
+		} elseif ( \is_single( $the_post ) ) {
 
-			// h::log( 'Get category title..' );
+			// helper::log( 'Get category title..' );
 
 			// $args->ID = $the_post->post_parent;
 			if ( 
-				! $array = self::get_the_category([ 'post' => $args['post'] ])
+				! $array = self::get_the_category([ 'post' => $the_post ])
 			){
 
 				return false;
@@ -197,7 +250,7 @@ class render extends \Q {
 		}
 
         // return ##
-		return ui\method::prepare_return( $args, $array );
+		return wp_core::prepare_return( $args, $array );
 
 	}
 
@@ -219,13 +272,78 @@ class render extends \Q {
 
 
 
+
+    /**
+     * Get Post excerpt and return it in an HTML element with classes
+     *
+     * @since       1.0.7
+     */
+    public static function the_excerpt( $args = array() )
+    {
+
+        // global arg validator ##
+		if ( ! $args = wp_core::prepare_args( $args ) ){ return false; }
+
+        // set-up new array ##
+		$array = [];
+
+        // get the post ##
+        if ( \is_home() ) {
+
+            // helper::log('Loading home excerpt');
+
+            $array['content'] = wp_post::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ) );
+
+        } else if (
+            \is_author()
+        ) {
+
+            // helper::log('Loading author excerpt');
+
+            $array['content'] =
+                \get_the_author_meta( 'description' ) ?
+                markup::chop( nl2br( \get_the_author_meta( 'description' ), intval( $args['limit'] ) ) ) :
+                wp_post::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ) );
+
+        } else if (
+            \is_tax()
+            || \is_category()
+            || \is_archive()
+        ) {
+
+            // helper::log('Loading category excerpt');
+            // helper::log( category_description() );
+
+            $array['content'] =
+                \category_description() ?
+                q_markup::chop( nl2br( \category_description(), intval( $args['limit'] ) ) ) :
+                q_wordpress::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ) );
+
+        } else {
+
+            // helper::log('Loading other excerpt');
+
+            $array['content'] = q_wordpress::excerpt_from_id( $the_post->ID, intval( $args['limit'] ) );
+
+		}
+		
+		 // return ##
+		 return wp_core::prepare_return( $args, $array );
+
+	}
+	
+
+
 	/**
 	 * Helper Method to get excerpt
 	 */
-	public static function the_excerpt( Array $args = null ){
+	public static function get_the_excerpt( Array $args = null ){
+
+		// we want to return ##
+		$args['return'] = 'return';
 
 		// bounce on, and return array ##
-		return wp\get::the_excerpt( $args );
+		return self::the_excerpt( $args );
 
 	}
 
@@ -238,7 +356,7 @@ class render extends \Q {
 			is_null( $args )
 		) {
 
-			h::log( 'Error in passed $args' );
+			helper::log( 'Error in passed $args' );
 
 			return false;
 
@@ -261,7 +379,7 @@ class render extends \Q {
 		// last check ##
 		if ( ! $the_post ) {
 
-			h::log( 'Error with post object, validate.' );
+			helper::log( 'Error with post object, validate.' );
 
 			return false;
 
@@ -272,7 +390,7 @@ class render extends \Q {
 			! $get_the_category = \get_the_category( $the_post->ID )
 		){
 
-			h::log( 'No categories found for Post: '.$the_post->post_title );
+			helper::log( 'No categories found for Post: '.$the_post->post_title );
 
 			return false;
 
@@ -282,7 +400,7 @@ class render extends \Q {
 		$category = $get_the_category[0];
 
 		// test ##
-		// h::log( $category );
+		// helper::log( $category );
 
 		// categories ##
 		if (
@@ -290,7 +408,7 @@ class render extends \Q {
 			|| ! $category instanceof \WP_Term
 		) {
 
-			h::log( 'Error in returned category' );
+			helper::log( 'Error in returned category' );
 
 			return false;
 
@@ -300,7 +418,7 @@ class render extends \Q {
 		$array['slug'] = $category->slug;
 		$array['title'] = $category->cat_name;
 
-		// h::log( $array );
+		// helper::log( $array );
 
 		if ( isset( $args['return'] ) && 'return' == $args['return'] ) {
 			
@@ -310,15 +428,15 @@ class render extends \Q {
 
 		if ( ! isset( $args['markup'] ) ) {
 
-			h::log( 'Missing "markup", returning false.' );
+			helper::log( 'Missing "markup", returning false.' );
 
 			return false;
 
 		}
 
-		$string = ui\markup::apply( $args['markup'], $array );
+		$string = markup::apply( $args['markup'], $array );
 
-		// h::log( $string );
+		// helper::log( $string );
 
 		// echo ##
 		echo $string ;
@@ -352,7 +470,7 @@ class render extends \Q {
 			is_null( $args )
 		) {
 
-			h::log( 'Error in passed $args' );
+			helper::log( 'Error in passed $args' );
 
 			return false;
 
@@ -375,7 +493,7 @@ class render extends \Q {
 		// last check ##
 		if ( ! $the_post ) {
 
-			h::log( 'Error with post object, validate.' );
+			helper::log( 'Error with post object, validate.' );
 
 			return false;
 
@@ -390,7 +508,7 @@ class render extends \Q {
 			! $authordata
 		) {
 
-			h::log( 'Error in returned author data' );
+			helper::log( 'Error in returned author data' );
 
 			return false;
 
@@ -404,7 +522,7 @@ class render extends \Q {
 		$array['slug'] = $authordata->user_login;
 		$array['title'] = $author_name;
 
-		// h::log( $array );
+		// helper::log( $array );
 
 		if ( isset( $args['return'] ) && 'return' == $args['return'] ) {
 			
@@ -414,15 +532,15 @@ class render extends \Q {
 
 		if ( ! isset( $args['markup'] ) ) {
 
-			h::log( 'Missing "markup", returning false.' );
+			helper::log( 'Missing "markup", returning false.' );
 
 			return false;
 
 		}
 
-		$string = ui\markup::apply( $args['markup'], $array );
+		$string = markup::apply( $args['markup'], $array );
 
-		// h::log( $string );
+		// helper::log( $string );
 
 		// echo ##
 		echo $string ;
@@ -456,7 +574,7 @@ class render extends \Q {
 			is_null( $args )
 		) {
 
-			h::log( 'Error in passed $args' );
+			helper::log( 'Error in passed $args' );
 
 			return false;
 
@@ -479,7 +597,7 @@ class render extends \Q {
 		// last check ##
 		if ( ! $the_post ) {
 
-			h::log( 'Error with post object, validate.' );
+			helper::log( 'Error with post object, validate.' );
 
 			return false;
 
@@ -494,7 +612,7 @@ class render extends \Q {
 			! $authordata
 		) {
 
-			h::log( 'Error in returned author data' );
+			helper::log( 'Error in returned author data' );
 
 			return false;
 
@@ -508,7 +626,7 @@ class render extends \Q {
 		$array['slug'] = $authordata->user_login;
 		$array['title'] = $author_name;
 
-		// h::log( $array );
+		// helper::log( $array );
 
 		if ( isset( $args['return'] ) && 'return' == $args['return'] ) {
 			
@@ -518,15 +636,15 @@ class render extends \Q {
 
 		if ( ! isset( $args['markup'] ) ) {
 
-			h::log( 'Missing "markup", returning false.' );
+			helper::log( 'Missing "markup", returning false.' );
 
 			return false;
 
 		}
 
-		$string = theme\markup::apply( $args['markup'], $array );
+		$string = markup::apply( $args['markup'], $array );
 
-		// h::log( $string );
+		// helper::log( $string );
 
 		// echo ##
 		echo $string ;
@@ -563,7 +681,7 @@ class render extends \Q {
     {
 
         // pass to functions
-        if ( ! $object = wp\media::get_post_thumbnail( $args ) ) { return false; }
+        if ( ! $object = wp_media::get_post_thumbnail( $args ) ) { return false; }
 
         // Parse incoming $args into an array and merge it with $defaults - caste to object ##
         $args = ( object )\wp_parse_args( $args, config::$the_post_thumbnail );
@@ -574,19 +692,5 @@ class render extends \Q {
 
     }
 
-
-
-    public static function the_password_form()
-    {
-
-?>
-        <div class="password" style="text-align: center; margin: 20px;">
-            <?php echo \get_the_password_form(); ?>
-        </div>
-<?php
-
-        return true;
-
-    }
 
 }

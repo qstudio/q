@@ -96,7 +96,6 @@ class field extends \Q {
     private static function load_libraries()
     {
 
-        // require_once self::get_plugin_path( 'library/ui/field/filter.php' );
         require_once self::get_plugin_path( 'library/ui/field/method.php' );
         require_once self::get_plugin_path( 'library/ui/field/callback.php' );
         require_once self::get_plugin_path( 'library/ui/field/fields.php' );
@@ -107,7 +106,7 @@ class field extends \Q {
         require_once self::get_plugin_path( 'library/ui/field/output.php' );
         require_once self::get_plugin_path( 'library/ui/field/log.php' );
 
-	}
-	
+    }
+
 
 }

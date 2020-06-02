@@ -2,19 +2,12 @@
 
 namespace q\ui;
 
-use q\core\config as config;
-use q\core\core as core;
-use q\core\helper as helper;
-// use q\controller\css as css;
-use q\theme\markup as markup;
-use q\wordpress\core as wp_core;
-
-// load it up ##
-#\q\theme\ui\frontpage::run();
+use q\core;
+use q\core\helper as h;
+use q\ui;
+use q\ui\wordpress as wp;
 
 class navigation extends \Q {
-
-
 
     /**
     * Check if a page shoould show sub navigation
@@ -33,7 +26,7 @@ class navigation extends \Q {
         // check for the_post ## 
         if ( ! $the_post = wordpress::the_post() ) {
 
-            #helper::log( 'No Post object found' );
+            #h::log( 'No Post object found' );
 
             return false;
 
@@ -42,7 +35,7 @@ class navigation extends \Q {
         // check for post parent ##
         if ( ! $the_post->post_parent ) {
 
-            #helper::log( 'Post has no parent' );
+            #h::log( 'Post has no parent' );
 
             return false;
 
@@ -50,7 +43,7 @@ class navigation extends \Q {
 
         if ( ! $parent = \get_post( $the_post->post_parent ) ) {
 
-            #helper::log( 'Parent post missing..' );
+            #h::log( 'Parent post missing..' );
 
             return false;
 
@@ -58,13 +51,13 @@ class navigation extends \Q {
 
         if ( in_array( $parent->post_name, $slugs ) ) {
 
-            #helper::log( 'Slug matched: '.$parent->post_name );
+            #h::log( 'Slug matched: '.$parent->post_name );
 
             return true;
 
         }
 
-        #helper::log( 'Not a page with sub navigation' );
+        #h::log( 'Not a page with sub navigation' );
 
         return false;
 
@@ -84,7 +77,7 @@ class navigation extends \Q {
        // if ( ! $array = wordpress::get_navigation( $args ) ) { return false; }
 
         // handheld navigation ##
-        #if ( q_ui::get_device() == 'handheld' ) {
+        #if ( q_ui::device() == 'handheld' ) {
 
 ?>
     <div id="the-navigation" class="navigation background-solid-<?php #echo self::get_header_colour()->name; ?>">
@@ -106,7 +99,7 @@ class navigation extends \Q {
         }
 
         // handheld navigation ##
-        #if ( q_ui::get_device() == 'handheld' ) {
+        #if ( q_ui::device() == 'handheld' ) {
 
 ?>
         </ul>
@@ -132,13 +125,13 @@ class navigation extends \Q {
         #global $blog_id;
         $blog_id = \absint( $blog_id );
 
-        #helper::log( 'nav_menu - $blog_id: '.$blog_id.' / $origin_id: '.$origin_id );
+        #h::log( 'nav_menu - $blog_id: '.$blog_id.' / $origin_id: '.$origin_id );
 
         if ( 
             ! \is_multisite() 
         ) {
 
-            #helper::log( $args );
+            #h::log( $args );
             \wp_nav_menu( $args );
             
             return;
@@ -146,8 +139,8 @@ class navigation extends \Q {
         }
 
         \switch_to_blog( $blog_id );
-        #helper::log( 'get_current_blog_id(): '.\get_current_blog_id()  );
-        #helper::log( $args );
+        #h::log( 'get_current_blog_id(): '.\get_current_blog_id()  );
+        #h::log( $args );
 	    \wp_nav_menu( $args );
         \restore_current_blog();
 
@@ -234,7 +227,7 @@ class navigation extends \Q {
     public static function the_nav_menu( $args = array(), $blog_id = 1 )
     {
 
-        #helper::log( $args );
+        #h::log( $args );
 
         // merge theme_location into passed args ##
         $args['theme_location'] = isset( $args['theme_location'] ) ? $args['theme_location'] : $args['menu'] ;
@@ -242,7 +235,7 @@ class navigation extends \Q {
         // try and grab data, or kick back false ##
         // if ( ! $args = wordpress::get_nav_menu( $args ) ) { 
 
-        //      helper::log( 'kicked here..' );
+        //      h::log( 'kicked here..' );
 
         //      return false; 
             
@@ -251,15 +244,15 @@ class navigation extends \Q {
         // Parse incoming $args into an array and merge it with $defaults - caste to object ##
         $args = ( object )wp_parse_args( 
             $args
-            , config::get( 'the_nav_menu' ) 
+            , core\config::get( 'the_nav_menu' ) 
         );
         
         //$args = \wp_parse_args( $args, self::$the_nav_menu );
-		#helper::log( $args );
+		#h::log( $args );
         
         if ( ! \has_nav_menu( $args->menu ) ) {
         
-            helper::log( '! has nav menu: '.$args->theme_location );
+            h::log( '! has nav menu: '.$args->theme_location );
 
             return false;
 
@@ -290,19 +283,19 @@ class navigation extends \Q {
 	public static function the_pagination( $args = array() ) {
 
 		// grab array ##
-        if ( ! $array = wp_core::get_the_pagination( $args ) ) { 
+        if ( ! $array = wp\get::the_pagination( $args ) ) { 
 
-			helper::log( 'No pagination...' );
+			h::log( 'No pagination...' );
             
             return false; 
         
 		}
 		
 		// test ##
-		// helper::log( $array );
+		// h::log( $array );
 
 		// get config ##
-		$config = config::get('the_pagination');
+		$config = core\config::get('the_pagination');
 
 		// format page items ##
 		$items = '';
@@ -315,9 +308,9 @@ class navigation extends \Q {
 			$row['item'] = str_replace( 'page-numbers', $config['class_link_item'], $page );
 			$row['active-class'] = (strpos($page, 'current') !== false ? ' active' : '');
 
-			// helper::log( $row );
+			// h::log( $row );
 
-			$items .= markup::apply( $markup, $row );
+			$items .= ui\markup::apply( $markup, $row );
 
 		}
 
@@ -379,7 +372,7 @@ class navigation extends \Q {
         $args = ( object )wp_parse_args( $args, config::$the_sidebar );
 
         // mobile wrapper ##
-        if ( 'mobile' == self::get_device() ) {
+        if ( 'mobile' == self::device() ) {
 
             // close tag ##
             ui::get_tag( $args->tag, '', 'close' );
@@ -405,7 +398,7 @@ class navigation extends \Q {
             case ( 'page' ) :
 
                 // section navigation ##
-                if ( 'mobile' != self::get_device() ) self::the_nav_menu();
+                if ( 'mobile' != self::device() ) self::the_nav_menu();
 
                 // secondary content ##
                 #self::the_secondary_content();
@@ -429,7 +422,7 @@ class navigation extends \Q {
         }
 
         // mobile wrapper ##
-        if ( 'handheld' == helper::get_device() ) {
+        if ( 'handheld' == h::device() ) {
 
             // close tag ##
             ui::get_tag( $args->tag, '', 'close' );

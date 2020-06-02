@@ -4,8 +4,6 @@ namespace q\plugin;
 
 use q\core;
 use q\core\helper as h;
-// use q\core\options as options;
-// use q\core\wordpress as wordpress;
 use q\controller\consent as consent; // @todo ##
 
 // load it up ##

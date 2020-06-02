@@ -4,9 +4,7 @@ namespace q\plugin;
 
 use q\core;
 use q\core\helper as h;
-// use q\core\options as options;
 use q\controller\consent as consent;
-// use q\core\wordpress as wordpress;
 
 // load it up ##
 \q\plugin\google::run();

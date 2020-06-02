@@ -5,9 +5,9 @@ namespace q\ui\field;
 use q\core\helper as h;
 use q\core;
 use q\ui;
+use q\ui\field;
 
 class callback extends ui\field {
-
 
     /**
      * Run defined callbacks on specific field ##

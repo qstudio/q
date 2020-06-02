@@ -2,21 +2,12 @@
 
 namespace q\ui\field;
 
-use q\core\helper as helper;
-use q\wordpress\post as wp_post;
+use q\core\helper as h;
+use q\ui;
+use q\ui\field;
+use q\ui\wordpress as wp;
 
-// Q Field Classes ##
-use q\ui\field as field;
-use q\ui\field\core as core;
-use q\ui\field\filter as filter;
-use q\ui\field\format as format;
-use q\ui\field\fields as fields;
-use q\ui\field\log as log;
-use q\ui\field\markup as markup;
-use q\ui\field\output as output;
-use q\ui\field\ui as ui;
-
-class type extends field {
+class type extends ui\field {
 
     
     /**
@@ -58,7 +49,7 @@ class type extends field {
             $alt = 
                 \get_post_meta( $value, '_wp_attachment_image_alt', true ) ?
                 \get_post_meta( $value, '_wp_attachment_image_alt', true ) :
-                wp_post::excerpt_from_id( $value, 100 );
+                wp\get::the_excerpt_from_id( $value, 100 );
 
             // markup tag attributes ##
             $srcset = '" srcset="'.\esc_attr($srcset).'"'; 

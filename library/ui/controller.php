@@ -29,6 +29,9 @@ class controller extends \Q {
     private static function load_libraries()
     {
 
+		// wordpress tools ##
+		require_once self::get_plugin_path( 'library/ui/wordpress/controller.php' );
+
 		// UI core ##
         require_once self::get_plugin_path( 'library/ui/method.php' );
 
@@ -55,7 +58,7 @@ class controller extends \Q {
 		require_once self::get_plugin_path( 'library/ui/css.php' );
 		
 		// custom field engines ##
-		require_once self::get_plugin_path( 'library/ui/field.php' );
+		require_once self::get_plugin_path( 'library/ui/field/controller.php' );
 		## require_once self::get_plugin_path( 'library/ui/fields.php' );
 
         // cookies ##

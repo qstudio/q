@@ -2,21 +2,11 @@
 
 namespace q\ui\field;
 
-// use q\core\core as core;
-use q\core\helper as helper;
-// use q\core\config as config;
+use q\core;
+use q\core\helper as h;
+use q\ui;
 
-use q\ui\field as field;
-use q\ui\field\core as core;
-use q\ui\field\filter as filter;
-use q\ui\field\format as format;
-use q\ui\field\fields as fields;
-use q\ui\field\log as log;
-use q\ui\field\markup as markup;
-use q\ui\field\output as output;
-use q\ui\field\ui as ui;
-
-class log extends field {
+class log extends \Q {
     
     /**
      * Logging function
@@ -24,14 +14,14 @@ class log extends field {
      */
     public static function render( Array $args = null ){
 
-        // helper::log( $args );
+        // h::log( $args );
 
         if (
             ! isset( self::$args['config']['debug'] )
             || false === self::$args['config']['debug']
         ) {
 
-            // helper::log( 'Debugging is turned off for Field Group: "'.$args['group'].'"' );
+            // h::log( 'Debugging is turned off for Field Group: "'.$args['group'].'"' );
 
             return false;
 
@@ -47,14 +37,14 @@ class log extends field {
             self::$log ;
 
         // log to log ##
-        helper::log( $return );
+        h::log( $return );
 
     }
 
 
     public static function backtrace(){
 
-        // helper::log( \debug_backtrace() );
+        // h::log( \debug_backtrace() );
 
         return \debug_backtrace()[2]['function'];
 

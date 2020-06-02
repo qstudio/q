@@ -4,7 +4,7 @@ namespace q\plugin;
 
 use q\core\core as core;
 use q\core\helper as helper;
-use q\wordpress\post as wp_post;
+use q\ui\wordpress as wp;
 
 // load it up ##
 \q\plugin\twitter::run();
@@ -30,7 +30,7 @@ class twitter extends \Q {
     {
 
         // check we can get a post object ##
-        if ( ! $the_post = wp_post::the_post() ) { 
+        if ( ! $the_post = wp\get::the_post() ) { 
         
             // helper::log( 'No post object' );
 

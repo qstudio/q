@@ -5,21 +5,9 @@ namespace q\ui\field;
 use q\core;
 use q\core\helper as h;
 use q\ui;
-// use q\core\config as config;
+use q\ui\field;
 
-// use q\ui\field as field;
-// // use q\ui\field\core as core;
-// use q\ui\field\filter as filter;
-// use q\ui\field\format as format;
-// use q\ui\field\fields as fields;
-// use q\ui\field\log as log;
-// use q\ui\field\markup as markup;
-// use q\ui\field\output as output;
-// use q\ui\field\ui as ui;
-
-// class method extends field {
 class method extends ui\field {
-
 	
     public static function validate( Array $args ) {
 

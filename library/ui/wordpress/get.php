@@ -1,31 +1,18 @@
 <?php
 
-namespace q\wordpress;
+namespace q\ui\wordpress;
 
 // Q ##
 use q\core;
 use q\core\helper as h;
-// use q\theme\template as template;
-// use q\controller\navigation as navigation;
-// use q\ui\wordpress as wp;
 use q\ui;
 
 // Q Theme ##
-use q\theme\ui\controller\fourzerofour as fourzerofour;
+use q\theme;
 
-class post extends \Q {
+class get extends ui\wordpress {
 
 
-	/**
-     *alias to get() method ##
-     */
-    public static function the_post( $args = null )
-    {
-
-		return self::get( $args );
-
-	}
-	
     /**
      * Method to clean up calling and checking for the global $post object
      * Allows $post to be passed
@@ -35,7 +22,7 @@ class post extends \Q {
      * @since       1.0.7
      * @return      Object      WP_Post object
      */
-    public static function get( $args = null )
+    public static function the_post( $args = null )
     {
 
         // self::log( $args );
@@ -100,7 +87,7 @@ class post extends \Q {
      * @since       1.3.0
      * @return      String
      */
-    public static function get_the_title( Array $args = null ) {
+    public static function the_title( Array $args = null ) {
 
 		// global arg validator ##
 		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
@@ -199,13 +186,13 @@ class post extends \Q {
      *
      * @since       1.0.7
      */
-    public static function get_the_excerpt( $args = array() )
+    public static function the_excerpt( $args = array() )
     {
 
         // global arg validator ##
 		if ( ! $args = ui\method::prepare_args( $args ) ){ 
 		
-			help::log( 'Bailing..' ); 
+			h::log( 'Bailing..' ); 
 		
 			return false; 
 		
@@ -219,7 +206,7 @@ class post extends \Q {
 
             // h::log('Loading home excerpt');
 
-            $array['content'] = excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ) );
+            $array['content'] = self::the_excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ) );
 
         } else if (
             \is_author()
@@ -230,7 +217,7 @@ class post extends \Q {
             $array['content'] =
                 \get_the_author_meta( 'description' ) ?
                 ui\markup::chop( nl2br( \get_the_author_meta( 'description' ), intval( $args['limit'] ) ) ) :
-                self::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ) );
+                self::the_excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ) );
 
         } else if (
             \is_tax()
@@ -250,7 +237,7 @@ class post extends \Q {
 
             // h::log('Loading other excerpt');
 
-            $array['content'] = self::excerpt_from_id( self::get(), intval( $args['limit'] ) );
+            $array['content'] = self::the_excerpt_from_id( self::get(), intval( $args['limit'] ) );
 
 		}
 		
@@ -258,6 +245,51 @@ class post extends \Q {
 		 return ui\method::prepare_return( $args, $array );
 
 	}
+
+
+
+	
+
+    /**
+     * Gets the excerpt of a specific post ID or object
+     *
+     * @param   $post       object/int  the ID or object of the post to get the excerpt of
+     * @param   $length     int         the length of the excerpt in words
+     * @param   $tags       string      the allowed HTML tags. These will not be stripped out
+     * @param   $extra      string      text to append to the end of the excerpt
+     *
+     * @link    http://pippinsplugins.com/a-better-wordpress-excerpt-by-id-function/        Reference
+     *
+     * @since 0.1
+     */
+    public static function the_excerpt_from_id( $post, $length = 155, $tags = null, $extra = '&hellip;' )
+    {
+
+        if( is_int( $post) ) {
+            $post = \get_post( $post );
+        } elseif( ! is_object( $post ) ) {
+            // var_dump( 'no $post' );
+            return false;
+        }
+
+        if( \has_excerpt( $post->ID ) ) {
+            $the_excerpt = $post->post_excerpt;
+        } else {
+            $the_excerpt = $post->post_content;
+        }
+
+        $the_excerpt = \strip_shortcodes( strip_tags( $the_excerpt, $tags ) );
+        #pr( $length );
+
+        if ( $length > 0 && strlen( $the_excerpt ) > $length ) { // length set and excerpt too long so chop ##
+            $the_excerpt = substr( $the_excerpt, 0, $length ).$extra;
+        }
+
+        // var_dump( $the_excerpt );
+
+        return \apply_filters( 'q/wordpress/excerpt_from_id', $the_excerpt );
+
+    }
 
     
 	
@@ -267,7 +299,7 @@ class post extends \Q {
      *
      * @since       1.0.2
      */
-    public static function get_posts( $args = array() )
+    public static function the_posts( $args = array() )
     {
 
         // h::log( $args );
@@ -278,7 +310,7 @@ class post extends \Q {
 		// h::log( $args );
 		
 		// we need $args->controller and $args->method for this to work ##
-		$args->controller = "\\q\\theme\\theme\\controller\\{$args->template}";
+		$args->controller = "\\q\\theme\\ui\\controller\\{$args->template}";
 		$args->method = "the_{$args->template}_loop";
 
         // pagination ##
@@ -369,6 +401,8 @@ class post extends \Q {
                     // && is_callable( array( "\q\theme\ui\view\{$args->template}\{$args->template}", "the_{$args->template}_loop" ) )
                 ) {
 
+					// @todo - we are moving to pure view + model - so gather data, pass to view ( get from theme or Q config ) - return or echo ##
+
 					// h::log ( "Post loop from: {$args->controller}::{$args->method}" );
 
                     #pr( $args_array );
@@ -411,14 +445,14 @@ class post extends \Q {
             if ( isset( $args->pagination ) ) {
 
                 // h::log( 'Adding pagination..' );
-                navigation::the_pagination([ 'query' => $q_query ]);
+                ui\navigation::the_pagination([ 'query' => $q_query ]);
 
             }
 
         } else {
 
             // nothing found ##
-            fourzerofour::render();
+            theme\ui\controller\fourzerofour::render();
 
         }
 
@@ -472,47 +506,108 @@ class post extends \Q {
 	*/
 
 
+	
+	
+
     /**
-     * Gets the excerpt of a specific post ID or object
+     * Get Pagination links
      *
-     * @param   $post       object/int  the ID or object of the post to get the excerpt of
-     * @param   $length     int         the length of the excerpt in words
-     * @param   $tags       string      the allowed HTML tags. These will not be stripped out
-     * @param   $extra      string      text to append to the end of the excerpt
-     *
-     * @link    http://pippinsplugins.com/a-better-wordpress-excerpt-by-id-function/        Reference
-     *
-     * @since 0.1
+     * @since       1.0.2
+     * @return      String      HTML
      */
-    public static function excerpt_from_id( $post, $length = 155, $tags = null, $extra = '&hellip;' )
+    public static function the_pagination( $args = array() )
     {
 
-        if( is_int( $post) ) {
-            $post = \get_post( $post );
-        } elseif( ! is_object( $post ) ) {
-            // var_dump( 'no $post' );
-            return false;
-        }
+		// global arg validator ##
+		if ( ! $args = ui\method::prepare_args( $args ) ){ 
+		
+			help::log( 'Bailing..' ); 
+		
+			return false; 
+		
+		}
 
-        if( \has_excerpt( $post->ID ) ) {
-            $the_excerpt = $post->post_excerpt;
-        } else {
-            $the_excerpt = $post->post_content;
-        }
+		if ( 
+			isset( $args['query'] )
+		) {
 
-        $the_excerpt = \strip_shortcodes( strip_tags( $the_excerpt, $tags ) );
-        #pr( $length );
+			$query = $args['query'];
 
-        if ( $length > 0 && strlen( $the_excerpt ) > $length ) { // length set and excerpt too long so chop ##
-            $the_excerpt = substr( $the_excerpt, 0, $length ).$extra;
-        }
+		// grab some global variables ##
+		} else {
+			
+			global $wp_query;
+			$query = $wp_query;
 
-        // var_dump( $the_excerpt );
+		}
 
-        return \apply_filters( 'q/wordpress/excerpt_from_id', $the_excerpt );
+		// no query, no pagination ##
+		if ( ! $query ) {
 
-    }
+			h::log( 'Nada to query...' );
 
+			return false;
+
+		}
+
+		// get config setting ##
+		$config = core\config::get('the_pagination');
+		// h::log( $config );
+
+        // work out total ##
+		$total = $query->max_num_pages;
+
+		// args to query WP ##
+		$paginate_args = [
+			// 'base'         			=> str_replace( 999999999, '%#%', \esc_url( \get_pagenum_link( 999999999 ) ) ),
+			'base'                  => @\add_query_arg('paged','%#%'),
+			'format'       			=> '?paged=%#%',
+			'total'        			=> $total,
+			'current'      			=> max( 1, \get_query_var( 'paged' ) ),
+			'type'         			=> 'array',
+            'show_all'              => false,
+            'end_size'		        => $config['end_size'], 
+            'mid_size'		        => $config['mid_size'],
+            'prev_text'             => $config['prev_text'],
+            'next_text'             => $config['next_text'],                   
+		];
+
+		// optionally add search query var ##
+		if( ! empty( $query->query_vars['s'] ) ) {
+
+			$paginate_args['add_args'] = array( 's' => \get_query_var( 's' ) );
+			
+		}
+
+		// filter args ##
+		$paginate_args = \apply_filters( 'q/wordpress/get_pagination/args', $paginate_args );
+
+		// get links from WP ##
+		$paginate_links = \paginate_links( $paginate_args );
+
+		// test ##
+        // h::log( $pages );
+
+		// empty array ##
+		$array = [];
+
+		// prepare first item ##
+		$array[] = '<li class="'.$config['li_class'].'"><a class="'.$config['class_link_first'].'" rel="1" href="?paged=1">'.$config['first_text'].'</a></li>';
+
+		// merge pagination into links ##
+		$array = array_merge( $array, $paginate_links ) ;
+
+		// prepare last item ##
+		$array[] = '<li class="'.$config['li_class'].'"><a class="'.$config['class_link_last'].'" rel="'.$total.'" href="?paged='.$total.'">'.$config['last_text'].'</a></li>';
+
+		// test ##
+        // h::log( $array );
+
+        // kick back array ##
+        return $array;
+
+	}
+	
 
 
 
@@ -521,7 +616,7 @@ class post extends \Q {
      *
      * @since       1.0.2
      */
-    public static function get_post_loop( $args = array() )
+    public static function the_post_loop( $args = array() )
     {
 
         #pr( $args );
@@ -530,7 +625,7 @@ class post extends \Q {
         if ( ! $the_post = self::the_post( $args ) ) { return false; }
 
         // Parse incoming $args into an array and merge it with $defaults - caste to object ##
-        $args = ( object ) \wp_parse_args( $args, config::get( 'the_posts' ) );
+        $args = ( object ) \wp_parse_args( $args, core\config::get( 'the_posts' ) );
 
         #pr( $the_post->ID );
 
@@ -618,8 +713,8 @@ class post extends \Q {
 
         // content ##
         $object->excerpt = 
-            self::excerpt_from_id( $the_post->ID, $args->length ) ? 
-            self::excerpt_from_id( $the_post->ID, $args->length ) : 
+            self::the_excerpt_from_id( $the_post->ID, $args->length ) ? 
+            self::the_excerpt_from_id( $the_post->ID, $args->length ) : 
             \get_bloginfo( 'description' ) ;
 
         // content ##
@@ -794,6 +889,262 @@ class post extends \Q {
         return $posts;
 
     }
+
+
+
+	
+
+    /**
+     * Get Post object by post_meta query
+     *
+     * @since       1.0.4
+     * @return      Object      $args
+     */
+    public static function get_post_by_meta( $args = array() )
+    {
+
+        // Parse incoming $args into an array and merge it with $defaults - caste to object ##
+        $args = ( object ) \wp_parse_args( $args, \q_theme::$get_post_by_meta );
+
+        // grab page - polylang will take care of language selection ##
+        $post_args = array(
+            'meta_query'        => array(
+                array(
+                    'key'       => $args->meta_key,
+                    'value'     => $args->meta_value
+                )
+            ),
+            'post_type'         => $args->post_type,
+            'posts_per_page'    => $args->posts_per_page,
+            'order'				=> $args->order,
+            'orderby'			=> $args->orderby
+        );
+
+        #pr( $args );
+
+        // run query ##
+        $posts = \get_posts( $post_args );
+
+        // check results ##
+        if ( ! $posts || \is_wp_error( $posts ) ) return false;
+
+        // test it ##
+        #pr( $posts[0] );
+        #pr( $args->posts_per_page );
+
+        // if we've only got a single item - shuffle up the array ##
+        if ( 1 === $args->posts_per_page && $posts[0] ) { return $posts[0]; }
+
+        // kick back results ##
+        return $posts;
+
+	}
+
+
+
+	
+    /**
+     * Get Sibling pages and return them in a flexible "landing" format
+     *
+     * @since       1.3.0
+     * @return      string       HTML Menu
+     * @todo        Add exception to block certain pages from showing - "Hide_landing = true"
+     */
+    public static function the_landing( $args = array() )
+    {
+
+        // get $the_post - allows for post_forcing ##
+        // move global post to a new variable, for later use ##
+        if ( ! $the_post = self::the_post() ) { return false; }
+
+        // Parse incoming $args into an array and merge it with $defaults - caste to object ##
+        $args = ( object ) \wp_parse_args( $args, \q_theme::$the_landing );
+
+        // find out "depth" of current page ##
+        $depth = count( \get_post_ancestors( $the_post->ID ) );
+
+        // work out who to list pages from ##
+        $post_parent = $depth == 0 ? $the_post : \get_post( $the_post->post_parent );
+
+        $args = array (
+            'child_of'          => $post_parent->ID,
+            'sort_column'       => 'menu_order',
+            'sort_order'        => 'ASC',
+        );
+        $pages = \get_pages($args);
+
+        if ( ! $pages ) { return false; }
+
+        #pr( $pages );
+
+        // remove pages with children ##
+        foreach ( $pages as $key => $value ) {
+
+            if ( self::has_children( $value->ID ) ) {
+
+                // not needed ##
+                unset( $pages[$key] );
+
+            }
+
+        }
+
+        // kick 'em back ##
+        return $pages;
+
+    }
+
+
+
+	
+    /**
+     * get nav_menu based on parent page slug
+     *
+     * @since       1.3.3
+     * @return      string       HTML Menu
+     */
+    public static function the_nav_menu( $args = array() )
+    {
+
+        // get the_post ##
+        if ( ! $the_post = self::the_post() ) { return false; }
+
+        #self::log( $args );
+
+        // Parse incoming $args into an array and merge it with $defaults - caste to object ##
+        $args = ( object )\wp_parse_args( 
+            $args
+            , \q_theme::$the_nav_menu 
+        );
+
+        #self::log( $args );
+
+        if ( \has_nav_menu( $args->menu ) ) {
+        
+            #self::log( 'has nav menu..' );
+
+            return $args;
+
+        }
+
+        return false;
+
+	}
+	
+
+
+
+	
+
+
+    /**
+    * Get post with title %like% search term
+    *
+    * @param       $title          Post title to search for
+    * @param       $method         wpdb method to use to retrieve results
+    * @param       $columns        Array of column rows to retrieve
+    *
+    * @since       0.3
+    * @return      Mixed           Array || False
+    */
+    public static function posts_with_title_like( $title = null, $method = 'get_col', $columns = array ( 'ID' ) )
+    {
+
+        // sanity check ##
+        if ( ! $title ) { return false; }
+
+        // global $wpdb ##
+        global $wpdb;
+
+        // First escape the $columns, since we don't use it with $wpdb->prepare() ##
+        $columns = \esc_sql( $columns );
+
+        // now implode the values, if it's an array ##
+        if( is_array( $columns ) ){
+            $columns = implode( ', ', $columns ); // e.g. "ID, post_title" ##
+        }
+
+        // run query ##
+        $results = $wpdb->$method (
+                $wpdb->prepare (
+                "
+                    SELECT $columns
+                    FROM $wpdb->posts
+                    WHERE {$wpdb->posts}.post_title LIKE %s
+                "
+                #,   esc_sql( '%'.like_escape( trim( $title ) ).'%' )
+                ,   \esc_sql( '%'.$wpdb->esc_like( trim( $title )  ).'%' )
+                )
+            );
+
+        #var_dump( $results );
+
+        // return results or false ##
+        return $results ? $results : false ;
+
+	}
+	
+
+
+	
+	/**
+     * Get body classes
+     *
+     * @since       1.0.2
+     * @return      string   HTML
+     */
+    public static function body_class( $args = array() ) 
+    {
+
+        // set-up new array ##
+        $array = [];
+
+        // get page template ##
+        $template =
+            \get_body_class() ?
+            (array) \get_body_class() :
+            array( "home" ) ;
+
+        // add to array ##
+        array_push( $array, $template[0] );
+
+        // add page-$post_name ##
+        if ( $post_name = ( isset( $the_post ) && \get_post_type() == "page" ) ? "page-{$the_post->post_name}" : false ) {
+
+            // add to array ##
+            array_push( $array, $post_name );
+
+        }
+
+        // added passed element, if ! is_null ##
+        if ( isset ( $args['class'] ) ) {
+
+            // h::log( 'Adding passed class..' );
+
+            if ( is_array( $args['class'] ) ) {
+                
+                $args['class'] = implode( array_filter( $args['class'] ), ' ' ) ;
+
+            } 
+
+            // add it in ##
+            array_push( $array, $args['class'] );
+
+        }
+
+		// h::log( $array );
+		
+        // check if we've got an array - if so filter and implode it ##
+        $string =
+            is_array( $array ) ?
+            implode( array_filter( $array ), ' ' ) :
+            $array ;
+
+        // kick it back ##
+        return $string;
+
+	}
+
 
 
 }

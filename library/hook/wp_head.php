@@ -21,7 +21,7 @@ use q\core\helper as h;
 // use q\core\options as options;
 // use q\core\wordpress as wordpress;
 use q\ui;
-use q\wordpress as wp;
+use q\ui\wordpress as wp;
 // use q\theme\markup as markup;
 
 // load it up ##
@@ -220,7 +220,7 @@ class wp_head extends \Q {
             if ( $meta_desc = \get_post_meta( $id, "metadescription", true ) ) {
                 
                 #pr( '1' );
-                $meta_desc = wp\post::excerpt_from_id( \get_the_ID(), $length, '', '' );
+                $meta_desc = wp\get::the_excerpt_from_id( \get_the_ID(), $length, '', '' );
                 
             } else if ( $meta_desc = \get_post_meta ( $id, 'template_meta_description', true ) ) {
                 
@@ -230,7 +230,7 @@ class wp_head extends \Q {
             } else { 
                 
                 #pr( '3' );
-                $meta_desc = wp\post::excerpt_from_id( $id, $length );
+                $meta_desc = wp\get::the_excerpt_from_id( $id, $length );
                 
             }
         }

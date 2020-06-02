@@ -5,8 +5,8 @@ namespace q\ui;
 // use q\core\core as core;
 use q\core;
 use q\core\helper as h;
-use q\wordpress\core as wp_core; // @todo ##
-use q\wordpress\post as wp_post; // @todo ##
+use q\ui;
+use q\ui\wordpress as wp; 
 
 class method extends \Q {
 
@@ -57,7 +57,7 @@ class method extends \Q {
 
 		} else {
 
-			$args['post'] = wp_post::get();
+			$args['post'] = wp\get::the_post();
 
 		}
 
@@ -125,7 +125,7 @@ class method extends \Q {
 		}
 
 		// markup ##
-		$string = markup::apply( $args['markup'], $array );
+		$string = ui\markup::apply( $args['markup'], $array );
 
 		// filter ##
         $string = \apply_filters( 'q/theme/get/string/'.$method, $string, $args );
