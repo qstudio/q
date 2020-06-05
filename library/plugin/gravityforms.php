@@ -369,7 +369,7 @@ class gravityforms extends \Q {
 
         if ( ! class_exists( 'RGFormsModel' ) ) {
             
-            helper::log( 'GF Class unavailable..' );
+            // helper::log( 'GF Class unavailable..' ); // @todo ##
 
             return false;
 

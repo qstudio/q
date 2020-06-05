@@ -4,10 +4,8 @@ namespace q\plugin;
 
 use q\core;
 use q\core\helper as h;
-// use q\core\options as options;
-use q\ui\wordpress as wp;
 use q\ui;
-use q\controller\consent as consent; // @todo
+use q\get;
 
 // load it up ##
 \q\plugin\facebook::run();
@@ -110,7 +108,7 @@ class facebook extends \Q {
     {
 
         // check we can get a post object ##
-        if ( ! $the_post = wp\get::the_post() ) { 
+        if ( ! $the_post = get\wp::the_post() ) { 
         
             // h::log( 'No post object' );
 
@@ -135,10 +133,10 @@ class facebook extends \Q {
         $array['title'] = $the_post->post_title;
 
         // get the excerpt ##
-        $string = wp\post::excerpt_from_id( $the_post->ID, 200 );
+        $string = get\wp::the_excerpt_from_id( $the_post->ID, 200 );
 
         // clean up ##
-        $string = ui\markup::rip_tags( $string );
+        $string = ui\method::rip_tags( $string );
 
         // replacements ##
         $string = str_replace( "\"", "'", $string );
@@ -184,7 +182,7 @@ class facebook extends \Q {
         // }
 
         // check if consent given to load script ##
-        if ( ! consent::given( 'marketing' ) ) {
+        if ( ! ui\consent::given( 'marketing' ) ) {
 
             // h::log( 'Marketing NOT allowed...' );
 
@@ -245,7 +243,7 @@ class facebook extends \Q {
         // }
 
         // check if consent given to load script ##
-        if ( ! consent::given( 'marketing' ) ) {
+        if ( ! ui\consent::given( 'marketing' ) ) {
 
             // h::log( 'Marketing NOT allowed...' );
 
@@ -306,7 +304,7 @@ class facebook extends \Q {
         }
 
         // we need a post to share, so let's see if we have one ##
-        if ( ! $the_post = wp\get::the_post() ) { 
+        if ( ! $the_post = get\wp::the_post() ) { 
         
             h::log( 'No post object found.' );
 

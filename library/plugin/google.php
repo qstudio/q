@@ -4,7 +4,7 @@ namespace q\plugin;
 
 use q\core;
 use q\core\helper as h;
-use q\controller\consent as consent;
+use q\ui;
 
 // load it up ##
 \q\plugin\google::run();
@@ -346,7 +346,7 @@ class google extends \Q {
         // }
 
         // check if consent given to load script ##
-        if ( ! consent::given( 'analytics' ) ) {
+        if ( ! ui\consent::given( 'analytics' ) ) {
 
             // h::log( 'Analytics NOT allowed...' );
 
@@ -410,7 +410,7 @@ class google extends \Q {
         // }
 
         // check if consent given to load script ##
-        if ( ! consent::given( 'analytics' ) ) {
+        if ( ! ui\consent::given( 'analytics' ) ) {
 
             // h::log( 'Analytics NOT allowed...' );
 
@@ -473,7 +473,7 @@ class google extends \Q {
         // }
 
         // check if consent given to load script ##
-        if ( ! consent::given( 'analytics' ) ) {
+        if ( ! ui\consent::given( 'analytics' ) ) {
 
             // h::log( 'Analytics NOT allowed...' );
 

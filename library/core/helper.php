@@ -258,9 +258,46 @@ class helper extends \Q {
      * @since       1.5.0
      * @return      void
      */
-    public static function log( $log )
+    public static function log( $args = null )
     {
 
+		// error_log( $args );
+
+		// sanity ##
+		if ( is_null( $args ) ) { 
+			
+			error_log( 'No args..' );
+
+			return false; 
+		
+		}
+
+		// $args can be a string or an array - so fund out ##
+		if (  
+			is_string( $args )
+		) {
+
+			// default ##
+			$log = $args;
+
+		} elseif ( 
+			is_array( $args ) 
+			&& isset( $args['string'] )	
+		) {
+
+			error_log( 'string => from $args..' );
+			$log = $args['string'];
+
+		} else {
+			
+			$log = $args;
+
+		} 
+
+		// we can also log to a property ( self::$log['caller'][].. ) if true === $arsg['internal'] ##
+		// @todo ## 
+
+		// debugging is on in WP, so write to error_log ##
         if ( true === WP_DEBUG ) {
 
             $trace = debug_backtrace();
@@ -280,7 +317,10 @@ class helper extends \Q {
                 error_log( $log.$suffix );
             }
 
-        }
+		}
+		
+		// done ##
+		return true;
 
     }
 

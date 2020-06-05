@@ -4,7 +4,7 @@ namespace q\plugin;
 
 use q\core;
 use q\core\helper as h;
-use q\controller\consent as consent; // @todo ##
+use q\ui;
 
 // load it up ##
 \q\plugin\linkedin::run();
@@ -110,7 +110,7 @@ class linkedin extends \Q {
         // }
 
         // check if consent given to load script ##
-        if ( ! consent::given( 'marketing' ) ) {
+        if ( ! ui\consent::given( 'marketing' ) ) {
 
             // h::log( 'Marketing NOT allowed...' );
 
@@ -171,7 +171,7 @@ class linkedin extends \Q {
         // }
 
         // check if consent given to load script ##
-        if ( ! consent::given( 'marketing' ) ) {
+        if ( ! ui\consent::given( 'marketing' ) ) {
 
             // h::log( 'Marketing NOT allowed...' );
 

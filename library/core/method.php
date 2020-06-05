@@ -172,10 +172,82 @@ class method extends \Q {
         // return the key ##
         return $key;
         
-    }
+	}
+	
+
+	/**
+	 * Debug Calling class + method / function 
+	 * 
+	 * @since 	4.0.0
+	 */
+	public static function backtrace( $args = null ) {
+
+		
+
+		// default args ##
+		$level = isset( $args['level'] ) ? $args['level'] : 1 ; // direct caller ##
+
+		// check we have a result ##
+		$backtrace = debug_backtrace();
+
+		if (
+			! isset( $backtrace[$level] )
+			// || ! isset( $backtrace[$level]['class'] )
+			// || ! isset( $backtrace[$level]['function'] )
+		) {
+
+			return false;
+
+		}
+
+		// get defined level of data ##
+		$caller = $backtrace[$level];
+
+		// class::method() ##
+		if ( 
+			isset( $args['return'] ) 
+			&& 'class_function' == $args['return'] 
+			&& isset( $caller['class'] )
+			&& isset( $caller['function'] )
+		) {
+
+			return sprintf(
+				__( '%s::%s()', 'Q' )
+				,  	$caller['class'] 
+				,   $caller['function']
+			);
+
+		}
+
+		// specific value ##
+		if ( 
+			isset( $args['return'] ) 
+			&& isset( $caller[$args['return']] )
+		) {
+
+			return sprintf(
+				__( '%s', 'Q' )
+				,  $caller[$args['return']] 
+			);
+
+		}
+
+		// default - everything ##
+		$return = sprintf(
+			__( '%s%s() %s:%d', 'Q' )
+			,   isset($caller['class']) ? $caller['class'].'::' : ''
+			,   $caller['function']
+			,   isset( $caller['file'] ) ? $caller['file'] : 'n'
+			,   isset( $caller['line'] ) ? $caller['line'] : 'x'
+		);
+
+		// kick it back ##
+		return $return;
+
+	}
 
 
-
+	
 
     public static function array_to_object( $array ) {
         
@@ -254,6 +326,202 @@ class method extends \Q {
         }
         
         return null;
+
+	}
+	
+
+	
+    /**
+     * Check if a plugin is active
+     * 
+     * @since       2.0.0
+     * @return      Boolean
+     */
+    public static function plugin_is_active( $plugin ) 
+    {
+        
+        return in_array( $plugin, (array) \get_site_option( 'active_plugins', [] ) );
+    
+    }
+
+
+    /**
+     * Save a value to the options table, either updating or creating a new key
+     * 
+     * @since       2.0.0
+     * @return      Void
+     */
+    public static function add_update_option( $option_name, $new_value, $deprecated = ' ', $autoload = 'no' ) 
+    {
+    
+        if ( \get_site_option( $option_name ) != $new_value ) {
+
+            \update_site_option( $option_name, $new_value );
+
+        } else {
+
+            \add_site_option( $option_name, $new_value, $deprecated, $autoload );
+
+        }
+    
+    }
+
+
+    /**
+    * Get Q Plugin data
+    *
+    * @return   Object
+    * @since    0.3
+    */
+    public static function plugin_data( $refresh = false ){
+
+        if ( $refresh ) {
+
+            #echo 'refrshing stored framework data<br />'; ##
+            \delete_site_option( 'q_plugin_data' ); // delete option ##
+
+        }
+
+        if ( ! $array = \get_site_option( 'q_plugin_data' ) ) {
+
+            $array = array (
+                'version'       => self::version // \Q::version
+            );
+
+            if ( $array ) {
+
+                self::add_update_option( 'q_plugin_data', $array, '', 'yes' );
+
+            }
+
+        }
+
+        return core\method::array_to_object( $array );
+
+    }
+
+
+
+    /**
+    * Get installed theme data
+    *
+    * @return  Object
+    * @since   0.3
+    */
+    public static function theme_data( $refresh = false )
+    {
+
+       if ( $refresh ) {
+
+           #echo 'refrshing stored theme data<br />'; ##
+           \delete_site_option( 'q_theme_data' ); // delete option ##
+
+       }
+
+       // declare global variable ##
+       global $q_theme_data;
+
+       $array = \get_site_option( 'q_theme_data' );
+
+       if ( ! \get_site_option( 'q_theme_data' ) ) {
+
+           #echo 'stored theme option empty<br />';
+           #$array = @file_get_contents( q_get_option("uri_parent")."library/version/");
+
+           if( function_exists( 'wp_get_theme' ) ) {
+               $array = \wp_get_theme( \get_site_option( 'template' ));
+               #$theme_version = $theme_data->Version;
+           } else {
+               $array = \get_theme_data( \get_template_directory() . '/style.css');
+               #$theme_version = $theme_data['Version'];
+           }
+           #$theme_base = get_option('template');
+
+           if ( $array ) {
+
+               self::add_update_option( 'q_theme_data', $array, '', 'yes' );
+               #echo 'stored fresh theme data<br />';
+
+           }
+
+       }
+
+       return core\method::array_to_object( $array );
+
+    }
+
+
+
+
+	/**
+     * Check if a page has children
+     *
+     * @since       1.3.0
+     * @param       integer         $post_id
+     * @return      boolean
+     */
+    public static function has_children( $post_id = null )
+    {
+
+        // nothing to do here ##
+        if ( is_null ( $post_id ) ) { return false; }
+
+        // meta query to allow for inclusion and exclusion of certain posts / pages ##
+        $meta_query =
+                array(
+                    array(
+                        'key'       => 'program_sub_group',
+                        'value'     => '',
+                        'compare'   => '='
+                    )
+                );
+
+        // query for child or sibling's post ##
+        $wp_args = array(
+            'post_type'         => 'page',
+            'orderby'           => 'menu_order',
+            'order'             => 'ASC',
+            'posts_per_page'    => -1,
+            'meta_query'        => $meta_query,
+        );
+
+        #pr( $wp_args );
+
+        $object = new \WP_Query( $wp_args );
+
+        // nothing found - why? ##
+        if ( 0 === $object->post_count ) { return false; }
+
+        // get children ##
+        $children = \get_pages(
+            array(
+                'child_of'      => $post_id,
+                'meta_key'      => '',
+                'meta_value'    => '',
+            )
+        );
+
+        // count 'em ##
+        if( count( $children ) == 0 ) {
+
+            // No children ##
+            return false;
+
+        } else {
+
+            // Has Children ##
+            return true;
+
+        }
+
+    }
+
+
+    public static function list_image_sizes()
+    {
+
+        global $_wp_additional_image_sizes; 
+        if( self::$debug ) h::log( $_wp_additional_image_sizes ); 
 
     }
 

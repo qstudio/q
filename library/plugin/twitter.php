@@ -2,9 +2,10 @@
 
 namespace q\plugin;
 
-use q\core\core as core;
-use q\core\helper as helper;
-use q\ui\wordpress as wp;
+use q\core;
+use q\core\helper as h;
+use q\ui;
+use q\get;
 
 // load it up ##
 \q\plugin\twitter::run();
@@ -30,9 +31,9 @@ class twitter extends \Q {
     {
 
         // check we can get a post object ##
-        if ( ! $the_post = wp\get::the_post() ) { 
+        if ( ! $the_post = get\wp::the_post() ) { 
         
-            // helper::log( 'No post object' );
+            // h::log( 'No post object' );
 
             return false; 
         
@@ -44,7 +45,7 @@ class twitter extends \Q {
             && ! \is_page()
         ) { 
         
-            // helper::log( 'Not a single post or page query' );
+            // h::log( 'Not a single post or page query' );
 
             return false; 
         

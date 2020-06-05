@@ -177,7 +177,8 @@ if ( ! class_exists( 'Q' ) ) {
 
             return plugin_dir_path( __FILE__ ).$path;
 
-        }
+		}
+		
 
 
 
@@ -217,13 +218,16 @@ if ( ! class_exists( 'Q' ) ) {
         {
 
             // core ##
-            require_once self::get_plugin_path( 'library/core/controller.php' );
+			require_once self::get_plugin_path( 'library/core/_controller.php' );
+			
+			// getter ##
+            require_once self::get_plugin_path( 'library/get/_controller.php' );
 
 			// theme ##
-            require_once self::get_plugin_path( 'library/ui/controller.php' );
+            require_once self::get_plugin_path( 'library/ui/_controller.php' );
 
             // admin ##
-            require_once self::get_plugin_path( 'library/admin/controller.php' );
+            require_once self::get_plugin_path( 'library/admin/_controller.php' );
 
             // check for dependencies, required for UI components - admin will still run ##
             if ( ! self::has_dependencies() ) {
@@ -233,13 +237,13 @@ if ( ! class_exists( 'Q' ) ) {
             }
             
             // plugins ##
-            require_once self::get_plugin_path( 'library/plugin/controller.php' );
+            require_once self::get_plugin_path( 'library/plugin/_controller.php' );
 
             // test suite ##
-            require_once self::get_plugin_path( 'library/test/controller.php' );
+            require_once self::get_plugin_path( 'library/test/_controller.php' );
 
             // hooks ##
-            require_once self::get_plugin_path( 'library/hook/controller.php' );
+            require_once self::get_plugin_path( 'library/hook/_controller.php' );
 
 
         }

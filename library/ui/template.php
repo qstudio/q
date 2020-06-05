@@ -89,7 +89,7 @@ class template {
 
 
     /**
-     * Global getter
+     * Get Q template name, if set - else return
      * 
      * 
      */
@@ -100,7 +100,10 @@ class template {
 
             // h::log( 'Page template empty' );
             
-            return false;
+			// return false;
+			
+			// changes to return WP template -- check for instroduced issues ##
+			return str_replace( '.php', '', \get_page_template_slug() );
 
         } else {
 

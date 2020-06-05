@@ -99,7 +99,7 @@ class acf extends \Q {
      */
     public static function get_field_group( String $group = null ) {
 
-        // @todo -- sanity ##
+        // sanity ##
         if ( ! \function_exists('acf_get_field_group') ) {
 
             h::log( 'Error -> function "acf_get_field_group" not found' );
@@ -108,7 +108,7 @@ class acf extends \Q {
 
         }
 
-        // @todo -- check if string passed ##
+        // check if string passed ##
         if ( is_null( $group ) ) {
 
             h::log( 'Error -> No "group" string passed to method.' );
@@ -126,7 +126,7 @@ class acf extends \Q {
 
         }
 
-        // @todo -- look for field group and return boolen if fails ##
+        // look for field group and return boolen if fails ##
         if ( ! $array = \acf_get_fields( $group ) ) {
 
             h::log( 'Notice -> Group: "'.$group.'" not found.' );
@@ -136,7 +136,7 @@ class acf extends \Q {
         }
 
         // filter ##
-        $array = \apply_filters( 'q/plugin/acf/get_fields/'.$group, $array );
+        $array = \apply_filters( 'q/plugin/acf/get_field_group/'.$group, $array );
 
         // return ##
         return $array;

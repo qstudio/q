@@ -21,10 +21,20 @@ class filter extends \Q {
             || ! isset( $args['filter'] )
             || ! isset( $args['parameters'] )
             || ! is_array( $args['parameters'] )
-            || ! isset( $args['return'] )
         ) {
 
-            self::$log['error'][] = 'Error in passed self::$args';
+            h::log('Error in passed self::$args');
+
+            return $args['return'];
+
+		}
+		
+		// sanity ##
+        if ( 
+            ! isset( $args['return'] )
+        ) {
+
+            h::log('Error in passed self::$args - no $return specified');
 
             return 'Error';
 
@@ -32,13 +42,25 @@ class filter extends \Q {
 
         if( \has_filter( $args['filter'] ) ) {
 
-            // h::log( 'Running Filter: '.$args['filter'] );
+			if ( isset( $args['debug'] ) ) {
+
+				h::log( '
+					Filter: '.$args['filter'].' - 
+					Parameters: '.implode( ',', array_keys( $args['parameters'] ) ).' - 
+					Return: '.gettype( $args['return'] ) 
+				);
+
+			}
 
             // run filter ##
             $return = \apply_filters( $args['filter'], $args['parameters'] );
 
-            // check return ##
-            // h::log( $return );
+			if ( isset( $args['debug'] ) ) {
+
+				// check return ##
+				h::log( $return );
+
+			}
 
         } else {
 
