@@ -430,11 +430,11 @@ class method extends ui\render {
 
 		// get post ##
 		if ( 
-			isset( $args['post'] ) 
-			&& $args['post'] instanceof \WP_Post
+			isset( $args['config']['post'] ) 
+			&& $args['config']['post'] instanceof \WP_Post
 		) {
 
-			$the_post = $args['post'];
+			$the_post = $args['config']['post'];
 
 		} else {
 
@@ -544,11 +544,11 @@ class method extends ui\render {
 
 		// get post ##
 		if ( 
-			isset( $args['post'] ) 
-			&& $args['post'] instanceof \WP_Post
+			isset( $args['config']['post'] ) 
+			&& $args['config']['post'] instanceof \WP_Post
 		) {
 
-			$the_post = $args['post'];
+			$the_post = $args['config']['post'];
 
 		} else {
 
@@ -648,11 +648,11 @@ class method extends ui\render {
 
 		// get post ##
 		if ( 
-			isset( $args['post'] ) 
-			&& $args['post'] instanceof \WP_Post
+			isset( $args['config']['post'] ) 
+			&& $args['config']['post'] instanceof \WP_Post
 		) {
 
-			$the_post = $args['post'];
+			$the_post = $args['config']['post'];
 
 		} else {
 

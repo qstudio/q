@@ -19,9 +19,6 @@ class config extends \Q {
         // filter intermediate image sizes ##
         // \add_filter( 'intermediate_image_sizes_advanced', [ get_class(), 'intermediate_image_sizes_advanced' ] );
 
-		// filter excerpts on search ##
-		// \add_filter( 'q/render/format/wp_post/field/post_excerpt', [ get_class(), 'render_search_excerpt' ], 10, 1 );
-
         // add_image_sizes for all themes ##
         \add_action( 'init', [ get_class(), 'add_image_sizes' ], 1 );
 
@@ -43,15 +40,6 @@ class config extends \Q {
         }
 
 	}
-	
-	public static function render_search_excerpt( $excerpt ) {
-
-		h::log( $excerpt );
-
-		return $excerpt;
-
-	}
-
 
 
 	
@@ -65,7 +53,11 @@ class config extends \Q {
 
 		// comments are ok ##
 		$array['allow_comments'] = true;
-		// $array['holder'] = ''; // reference to one single holding image ##
+
+		// holder images -- let's use one single svg placed center bg and scaled ##
+        $array['the_holder']  = [
+			'src'						=> '', // @todo ##
+		];
 
 		// the_content_open() ##
         $array['the_content_open']  = [
@@ -79,8 +71,8 @@ class config extends \Q {
 		
 		// acf field groups ##
         $array['the_group']  = [
-			// 'config'				=> [ 'load' => 'the_group' ]
-			'blach', // @todo.. why is this needed ##
+			'config'				=> [ 'run' => true ],
+			// 'filter'				=> [ 'src' => true ] // add srcsets ##
 		];
 
         // title ##
@@ -95,7 +87,7 @@ class config extends \Q {
 
         // the_excerpt() ##
         $array['the_excerpt']  = [
-			'markup'                => '<div class="col-12 the-excerpt">%content%</div>',
+			'markup'                => '<div class="col-12 mb-3 the-excerpt">%content%</div>',
             'limit'                 => 300, // default excerpt length ##
         ];
 
@@ -104,16 +96,6 @@ class config extends \Q {
 			'markup'                => '<div class="col-12 the-content">%content%</div>',
 		];
 		
-		// holder images -- let's use one single svg placed center bg and scaled ##
-        $array['the_holder']  = [
-			'src'						=> '', // @todo ##
-            // 'the_posts'             => h::get( "theme/css/images/holder/desktop_the_posts.svg", 'return' ),
-            // 'the_avatar'            => h::get( "theme/css/images/holder/desktop_the_avatar.svg", 'return' ),
-            // 'template_header'       => h::device() == 'desktop' ?
-            //                             h::get( "theme/css/images/holder/desktop_header.svg", 'return' ) :
-            //                             h::get( "theme/css/images/holder/handheld_header.svg", 'return' )
-		];
-
         // get_posts() ##
         $array['the_posts']  = [
 
@@ -122,6 +104,7 @@ class config extends \Q {
 										// 'run' => true, 
 										'debug' => false, 
 										// 'load' => 'the_posts'  // change loaded config ##
+										// 'srcset' => true // add srcsets ##
 									],
 			
 			// UI ##
@@ -136,7 +119,7 @@ class config extends \Q {
 									'posts'	=> 
 										'<div class="col-12 col-md-6 col-lg-4">
 											<a href="%permalink%" title="%post_title%">
-												<div class="lazy card-img-top holder-if-empty" data-src="%src%" alt="Open %post_title%" src="%src%"></div>
+												<img class="lazy card-img-top holder-if-empty" data-src="%src%" alt="Open %post_title%" src=""></img>
 											</a>
 											<div class="card-body p-0">
 												<h5 class="card-title"><a href="%permalink%" title="Read More">%post_title%</a></h5>

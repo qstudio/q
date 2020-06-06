@@ -25,14 +25,15 @@ class wp extends \Q {
     public static function the_post( $args = null )
     {
 
-        // self::log( $args );
+        // h::log( $args );
 
         // let's try and get a $post from the passed $args ##
         if ( ! is_null ( $args ) && isset( $args ) ) {
 
             if ( is_array( $args ) && isset( $args["post"] ) ) {
 
-                $post = $args["post"];
+				$post = $args["post"];
+				// h::log( 'Post ID sent: '.$post );
 
             } else if ( is_object ( $args ) && isset ( $args->post ) ) {
 
@@ -51,11 +52,14 @@ class wp extends \Q {
         // first let's see if anything was set ##
         if ( isset ( $post ) ) {
 
-            if ( ! is_object ( $post ) && is_int( $post ) ) {
+			// h::log( gettype( $post ) );
+
+			// if ( ! is_object ( $post ) && is_int( $post ) ) {
+            if ( is_string ( $post ) || is_int( $post ) ) {
 
                 if ( $object = \get_post( $post ) ) {
 
-                    // h::log( 'got post: '.$post );
+                    // h::log( 'got post: '.$object->ID );
 
                     return (object) $object;
 
@@ -213,8 +217,8 @@ class wp extends \Q {
 		
 		// pages might have a parent
 		if ( 
-			'page' === \get_post_type( $args['post'] ) 
-			&& $args['post']->post_parent
+			'page' === \get_post_type( $args['config']['post'] ) 
+			&& $args['config']['post']->post_parent
 		) {
 
 			// $array['text'] = __( "View More", 'q-textdomain' );
@@ -223,13 +227,13 @@ class wp extends \Q {
             $array['title'] = $object->post_title;
 
 		// is singular post ##
-		} elseif ( \is_single( $args['post'] ) ) {
+		} elseif ( \is_single( $args['config']['post'] ) ) {
 
 			// h::log( 'Get category title..' );
 
 			// $args->ID = $the_post->post_parent;
 			if ( 
-				! $array = self::get_the_category([ 'post' => $args['post'] ])
+				! $array = self::get_the_category([ 'post' => $args['config']['post'] ])
 			){
 
 				return false;
@@ -385,7 +389,7 @@ class wp extends \Q {
 		$array = [];
 
 		// get the post_content with filters applied ##
-		$array['content'] = \apply_filters( 'the_content', ui\method::clean( \get_post_field( 'post_content', $args['post'] ) ) );
+		$array['content'] = \apply_filters( 'the_content', ui\method::clean( \get_post_field( 'post_content', $args['config']['post'] ) ) );
 
 		// h::log( $array );
 

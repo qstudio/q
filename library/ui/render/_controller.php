@@ -47,7 +47,8 @@ class render extends \Q {
             'config'            => [
                 'run'           => true, // don't run this item ##
                 'debug'         => false, // don't debug this item ##
-                'return'        => 'echo' // default to echo return string ##
+				'return'        => 'echo', // default to echo return string ##
+				'srcset' 		=> true // add srcset to src references ##
             ],
             'filter'        => [
                 'img'           => 'srcset' // apply srcset handlers to all images ## 
@@ -64,7 +65,7 @@ class render extends \Q {
         ],
 
         // value formatters ##
-        $formats = [
+        $format = [
             // Arrays could be collection of WP Post Objects OR repeater block - so check ##
             'array'             => [
                 'type'          => 'is_array',
@@ -82,6 +83,27 @@ class render extends \Q {
                 'type'          => 'is_string',
                 'method'        => 'format_text',
             ],
+		],
+		
+
+		// allowed field types ##
+        $type = [
+            'src'             	=> [
+                'format'        => [ 'is_string', 'is_int', 'is_array', 'is_object' ],
+                'method'        => 'src'
+            ],
+            // 'post_object'       => [
+            //     'type'          => 'is_object',
+            //     'method'        => 'format_object'
+            // ],
+            // 'integer'           => [
+            //     'type'          => 'is_int',
+            //     'method'        => 'format_integer'
+            // ],
+            // 'string'            => [
+            //     'type'          => 'is_string',
+            //     'method'        => 'format_text',
+            // ],
         ],
 
         // standard fields to add to wp_post objects

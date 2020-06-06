@@ -33,7 +33,7 @@ class get extends ui\render {
 
         }
 
-		// h::log( self::$args['post'] );
+		// h::log( self::$args['config']['post'] );
 
         // Get all ACF field data for this post ##
         if ( ! self::acf_fields() ) {
@@ -122,25 +122,28 @@ class get extends ui\render {
      */
     public static function acf_fields(){
 
-		if ( ! \function_exists( 'get_fields' ) ) {
+		if ( ! function_exists( 'get_fields' ) ) {
 
 			h::log( 'ACF Plugin missing' );
 
 			return false;
 
 		}
+		// h::log( self::$args );
 
         // option to pass post ID to function ##
         // this can be passed as an arg ##
-        $post = 
-            isset( self::$args['post'] ) ? 
-            self::$args['post'] : 
-			\get_the_ID() ;
+        // $post = 
+        //     isset( self::$args['config'] ) && isset( self::$args['config']['post'] ) ? 
+        //     is_object( self::$args['config']['post'] ) ? self::$args['config']['post']->ID : self::$args['config']['post'] : 
+		// 	get\wp::the_post()->ID ;
 			
-		// h::log( 'Post: '.$post );
+
+		// h::log( self::$args['config'] );
+		// h::log( 'Post: '.self::$args['config']['post']->ID );
 
         // get fields ##
-		$array = \get_fields( $post );
+		$array = \get_fields( self::$args['config']['post']->ID );
 		
 		// h::log( $array );
 
@@ -275,7 +278,9 @@ class get extends ui\render {
 
             return false;
 
-        }
+		}
+		
+		// h::log( self::$acf_fields );
 
         if ( 
             isset( self::$args['group'] )

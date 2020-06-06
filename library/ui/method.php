@@ -69,29 +69,29 @@ class method extends \Q {
 		}
 		
 		// no post set ##
-		if ( ! isset( $args['post'] ) ) {
+		if ( ! isset( $args['config']['post'] ) ) {
 
-			$args['post'] = get\wp::the_post();
+			$args['config']['post'] = get\wp::the_post();
 
 		}
 
 		// validate passed post ##
 		if ( 
-			isset( $args['post'] ) 
-			&& ! $args['post'] instanceof \WP_Post
+			isset( $args['config']['post'] ) 
+			&& ! $args['config']['post'] instanceof \WP_Post
 		) {
 
 			// get new post, if corrupt ##
-			$args['post'] = get\wp::the_post( $args );
+			$args['config']['post'] = get\wp::the_post( $args );
 
 		}
 
 		// last check ##
-		if ( ! $args['post'] ) {
+		if ( ! $args['config']['post'] ) {
 
 			h::log( 'Error with post object, validate - returned as null.' );
 
-			$args['post'] = null;
+			$args['config']['post'] = null;
 
 			// return false;
 

@@ -4,7 +4,6 @@ namespace q\ui\render;
 
 use q\core\helper as h;
 use q\ui;
-// use q\ui\field;
 use q\get;
 
 class type extends ui\render {
@@ -20,32 +19,66 @@ class type extends ui\render {
      **/ 
     public static function src( $value = null, $field = null ){
 
+		$type = 'src';
+
+		// check this type is allowed ##
+		if ( ! array_key_exists( $type, self::get_allowed() ) ) {
+
+			h::log( 'Value Type not allowed: '.$type );
+
+			return $value;
+
+		}
+
+		// attachment ID ##
+		$attachment_id = \get_post_thumbnail_id( $value );
+
+		// $post = \get_post_thumbnail_id( $value->ID );
+		// h::log( 'Field: '.$field.' - Post ID: '.$value.' - Src ID: '.$attachment_id );
+
         // check and assign ##
         $handle = 
             isset( self::$args['src']['handle'][$field] ) ?
             self::$args['src']['handle'][$field] :
-            \apply_filters( 'q/render/type/src/handle', 'medium' ); ;
+            \apply_filters( 'q/render/type/src/handle', 'medium' ); // filterable default ##
 
-        // helper::log( 'Image handle: '.$handle );
+        // h::log( 'Image handle: '.$handle );
 
+		// start empty ##
         $string = '';
 
-        // helper::log( 'Image ID: '.$value );
+        // h::log( 'Image ID: '.$value );
 
         // get image ##
-        $src =  \get_the_post_thumbnail_url( $value, $handle );
+		$src = \wp_get_attachment_image_src( $attachment_id, $handle );
+		// h::log( $src );
 
-        $string = $src;
+		// validate ##
+		if ( 
+			! $src
+			|| ! is_array( $src ) 
+		) {
 
-        // conditional -- add img meta values and srcset ##
+			h::log( $src );
+			h::log( 'wp_get_attachment_image_src returned bad data' );
+
+			return $value;
+
+		}
+
+		// assign to string ##
+        $string = $src[0];
+
+		// conditional -- add img meta values and srcset ##
+		/*
         if ( 
-            isset( self::$args['filter']['src'] )
-            && 'srcset' == self::$args['filter']['src'] 
+            isset( self::$args['config']['srcset'] )
+            && true == self::$args['config']['srcset'] 
         ) {
 
             // $id = \get_post_thumbnail_id( $value );
-            $srcset =  \wp_get_attachment_image_srcset( $value, $handle );
-            $sizes =  \wp_get_attachment_image_sizes( $value, $handle );
+            $srcset = \wp_get_attachment_image_srcset( $value, $handle );
+            $sizes = \wp_get_attachment_image_sizes( $value, $handle );
             $alt = 
                 \get_post_meta( $value, '_wp_attachment_image_alt', true ) ?
                 \get_post_meta( $value, '_wp_attachment_image_alt', true ) :
@@ -56,11 +89,12 @@ class type extends ui\render {
             $sizes = ' sizes="'.\esc_attr($sizes).'"'; 
             $alt = ' alt="'.\esc_attr($alt).'"'; 
 
-            $string = $src.$srcset.$sizes.$alt;
+            $string = $src[0].$srcset.$sizes.$alt;
 
         }
+		*/
 
-        // helper::log( 'Image string: '.$string );
+        // h::log( 'Image string: '.$string );
 
         // kick back ##
         return $string;
@@ -76,7 +110,7 @@ class type extends ui\render {
     public static function get_allowed()
     {
 
-        return \apply_filters( 'q/field/formats/get', self::$formats );
+        return \apply_filters( 'q/render/type/get', self::$type );
 
     }
 

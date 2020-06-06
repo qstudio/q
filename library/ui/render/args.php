@@ -64,34 +64,45 @@ class args extends ui\render {
 		// assign "group" - this is used by group to pull acf fields, or to know the calling method for the_ calls ##
 		$args['group'] = isset( $args['group'] ) ? $args['group'] : core\method::backtrace([ 'level' => 2, 'return' => 'function' ]) ;
 
-		// no post set ##
-		if ( ! isset( $args['post'] ) ) {
+		// h::log( $args['config']['post'] );
 
-			$args['post'] = get\wp::the_post();
-
-		}
+		// If posts is passed as an int, then get a matching post Object, as we can use the data later ## 
 
 		// validate passed post ##
 		if ( 
-			isset( $args['post'] ) 
-			&& ! $args['post'] instanceof \WP_Post
+			isset( $args['config']['post'] ) 
+			// is_int( $args['config']['post'] )
+			&& ! $args['config']['post'] instanceof \WP_Post
 		) {
 
 			// get new post, if corrupt ##
-			$args['post'] = get\wp::the_post( $args );
+			$args['config']['post'] = get\wp::the_post( $args['config'] );
+
+			// h::log( 'Post set, but not an Object.. so getting again..: '.$args['config']['post']->ID );
+
+		}
+
+		// no post set ##
+		if ( ! isset( $args['config']['post'] ) ) {
+
+			$args['config']['post'] = get\wp::the_post();
+
+			// h::log( 'No post set, so getting: '.$args['config']['post']->ID );
 
 		}
 
 		// last check ##
-		if ( ! $args['post'] ) {
+		if ( ! isset( $args['config']['post'] ) ) {
 
-			h::log( 'Error with post object, validate - returned as null.' );
+			// h::log( 'Error with post object, validate - returned as null.' );
 
-			$args['post'] = null;
+			$args['config']['post'] = null;
 
 			// return false;
 
 		}
+
+		// h::log( $args['config']['post']->ID );
 
 		// assign "group" - this is used by group to pull acf fields, or to know the calling method for the_ calls ##
 		// $args['group'] = isset( $args['group'] ) ? $args['group'] : core\method::backtrace([ 'return' => 'function' ]) ;

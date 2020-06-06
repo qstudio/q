@@ -466,6 +466,7 @@ class format extends ui\render {
 		}
 		
 		// h::log( 'Formatting WP Post Object: '.$value->post_title );
+		// h::log( $value ); // whole object ##
 
         // now, we need to create some new $fields based on each value in self::$wp_post_fields ##
         foreach( self::$wp_post_fields as $wp_post_field ) {
@@ -493,7 +494,14 @@ class format extends ui\render {
             // hand crafted ##
             } else {
 
-				// @todo - note that this field value was not found ##
+				// note that this field value was not found ##
+				log::add([
+					'key' => 'notice', 
+					'field'	=> __FUNCTION__,
+					'value' =>  'No value found for field: '.$wp_post_field
+				]);
+
+				// @todo - do we need to remove this field? ##
 
 			}
 
@@ -562,11 +570,15 @@ class format extends ui\render {
 
 				break ;
 
+				// images ###
 				case 'src' :
-					
+
+					// h::log( 'src: '.$value->ID );
+
 					// get post_thumbnail ID ##
-					$src_id = \get_post_thumbnail_id( $value->ID );
-					$string = type::src( $src_id, $field );
+					// $src_id = \get_post_thumbnail_id( $value->ID );
+					$string = type::src( $value->ID, $field );
+					// h::log( 'Final string: '.$string );
 
 				break ;
 
@@ -592,7 +604,7 @@ class format extends ui\render {
     public static function get_allowed()
     {
 
-        return \apply_filters( 'q/render/formats/get_allowed', self::$formats );
+        return \apply_filters( 'q/render/format/get_allowed', self::$format );
 
     }
 
