@@ -17,21 +17,14 @@ class method extends ui\render {
      * @since       1.0.2
      * @return      string   HTML
      */
-    public static function the_content_open( $args = array() )
+    public static function the_content_open( $args = null )
     {
 
 		// global arg validator ##
 		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
 
-		// h::log( $args );
-
-        // set-up new array ##
-		$array = [];
-
         // grab classes ##
 		$array['classes'] = get\wp::body_class( $args );
-		
-		// h::log( $array );
 
         // return ##
 		return ui\method::prepare_render( $args, $array );
@@ -46,14 +39,14 @@ class method extends ui\render {
      * @since       1.0.2
      * @return      string   HTML
      */
-    public static function the_content_close( $args = array() )
+    public static function the_content_close( $args = null )
     {
 
 		// global arg validator ##
 		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
 
         // set-up new array -- nothing really to do ##
-		$array = [];
+		$array[] = []; // hack.. nothing to pass here ##
 
         // return ##
 		return ui\method::prepare_render( $args, $array );
@@ -69,9 +62,7 @@ class method extends ui\render {
      * @since       1.3.0
      * @return      String
      */
-    public static function the_title( Array $args = null ) {
-
-		// h::log( 'Here..' );
+    public static function the_title( $args = null ) {
 
 		// global arg validator ##
 		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
@@ -83,8 +74,6 @@ class method extends ui\render {
 		return ui\method::prepare_render( $args, $array );
 
     }
-
-
 
 
 	
@@ -105,30 +94,10 @@ class method extends ui\render {
 
 		}
 
-		// @todo - hack to build $args['fields'] -- make this into a function ##
+		// build $args['fields'] -- this can be moved to a pre-function call ##
 		self::$args['fields'] = [];
 
-		// 	array (
-		// 		// 'key' => 'field_total',
-		// 		// 'name' => 'total',
-		// 		// 'type' => 'text',
-		// 	),
-
-		// 	array (
-		// 		// 'key' => 'field_posts',
-		// 		// 'name' => 'posts',
-		// 		// 'type' => 'array',
-		// 	),
-
-		// 	array (
-		// 		// 'key' => 'field_pagination',
-		// 		// 'name' => 'pagination',
-		// 		// 'type' => 'text',
-		// 	)
-
-		// ];
-
-		// build fields array ##
+		// build fields array ## -- this can be moved to a pre-function call ##
 		self::$fields = [];
 
         // pass to get_posts -- and validate that we get an array back ##
@@ -199,7 +168,7 @@ class method extends ui\render {
         markup::prepare();
 
         // optional logging to show removals and stats ##
-        // log::render( $args );
+        log::render( $args );
 
         // return or echo ##
         return output::return();
@@ -214,8 +183,7 @@ class method extends ui\render {
     *
     * @since       1.0.2
     */
-    public static function the_post_loop( $args = array() )
-    {
+    public static function the_post_loop( $args = null ){
 
         // h::log( $args );
 
@@ -276,7 +244,7 @@ class method extends ui\render {
     *
     * @since       1.0.2
     */
-    public static function the_meta( $args = array() )
+    public static function the_meta( $args = null )
     {
 
         // get the_post ##
@@ -379,81 +347,41 @@ class method extends ui\render {
 
 
 
-
-	/**
-     * link to parent, works for single WP Post or page objects
-     *
-     * @since       1.0.1
-     * @return      string   HTML
-     */
-    public static function the_parent( Array $args = null ) {
+    /**
+	 * Helper Method to get parent
+	 */
+	public static function the_parent( $args = null ){
 
 		// global arg validator ##
 		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
 
-        // set-up new array ##
-		$array = [];
-		
-		// pages might have a parent
-		if ( 
-			'page' === \get_post_type( $args['post'] ) 
-			&& $args['post']->post_parent
-		) {
-
-			// $array['text'] = __( "View More", 'q-textdomain' );
-            $array['permalink'] = \get_permalink( $object->ID );
-            $array['slug'] = $object->post_name;
-            $array['title'] = $object->post_title;
-
-		// is singular post ##
-		} elseif ( \is_single( $args['post'] ) ) {
-
-			// h::log( 'Get category title..' );
-
-			// $args->ID = $the_post->post_parent;
-			if ( 
-				! $array = self::get_the_category([ 'post' => $args['post'] ])
-			){
-
-				return false;
-
-			}
-
-
-		}
+		// get title - returns array with key 'title' ##
+		$array = get\wp::the_parent( $args );
 
         // return ##
-		return ui\method::prepare_return( $args, $array );
+		return ui\method::prepare_render( $args, $array );
 
 	}
-
-
-
-    /**
-	 * Helper Method to get parent
-	 */
-	public static function get_the_parent( Array $args = null ){
-
-		// we want to return ##
-		$args['return'] = 'return';
-
-		// bounce on, and return array ##
-		return self::the_parent( $args );
-
-	}
-
 
 
 
 	/**
 	 * Helper Method to get the_excerpt
 	 */
-	public static function the_excerpt( Array $args = null ){
+	public static function the_excerpt( $args = null ){
 
-		// bounce on, and return array ##
-		return get\wp::the_excerpt( $args );
+		// global arg validator ##
+		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
+
+		// get title - returns array with key 'title' ##
+		$array = get\wp::the_excerpt( $args );
+
+        // return ##
+		return ui\method::prepare_render( $args, $array );
 
 	}
+
+
 
 
 	/**
@@ -461,8 +389,14 @@ class method extends ui\render {
 	 */
 	public static function the_content( Array $args = null ){
 
-		// bounce on, and return array ##
-		return get\wp::the_content( $args );
+		// global arg validator ##
+		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
+
+		// get title - returns array with key 'title' ##
+		$array = get\wp::the_content( $args );
+
+        // return ##
+		return ui\method::prepare_render( $args, $array );
 
 	}
 

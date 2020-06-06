@@ -71,7 +71,7 @@ class log extends ui\render {
 
         }   
 
-		h::log( self::$log );
+		// h::log( self::$log );
 
         // option to debug only specific fields ##
         $return = 

@@ -29,14 +29,17 @@ class method extends \Q {
 
 		}
 
+		// get calling method for filters ##
+		$method = core\method::backtrace([ 'level' => 2, 'return' => 'function' ]);
+
 		// get stored config - pulls from Q, but available to filter via q/config/get/all ##
 		$config = 
 			( // force config settings to return by passing "config" -> "property" ##
-				isset( $args['config'] ) 
-				&& core\config::get( $args['config'] ) 
+				isset( $args['config']['load'] ) 
+				&& core\config::get( $args['config']['load'] ) 
 			) ?
-			core\config::get( $args['config'] ) :
-			core\config::get( core\method::backtrace([ 'level' => 2, 'return' => 'function' ]) ) ;
+			core\config::get( $args['config']['load'] ) :
+			core\config::get( $method ) ;
 
 		// test ##
 		// h::log( $config );
@@ -44,6 +47,11 @@ class method extends \Q {
 		// Parse incoming $args into an array and merge it with $config defaults ##
 		// allows specific calling methods to alter passed $args ##
 		if ( $config ) $args = \wp_parse_args( $args, $config );
+
+		// let's set "group" to calling function, for debugging ##
+		if ( ! isset( $args['group'] ) ) { 
+			$args['group'] = $method; 
+		}
 				
 		// h::log( $config );
 		// h::log( $args );
@@ -103,6 +111,9 @@ class method extends \Q {
 	 */
 	public static function prepare_return( $args = null, $array = null ) {
 
+		// get calling method for filters ##
+		$method = core\method::backtrace([ 'level' => 2, 'return' => 'function' ]);
+
 		// sanity ##
 		if ( 
 			is_null( $args )
@@ -116,9 +127,6 @@ class method extends \Q {
 			return false;
 
 		}
-
-		// get calling method for filters ##
-		$method = core\method::backtrace([ 'return' => 'function' ]);
 
 		// h::log( $args );
 		// h::log( $array );
@@ -162,39 +170,50 @@ class method extends \Q {
 	 */
 	public static function prepare_render( $args = null, $array = null ) {
 
+		// get calling method for filters ##
+		$method = core\method::backtrace([ 'level' => 2, 'return' => 'function' ]);
+
 		// sanity ##
 		if ( 
 			is_null( $args )
 			|| ! is_array( $args )
 			|| is_null( $array )
 			|| ! is_array( $array )
+			// || empty( $array )
 		) {
 
-			h::log( 'Error in passed $args or $array' );
+			// h::log( 'Error in passed $args or $array: '.$method );
+
+			// log ##
+			ui\render\log::add([
+				'key' => 'error', 
+				'field'	=> $method,
+				'value' => 'Error in passed $args or $array'
+			]);
 
 			return false;
 
 		}
 
-		// get calling method for filters ##
-		$method = core\method::backtrace([ 'level' => 2, 'return' => 'function' ]);
+		// empty results ##
+		if ( 
+			empty( $array )
+		) {
+
+			// h::log( 'Returned $array is empty: '.$method );
+
+			// log ##
+			ui\render\log::add([
+				'key' => 'notice', 
+				'field'	=> $method,
+				'value' => 'Returned $array is empty'
+			]);
+
+			return false;
+
+		}
 
 		// h::log( '$method: '.$method );
-
-		// merge any default args with any pass args ##
-		if ( 
-			is_null( $args )
-			|| ! is_array( $args )
-			|| is_null( $array )
-			|| ! is_array( $array )
-		) {
-
-			h::log( 'Error in passed $args or $array' );
-
-			return false;
-
-		}
-
 		// h::log( $args );
 		// h::log( $array );
 
@@ -208,20 +227,19 @@ class method extends \Q {
 		}
 
 		// last filter on array, before applying markup ##
-		$array = \apply_filters( 'q/ui/render/'.$method.'/array', $array, $args );
+		$array = \apply_filters( 'q/ui/render/prepare/'.$method.'/array', $array, $args );
 
 		// do markup ##
 		$string = self::markup( $args['markup'], $array );
 
 		// filter $string by $method ##
-		$string = \apply_filters( 'q/ui/render/'.$method.'/string', $string, $args );
+		$string = \apply_filters( 'q/ui/render/prepare/'.$method.'/string', $string, $args );
 		
 		// filter $array by method/template ##
 		if ( $template = ui\template::get() ) {
 
 			// h::log( 'Filter: "q/theme/get/string/'.$method.'/'.$template.'"' );
-
-			$string = \apply_filters( 'q/ui/render/'.$method.'/string/'.$template, $string, $args );
+			$string = \apply_filters( 'q/ui/render/prepare/'.$method.'/string/'.$template, $string, $args );
 
 		}
 
@@ -230,6 +248,9 @@ class method extends \Q {
 
 		// all render methods echo ##
 		echo $string ;
+
+		// optional logging to show removals and stats ##
+        render\log::render( $args );
 
 		return true;
 

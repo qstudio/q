@@ -186,6 +186,63 @@ class wp extends \Q {
 		return ui\method::prepare_return( $args, $array );
 
 	}
+
+
+	/**
+     * link to parent, works for single WP Post or page objects
+     *
+     * @since       1.0.1
+     * @return      string   HTML
+     */
+    public static function the_parent( Array $args = null ) {
+
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+		){
+
+			h::log( 'Error in passed args' );
+
+			return false;
+
+		}
+
+        // set-up new array ##
+		$array = [];
+		
+		// pages might have a parent
+		if ( 
+			'page' === \get_post_type( $args['post'] ) 
+			&& $args['post']->post_parent
+		) {
+
+			// $array['text'] = __( "View More", 'q-textdomain' );
+            $array['permalink'] = \get_permalink( $object->ID );
+            $array['slug'] = $object->post_name;
+            $array['title'] = $object->post_title;
+
+		// is singular post ##
+		} elseif ( \is_single( $args['post'] ) ) {
+
+			// h::log( 'Get category title..' );
+
+			// $args->ID = $the_post->post_parent;
+			if ( 
+				! $array = self::get_the_category([ 'post' => $args['post'] ])
+			){
+
+				return false;
+
+			}
+
+
+		}
+
+        // return ##
+		return ui\method::prepare_return( $args, $array );
+
+	}
 	
 
 
@@ -201,7 +258,7 @@ class wp extends \Q {
         // global arg validator ##
 		if ( ! $args = ui\method::prepare_args( $args ) ){ 
 		
-			h::log( 'Bailing..' ); 
+			// h::log( 'Bailing..' ); 
 		
 			return false; 
 		
@@ -312,13 +369,16 @@ class wp extends \Q {
     public static function the_content( $args = array() )
     {
 
-		// global arg validator ##
-		if ( ! $args = ui\method::prepare_args( $args ) ){ 
-		
-			h::log( 'Bailing..' ); 
-		
-			return false; 
-		
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+		){
+
+			h::log( 'Error in passed args' );
+
+			return false;
+
 		}
 
         // set-up new array ##
@@ -574,176 +634,6 @@ class wp extends \Q {
 
     }
     
-	
-
-	/**
-     * Get Main Posts Loop
-     *
-     * @since       1.0.2
-     */
-    public static function the_posts_OLD( $args = array() )
-    {
-
-        // h::log( $args );
-
-		// global arg validator ##
-		if ( ! $args = ( object ) ui\method::prepare_args( $args ) ){ return false; }
-
-		// h::log( $args );
-		
-		// we need $args->controller and $args->method for this to work ##
-		$method_exists = false;
-		if ( $args->template ) {
-
-			$args->controller = "\\q\\theme\\ui\\controller\\{$args->template}";
-			$args->method = "the_{$args->template}_loop";
-
-			// check if method available ##
-			if ( method_exists( $args->controller, $args->method ) ) {
-
-				// ok - no need to check again ##
-				$method_exists = true;
-
-			}
-
-		} else {
-
-			h::log ( "$templates param missing, so using default the_post_loop... etc.." );
-
-		}
-
-        // pagination ##
-        $paged = \get_query_var( 'paged' ) ? \get_query_var( 'paged' ) : 1 ;
-
-        // args ##
-        $wp_query_args = array (
-            'posts_per_page'    => $args->posts_per_page,
-            'paged'             => $paged
-        );
-
-        // merge in global $wp_query variables ? ( required for archive pages ) ##
-        if ( isset( $args->query_vars ) ) {
-
-            // grab all global wp_query args ##
-            global $wp_query;
-
-            // merge all args together ##
-            $wp_query_args = array_merge( $wp_query->query_vars, $wp_query_args );
-
-            // h::log( array( 'added query vars' => $wp_query_args ) );
-
-        }
-
-        // merge in global $wp_query variables ? ( required for archive pages ) ##
-        if ( isset( $args->search ) ) {
-
-            // h::log( 'searching...' );
-
-            $wp_query_args['post_type'] = isset( $args->post_type ) ? $args->post_type : 'any' ;
-            #$wp_query_args['posts_per_page'] = 100; // get them all ##
-
-        }
-
-        // h::log( $wp_query_args );
-
-        // set-up main query ##
-        $q_query = new \WP_Query( $wp_query_args );
-
-        // h::log( $q_query->request );
-        // h::log( $q_query->found_posts );
-        // h::log( $q_query->post_count );
-
-        // weird WPE hack - to reduce the returned array to the size of $args->limit ##
-        if ( -1 != $args->limit && $q_query->post_count > $args->limit ) {
-
-            // h::log( "splicing.." );
-            $get_posts = array_slice( $q_query->posts, 0, $args->limit, true );
-
-        } else {
-
-            $get_posts = $q_query->posts;
-
-        }
-
-        // self::log( count( $q_query->posts ) );
-        // self::log( count( $get_posts ) );
-
-        if ( 
-            $q_query->posts 
-            && count( $get_posts ) > 0
-        ) {
-
-            // total ##
-            if ( isset( $args->total ) ) {
-
-                echo str_replace( '%total%', $q_query->found_posts, $args->total );
-
-            }
-
-            // loop ##
-            foreach ( $get_posts as $post ) {
-
-                // iterate the post loop ##
-                \setup_postdata( $post );
-
-                // h::log( $post->ID );
-
-                // add post ID to passed args ##
-                $args_array['post'] = $post->ID;
-
-                // check if method exists in 'q_theme' ##
-                if (
-					$method_exists
-                    // && is_callable( array( "\q\theme\ui\view\{$args->template}\{$args->template}", "the_{$args->template}_loop" ) )
-                ) {
-
-					// @todo - we are moving to pure view + model - so gather data, pass to view ( get from theme or Q config ) - return or echo ##
-
-					// h::log ( "Post loop from: {$args->controller}::{$args->method}" );
-
-                    #pr( $args_array );
-
-                    // call template method ##
-                    call_user_func (
-                            array( $args->controller, $args->method )
-                        ,   (array)$args_array
-                    );
-
-                } else {
-
-					// h::log ( "class\method param missing -- using default" );
-					
-					// call default method ##
-                    call_user_func (
-							array( 'q\ui\render', 'the_post_loop' )
-						,   (array)$args_array
-					);
-
-                }
-
-                // tidy up ##
-                \wp_reset_postdata();
-
-			}
-			
-			// h::log( $args );
-
-            // pagination ##
-            if ( true === $args->pagination ) {
-
-                // h::log( 'Adding pagination..' );
-                ui\navigation::the_pagination([ 'query' => $q_query ]);
-
-            }
-
-        } else {
-
-            // nothing found ##
-            theme\ui\controller\fourzerofour::render();
-
-        }
-
-    }
 
 
 
