@@ -19,6 +19,9 @@ class group extends ui\render {
 		// return h::log( 'hello here..' );
 		// h::log( $args );
 
+		// for config to the_group ##
+		$args['config']['load'] = 'the_group';
+
         // validate passed args ##
         if ( ! args::validate( $args ) ) {
 

@@ -63,6 +63,8 @@ class fields extends ui\render {
 					'value' =>  'Field: '.$field.' has no value, check for data issues.'
 				]);
 
+				// h::log( 'Field empty: '.$field );
+
                 continue;
 
             }
@@ -86,7 +88,9 @@ class fields extends ui\render {
                 'parameters'    => [ 'field' => $field, 'value' => $value, 'args' => self::$args, 'fields' => self::$fields ], // params
                 'filter'        => 'q/render/fields/prepare/before/format/'.self::$args['group'].'/'.$field, // filter handle ##
                 'return'        => $field
-            ]); 
+			]); 
+			
+			// h::log( 'Field value: '.$value );
 
             // Format each field value based on type ( int, string, array, WP_Post Object ) ##
             // each item is filtered as looped over -- q/render/field/GROUP/FIELD - ( $args, $fields ) ##

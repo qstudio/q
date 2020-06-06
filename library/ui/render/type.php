@@ -18,13 +18,13 @@ class type extends ui\render {
      * @todo - placeholder fallback
      * @todo - what about different image methods ??
      **/ 
-    public static function img( $value = null, $field = null ){
+    public static function src( $value = null, $field = null ){
 
         // check and assign ##
         $handle = 
-            isset( self::$args['img']['handle'][$field] ) ?
-            self::$args['img']['handle'][$field] :
-            \apply_filters( 'q/field/format/img/handle', 'medium' ); ;
+            isset( self::$args['src']['handle'][$field] ) ?
+            self::$args['src']['handle'][$field] :
+            \apply_filters( 'q/render/type/src/handle', 'medium' ); ;
 
         // helper::log( 'Image handle: '.$handle );
 
@@ -39,8 +39,8 @@ class type extends ui\render {
 
         // conditional -- add img meta values and srcset ##
         if ( 
-            isset( self::$args['filter']['img'] )
-            && 'srcset' == self::$args['filter']['img'] 
+            isset( self::$args['filter']['src'] )
+            && 'srcset' == self::$args['filter']['src'] 
         ) {
 
             // $id = \get_post_thumbnail_id( $value );

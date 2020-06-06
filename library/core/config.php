@@ -19,6 +19,9 @@ class config extends \Q {
         // filter intermediate image sizes ##
         // \add_filter( 'intermediate_image_sizes_advanced', [ get_class(), 'intermediate_image_sizes_advanced' ] );
 
+		// filter excerpts on search ##
+		// \add_filter( 'q/render/format/wp_post/field/post_excerpt', [ get_class(), 'render_search_excerpt' ], 10, 1 );
+
         // add_image_sizes for all themes ##
         \add_action( 'init', [ get_class(), 'add_image_sizes' ], 1 );
 
@@ -39,7 +42,15 @@ class config extends \Q {
 
         }
 
-    }
+	}
+	
+	public static function render_search_excerpt( $excerpt ) {
+
+		h::log( $excerpt );
+
+		return $excerpt;
+
+	}
 
 
 
@@ -64,16 +75,22 @@ class config extends \Q {
 		// the_content_close() ##
         $array['the_content_close']  = [
 			'markup'				=> '</main>'
-        ];
+		];
+		
+		// acf field groups ##
+        $array['the_group']  = [
+			// 'config'				=> [ 'load' => 'the_group' ]
+			'blach', // @todo.. why is this needed ##
+		];
 
         // title ##
         $array['the_title']  = [
-			'markup'                => '<h1 class="the-title col-12 text-uppercase">%title%</h1>',
+			'markup'                => '<h1 class="col-12 the-title text-uppercase">%title%</h1>',
 		];
 
         // parent ##
         $array['the_parent']  = [
-            'markup'                => '<h4 class="the-parent col-12"><a href="%permalink%">%title%</a></h4>',
+            'markup'                => '<h4 class="col-12 the-parent"><a href="%permalink%">%title%</a></h4>',
         ];
 
         // the_excerpt() ##
@@ -103,25 +120,25 @@ class config extends \Q {
 			// config ##
 			'config'				=> [ 
 										// 'run' => true, 
-										'debug' => true, 
-										'load' => 'the_posts'  // ?? needed ##
+										'debug' => false, 
+										// 'load' => 'the_posts'  // change loaded config ##
 									],
 			
 			// UI ##
 			'markup'				=> [ 
 									'template'=> 
-										'<div class="the-posts row">
-											<div class="col-12"><h5 class="col-12 mb-5 mt-2">%total% Results Found.</h5></div>
-											%posts%
-											<div class="col-12">%pagination%</div>
-										<div>',
+										'<div class="col-12 the-posts">
+											<div class="row"><h5 class="col-12 mt-2">%total% Results Found.</h5></div>
+											<div class="row mt-3">%posts%</div>
+											<div class="row"><div class="col-12">%pagination%</div></div>
+										</div>',
 									// post template ##
 									'posts'	=> 
 										'<div class="col-12 col-md-6 col-lg-4">
 											<a href="%permalink%" title="%post_title%">
 												<div class="lazy card-img-top holder-if-empty" data-src="%src%" alt="Open %post_title%" src="%src%"></div>
 											</a>
-											<div class="card-body">
+											<div class="card-body p-0">
 												<h5 class="card-title"><a href="%permalink%" title="Read More">%post_title%</a></h5>
 												<p class="card-text">%post_excerpt%</p>
 												<p class="card-text">
@@ -133,36 +150,80 @@ class config extends \Q {
 									// 'total'
 									// 	=> '<h5 class="col-12 mb-5 mt-2">%total% Results Found.</h5>', // result count ##
 									'no_results'			
-										=> 'No Results Found.', // no results ##
+										=> '<div class="col-12"><p>We count not find any matching posts, please check again later.</p></div>', // no results ##
 
 									],
 
 			// config ##
+			'wp_query_args'			=> [
+										'post_type'				=> [ 'post' ], // post -- force no results ##
+										'posts_per_page'        => \get_option( "posts_per_page", 10 ),// per page ##
+										'limit'                 => \get_option( "posts_per_page", 10 ), // posts to load ##
+										// 'query_vars'            => false, // only wp_query what we pass in config ##
+									],	
 			'length'                => '200', // return limit for excerpt ##
-			'handle'                => 'medium',
-			'pagination'            => true, // next / back links ##
-			'post_type'				=> [ 'post' ],
-            'posts_per_page'        => \get_option( "posts_per_page", 10 ),// per page ##
-			'limit'                 => \get_option( "posts_per_page", 10 ), // posts to load ##
-            'query_vars'            => false, // only wp_query what we pass in config ##
+			'handle'                => 'medium', // image handle ## srcset returns device sizes ##
 			'date_format'           => 'U',
 			'allow_comments'        => $array['allow_comments'], // show comment count - might slow up query ##
         ];
 
-		// search ---------
+		// search results ##
         $array['the_search']  = [
-			'total'         		=> '<h5 class="col-12 mb-5 mt-2">%total% Results Found.</h5>', // result count ##
-            'post_type'				=> [ 'post' ],
-            'posts_per_page'        => \get_option( "posts_per_page", 10 ),// per page ##
-			'limit'                 => \get_option( "posts_per_page", 10 ), // posts to load ##
-			'wrap'					=> '<div class="the-posts row">%the_posts%<div>',
-            'template'              => 'search', // used to make get_$template_loop method call ##
-            'pagination'            => true, // next / back links ##
-            'query_vars'            => true, // @todo - check that this adds search term ##
-            // 'type'					=> 'search', // could be 'search' ##
-            'handle'                => 'medium', // 
-            'length'                => '200', // return limit for excerpt ##
-			'date_format'           => 'F j, Y',
+
+			// config ##
+			'config'				=> [ 
+										// 'run' => true, 
+										'debug' => false, 
+										// 'load' => 'the_posts'  // change loaded config ##
+									],
+			
+			// UI ##
+			'markup'				=> [ 
+									// main template ##
+									'template' => 
+										'<div class="col-12 the-posts">
+											<div class="row"><h5 class="col-12 mt-2">%total% Results Found.</h5></div>
+											<div class="row mt-3">%posts%</div>
+											<div class="row"><div class="col-12">%pagination%</div></div>
+										</div>',
+
+									// highlight ##
+									'highlight' => 
+										'<mark>%string%</mark>',
+
+									// post template ##
+									'posts'	=> 
+										'<div class="col-12 col-md-6 col-lg-4">
+											<a href="%permalink%" title="%post_title%">
+												<div class="lazy card-img-top holder-if-empty" data-src="%src%" alt="Open %post_title%" src="%src%"></div>
+											</a>
+											<div class="card-body p-0">
+												<h5 class="card-title"><a href="%permalink%" title="Read More">%post_title%</a></h5>
+												<p class="card-text">%post_excerpt%</p>
+												<p class="card-text">
+													<small class="text-muted">Posted %human_date% ago</small>
+													<small class="text-muted">in <a href="%category_permalink%" title="%category_name%">%category_name%</a> </small>    
+												</p>
+											</div>
+										</div>',
+									// 'total'
+									// 	=> '<h5 class="col-12 mb-5 mt-2">%total% Results Found.</h5>', // result count ##
+									'no_results'			
+										=> '<div class="col-12"><p>We count not find any matching posts, please check again later.</p></div>', // no results ##
+
+									],
+
+			// config ##
+			'wp_query_args'			=> [
+										'post_type'				=> [ 'any' ], // post -- force no results ##
+										'posts_per_page'        => \get_option( "posts_per_page", 10 ),// per page ##
+										'limit'                 => \get_option( "posts_per_page", 10 ), // posts to load ##
+										'query_vars'            => true, // only wp_query what we pass in config ##
+									],	
+			'length'                => '200', // return limit for excerpt ##
+			'handle'                => 'medium', // image handle ## srcset returns device sizes ##
+			'date_format'           => 'U',
+			'allow_comments'        => $array['allow_comments'], // show comment count - might slow up query ##
         ];
 
         // the_post_single() ##

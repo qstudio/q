@@ -89,18 +89,17 @@ class render extends \Q {
             'ID',
             'post_title',
             'post_content',
+		],
+		
+		// extended WP_Post fields -- with hand crafted values ##
+        $wp_post_fields_custom = [
             'post_excerpt',
-
-			// required additional lookup ##
-			// @todo -- add more ##
             'permalink', 
 			'category_name', 
 			'human_date', // human readable date ##
 			'post_date',
             'category_permalink',
-            
-            // requires additional lookup and handle ##
-            'img', 
+            'src', // requires additional lookup and handle ##
         ],
 
         $output = null, // return string ##

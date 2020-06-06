@@ -417,17 +417,24 @@ class wp extends \Q {
 
 		// h::log( $args );
 
-        // args ##
-        $wp_query_args = array (
-            'posts_per_page'    => isset( $args['posts_per_page'] ) ? $args['posts_per_page'] : \get_option( "posts_per_page", 10 ),
-			'paged'             => \get_query_var( 'paged' ) ? \get_query_var( 'paged' ) : 1, 
-			'post_type'			=> isset( $args['post_type'] ) ? $args['post_type'] : 'any'
-        );
+		// add hardcoded query args ##
+		$wp_query_args['paged'] = \get_query_var( 'paged' ) ? \get_query_var( 'paged' ) : 1 ;
+		
+		// merge passed args ##
+		if ( 
+			isset( $args['wp_query_args'] )
+			&& is_array( $args['wp_query_args'] )
+		){
 
-        // merge in global $wp_query variables ? ( required for archive pages ) ##
+            // merge passed args ##
+			$wp_query_args = array_merge( $args['wp_query_args'], $wp_query_args );
+			
+		}
+		
+        // merge in global $wp_query variables ( required for archive pages ) ##
         if ( 
-			isset( $args['query_vars'] ) 
-			&& true === $args['query_vars']	
+			isset( $args['wp_query_args']['query_vars'] ) 
+			// && true === $args['query_vars']	
 		) {
 
             // grab all global wp_query args ##
@@ -436,7 +443,7 @@ class wp extends \Q {
             // merge all args together ##
             $wp_query_args = array_merge( $wp_query->query_vars, $wp_query_args );
 
-			h::log('added query vars');
+			// h::log('added query vars');
 
         }
 
@@ -608,7 +615,7 @@ class wp extends \Q {
 			\get_bloginfo( 'description' ) ;
 			
 		// if is_search - highlight ##
-		if ( is_search() ) {
+		if ( \is_search() ) {
 
 			$object->excerpt = 
 				ui\method::search_the_content([

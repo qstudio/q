@@ -25,6 +25,8 @@ class format extends ui\render {
 				'value' => 'No field value passed to method.'
 			]);
 
+			// h::log( 'Field value: '.$value );
+
             return false;
 
         }
@@ -38,6 +40,8 @@ class format extends ui\render {
 				'field'	=> __FUNCTION__,
 				'value' => 'No value passed to method.'
 			]);
+
+			// h::log( 'Field value: '.$value );
 
             return false;
 
@@ -67,8 +71,8 @@ class format extends ui\render {
         $format = self::get( $value, $field );
 
         // now try to format value ##
-        $return = self::apply( $value, $field, $format );
-
+		$return = self::apply( $value, $field, $format );
+		
         // self::$fields should all be String values by now, ready for markup ##
         return $return;
 
@@ -138,14 +142,17 @@ class format extends ui\render {
             // h::log( 'Handler method returned bad OR empty data for Field: '.$field );
 
             // this item needs to be removed from self::$fields
-            // self::remove_field( $field, 'Removed by "apply" due to bad or empty data' );
+			// self::remove_field( $field, 'Removed by "apply" due to bad or empty data' );
+			
+			// h::log( 'Field value bad: '.$field );
 
             return false; // we do not return the $value either ##
 
         }
 
         // test returned data ##
-        // h::log( self::$fields );
+		// h::log( self::$fields );
+		// h::log( 'Field value now: '.$value );
 
         // fields are filtered and saved by each type handler, as new fields might be added or removed internally ##
 
@@ -399,7 +406,7 @@ class format extends ui\render {
     {
 
         // allow filtering early ##
-        $value = \apply_filters( 'q/render/format/object/before/'.self::$args['group'].'/'.$field, $value );
+        $value = \apply_filters( 'q/render/format/object/'.self::$args['group'].'/'.$field, $value );
 
         // WP Object format ##
         if ( $value instanceof \WP_Post ) {
@@ -468,66 +475,107 @@ class format extends ui\render {
 
 				// h::log( 'Field: "'.$wp_post_field.'" value already set.' );
 
+				// filter magic post fields -- global ##
+				$value->$wp_post_field = \apply_filters( 
+					'q/render/format/wp_post/field/'.$wp_post_field, $value->$wp_post_field 
+				);
+
+				// h::log( 'Filter: q/render/format/wp_post/field/'.$wp_post_field );
+
+				// filter magic post fields -- field specific ##
+				$value->$wp_post_field = \apply_filters( 
+					'q/render/format/wp_post/field/'.self::$args['group'].'/'.$wp_post_field, $value->$wp_post_field 
+				);
+
+				// set field ##
                 fields::set( $field.'__'.$wp_post_field, $value->$wp_post_field );
 
             // hand crafted ##
             } else {
 
-                // get categories ##
-				$categories = \get_the_category( $value->ID );
-				
-				// h::log( 'Working: '.$wp_post_field );
+				// @todo - note that this field value was not found ##
 
-                switch( $wp_post_field ) {
+			}
 
-					// human readable date ##
-					case 'human_date' :
+		}
 
-						// h::log( self::$args['date_format'] );
+		// custom field value handlers ##
+        foreach( self::$wp_post_fields_custom as $wp_post_field ) {
 
-						$string = \human_time_diff( 
-							\get_the_date( 
-								isset( self::$args['date_format'] ) ? self::$args['date_format'] : 'U', 
-								$value->ID 
-							), \current_time('timestamp') );
-						
-					break ;
+			// get categories ##
+			$categories = \get_the_category( $value->ID );
+			
+			// h::log( 'Working: '.$wp_post_field );
 
-                    case 'permalink' :
+			switch( $wp_post_field ) {
 
-                        $string = \get_permalink( $value->ID );
+				// human readable date ##
+				case 'human_date' :
 
-                    break ;
+					// h::log( self::$args['date_format'] );
 
-                    case 'category_name' :
+					$string = \human_time_diff( 
+						\get_the_date( 
+							isset( self::$args['date_format'] ) ? self::$args['date_format'] : 'U', 
+							$value->ID 
+						), \current_time('timestamp') );
+					
+				break ;
 
-                        $string = isset( $categories[0] ) ? $categories[0]->name : null ; // category missing ##
+				case 'permalink' :
 
-                    break ;
+					$string = \get_permalink( $value->ID );
 
-					case 'category_permalink' :
+				break ;
 
-						$string = isset( $categories[0] ) ? \get_category_link( $categories[0] ) : null ; // category missing ##
+				case 'post_excerpt' :
 
-                    break ;
+					$string = $value->post_excerpt;
 
-                    case 'img' :
-                        
-                        // get post_thumbnail ID ##
-                        $img_id = \get_post_thumbnail_id( $value->ID );
-                        $string = type::img( $img_id, $field );
+					// if is_search - highlight ##
+					if ( \is_search() ) {
 
-                    break ;
+						$string = 
+							ui\method::search_the_content([
+								'string' 	=> \apply_filters( 'q/get/wp/post_content', $value->post_content ),
+								'limit'		=> self::$args['length']
+							]) ? 
+							ui\method::search_the_content([
+								'string' 	=> \strip_shortcodes(\apply_filters( 'q/get/wp/post_content', $value->post_content )),
+								'limit'		=> self::$args['length']
+							]) : 
+							$value->post_excerpt ;
 
-                }
+					}
 
-                // assign field and value ##
-                // self::$fields[$field.'__'.$wp_post_field] = $string;
-                fields::set( $field.'__'.$wp_post_field, $string );
+				break ;
 
-            }
+				case 'category_name' :
 
-        }
+					$string = isset( $categories[0] ) ? $categories[0]->name : null ; // category missing ##
+
+				break ;
+
+				case 'category_permalink' :
+
+					$string = isset( $categories[0] ) ? \get_category_link( $categories[0] ) : null ; // category missing ##
+
+				break ;
+
+				case 'src' :
+					
+					// get post_thumbnail ID ##
+					$src_id = \get_post_thumbnail_id( $value->ID );
+					$string = type::src( $src_id, $field );
+
+				break ;
+
+			}
+
+			// assign field and value ##
+			fields::set( $field.'__'.$wp_post_field, $string );
+
+		}
 
         // kick back ##
         return true;

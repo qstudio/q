@@ -44,14 +44,33 @@ class markup extends ui\render {
         // loop over each field, replacing placeholders with values ##
         foreach( self::$fields as $key => $value ) {
 
-            // we only want string values here -- so check and remove, as required ##
-            if ( ! \is_string( $value ) ) {
+			// cast booleans to integer ##
+			if ( \is_bool( $value ) ) {
+
+				// // log ##
+				// log::add([
+				// 	'key' => 'notice', 
+				// 	'field'	=> __FUNCTION__,
+				// 	'value' =>  'The value of: '.$key.' was a boolean, so we cast to an integer'
+				// ]);
+
+				// $value = (int) $value;
+
+			}
+
+            // we only want integer or string values here -- so check and remove, as required ##
+            if ( 
+				! \is_string( $value ) 
+				&& ! \is_int( $value ) 
+			) {
+
+				// h::log( 'The value of: '.$key.' is not a string or integer - so we cannot render it' );
 
 				// log ##
 				log::add([
 					'key' => 'notice', 
 					'field'	=> __FUNCTION__,
-					'value' =>  'The value of: '.$key.' is not a string'
+					'value' =>  'The value of: '.$key.' is not a string or integer - so it will be skipper and removed from markup...'
 				]);
 
                 unset( self::$fields[$key] );

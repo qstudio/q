@@ -65,11 +65,20 @@ class log extends ui\render {
             || false === self::$args['config']['debug']
         ) {
 
-            h::log( 'Debugging is turned off for Field Group: "'.$args['group'].'"' );
+            // h::log( 'Debugging is turned off for Field Group: "'.$args['group'].'"' );
 
             return false;
 
         }   
+
+		// we debug by group -- so, if the group is empty, bail ##
+		if ( ! isset( self::$log[ $args['group'] ] ) ) {
+
+			h::log( 'Log Group empty: "'.$args['group'].'"' );
+
+			return false;
+
+		}
 
 		// h::log( self::$log );
 

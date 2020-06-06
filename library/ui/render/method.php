@@ -94,11 +94,16 @@ class method extends ui\render {
 
 		}
 
-		// build $args['fields'] -- this can be moved to a pre-function call ##
+		// build $args['fields'] -- @todo -- this can be moved to a pre-function call ##
 		self::$args['fields'] = [];
 
-		// build fields array ## -- this can be moved to a pre-function call ##
-		self::$fields = [];
+		// build fields array with default values ##
+		self::$fields = [
+			'total' 		=> '0', // set to zero string value ##
+			'pagination' 	=> null, // empty field.. ##
+			// 'pagination' = false, // don't load pagination ##
+			'posts' 		=> $args['markup']['no_results'] // replace posts with no_results markup ## is this right ?? ##
+		];
 
         // pass to get_posts -- and validate that we get an array back ##
         if ( ! $array = get\wp::the_posts( $args ) ) {
@@ -112,18 +117,16 @@ class method extends ui\render {
 				'value' =>  'the_posts did not return any data'
 			]);
 
-			// no posts feedback ##
-			self::$fields['posts'] = $args['markup']['no_results'];
-
 		}
 
 		// validate what came back - it should include the WP Query, posts and totals ##
 		if ( 
 			! isset( $array['query'] ) 
 			|| ! isset( $array['query']->posts ) 
+			// || ! isset( $array['query']->posts ) 
 		){
 
-			// h::log( 'Error in data returned from the_posts' );
+			h::log( 'Error in data returned from the_posts' );
 
 			// log ##
 			log::add([
@@ -132,29 +135,27 @@ class method extends ui\render {
 				'value' =>  'Error in data returned from the_posts'
 			]);
 
-			// no posts feedback ##
-			self::$fields['posts'] = $args['markup']['no_results'];
-
 		}
 		
 		// no posts.. so empty, set count to 0 and no pagination ##
 		if ( 
-			0 == count( $array['query']->posts )
+			empty( $array['query']->posts )
+			|| 0 == count( $array['query']->posts )
 		){
 
-			self::$fields['total'] = 0; // set to zero ##
-			self::$fields['pagination'] = null; // empty field.. ##
-			self::$args['pagination'] = false; // don't load pagination ##
-			self::$fields['posts'] = $args['markup']['no_results'] ; // replace posts with no_results markup ## is this right ?? ##
+			h::log( 'No results returned from the_posts' );
+
+		// we have posts, so let's add some charm ##
+		} else {
+
+			// define all required fields for markup ##
+			self::$fields = [
+				'total' 		=> count( $array['query']->posts ), // total posts ##
+				'pagination'	=> ui\navigation::the_pagination( $array, 'return' ), #'PAGINATION', // @todo ## -- perhaps we have to call the_pagination here ??? ##
+				'posts'			=> $array['query']->posts // array of WP_Posts ##
+			];
 
 		}
-
-		// define all required fields for markup ##
-		self::$fields = [
-			'total' 		=> count( $array['query']->posts ), // total posts ##
-			'pagination'	=> 'PAGINATION', // @todo ## -- perhaps we have to call the_paginatio here ??? ##
-			'posts'			=> $array['query']->posts // array of WP_Posts ##
-		];
 
 		// filter fields by template ##
 		self::$fields = \apply_filters( 'q/ui/render/the_posts/'.ui\template::get(), self::$fields, self::$args );
@@ -401,6 +402,7 @@ class method extends ui\render {
 	}
 
 
+
 	/**
 	 * Helper Method to get the_fields - ui\field\render() ##
 	 */
@@ -408,7 +410,6 @@ class method extends ui\render {
 
 		// bounce on, and return array ##
 		return ui\render\group::render( $args );
-		// render\group::render( $args );
 
 	}
 

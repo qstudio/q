@@ -12,6 +12,9 @@ class args extends ui\render {
 	
     public static function validate( $args = null ) {
 
+		// h::log( core\method::backtrace([ 'level' => 2, 'return' => 'function' ]) );
+		// h::log( $args );
+
 		// get stored config - pulls from Q, but available to filter via q/config/get/all ##
 		$config = 
 			( // force config settings to return by passing "config" -> "property" ##
@@ -91,7 +94,7 @@ class args extends ui\render {
 		}
 
 		// assign "group" - this is used by group to pull acf fields, or to know the calling method for the_ calls ##
-		$args['group'] = isset( $args['group'] ) ? $args['group'] : core\method::backtrace([ 'return' => 'function' ]) ;
+		// $args['group'] = isset( $args['group'] ) ? $args['group'] : core\method::backtrace([ 'return' => 'function' ]) ;
 		
         // assign properties with initial filters ##
 		$args = self::assign( $args );
