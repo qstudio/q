@@ -7,6 +7,7 @@ use q\core\helper as h;
 use q\ui;
 use q\plugin;
 use q\get;
+use q\render;
 
 class method extends \Q {
 
@@ -185,7 +186,7 @@ class method extends \Q {
 			// h::log( 'Error in passed $args or $array: '.$method );
 
 			// log ##
-			ui\render\log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> $method,
 				'value' => 'Error in passed $args or $array'
@@ -203,7 +204,7 @@ class method extends \Q {
 			// h::log( 'Returned $array is empty: '.$method );
 
 			// log ##
-			ui\render\log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> $method,
 				'value' => 'Returned $array is empty'

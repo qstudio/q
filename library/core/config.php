@@ -198,11 +198,13 @@ class config extends \Q {
 
 			// config ##
 			'wp_query_args'			=> [
-										'post_type'				=> [ 'any' ], // post -- force no results ##
+										'post_type'				=> [ 'page' ], // post -- force no results ##
 										'posts_per_page'        => \get_option( "posts_per_page", 10 ),// per page ##
 										'limit'                 => \get_option( "posts_per_page", 10 ), // posts to load ##
 										'query_vars'            => true, // only wp_query what we pass in config ##
 									],	
+			'highight'				=> true, // @todo - add to controls -- highlight results in excerpt ##
+			'highlight_wrap'		=> '<mark>%string%</mark>', // @todo - passed to render -- markup to highlight result ##
 			'length'                => '200', // return limit for excerpt ##
 			'handle'                => 'medium', // image handle ## srcset returns device sizes ##
 			'date_format'           => 'U',

@@ -282,10 +282,10 @@ class helper extends \Q {
 
 		} elseif ( 
 			is_array( $args ) 
-			&& isset( $args['string'] )	
+			&& isset( $args['log_string'] )	
 		) {
 
-			error_log( 'string => from $args..' );
+			error_log( 'log_string => from $args..' );
 			$log = $args['string'];
 
 		} else {

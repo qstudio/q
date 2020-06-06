@@ -42,7 +42,7 @@ class controller extends \Q {
 			'module' => h::get( 'ui/module/_controller.php', 'return', 'path' ),
 
 			// render ##
-			'render' => h::get( 'ui/render/_controller.php', 'return', 'path' ), // NEW ##
+			// 'render' => h::get( 'ui/render/_controller.php', 'return', 'path' ), // NEW ##
 
 			// 'field' => h::get( 'ui/field/_controller.php', 'return', 'path' ), // @todo - deprecate ##
 			

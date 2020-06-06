@@ -207,7 +207,7 @@ class render extends \Q {
 		}
 
 		// test namespace ##
-		// h::log( __NAMESPACE__ );
+		h::log( __NAMESPACE__ );
 
 		// the__ methods ##
 		if (

@@ -221,7 +221,10 @@ if ( ! class_exists( 'Q' ) ) {
 			require_once self::get_plugin_path( 'library/core/_controller.php' );
 			
 			// getter ##
-            require_once self::get_plugin_path( 'library/get/_controller.php' );
+			require_once self::get_plugin_path( 'library/get/_controller.php' );
+			
+			// render engine ##
+            require_once self::get_plugin_path( 'library/render/_controller.php' );
 
 			// theme ##
             require_once self::get_plugin_path( 'library/ui/_controller.php' );
