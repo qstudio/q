@@ -95,7 +95,7 @@ class render extends \Q {
         ],
 
         // standard fields to add to wp_post objects
-        $wp_post_fields = [
+        $type_fields = [
 
 			// standard WP fields ##
             'post_ID',

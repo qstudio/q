@@ -94,13 +94,29 @@ class type extends render {
 		// $value needs to be a WP_Post object ##
 		if ( ! isset( $args[1] ) ) {
 
-			h::log( 'Error in passed $args - missing field' );
+			h::log( 'Error in passed $args - missing type_field' );
 
 			// log ##
 			log::add([
 				'key' => 'error', 
 				'field'	=> $function,
-				'value' => 'Error in pased $args - missing field'
+				'value' => 'Error in pased $args - missing $type_field'
+			]);
+
+			return false;
+
+		}
+
+		// $value needs to be a WP_Post object ##
+		if ( ! isset( $args[2] ) ) {
+
+			h::log( 'Error in passed $args - missing $field' );
+
+			// log ##
+			log::add([
+				'key' => 'error', 
+				'field'	=> $function,
+				'value' => 'Error in pased $args - missing $field'
 			]);
 
 			return false;
@@ -137,7 +153,7 @@ class type extends render {
 			// h::log( 'Found function: "'.$namespace.'::'.$method_function.'()"' );
 
 			// call it and capture response ##
-			$string = $namespace::{$method_function}( $args[0], $args[1] );
+			$string = $namespace::{$method_function}( $args[0], $args[1], $args[2] );
 
 			// filter post fields -- global ##
 			$string = \apply_filters( 

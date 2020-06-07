@@ -15,13 +15,13 @@ class category extends render\type {
      *  
      * 
      **/ 
-    public static function format( \WP_Post $value = null, String $field = null ): string {
+    public static function format( \WP_Post $wp_post = null, String $type_field = null, String $field = null ): string {
 
 		// start with default passed value ##
-		$string = $value->$field;
+		$string = null;
 
 		// get category ##
-		$category = \get_the_category( $value->ID );
+		$category = \get_the_category( $wp_post->ID );
 		// h::log( $category );
 
 		// get category ##
@@ -45,7 +45,7 @@ class category extends render\type {
 
 		// h::log( 'Working: '.$field );
 
-		switch( $field ) {
+		switch( $type_field ) {
 
 			case 'category_name' :
 
@@ -64,9 +64,9 @@ class category extends render\type {
 		// check ##
 		if ( is_null( $string ) ) {
 
-			h::log( 'String is empty.. so return passed value' );
+			h::log( 'String is empty.. so return null' );
 
-			$string = $value->$field;
+			$string = null;
 
 		}
 

@@ -450,11 +450,11 @@ class format extends \q\render {
     /**
      * Format WP_Post Objects
      */
-    public static function format_object_wp_post( \WP_Post $value = null, $field = null ){
+    public static function format_object_wp_post( \WP_Post $wp_post = null, $field = null ) :bool {
 
         // sanity ##
         if (
-            is_null( $value )
+            is_null( $wp_post )
             || is_null( $field )
         ) {
 
@@ -469,45 +469,45 @@ class format extends \q\render {
 
 		}
 		
-		// h::log( 'Formatting WP Post Object: '.$value->post_title );
-		// h::log( $value ); // whole object ##
+		// h::log( 'Formatting WP Post Object: '.$wp_post->post_title );
+		// h::log( 'Field: '.$field ); // whole object ##
 
-        // now, we need to create some new $fields based on each value in self::$wp_post_fields ##
-        foreach( self::$wp_post_fields as $wp_post_field ) {
+        // now, we need to create some new $fields based on each value in self::$type_fields ##
+        foreach( self::$type_fields as $type_field ) {
 			
-			// h::log( 'Working: '.$wp_post_field );
+			// h::log( 'Working: '.$type_field );
 
 			// start empty ##
 			$string = null;
 
-			switch( $wp_post_field ) {
+			switch( $type_field ) {
 
 				// post handlers ##	
 				// case "ID" : // post special ##
-				case substr( $wp_post_field, 0, strlen( 'post_' ) ) === 'post_' :
+				case substr( $type_field, 0, strlen( 'post_' ) ) === 'post_' :
 
-					$string = type::post( $value, $wp_post_field );
+					$string = type::post( $wp_post, $type_field, $field );
 
 				break ;
 
 				// author handlers ##	
-				case substr( $wp_post_field, 0, strlen( 'author_' ) ) === 'author_' :
+				case substr( $type_field, 0, strlen( 'author_' ) ) === 'author_' :
 
-					$string = type::author( $value, $wp_post_field );
+					$string = type::author( $wp_post, $type_field, $field );
 
 				break ;
 
 				// category handlers ##	
-				case substr( $wp_post_field, 0, strlen( 'category_' ) ) === 'category_' :
+				case substr( $type_field, 0, strlen( 'category_' ) ) === 'category_' :
 
-					$string = type::category( $value, $wp_post_field );
+					$string = type::category( $wp_post, $type_field, $field );
 
 				break ;
 
 				// images ###
 				case 'src' :
 
-					$string = type::src( $value, $wp_post_field );
+					$string = type::src( $wp_post, $type_field, $field );
 
 				break ;
 
@@ -515,13 +515,13 @@ class format extends \q\render {
 
 			if ( is_null( $string ) ) {
 
-				h::log( 'Field: '.$field.' / '.$wp_post_field.' returned an empty string' );
+				h::log( 'Field: '.$field.' / '.$type_field.' returned an empty string' );
 
 				// log ##
 				log::add([
 					'key' => 'error', 
 					'field'	=> __FUNCTION__,
-					'value' => 'Field: '.$field.' / '.$wp_post_field.' returned an empty string'
+					'value' => 'Field: '.$field.' / '.$type_field.' returned an empty string'
 				]);
 
 				// @@ todo.. do we need to remove field or markup ?? ##
@@ -531,7 +531,7 @@ class format extends \q\render {
 			}
 
 			// assign field and value ##
-			fields::set( $field.'__'.$wp_post_field, $string );
+			fields::set( $field.'__'.$type_field, $string );
 
 		}
 

@@ -18,14 +18,15 @@ class src extends render\type {
      * @todo - placeholder fallback
      * @todo - what about different image methods ??
      **/ 
-    public static function format( \WP_Post $value = null, String $field = null ): string {
+    public static function format( \WP_Post $wp_post = null, String $type_field = null, String $field = null ): string {
 
 		// attachment ID ##
-		$attachment_id = \get_post_thumbnail_id( $value );
-		// $post = \get_post_thumbnail_id( $value->ID );
-		// h::log( 'Field: '.$field.' - Post ID: '.$value->ID.' - Src ID: '.$attachment_id );
+		$attachment_id = \get_post_thumbnail_id( $wp_post );
+		// $post = \get_post_thumbnail_id( $wp_post->ID );
+		// h::log( 'Field: '.$field.' - Type: '.$type_field.' - Post ID: '.$wp_post->ID.' - Src ID: '.$attachment_id );
 
-        // check and assign ##
+		// check and assign ##
+		// h::log( self::$args );
         $handle = 
             isset( self::$args['src']['handle'][$field] ) ? // @todo -- this is probably wrong ##
             self::$args['src']['handle'][$field] :
@@ -34,9 +35,9 @@ class src extends render\type {
         // h::log( 'Image handle: '.$handle );
 
 		// start empty ##
-        $string = $value->$field;
+        $string = null;
 
-        // h::log( 'Image ID: '.$value );
+        // h::log( 'Image ID: '.$wp_post );
 
         // get image ##
 		$src = \wp_get_attachment_image_src( $attachment_id, $handle );
@@ -71,29 +72,31 @@ class src extends render\type {
             && true == self::$args['config']['srcset'] 
         ) {
 
-            // $id = \get_post_thumbnail_id( $value );
-            $srcset = \wp_get_attachment_image_srcset( $value->ID, $handle );
-            $sizes = \wp_get_attachment_image_sizes( $value->ID, $handle );
+			// h::log( 'Adding srcset to: '.$string );
+
+            // $id = \get_post_thumbnail_id( $wp_post );
+            $srcset = \wp_get_attachment_image_srcset( $attachment_id, $handle );
+            $sizes = \wp_get_attachment_image_sizes( $attachment_id, $handle );
             $alt = 
-                \get_post_meta( $value->ID, '_wp_attachment_image_alt', true ) ?
-                \get_post_meta( $value->ID, '_wp_attachment_image_alt', true ) :
-                get\wp::the_excerpt_from_id( $value->ID, 100 );
+                \get_post_meta( $wp_post->ID, '_wp_attachment_image_alt', true ) ?
+                \get_post_meta( $wp_post->ID, '_wp_attachment_image_alt', true ) :
+                get\wp::the_excerpt_from_id( $wp_post->ID, 100 );
 
             // markup tag attributes ##
             $srcset = '" srcset="'.\esc_attr($srcset).'"'; 
             $sizes = ' sizes="'.\esc_attr($sizes).'"'; 
             $alt = ' alt="'.\esc_attr($alt).'"'; 
 
-            $string = $src[0].$srcset.$sizes.$alt;
+			$string = $src[0].$srcset.$sizes.$alt;
+			
+			// h::log( $string );
 
         }
 
 		// check ##
 		if ( is_null( $string ) ) {
 
-			h::log( 'String is empty.. so return passed value' );
-
-			$string = $value->$field;
+			h::log( 'String is empty.. so return null' );
 
 		}
 

@@ -15,13 +15,13 @@ class author extends render\type {
      *  
      * 
      **/ 
-    public static function format( \WP_Post $value = null, String $field = null ): string {
+    public static function format( \WP_Post $wp_post = null, String $type_field = null, String $field = null ): string {
 
 		// start with default passed value ##
-		$string = $value->$field;
+		$string = null;
 
 		// get author ##
-		$author = $value->post_author;
+		$author = $wp_post->post_author;
 		$authordata = \get_userdata( $author );
 
 		// validate ##
@@ -36,7 +36,7 @@ class author extends render\type {
 		}
 
 		// special fields first ?? ##
-		switch( $field ) {
+		switch( $type_field ) {
 
 			// human readable date ##
 			case 'author_permalink' :
@@ -59,7 +59,7 @@ class author extends render\type {
 
 			h::log( 'String is empty.. so return passed value' );
 
-			$string = $value->$field;
+			// $string = $wp_post->$field;
 
 		}
 
