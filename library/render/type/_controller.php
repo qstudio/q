@@ -78,13 +78,29 @@ class type extends render {
 		// $value needs to be a WP_Post object ##
 		if ( ! $args[0] instanceof \WP_Post ) {
 
-			h::log( 'Error in passed $args' );
+			h::log( 'Error in passed $args - not a WP_Post object' );
 
 			// log ##
 			log::add([
 				'key' => 'error', 
 				'field'	=> $function,
-				'value' => 'Error in pased $args'
+				'value' => 'Error in pased $args - not a WP_Post object'
+			]);
+
+			return false;
+
+		}
+
+		// $value needs to be a WP_Post object ##
+		if ( ! isset( $args[1] ) ) {
+
+			h::log( 'Error in passed $args - missing field' );
+
+			// log ##
+			log::add([
+				'key' => 'error', 
+				'field'	=> $function,
+				'value' => 'Error in pased $args - missing field'
 			]);
 
 			return false;
@@ -120,10 +136,24 @@ class type extends render {
 
 			// h::log( 'Found function: "'.$namespace.'::'.$method_function.'()"' );
 
-			// h::log( $args );
+			// call it and capture response ##
+			$string = $namespace::{$method_function}( $args[0], $args[1] );
 
-			// call it ##
-			return $namespace::{$method_function}( $args[0], $args[1] );
+			// filter post fields -- global ##
+			$string = \apply_filters( 
+				'q/render/type/'.$args[1], $string 
+			);
+
+			// filter group/field -- field specific ##
+			$string = \apply_filters( 
+				'q/render/type/'.self::$args['group'].'/'.$args[1], $string
+			);
+
+			// test ##
+			// h::log( $string );
+
+			// return ##
+			return $string;
 
 		}
 

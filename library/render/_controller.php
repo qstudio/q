@@ -98,11 +98,12 @@ class render extends \Q {
         $wp_post_fields = [
 
 			// standard WP fields ##
-            'ID',
+            'post_ID',
             'post_title',
             'post_content',
             'post_excerpt',
-			'post_permalink', 
+			'post_permalink',
+			'post_is_sticky',
 			
 			// dates ##
 			'post_date', // formatted ##
@@ -115,9 +116,6 @@ class render extends \Q {
 			// author ##
 			'author_permalink',
 			'author_name',
-			
-			// stickyness ##
-			'is_sticky',
 			
 			// image src ##
 			'src', 

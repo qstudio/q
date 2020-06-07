@@ -23,6 +23,18 @@ class post extends render\type {
 		// special fields first ?? ##
 		switch( $field ) {
 
+			case 'post_ID' :
+
+				$string = $value->ID;
+
+			break ;
+
+			// case 'post_title' :
+
+			// 	$string = null;
+
+			// break ;
+
 			// human readable date ##
 			case 'post_date_human' :
 
@@ -48,13 +60,19 @@ class post extends render\type {
 						$value->ID
 					);
 
-				h::log( 'post_date: '.$string );
+				// h::log( 'post_date: '.$string );
 				
 			break ;
 
 			case 'post_permalink' :
 
 				$string = \get_permalink( $value->ID );
+
+			break ;
+
+			case 'post_is_sticky' :
+
+				$string = \is_sticky( $value->ID ) ? 'sticky' : 'not_sticky' ;
 
 			break ;
 
@@ -83,33 +101,32 @@ class post extends render\type {
 		}
 
 		// __magic__ fields ##
-		if ( is_null( $string ) && $value->$field ) {
+		if ( 
+			$value->$field
+			&& ( 
+				empty( $string ) 
+				|| is_null( $string ) 
+			) 
+		) {
 
-			// h::log( 'Field: "'.$field.'" value already set: '.$value->$field );
+			// h::log( 'Field: "'.$field.'" value magically set to: '.ui\method::chop( $value->$field, 50 ) );
 
-			// filter magic post fields -- global ##
-			$string = \apply_filters( 
-				'q/render/format/wp_post/field/'.$field, $value->$field 
-			);
+			$string = $value->$field;
 
-			// h::log( 'Filter: q/render/format/wp_post/field/'.$field );
+			// // filter magic post fields -- global ##
+			// $string = \apply_filters( 
+			// 	'q/render/type/wp_post/'.$field, $value->$field 
+			// );
 
-			// filter magic post fields -- field specific ##
-			$string = \apply_filters( 
-				'q/render/format/wp_post/field/'.self::$args['group'].'/'.$field, $value->$field 
-			);
+			// h::log( 'Filter: q/render/type/wp_post/'.$field );
+
+			// // filter magic post fields -- field specific ##
+			// $string = \apply_filters( 
+			// 	'q/render/type/wp_post/'.self::$args['group'].'/'.$field, $value->$field 
+			// );
 
 			// kick back already ##
 			// return $string;
-
-		}
-
-		// check ##
-		if ( is_null( $string ) ) {
-
-			h::log( 'String is empty.. so return passed value' );
-
-			$string = $value->$field;
 
 		}
 

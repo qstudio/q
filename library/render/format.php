@@ -77,93 +77,10 @@ class format extends \q\render {
         // self::$fields should all be String values by now, ready for markup ##
         return $return;
 
-    }
+	}
+	
 
-
-    /**
-     * Allow text field to be filtered ##
-     * 
-     */
-    public static function apply( $value = null, String $field = null, String $format = null )
-    {
-
-        // sanity ##
-        if ( 
-            is_null( $value )
-            || is_null( $field )
-            || is_null( $format )
-        ) {
-
-			// log ##
-			log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Error in parameters passed to "apply", $value returned empty and field removed from $fields'
-			]);
-
-            // this item needs to be removed from self::$fields
-            fields::remove( $field );
-
-             // we do not return the $value either ##
-            return false;
-
-        }
-
-        // h::log( 'Checking Format for - Field: '.$field.' with method: '.$format );
-
-        // we can now distribute the $value to the relevant format method ##
-        if (
-            ! method_exists( __CLASS__, $format )
-            || ! is_callable( array( __CLASS__, $format ) )
-        ){
-
-			// log ##
-			log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'handler wrong - class: '.__CLASS__.' / method: '.$format
-			]);
-
-            // this item needs to be removed from self::$fields
-            fields::remove( $field );
-
-            // we do not return the $value either ##
-            return false; 
-
-        }
-
-        // call class method and pass arguments ##
-        $value = call_user_func_array (
-            array( __CLASS__, $format )
-            ,   array( $value, $field )
-        );
-
-        if ( ! $value ) {
-
-            // h::log( 'Handler method returned bad OR empty data for Field: '.$field );
-
-            // this item needs to be removed from self::$fields
-			// self::remove_field( $field, 'Removed by "apply" due to bad or empty data' );
-			
-			// h::log( 'Field value bad: '.$field );
-
-            return false; // we do not return the $value either ##
-
-        }
-
-        // test returned data ##
-		// h::log( self::$fields );
-		// h::log( 'Field value now: '.$value );
-
-        // fields are filtered and saved by each type handler, as new fields might be added or removed internally ##
-
-        // kick back ##
-        return true;
-
-    }
-
-
-
+	
     /**
      * Get format of $field $value from defined list of allowed formats ##
      * 
@@ -258,6 +175,92 @@ class format extends \q\render {
         return $return;
 
     }
+
+
+
+
+    /**
+     * Allow text field to be filtered ##
+     * 
+     */
+    public static function apply( $value = null, String $field = null, String $format = null )
+    {
+
+        // sanity ##
+        if ( 
+            is_null( $value )
+            || is_null( $field )
+            || is_null( $format )
+        ) {
+
+			// log ##
+			log::add([
+				'key' => 'error', 
+				'field'	=> __FUNCTION__,
+				'value' => 'Error in parameters passed to "apply", $value returned empty and field removed from $fields'
+			]);
+
+            // this item needs to be removed from self::$fields
+            fields::remove( $field );
+
+             // we do not return the $value either ##
+            return false;
+
+        }
+
+        // h::log( 'Checking Format for - Field: '.$field.' with method: '.$format );
+
+        // we can now distribute the $value to the relevant format method ##
+        if (
+            ! method_exists( __CLASS__, $format )
+            || ! is_callable( array( __CLASS__, $format ) )
+        ){
+
+			// log ##
+			log::add([
+				'key' => 'error', 
+				'field'	=> __FUNCTION__,
+				'value' => 'handler wrong - class: '.__CLASS__.' / method: '.$format
+			]);
+
+            // this item needs to be removed from self::$fields
+            fields::remove( $field );
+
+            // we do not return the $value either ##
+            return false; 
+
+        }
+
+        // call class method and pass arguments ##
+        $value = call_user_func_array (
+            array( __CLASS__, $format )
+            ,   array( $value, $field )
+        );
+
+        if ( ! $value ) {
+
+            // h::log( 'Handler method returned bad OR empty data for Field: '.$field );
+
+            // this item needs to be removed from self::$fields
+			// self::remove_field( $field, 'Removed by "apply" due to bad or empty data' );
+			
+			// h::log( 'Field value bad: '.$field );
+
+            return false; // we do not return the $value either ##
+
+        }
+
+        // test returned data ##
+		// h::log( self::$fields );
+		// h::log( 'Field value now: '.$value );
+
+        // fields are filtered and saved by each type handler, as new fields might be added or removed internally ##
+
+        // kick back ##
+        return true;
+
+    }
+
 
 
 
@@ -447,7 +450,7 @@ class format extends \q\render {
     /**
      * Format WP_Post Objects
      */
-    public static function format_object_wp_post( Object $value = null, $field = null ){
+    public static function format_object_wp_post( \WP_Post $value = null, $field = null ){
 
         // sanity ##
         if (
@@ -480,7 +483,7 @@ class format extends \q\render {
 			switch( $wp_post_field ) {
 
 				// post handlers ##	
-				case "ID" : // post special ##
+				// case "ID" : // post special ##
 				case substr( $wp_post_field, 0, strlen( 'post_' ) ) === 'post_' :
 
 					$string = type::post( $value, $wp_post_field );
