@@ -76,7 +76,7 @@ class load extends \Q {
             'markup'            => '<li>%title%</li>',
             'handle'            => [],
             'holder'            => [],
-            'date_format'       => 'F j, Y',
+            'date_format'       => 'F j, Y', // should pull from Q config ##
             'callback'          => false
         );
 

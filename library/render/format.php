@@ -471,117 +471,59 @@ class format extends \q\render {
 
         // now, we need to create some new $fields based on each value in self::$wp_post_fields ##
         foreach( self::$wp_post_fields as $wp_post_field ) {
-            
-            // let's auto-assign some values - then hand create the rest ##
-            if ( $value->$wp_post_field ) {
-
-				// h::log( 'Field: "'.$wp_post_field.'" value already set.' );
-
-				// filter magic post fields -- global ##
-				$value->$wp_post_field = \apply_filters( 
-					'q/render/format/wp_post/field/'.$wp_post_field, $value->$wp_post_field 
-				);
-
-				// h::log( 'Filter: q/render/format/wp_post/field/'.$wp_post_field );
-
-				// filter magic post fields -- field specific ##
-				$value->$wp_post_field = \apply_filters( 
-					'q/render/format/wp_post/field/'.self::$args['group'].'/'.$wp_post_field, $value->$wp_post_field 
-				);
-
-				// set field ##
-                fields::set( $field.'__'.$wp_post_field, $value->$wp_post_field );
-
-            // hand crafted ##
-            } else {
-
-				// note that this field value was not found ##
-				log::add([
-					'key' => 'notice', 
-					'field'	=> __FUNCTION__,
-					'value' =>  'No value found for field: '.$wp_post_field
-				]);
-
-				// @todo - do we need to remove this field? ##
-
-			}
-
-		}
-
-		// custom field value handlers ##
-        foreach( self::$wp_post_fields_custom as $wp_post_field ) {
-
-			// get categories ##
-			$categories = \get_the_category( $value->ID );
 			
 			// h::log( 'Working: '.$wp_post_field );
 
+			// start empty ##
+			$string = null;
+
 			switch( $wp_post_field ) {
 
-				// human readable date ##
-				case 'human_date' :
+				// post handlers ##	
+				case "ID" : // post special ##
+				case substr( $wp_post_field, 0, strlen( 'post_' ) ) === 'post_' :
 
-					// h::log( self::$args['date_format'] );
-
-					$string = \human_time_diff( 
-						\get_the_date( 
-							isset( self::$args['date_format'] ) ? self::$args['date_format'] : 'U', 
-							$value->ID 
-						), \current_time('timestamp') );
-					
-				break ;
-
-				case 'permalink' :
-
-					$string = \get_permalink( $value->ID );
+					$string = type::post( $value, $wp_post_field );
 
 				break ;
 
-				case 'post_excerpt' :
+				// author handlers ##	
+				case substr( $wp_post_field, 0, strlen( 'author_' ) ) === 'author_' :
 
-					$string = $value->post_excerpt;
-
-					// if is_search - highlight ##
-					if ( \is_search() ) {
-
-						$string = 
-							ui\method::search_the_content([
-								'string' 	=> \apply_filters( 'q/get/wp/post_content', $value->post_content ),
-								'limit'		=> self::$args['length']
-							]) ? 
-							ui\method::search_the_content([
-								'string' 	=> \strip_shortcodes(\apply_filters( 'q/get/wp/post_content', $value->post_content )),
-								'limit'		=> self::$args['length']
-							]) : 
-							$value->post_excerpt ;
-
-					}
+					$string = type::author( $value, $wp_post_field );
 
 				break ;
 
-				case 'category_name' :
+				// category handlers ##	
+				case substr( $wp_post_field, 0, strlen( 'category_' ) ) === 'category_' :
 
-					$string = isset( $categories[0] ) ? $categories[0]->name : null ; // category missing ##
-
-				break ;
-
-				case 'category_permalink' :
-
-					$string = isset( $categories[0] ) ? \get_category_link( $categories[0] ) : null ; // category missing ##
+					$string = type::category( $value, $wp_post_field );
 
 				break ;
 
 				// images ###
 				case 'src' :
 
-					// h::log( 'src: '.$value->ID );
-
-					// get post_thumbnail ID ##
-					// $src_id = \get_post_thumbnail_id( $value->ID );
-					$string = type::src( $value->ID, $field );
-					// h::log( 'Final string: '.$string );
+					$string = type::src( $value, $wp_post_field );
 
 				break ;
+
+			}
+
+			if ( is_null( $string ) ) {
+
+				h::log( 'Field: '.$field.' / '.$wp_post_field.' returned an empty string' );
+
+				// log ##
+				log::add([
+					'key' => 'error', 
+					'field'	=> __FUNCTION__,
+					'value' => 'Field: '.$field.' / '.$wp_post_field.' returned an empty string'
+				]);
+
+				// @@ todo.. do we need to remove field or markup ?? ##
+
+				continue;
 
 			}
 

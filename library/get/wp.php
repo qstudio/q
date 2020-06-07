@@ -91,7 +91,7 @@ class wp extends \Q {
      * @since       1.3.0
      * @return      String
      */
-    public static function the_title( Array $args = null ) {
+    public static function the_title( $args = null ) {
 
 		// sanity ##
 		if (
@@ -198,7 +198,7 @@ class wp extends \Q {
      * @since       1.0.1
      * @return      string   HTML
      */
-    public static function the_parent( Array $args = null ) {
+    public static function the_parent( $args = null ) {
 
 		// sanity ##
 		if (
@@ -256,7 +256,7 @@ class wp extends \Q {
      *
      * @since       1.0.7
      */
-    public static function the_excerpt( $args = array() )
+    public static function the_excerpt( $args = null )
     {
 
         // global arg validator ##
@@ -332,8 +332,15 @@ class wp extends \Q {
      *
      * @since 0.1
      */
-    public static function the_excerpt_from_id( $post, $length = 155, $tags = null, $extra = '&hellip;' )
+    public static function the_excerpt_from_id( $post = null, $length = 155, $tags = null, $extra = '&hellip;' )
     {
+
+		// null post ##
+		if ( is_null( $post ) ) {
+
+			$post = self::the_post();
+
+		}
 
         if( is_int( $post) ) {
             $post = \get_post( $post );
@@ -370,7 +377,7 @@ class wp extends \Q {
     * @since       1.0.1
     * @return      string       HTML
     */
-    public static function the_content( $args = array() )
+    public static function the_content( $args = null )
     {
 
 		// sanity ##
@@ -470,45 +477,62 @@ class wp extends \Q {
 		// filter and return array ##
 		return ui\method::prepare_return( $args, $array );
 
-
-
-        // h::log( $q_query->request );
-        // h::log( $q_query->found_posts );
-        // h::log( $q_query->post_count );
-
-        // weird WPE hack - to reduce the returned array to the size of $args['limit ##
-        // if ( -1 != $args['limit'] && $q_query->post_count > $args['limit'] ) {
-
-        //     // h::log( "splicing.." );
-        //     $get_posts = array_slice( $q_query->posts, 0, $args['limit'], true );
-
-        // } else {
-
-            // $get_posts = $q_query->posts;
-
-        // }
-
-        // self::log( count( $q_query->posts ) );
-
-        // if ( 
-        //     $q_query->posts 
-        //     // && count( $q_query->posts ) > 0
-        // ) {
-
-		// 	// store the query ##
-		// 	$array['query'] = $q_query;
-		// 	// $array['posts'] = $q_query->posts;
-
-		// } else {
-
-		// 	// nada ##
-		// 	$array['query'] = false;
-		// 	// $array['posts'] = false;
-
-		// }
-
     }
 
+
+
+	
+	/**
+	 * Helper Method to get category
+	 */
+	public static function get_the_category( $args = null ){
+
+		// global arg validator ##
+		if ( ! $args = ui\method::prepare_args( $args ) ){ 
+	   
+		   // h::log( 'Bailing..' ); 
+	   
+		   return false; 
+	   
+	   }
+
+	   // try and get_post_categories ##
+	   if ( 
+		   ! $get_the_category = \get_the_category( $the_post->ID )
+	   ){
+
+		   h::log( 'No categories found for Post: '.$the_post->post_title );
+
+		   return false;
+
+	   }
+
+	   // we only want the first array item ##
+	   $category = $get_the_category[0];
+
+	   // test ##
+	   // h::log( $category );
+
+	   // categories ##
+	   if (
+		   ! is_object( $category )
+		   || ! $category instanceof \WP_Term
+	   ) {
+
+		   h::log( 'Error in returned category' );
+
+		   return false;
+
+	   }
+
+	   $array['permalink'] = \get_category_link( $category );
+	   $array['slug'] = $category->slug;
+	   $array['title'] = $category->cat_name;
+
+	   // return ##
+	   return ui\method::prepare_return( $args, $array );
+
+   }
 
 	
 
@@ -722,6 +746,7 @@ class wp extends \Q {
 		// grab some global variables ##
 		} else {
 			
+			// h::log( 'Grabbing global query..' );
 			global $wp_query;
 			$query = $wp_query;
 
@@ -742,6 +767,7 @@ class wp extends \Q {
 
         // work out total ##
 		$total = $query->max_num_pages;
+		// h::log( 'Total: '.$total );
 
 		// append query to pagination links, if set ##
 		$fragement = '';

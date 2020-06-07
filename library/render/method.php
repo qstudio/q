@@ -151,8 +151,8 @@ class method extends \q\render {
 
 			// define all required fields for markup ##
 			self::$fields = [
-				'total' 		=> count( $array['query']->posts ), // total posts ##
-				'pagination'	=> ui\navigation::the_pagination( $array, 'return' ), #'PAGINATION', // @todo ## -- perhaps we have to call the_pagination here ??? ##
+				'total' 		=> $array['query']->found_posts, // total posts ##
+				'pagination'	=> ui\navigation::the_pagination( $array, 'return' ), // get the_pagination ##
 				'posts'			=> $array['query']->posts // array of WP_Posts ##
 			];
 
@@ -176,69 +176,6 @@ class method extends \q\render {
         return output::return();
 
     }
-
-
-
-	
-    /**
-    * Get Post Loop
-    *
-    * @since       1.0.2
-	*/
-	/*
-    public static function the_post_loop( $args = null ){
-
-        // h::log( $args );
-
-        // grab object with post_loop data ##
-        if ( ! $object = get\wp::the_post_loop( $args ) ) { 
-		
-			h::log( 'Error in $object returned from get\the_post_loop' );
-
-			return false; 
-		
-		}
-
-        // auto ##
-        $class = ( isset( $object->auto ) && $object->auto ) ? ' auto' : '' ;
-
-        // class ##
-        $class .= true === $object->sticky ? ' is_sticky' : ' not_sticky' ;
-
-?>
-        <li class="the-post-loop">
-
-            <div class="blog-wrapper equal-item use_wrap posts<?php echo $class; if ( 'handheld' != h::device() ) echo ' whole'; ?>">
-<?php
-
-                // auto ##
-                if ( isset( $object->auto ) && $object->auto ) {
-
-?>                  <span class="auto"></span><?php
-
-                }
-
-?>
-                <a class="blog-image lazy rounded" href="<?php echo $object->permalink; ?>" data-src="<?php echo $object->src; ?>">
-                    <span></span>
-                </a>
-                <a href="<?php echo $object->permalink; ?>" class="use"><h3><?php echo $object->title; ?></h3></a>
-                <p><?php echo $object->excerpt; ?></p>
-<?php
-                // test ID ##
-                #pr( $object->ID );
-
-                // post meta ##
-                self::the_meta( array( 'post' => $object->ID ) );
-
-?>
-            </div>
-        </li>
-<?php
-
-    }
-	*/
-
 
 	
 
@@ -395,7 +332,7 @@ class method extends \q\render {
 		// global arg validator ##
 		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
 
-		// get title - returns array with key 'title' ##
+		// get content - returns array with key 'content' ##
 		$array = get\wp::the_content( $args );
 
         // return ##
@@ -420,115 +357,16 @@ class method extends \q\render {
 
 	public static function the_category( Array $args = null ) {
 
-		if ( 
-			is_null( $args )
-		) {
+		// global arg validator ##
+		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
 
-			h::log( 'Error in passed $args' );
+		// get title - returns array with key 'title' ##
+		$array = get\wp::the_category( $args );
 
-			return false;
-
-		}
-
-		// get post ##
-		if ( 
-			isset( $args['config']['post'] ) 
-			&& $args['config']['post'] instanceof \WP_Post
-		) {
-
-			$the_post = $args['config']['post'];
-
-		} else {
-
-			$the_post = self::the_post();
-
-		}
-
-		// last check ##
-		if ( ! $the_post ) {
-
-			h::log( 'cats: Error with post object, validate.' );
-
-			return false;
-
-		}
-
-		// try and get_post_categories ##
-		if ( 
-			! $get_the_category = \get_the_category( $the_post->ID )
-		){
-
-			h::log( 'No categories found for Post: '.$the_post->post_title );
-
-			return false;
-
-		}
-
-		// we only want the first array item ##
-		$category = $get_the_category[0];
-
-		// test ##
-		// h::log( $category );
-
-		// categories ##
-		if (
-			! is_object( $category )
-			|| ! $category instanceof \WP_Term
-		) {
-
-			h::log( 'Error in returned category' );
-
-			return false;
-
-		}
-
-		$array['permalink'] = \get_category_link( $category );
-		$array['slug'] = $category->slug;
-		$array['title'] = $category->cat_name;
-
-		// h::log( $array );
-
-		if ( isset( $args['return'] ) && 'return' == $args['return'] ) {
-			
-			return $array ;
-
-		}
-
-		if ( ! isset( $args['markup'] ) ) {
-
-			h::log( 'Missing "markup", returning false.' );
-
-			return false;
-
-		}
-
-		$string = ui\method::markup( $args['markup'], $array );
-
-		// h::log( $string );
-
-		// echo ##
-		echo $string ;
-
-		// stop ##
-		return true;
+        // return ##
+		return ui\method::prepare_render( $args, $array );
 
 	}
-
-
-
-	/**
-	 * Helper Method to get category
-	 */
-	public static function get_the_category( Array $args = null ){
-
-		// we want to return ##
-		$args['return'] = 'return';
-
-		// bounce on, and return array ##
-		return \apply_filters( 'q/wordpress/get_the_category', self::the_category( $args ) );
-
-	}
-
 
 
 

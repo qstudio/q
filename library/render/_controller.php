@@ -88,40 +88,39 @@ class render extends \Q {
 
 		// allowed field types ##
         $type = [
-            'src'             	=> [
-                'format'        => [ 'is_string', 'is_int', 'is_array', 'is_object' ],
-                'method'        => 'src'
-            ],
-            // 'post_object'       => [
-            //     'type'          => 'is_object',
-            //     'method'        => 'format_object'
-            // ],
-            // 'integer'           => [
-            //     'type'          => 'is_int',
-            //     'method'        => 'format_integer'
-            // ],
-            // 'string'            => [
-            //     'type'          => 'is_string',
-            //     'method'        => 'format_text',
-            // ],
+			'post'       		=> [],
+			'src'             	=> [],
+			'category'       	=> [],
+			'author'       		=> [],
         ],
 
         // standard fields to add to wp_post objects
         $wp_post_fields = [
+
+			// standard WP fields ##
             'ID',
             'post_title',
             'post_content',
-		],
-		
-		// extended WP_Post fields -- with hand crafted values ##
-        $wp_post_fields_custom = [
             'post_excerpt',
-            'permalink', 
+			'post_permalink', 
+			
+			// dates ##
+			'post_date', // formatted ##
+			'post_date_human', // human readable ##
+			
+			// category ##
 			'category_name', 
-			'human_date', // human readable date ##
-			'post_date',
-            'category_permalink',
-            'src', // requires additional lookup and handle ##
+			'category_permalink',
+			
+			// author ##
+			'author_permalink',
+			'author_name',
+			
+			// stickyness ##
+			'is_sticky',
+			
+			// image src ##
+			'src', 
         ],
 
         $output = null, // return string ##
@@ -172,7 +171,7 @@ class render extends \Q {
 			'format' => h::get( 'render/format.php', 'return', 'path' ),
 
 			// defined field types, with modifies to extend base data ##
-			'type' => h::get( 'render/type.php', 'return', 'path' ),
+			'type' => h::get( 'render/type/_controller.php', 'return', 'path' ),
 
 			// prepare defined markup, search for and replace placeholders 
 			'markup' => h::get( 'render/markup.php', 'return', 'path' ),

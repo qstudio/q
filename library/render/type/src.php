@@ -1,15 +1,15 @@
 <?php
 
-namespace q\render;
+namespace q\render\type;
 
+use q\core;
 use q\core\helper as h;
 use q\ui;
 use q\get;
-// use q\render;
+use q\render;
 
-class type extends \q\render {
+class src extends render\type {
 
-    
     /**
      * Image type handler 
      *  
@@ -18,35 +18,23 @@ class type extends \q\render {
      * @todo - placeholder fallback
      * @todo - what about different image methods ??
      **/ 
-    public static function src( $value = null, $field = null ){
-
-		$type = 'src';
-
-		// check this type is allowed ##
-		if ( ! array_key_exists( $type, self::get_allowed() ) ) {
-
-			h::log( 'Value Type not allowed: '.$type );
-
-			return $value;
-
-		}
+    public static function format( \WP_Post $value = null, String $field = null ): string {
 
 		// attachment ID ##
 		$attachment_id = \get_post_thumbnail_id( $value );
-
 		// $post = \get_post_thumbnail_id( $value->ID );
-		// h::log( 'Field: '.$field.' - Post ID: '.$value.' - Src ID: '.$attachment_id );
+		// h::log( 'Field: '.$field.' - Post ID: '.$value->ID.' - Src ID: '.$attachment_id );
 
         // check and assign ##
         $handle = 
-            isset( self::$args['src']['handle'][$field] ) ?
+            isset( self::$args['src']['handle'][$field] ) ? // @todo -- this is probably wrong ##
             self::$args['src']['handle'][$field] :
             \apply_filters( 'q/render/type/src/handle', 'medium' ); // filterable default ##
 
         // h::log( 'Image handle: '.$handle );
 
 		// start empty ##
-        $string = '';
+        $string = $value->$field;
 
         // h::log( 'Image ID: '.$value );
 
@@ -60,10 +48,17 @@ class type extends \q\render {
 			|| ! is_array( $src ) 
 		) {
 
-			h::log( $src );
+			// h::log( $src );
 			h::log( 'wp_get_attachment_image_src returned bad data' );
 
-			return $value;
+			// log ##
+			log::add([
+				'key' => 'notice', 
+				'field'	=> __FUNCTION__,
+				'value' => 'wp_get_attachment_image_src returned bad data'
+			]);
+
+			return $string;
 
 		}
 
@@ -71,19 +66,18 @@ class type extends \q\render {
         $string = $src[0];
 
 		// conditional -- add img meta values and srcset ##
-		/*
         if ( 
             isset( self::$args['config']['srcset'] )
             && true == self::$args['config']['srcset'] 
         ) {
 
             // $id = \get_post_thumbnail_id( $value );
-            $srcset = \wp_get_attachment_image_srcset( $value, $handle );
-            $sizes = \wp_get_attachment_image_sizes( $value, $handle );
+            $srcset = \wp_get_attachment_image_srcset( $value->ID, $handle );
+            $sizes = \wp_get_attachment_image_sizes( $value->ID, $handle );
             $alt = 
-                \get_post_meta( $value, '_wp_attachment_image_alt', true ) ?
-                \get_post_meta( $value, '_wp_attachment_image_alt', true ) :
-                get\wp::the_excerpt_from_id( $value, 100 );
+                \get_post_meta( $value->ID, '_wp_attachment_image_alt', true ) ?
+                \get_post_meta( $value->ID, '_wp_attachment_image_alt', true ) :
+                get\wp::the_excerpt_from_id( $value->ID, 100 );
 
             // markup tag attributes ##
             $srcset = '" srcset="'.\esc_attr($srcset).'"'; 
@@ -93,28 +87,21 @@ class type extends \q\render {
             $string = $src[0].$srcset.$sizes.$alt;
 
         }
-		*/
 
-        // h::log( 'Image string: '.$string );
+		// check ##
+		if ( is_null( $string ) ) {
+
+			h::log( 'String is empty.. so return passed value' );
+
+			$string = $value->$field;
+
+		}
 
         // kick back ##
         return $string;
 
-    }
-
-
-
-    /**
-     * Get allowed fomats with filter ##
-     * 
-     */
-    public static function get_allowed()
-    {
-
-        return \apply_filters( 'q/render/type/get', self::$type );
-
-    }
-
+	}
+	
 
 
 }

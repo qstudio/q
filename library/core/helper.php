@@ -266,7 +266,7 @@ class helper extends \Q {
 		// sanity ##
 		if ( is_null( $args ) ) { 
 			
-			error_log( 'No args..' );
+			error_log( 'Nothing passed to log(), so bailing..' );
 
 			return false; 
 		
