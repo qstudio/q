@@ -1,3 +1,5 @@
-library/test/logs/*
-library/test/logs/error.log
-library/test/logs/programs.log
+library/theme/css/q.theme.css
+library/theme/javascript/q.theme.js
+.sass-cache/
+node_modules/
+package-lock.json
