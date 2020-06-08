@@ -25,8 +25,8 @@ class src extends render\type {
 		// check and assign ##
 		// h::log( self::$args );
         $handle = 
-            isset( self::$args['src']['handle'][$field] ) ?
-            self::$args['src']['handle'][$field] : // get handle defined in calling args ##
+            isset( self::$args['src'][$field]['handle'] ) ?
+            self::$args['src'][$field]['handle'] : // get handle defined in calling args ##
             \apply_filters( 'q/render/type/src/handle', 'medium' ); // filterable default ##
 
         // h::log( 'Image handle: '.$handle );

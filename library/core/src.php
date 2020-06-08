@@ -42,10 +42,6 @@ class src extends \Q {
     public static function intermediate_image_sizes_advanced( $sizes)
     {
 
-        unset( $sizes['slides']);
-        unset( $sizes['slides-small']);
-        unset( $sizes['home']);
-        unset( $sizes['new-photos']);
         unset( $sizes['hero']);
 
         return $sizes;

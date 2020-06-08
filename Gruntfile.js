@@ -2,7 +2,11 @@
 module.exports = function(grunt) {
 
 	// run -- https://github.com/shama/grunt-hub ##
-	// grunt hub:all:watch
+	// grunt hub:all:watch 
+	// OR
+	// npm run q:dev
+	// OR
+	// npm run q:deploy
 
 	grunt.initConfig({
 		hub: {
