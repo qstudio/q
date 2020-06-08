@@ -8,38 +8,7 @@ use q\core\helper as h;
 // Q Theme Config ##
 use q\theme as theme;
 
-// load it up ##
-\q\core\config::run();
-
 class config extends \Q {
-
-    public static function run()
-    {
-
-        // filter intermediate image sizes ##
-        // \add_filter( 'intermediate_image_sizes_advanced', [ get_class(), 'intermediate_image_sizes_advanced' ] );
-
-        // add_image_sizes for all themes ##
-        \add_action( 'init', [ get_class(), 'add_image_sizes' ], 1 );
-
-        if ( \is_admin() ) {
-
-
-		} else {
-
-            // load template properties ##
-            // \add_action( 'wp', [ get_class(), "load_properties" ] );
-
-        }
-
-        // make sure properties are loaded when AJAX requests run ##
-        if ( \wp_doing_ajax() ) {
-
-            // self::load_properties();
-
-        }
-
-	}
 
 
 	/**
@@ -109,53 +78,6 @@ class config extends \Q {
 		return $config[$field];
 
 	}
-
-
-
-    /**
-     * Remove standard image sizes so that these sizes are not
-     * created during the Media Upload process
-     *
-     * Tested with WP 3.2.1
-     *
-     * Hooked to intermediate_image_sizes_advanced filter
-     * See wp_generate_attachment_metadata( $attachment_id, $file ) in wp-admin/includes/image.php
-     *
-     * @param $sizes, array of default and added image sizes
-     * @return $sizes, modified array of image sizes
-     * @author http://www.wpmayor.com/code/remove-image-sizes-in-wordpress/
-     */
-    public static function intermediate_image_sizes_advanced( $sizes)
-    {
-
-        unset( $sizes['slides']);
-        unset( $sizes['slides-small']);
-        unset( $sizes['home']);
-        unset( $sizes['new-photos']);
-        unset( $sizes['hero']);
-
-        return $sizes;
-
-    }
-
-
-
-    /**
-     * Add image sizes for all devices - so that all device images sizes are prepared when files are uploaded
-     * Note: Tablet uses desktop sized images
-     *
-     * @since       0.1
-     * @return      void
-     */
-    public static function add_image_sizes()
-    {
-
-        // generic ##
-        \add_image_size( 'icon', 80, 80, true ); // icon ##
-        \add_image_size( 'thumb', 250, 250, true ); // small thumb ##
-
-    }
-
 
 
 }

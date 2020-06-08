@@ -507,7 +507,11 @@ class format extends \q\render {
 				// images ###
 				case 'src' :
 
-					$string = type::src( $wp_post, $type_field, $field );
+					// note, we pass the attachment ID to src handler ##
+					$attachment_id = \get_post_thumbnail_id( $wp_post );
+					$attachment = \get_post( $attachment_id );
+
+					$string = type::src( $attachment, $type_field, $field );
 
 				break ;
 

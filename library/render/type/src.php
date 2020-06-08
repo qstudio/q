@@ -12,24 +12,21 @@ class src extends render\type {
 
     /**
      * Image type handler 
-     *  
      * 
-     * @todo - add srcset check
+	 * @wp_post		Object 
      * @todo - placeholder fallback
-     * @todo - what about different image methods ??
+     * @todo - Add picture handler ##
      **/ 
     public static function format( \WP_Post $wp_post = null, String $type_field = null, String $field = null ): string {
 
-		// attachment ID ##
-		$attachment_id = \get_post_thumbnail_id( $wp_post );
-		// $post = \get_post_thumbnail_id( $wp_post->ID );
-		// h::log( 'Field: '.$field.' - Type: '.$type_field.' - Post ID: '.$wp_post->ID.' - Src ID: '.$attachment_id );
+		// check ##
+		// h::log( 'Field: '.$field.' - Type: '.$type_field.' - Attachment ID: '.$wp_post->ID );
 
 		// check and assign ##
 		// h::log( self::$args );
         $handle = 
-            isset( self::$args['src']['handle'][$field] ) ? // @todo -- this is probably wrong ##
-            self::$args['src']['handle'][$field] :
+            isset( self::$args['src']['handle'][$field] ) ?
+            self::$args['src']['handle'][$field] : // get handle defined in calling args ##
             \apply_filters( 'q/render/type/src/handle', 'medium' ); // filterable default ##
 
         // h::log( 'Image handle: '.$handle );
@@ -40,7 +37,7 @@ class src extends render\type {
         // h::log( 'Image ID: '.$wp_post );
 
         // get image ##
-		$src = \wp_get_attachment_image_src( $attachment_id, $handle );
+		$src = \wp_get_attachment_image_src( $wp_post->ID, $handle );
 		// h::log( $src );
 
 		// validate ##
@@ -68,15 +65,24 @@ class src extends render\type {
 
 		// conditional -- add img meta values and srcset ##
         if ( 
-            isset( self::$args['config']['srcset'] )
-            && true == self::$args['config']['srcset'] 
+			// set locally..
+			(
+				isset( self::$args['config']['srcset'] )
+            	&& true == self::$args['config']['srcset'] 
+			)
+			||
+			// OR, set globally ##
+			(
+				isset( core\config::get( 'src' )['srcset'] )
+				&& true == core\config::get( 'src' )['srcset']
+			)
         ) {
 
 			// h::log( 'Adding srcset to: '.$string );
 
             // $id = \get_post_thumbnail_id( $wp_post );
-            $srcset = \wp_get_attachment_image_srcset( $attachment_id, $handle );
-            $sizes = \wp_get_attachment_image_sizes( $attachment_id, $handle );
+            $srcset = \wp_get_attachment_image_srcset( $wp_post->ID, $handle );
+            $sizes = \wp_get_attachment_image_sizes( $wp_post->ID, $handle );
             $alt = 
                 \get_post_meta( $wp_post->ID, '_wp_attachment_image_alt', true ) ?
                 \get_post_meta( $wp_post->ID, '_wp_attachment_image_alt', true ) :

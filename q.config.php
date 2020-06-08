@@ -26,42 +26,59 @@ return [
 	// image sizes ## @todo - add sizes and function to add via add_image_sizes in config ##
 	'src'						=> [ 
 
+		// @ todo, make this a global controller ##
+		// add srcset to src references ##
+		'srcset' 				=> true, 
+		
+		// @ todo, make this a global controller ##
+		// wrap src in 'picture' element, with srcset ##
+		'picture' 				=> true,
+
 		// holder as data ref ##
 		'holder'				=> 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgZGF0YS1uYW1lPSJMYXllciAxIiBpZD0iTGF5ZXJfMSIgdmlld0JveD0iMCAwIDUxMiA1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOm5vbmU7c3Ryb2tlOiMwODNiNDM7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS13aWR0aDoyMHB4O30uY2xzLTJ7ZmlsbDojMDgzYjQzO308L3N0eWxlPjwvZGVmcz48dGl0bGUvPjxjaXJjbGUgY2xhc3M9ImNscy0xIiBjeD0iMjU2IiBjeT0iMjY3LjQyIiByPSIzMy45OSIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtMSIgcG9pbnRzPSIzMDIuMiAyMDIuNTIgMjg4LjkgMTc5LjY4IDIyMy4xIDE3OS42OCAyMDkuOCAyMDIuNTIgMTQ0IDIwMi41MiAxNDQgMzMyLjMyIDM2OCAzMzIuMzIgMzY4IDIwMi41MiAzMDIuMiAyMDIuNTIiLz48Y2lyY2xlIGNsYXNzPSJjbHMtMiIgY3g9IjMzNy44IiBjeT0iMjMyLjQ5IiByPSIxMS40OSIvPjwvc3ZnPg==',
 
-		// sizes
-		'sizes'					=> [
-			'example'			=> [ '600', '300', true ] // base size ##
+		// Golden Ratio ##
+		'ratio' 				=> 1.618,
+		'open' 					=> 9999, // open size ##
+		'open_height' 			=> 600, // open size ##
+		'scale'					=> 1, // scale sizes ##
+		'pixel'					=> 2, // double vision ##
+
+		// shape handles ##
+		'handles'					=> [
+			'square' 				=> [
+				'sizes'				=> 'all', // create in all sizes 
+				'width'				=> 'equal', // height = width ##
+				'height'			=> 'equal', // height = width ##
+				'pixel'				=> true, // handle for pixel image ##
+				'crop'				=> true, // hard crop ##
+				'open'				=> false // no open sized format
+			],
+			'horizontal' 			=> [
+			 	'sizes'				=> 'all', // create in all sizes 
+			 	'width'				=> 'equal', // height = width \ ratio ##
+				'height'			=> 'divide', // height = width \ ratio ## 
+			 	'crop'				=> true, // hard crop ##
+				'open'				=> 'width', // open sized image with no fixed width
+				'pixel'				=> true, // handle for pixel image ##
+			],
+			'vertical' 			=> [
+			 	'sizes'				=> 'all', // create in all sizes 
+			 	'width'				=> 'equal', // height = width \ ratio ##
+				'height'			=> 'multiply', // height = width * ratio ## 
+			 	'crop'				=> true, // hard crop ##
+				 'open'				=> 'height', // open sized image with no fixed width
+				'pixel'				=> true, // handle for pixel image ##
+			],
 		],
 
-		// @todo - add breakpoint image_size logic ##
-		'breakpoints'			=> [
-			'xs'				=> [ 
-									'width' => '0',
-									'scale' => 0
-			],
-			// base scale ##
-			'sm'				=> [ 
-									'width' => '576',
-									'scale' => 0
-			],
-			'md'				=> [ 
-									'width' => '720',
-									'scale' => 1
-			],
-			'lg'				=> [ 
-									'width' => '960',
-									'scale' => 2
-			],
-			'xl'				=> [ 
-									'width' => '1200',
-									'scale' => 3
-			],
-			// pixel * 2
-			'pixel'				=> [ 
-									'width' => '1200',
-									'scale' => 4
-			],
+		// image_size logic ##
+		'sizes'			=> [
+			'xs'				=> 300,
+			'sm'				=> 576,
+			'md'				=> 720,
+			'lg'				=> 960,
+			'xl'				=> 1200, 
 		]
 	],
 
@@ -128,23 +145,35 @@ return [
 									</div>',
 								// post template ##
 								'posts'	=> 
-									'<div class="col-12 col-md-6 col-lg-4 d-flex mb-3">
-										<div class="card h-100">
-											<div class="card-img" style="min-height: 150px">
-												<a href="%permalink%" title="%post_title%" class="mb-3">
-													<div class="lazy h-100" data-src="%src%" src=""></div>
-												</a>
-											</div>
-											<div class="card-body p-2">
-												<h5 class="card-title"><a href="%permalink%" title="Read More">%post_title%</a></h5>
-												<p class="card-text">%post_excerpt%</p>
-												<p class="card-text">
-													<small class="text-muted">Posted %post_date_human% ago</small>
-													<small class="text-muted">in <a href="%category_permalink%" title="%category_name%">%category_name%</a> </small>    
-												</p>
-											</div>
+									'<div class="card p-0 col-12 col-md-6 col-lg-4 mb-3">
+										<a href="%permalink%" title="%post_title%" class="mb-3">
+											<img class="lazy fit card-img-top" style="height: 200px;" data-src="%src%" src="" />
+										</a>
+										<div class="card-body p-2">
+											<h5 class="card-title"><a href="%permalink%" title="Read More">%post_title%</a></h5>
+											<p class="card-text">%post_excerpt%</p>
+											<p class="card-text">
+												<small class="text-muted">Posted %post_date_human% ago</small>
+												<small class="text-muted">in <a href="%category_permalink%" title="%category_name%">%category_name%</a> </small>    
+											</p>
 										</div>
 									</div>',
+									/*
+									<div class="card mb-3">
+										<a href="%frontpage_work_top__post_permalink%"><img class="lazy fit card-img-top" src="" data-src="%frontpage_work_top__src%"></a>
+										<div class="card-body">
+											<h5 class="card-title">
+												<a href="%frontpage_work_top__post_permalink%">
+													%frontpage_work_top__post_title%
+												</a>
+											</h5>
+											<p class="card-text">%frontpage_work_top__post_excerpt%</p>
+											<span class="badge badge-pill badge-primary ml-1">
+												%frontpage_work_top__category_name%
+											</span>
+										</div>
+									</div>
+									*/
 								// 'total'
 								// 	=> '<h5 class="col-12 mb-5 mt-2">%total% Results Found.</h5>', // result count ##
 								'no_results'			

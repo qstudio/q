@@ -48,11 +48,11 @@ class render extends \Q {
                 'run'           => true, // don't run this item ##
                 'debug'         => false, // don't debug this item ##
 				'return'        => 'echo', // default to echo return string ##
-				'srcset' 		=> true // add srcset to src references ##
             ],
-            'filter'        => [
-                'img'           => 'srcset' // apply srcset handlers to all images ## 
-            ]      
+            // 'src'        		=> [
+            //     'srcset' 		=> true, // add srcset to src references ##
+			// 	'picture' 		=> true // wrap src in 'picture' element, with srcset ##
+            // ]      
         ],
 
         // frontend pre-processor callbacks to update field values ##
@@ -168,7 +168,7 @@ class render extends \Q {
 			// check format of each fields data and modify as required to markup ##
 			'format' => h::get( 'render/format.php', 'return', 'path' ),
 
-			// defined field types, with modifies to extend base data ##
+			// defined field types to generate field data ##
 			'type' => h::get( 'render/type/_controller.php', 'return', 'path' ),
 
 			// prepare defined markup, search for and replace placeholders 

@@ -32,7 +32,8 @@ class controller extends \Q {
 		require_once self::get_plugin_path( 'library/core/helper.php' );
 		require_once self::get_plugin_path( 'library/core/filter.php' );
 		require_once self::get_plugin_path( 'library/core/load.php' );
-        require_once self::get_plugin_path( 'library/core/config.php' );
+		require_once self::get_plugin_path( 'library/core/config.php' );
+		require_once self::get_plugin_path( 'library/core/src.php' );
 		require_once self::get_plugin_path( 'library/core/method.php' );
 		require_once self::get_plugin_path( 'library/core/option.php' );
 		require_once self::get_plugin_path( 'library/core/filter.php' );

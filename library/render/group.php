@@ -19,9 +19,6 @@ class group extends \q\render {
 		// return h::log( 'hello here..' );
 		// h::log( $args );
 
-		// default config to the_group ##
-		// $args['config']['load'] = 'the_group';
-
         // validate passed args ##
         if ( ! args::validate( $args ) ) {
 
