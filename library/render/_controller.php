@@ -91,6 +91,8 @@ class render extends \Q {
 			'post'       		=> [],
 			'src'             	=> [],
 			'category'       	=> [],
+			'taxonomy'       	=> [],
+			'media'       		=> [],
 			'author'       		=> [],
         ],
 
@@ -124,11 +126,13 @@ class render extends \Q {
         $output = null, // return string ##
         $fields = null, // field names and values ##
         $markup = null, // store local version of passed markup ##
-        $log = null, // tracking array for feedback ##
+        // $log = null, // tracking array for feedback ##
         $acf_fields = null // fields grabbed by acf function ##
 
 	;
 	
+	public static $log = null; // tracking array for feedback ##
+
 	public static function run(){
 
 		core\load::libraries( self::load() );
@@ -187,7 +191,7 @@ class render extends \Q {
 	 * bounce to function getter ##
 	 * function name can be any of the following patterns:
 	 * 
-	 * the_group
+	 * group
 	 * the_%%%
 	 * 
 	 * field_FIELDNAME // @todo
@@ -206,10 +210,8 @@ class render extends \Q {
 		// test namespace ##
 		// h::log( __NAMESPACE__ );
 
-		// the__ methods ##
+		// look fo rmatching method to $function ##
 		if (
-			// "the_" == substr( $function, 0, 4 ) // $function starts with "the_" ##
-			// && 
 			\method_exists( __NAMESPACE__.'\render\method', $function ) // && exists ##
 			&& \is_callable([ __NAMESPACE__.'\render\method', $function ]) // && exists ##
 		) {

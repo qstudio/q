@@ -6,7 +6,7 @@ use q\core;
 use q\core\helper as h;
 use q\ui;
 use q\get;
-// use q\render;
+use q\render;
 
 class args extends \q\render {
 	
@@ -49,7 +49,7 @@ class args extends \q\render {
         ){
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' =>  'Missing required args, so stopping here'
@@ -76,7 +76,7 @@ class args extends \q\render {
 		) {
 
 			// get new post, if corrupt ##
-			$args['config']['post'] = get\wp::the_post( $args['config'] );
+			$args['config']['post'] = get\post::object( $args['config'] );
 
 			// h::log( 'Post set, but not an Object.. so getting again..: '.$args['config']['post']->ID );
 
@@ -85,7 +85,7 @@ class args extends \q\render {
 		// no post set ##
 		if ( ! isset( $args['config']['post'] ) ) {
 
-			$args['config']['post'] = get\wp::the_post();
+			$args['config']['post'] = get\post::object();
 
 			// h::log( 'No post set, so getting: '.$args['config']['post']->ID );
 
@@ -122,7 +122,7 @@ class args extends \q\render {
 			// self::$log['notice'][] = 'config->run defined as false for Group: '.$args['group'].', so stopping here.. ';
 			
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
 				'value' =>  'config->run defined as false for: '.$args['group'].', so stopping here.. '
@@ -190,7 +190,7 @@ class args extends \q\render {
         ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' => 'Error in passed self::$args'
@@ -218,7 +218,7 @@ class args extends \q\render {
             && ! isset( self::$fields[self::$args['group'].'_enable'] )
         ) {
 
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
 				'value' => 'No enable defined in $args or enable field found for Group: "'.self::$args['group'].'"'
@@ -239,7 +239,7 @@ class args extends \q\render {
         ) {
 
 			// track removal ##
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
 				'value' => 'Field Group: "'.self::$args['group'].'" Enabled, continue'
@@ -252,7 +252,7 @@ class args extends \q\render {
         }
 
 		// log ##
-		log::add([
+		render\log::add([
 			'key' => 'notice', 
 			'field'	=> __FUNCTION__,
 			'value' => 'Field Group: "'.self::$args['group'].'" NOT Enabled, stopping.'

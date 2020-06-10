@@ -5,7 +5,7 @@ namespace q\render;
 use q\core;
 use q\core\helper as h;
 use q\ui;
-// use q\render;
+use q\render;
 
 class output extends \q\render {
 
@@ -19,7 +19,7 @@ class output extends \q\render {
 		){
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' => '$output is empty, so nothing to render.. stopping here.'

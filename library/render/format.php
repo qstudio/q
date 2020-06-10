@@ -5,7 +5,7 @@ namespace q\render;
 use q\core;
 use q\core\helper as h;
 use q\ui;
-// use q\render;
+use q\render;
 
 class format extends \q\render {
 
@@ -20,7 +20,7 @@ class format extends \q\render {
         if ( is_null( $field ) ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' => 'No field value passed to method.'
@@ -36,7 +36,7 @@ class format extends \q\render {
         if ( is_null( $value ) ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' => 'No value passed to method.'
@@ -58,7 +58,7 @@ class format extends \q\render {
         ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' => 'No formats allowed in plugin or array corrupt'
@@ -95,7 +95,7 @@ class format extends \q\render {
         ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' => 'Error in parameters passed to check_format'
@@ -126,7 +126,7 @@ class format extends \q\render {
             if ( ! function_exists( $format_value['type'] ) ) {
 
 				// log ##
-				log::add([
+				render\log::add([
 					'key' => 'notice', 
 					'field'	=> __FUNCTION__,
 					'value' => 'Function not found: '.$format_value['type']
@@ -160,7 +160,7 @@ class format extends \q\render {
         if ( false === $tracker ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
 				'value' => 'No valid value type found for field: '.$field.' so assigned: '.$return
@@ -194,14 +194,14 @@ class format extends \q\render {
         ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' => 'Error in parameters passed to "apply", $value returned empty and field removed from $fields'
 			]);
 
             // this item needs to be removed from self::$fields
-            fields::remove( $field );
+            render\fields::remove( $field );
 
              // we do not return the $value either ##
             return false;
@@ -217,14 +217,14 @@ class format extends \q\render {
         ){
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' => 'handler wrong - class: '.__CLASS__.' / method: '.$format
 			]);
 
             // this item needs to be removed from self::$fields
-            fields::remove( $field );
+            render\fields::remove( $field );
 
             // we do not return the $value either ##
             return false; 
@@ -309,7 +309,7 @@ class format extends \q\render {
         // array of arrays containing named indexes ( not WP_Post Objects ) needs to be be marked up as a block, like an Object ##
 
         // add check to see if array is a collection of array - as exported by repeater fields ##
-        if ( 'repeater' == fields::get_type( $field ) ) {
+        if ( 'repeater' == render\fields::get_type( $field ) ) {
 
             // h::log( 'Array is a repeater' );
 
@@ -328,7 +328,7 @@ class format extends \q\render {
 
                 // create a new, named and numbered field based on field_COUNT -- empty value ##
                 $key_field = $field.'__'.$count;
-                fields::set( $key_field, '' );
+                render\fields::set( $key_field, '' );
 
                 // Format each field value based on type ( int, string, array, WP_Post Object ) ##
                 // each item is filtered as looped over -- q/render/format/GROUP/FIELD - ( $args, $fields ) ##
@@ -337,7 +337,7 @@ class format extends \q\render {
 
                     // format ran ok ##
                     // h::log( 'format ran ok.. so now we can update markup for field: '.$field );
-                    markup::set_markup( $field, $count );
+                    render\markup::set_markup( $field, $count );
 
                 }
 
@@ -349,10 +349,10 @@ class format extends \q\render {
         }
 
         // remove placeholder from markup template
-        self::$markup['template'] = markup::remove_placeholder( '%'.$field.'%', self::$markup['template'] );
+        self::$markup['template'] = render\markup::remove_placeholder( '%'.$field.'%', self::$markup['template'] );
 
         // delete sending field ##
-        fields::remove( $field, 'Removed by format_array after working' );
+        render\fields::remove( $field, 'Removed by format_array after working' );
 
         // checkout markup ##
         // h::log( self::$markup['template'] );
@@ -382,12 +382,12 @@ class format extends \q\render {
 
                 // create a new, named and numbered field based on field_COUNT__row_key ##
                 // $key_field = $field.'__'.$count.'__'.$r2;
-                fields::set( $field.'__'.$count.'__'.$r2, $v2 );
+                render\fields::set( $field.'__'.$count.'__'.$r2, $v2 );
 
             }
 
             // format ran ok ##
-            markup::set_markup( $field, $count );
+            render\markup::set_markup( $field, $count );
 
             // iterate count ##
             $count ++ ;
@@ -423,14 +423,14 @@ class format extends \q\render {
         } else {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
 				'value' => 'Object is not of type WP_Post, so emptied, $value returned empty and field removed from $fields'
 			]);
 
             // this item needs to be removed from self::$fields
-            fields::remove( $field, 'Removed by format_object because Object format is not allowed in $formats' );
+            render\fields::remove( $field, 'Removed by format_object because Object format is not allowed in $formats' );
 
             // we do not return the $value either ##
             return false; 
@@ -438,7 +438,7 @@ class format extends \q\render {
         }
 
         // delete sending field ##
-        fields::remove( $field, 'Removed by format_object after working' );
+        render\fields::remove( $field, 'Removed by format_object after working' );
 
         // return false will delete the passed field ##
         return true;
@@ -459,7 +459,7 @@ class format extends \q\render {
         ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' =>  'No value or field passed to format_wp_post_object.'
@@ -486,21 +486,21 @@ class format extends \q\render {
 				// case "ID" : // post special ##
 				case substr( $type_field, 0, strlen( 'post_' ) ) === 'post_' :
 
-					$string = type::post( $wp_post, $type_field, $field );
+					$string = render\type::post( $wp_post, $type_field, $field );
 
 				break ;
 
 				// author handlers ##	
 				case substr( $type_field, 0, strlen( 'author_' ) ) === 'author_' :
 
-					$string = type::author( $wp_post, $type_field, $field );
+					$string = render\type::author( $wp_post, $type_field, $field );
 
 				break ;
 
-				// category handlers ##	
+				// taxonomy / category handlers ##	
 				case substr( $type_field, 0, strlen( 'category_' ) ) === 'category_' :
 
-					$string = type::category( $wp_post, $type_field, $field );
+					$string = render\type::taxonomy( $wp_post, $type_field, $field );
 
 				break ;
 
@@ -511,7 +511,7 @@ class format extends \q\render {
 					$attachment_id = \get_post_thumbnail_id( $wp_post );
 					$attachment = \get_post( $attachment_id );
 
-					$string = type::src( $attachment, $type_field, $field );
+					$string = render\type::src( $attachment, $type_field, $field );
 
 				break ;
 
@@ -522,7 +522,7 @@ class format extends \q\render {
 				h::log( 'Field: '.$field.' / '.$type_field.' returned an empty string' );
 
 				// log ##
-				log::add([
+				render\log::add([
 					'key' => 'error', 
 					'field'	=> __FUNCTION__,
 					'value' => 'Field: '.$field.' / '.$type_field.' returned an empty string'
@@ -535,7 +535,7 @@ class format extends \q\render {
 			}
 
 			// assign field and value ##
-			fields::set( $field.'__'.$type_field, $string );
+			render\fields::set( $field.'__'.$type_field, $string );
 
 		}
 

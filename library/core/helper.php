@@ -2,7 +2,7 @@
 
 namespace q\core;
 
-// use q\core;
+use q\core;
 // use q\core\helper as helper;
 // use q\theme\template as template;
 
@@ -261,6 +261,9 @@ class helper extends \Q {
     public static function log( $args = null )
     {
 
+		// pass to log::add();
+		return core\log::set( $args );
+
 		// error_log( $args );
 
 		// sanity ##
@@ -300,21 +303,22 @@ class helper extends \Q {
 		// debugging is on in WP, so write to error_log ##
         if ( true === WP_DEBUG ) {
 
-            $trace = debug_backtrace();
-            $caller = $trace[1];
+            // $trace = debug_backtrace();
+			// $caller = $trace[1];
+			$backtrace = core\method::backtrace();
 
-            $suffix = sprintf(
-                __( ' - %s%s() %s:%d', 'Q' )
-                ,   isset($caller['class']) ? $caller['class'].'::' : ''
-                ,   $caller['function']
-                ,   isset( $caller['file'] ) ? $caller['file'] : 'n'
-                ,   isset( $caller['line'] ) ? $caller['line'] : 'x'
-            );
+            // $suffix = sprintf(
+            //     __( ' - %s%s() %s:%d', 'Q' )
+            //     ,   isset($caller['class']) ? $caller['class'].'::' : ''
+            //     ,   $caller['function']
+            //     ,   isset( $caller['file'] ) ? $caller['file'] : 'n'
+            //     ,   isset( $caller['line'] ) ? $caller['line'] : 'x'
+            // );
 
             if ( is_array( $log ) || is_object( $log ) ) {
-                error_log( print_r( $log, true ).$suffix );
+                error_log( print_r( $log, true ).' -> '.$backtrace );
             } else {
-                error_log( $log.$suffix );
+                error_log( $log.' -> '.$backtrace );
             }
 
 		}

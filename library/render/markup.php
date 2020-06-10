@@ -5,7 +5,7 @@ namespace q\render;
 use q\core;
 use q\core\helper as h;
 use q\ui;
-// use q\render;
+use q\render;
 
 class markup extends \q\render {
 
@@ -24,7 +24,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' =>  'Error with passed $args'
@@ -48,7 +48,7 @@ class markup extends \q\render {
 			if ( \is_bool( $value ) ) {
 
 				// // log ##
-				// log::add([
+				// render\log::add([
 				// 	'key' => 'notice', 
 				// 	'field'	=> __FUNCTION__,
 				// 	'value' =>  'The value of: '.$key.' was a boolean, so we cast to an integer'
@@ -67,7 +67,7 @@ class markup extends \q\render {
 				// h::log( 'The value of: '.$key.' is not a string or integer - so we cannot render it' );
 
 				// log ##
-				log::add([
+				render\log::add([
 					'key' => 'notice', 
 					'field'	=> __FUNCTION__,
 					'value' =>  'The value of: '.$key.' is not a string or integer - so it will be skipper and removed from markup...'
@@ -97,7 +97,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
 				'value' =>  count( $placeholders ) .' placeholders found in formatted string - these will be removed'
@@ -217,7 +217,7 @@ class markup extends \q\render {
 			// self::$log['error'][] = 'No field value or count iterator passed to method.';
 			
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' =>  'No field value or count iterator passed to method.'
@@ -236,7 +236,7 @@ class markup extends \q\render {
 			// self::$log['notice'][] = 'Field: '.$field.' does not have required markup defined in $args -- markup => '.$field;
 			
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
 				'value' =>  'Field: '.$field.' does not have required markup defined in $args -- markup => '.$field
@@ -273,7 +273,7 @@ class markup extends \q\render {
 			// self::$log['notice'][] = 'Placeholder: '.$placeholder.' is not in the passed markup template';
 			
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
 				'value' => 'Placeholder: '.$placeholder.' is not in the passed markup template'
@@ -294,7 +294,7 @@ class markup extends \q\render {
 			// self::$log['notice'][] = 'No placeholders found in passed string';
 			
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
 				'value' => 'No placeholders found in passed string'
@@ -360,7 +360,7 @@ class markup extends \q\render {
 			// self::$log['error'][] = 'No string value passed to method.';
 			
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' => 'No string value passed to method.'
@@ -375,7 +375,7 @@ class markup extends \q\render {
 			// self::$log['notice'][] = 'No extra placeholders found in string to clean up - good!.';
 			
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
 				'value' => 'No extra placeholders found in string to clean up - good!.'
@@ -429,7 +429,7 @@ class markup extends \q\render {
 			// h::log ('No string value passed to method.');
 			
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' => 'No placeholder or markkup value passed to method.'
@@ -455,7 +455,7 @@ class markup extends \q\render {
 			// self::$log['notice'][] = 'Placeholder is not correctly formatted - missing % at start or end of passed string.';
 			
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
 				'value' => 'Placeholder is not correctly formatted - missing % at start or end of passed string.'
@@ -480,10 +480,10 @@ class markup extends \q\render {
 		// h::log( $markup );
 
 		// log ##
-		log::add([
+		render\log::add([
 			'key' => 'placeholder_removed', 
 			'field'	=> $placeholder,
-			'value' => log::backtrace()
+			'value' => core\method::backtrace([ 'level' => 2, 'return' => 'function' ])
 		]);
 
         // positive ##

@@ -7,7 +7,7 @@ use q\core\helper as h; // helper shortcut ##
 use q\plugin; // plugins ## 
 use q\ui; // template, ui, markup... ##
 use q\get; // wp, db, data lookups ##
-// use q\render;
+use q\render;
 
 class method extends \q\render {
 
@@ -18,14 +18,14 @@ class method extends \q\render {
      * @since       1.0.2
      * @return      string   HTML
      */
-    public static function the_content_open( $args = null )
+    public static function container_open( $args = null )
     {
 
 		// global arg validator ##
 		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
 
         // grab classes ##
-		$array['classes'] = get\wp::body_class( $args );
+		$array['classes'] = get\theme::body_class( $args );
 
         // return ##
 		return ui\method::prepare_render( $args, $array );
@@ -40,7 +40,7 @@ class method extends \q\render {
      * @since       1.0.2
      * @return      string   HTML
      */
-    public static function the_content_close( $args = null )
+    public static function container_close( $args = null )
     {
 
 		// global arg validator ##
@@ -63,13 +63,14 @@ class method extends \q\render {
      * @since       1.3.0
      * @return      String
      */
-    public static function the_title( $args = null ) {
+    public static function title( $args = null ) {
 
 		// global arg validator ##
 		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
 
 		// get title - returns array with key 'title' ##
-		$array = get\wp::the_title( $args );
+		// $array = get\wp::the_title( $args );
+		$array = get\post::title( $args );
 
         // return ##
 		return ui\method::prepare_render( $args, $array );
@@ -83,13 +84,13 @@ class method extends \q\render {
     *
     * @since       1.0.2
     */
-    public static function the_posts( $args = [] )
+    public static function posts( $args = [] )
     {
 
 		// validate passed args ##
-        if ( ! $args = args::validate( $args ) ) {
+        if ( ! $args = render\args::validate( $args ) ) {
 
-            log::render( $args );
+            render\log::render( $args );
 
             return false;
 
@@ -107,12 +108,13 @@ class method extends \q\render {
 		];
 
         // pass to get_posts -- and validate that we get an array back ##
-        if ( ! $array = get\wp::the_posts( $args ) ) {
+        // if ( ! $array = get\wp::the_posts( $args ) ) {
+		if ( ! $array = get\query::posts( $args ) ) {
 
 			// return false;
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
 				'value' =>  'the_posts did not return any data'
@@ -127,13 +129,13 @@ class method extends \q\render {
 			// || ! isset( $array['query']->posts ) 
 		){
 
-			h::log( 'Error in data returned from the_posts' );
+			h::log( 'Error in data returned from query::posts' );
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
-				'value' =>  'Error in data returned from the_posts'
+				'value' =>  'Error in data returned from query::posts'
 			]);
 
 		}
@@ -152,28 +154,28 @@ class method extends \q\render {
 			// define all required fields for markup ##
 			self::$fields = [
 				'total' 		=> $array['query']->found_posts, // total posts ##
-				'pagination'	=> ui\navigation::the_pagination( $array, 'return' ), // get the_pagination ##
+				'pagination'	=> ui\navigation::pagination( $array, 'return' ), // get pagination ##
 				'posts'			=> $array['query']->posts // array of WP_Posts ##
 			];
 
 		}
 
 		// filter fields by template ##
-		self::$fields = \apply_filters( 'q/render/the_posts/'.ui\template::get(), self::$fields, self::$args );
+		self::$fields = \apply_filters( 'q/render/posts/'.ui\template::get(), self::$fields, self::$args );
 
 		// h::log( self::$fields );
 
 		// check each field data and apply numerous filters ##
-		fields::prepare();
+		render\fields::prepare();
 
 		// Prepare template markup ##
-        markup::prepare();
+        render\markup::prepare();
 
         // optional logging to show removals and stats ##
-        log::render( $args );
+        render\log::render( $args );
 
         // return or echo ##
-        return output::return();
+        return render\output::return();
 
     }
 
@@ -188,7 +190,7 @@ class method extends \q\render {
     {
 
         // get the_post ##
-        if ( ! $the_post = get\wp::the_post( $args ) ) { return false; }
+        if ( ! $the_post = get\post::object( $args ) ) { return false; }
 
         // test ID ##
         #h::log( $the_post->ID );
@@ -290,13 +292,14 @@ class method extends \q\render {
     /**
 	 * Helper Method to get parent
 	 */
-	public static function the_parent( $args = null ){
+	public static function parent( $args = null ){
 
 		// global arg validator ##
 		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
 
-		// get title - returns array with key 'title' ##
-		$array = get\wp::the_parent( $args );
+		// get parent - returns false OR array with key 'title, slug, permalink' ##
+		// $array = get\wp::the_parent( $args );
+		$array = get\post::parent( $args );
 
         // return ##
 		return ui\method::prepare_render( $args, $array );
@@ -308,13 +311,14 @@ class method extends \q\render {
 	/**
 	 * Helper Method to get the_excerpt
 	 */
-	public static function the_excerpt( $args = null ){
+	public static function excerpt( $args = null ){
 
 		// global arg validator ##
 		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
 
 		// get title - returns array with key 'title' ##
-		$array = get\wp::the_excerpt( $args );
+		// $array = get\wp::the_excerpt( $args );
+		$array = get\post::excerpt( $args );
 
         // return ##
 		return ui\method::prepare_render( $args, $array );
@@ -327,13 +331,13 @@ class method extends \q\render {
 	/**
 	 * Helper Method to get the_content
 	 */
-	public static function the_content( Array $args = null ){
+	public static function content( Array $args = null ){
 
 		// global arg validator ##
 		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
 
 		// get content - returns array with key 'content' ##
-		$array = get\wp::the_content( $args );
+		$array = get\post::content( $args );
 
         // return ##
 		return ui\method::prepare_render( $args, $array );
@@ -345,7 +349,7 @@ class method extends \q\render {
 	/**
 	 * Helper Method to get the_fields - ui\field\render() ##
 	 */
-	public static function the_group( Array $args = null ){
+	public static function group( Array $args = null ){
 
 		// bounce on, and return array ##
 		return group::render( $args );

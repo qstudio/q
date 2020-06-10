@@ -28,6 +28,9 @@ class type extends render {
 
 		return $array = [
 
+			// media object -- @todo ##
+			// 'media' => h::get( 'render/type/media.php', 'return', 'path' ),
+
 			// image src ##
 			'src' => h::get( 'render/type/src.php', 'return', 'path' ),
 
@@ -37,8 +40,8 @@ class type extends render {
 			// author fields ##
 			'author' => h::get( 'render/type/author.php', 'return', 'path' ),
 
-			// category ##
-			'category' => h::get( 'render/type/category.php', 'return', 'path' ),
+			// taxonomy ## ##
+			'taxonomy' => h::get( 'render/type/taxonomy.php', 'return', 'path' ),
 
 		];
 
@@ -65,7 +68,7 @@ class type extends render {
 			h::log( 'Error in passed $args' );
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> $function,
 				'value' => 'Error in pased $args'
@@ -81,7 +84,7 @@ class type extends render {
 			h::log( 'Error in passed $args - not a WP_Post object' );
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> $function,
 				'value' => 'Error in pased $args - not a WP_Post object'
@@ -97,7 +100,7 @@ class type extends render {
 			h::log( 'Error in passed $args - missing type_field' );
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> $function,
 				'value' => 'Error in pased $args - missing $type_field'
@@ -113,7 +116,7 @@ class type extends render {
 			h::log( 'Error in passed $args - missing $field' );
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> $function,
 				'value' => 'Error in pased $args - missing $field'
@@ -129,7 +132,7 @@ class type extends render {
 			h::log( 'Value Type not allowed: '.$function );
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> $function,
 				'value' => 'Value Type not allowed: '.$function

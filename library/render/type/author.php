@@ -38,14 +38,14 @@ class author extends render\type {
 		// special fields first ?? ##
 		switch( $type_field ) {
 
-			// human readable date ##
+			// author permalink ##
 			case 'author_permalink' :
 
 				$string = \esc_url( \get_author_posts_url( $author ) );
 
 			break ;
 
-			// formatted date ##
+			// formatted author name ##
 			case 'author_name' :
 
 				$string = isset( $authordata->display_name ) ? $authordata->display_name : $authordata->user_login ;
@@ -57,7 +57,7 @@ class author extends render\type {
 		// check ##
 		if ( is_null( $string ) ) {
 
-			h::log( 'String is empty.. so return passed value' );
+			h::log( 'String is empty.. so return null' );
 
 			// $string = $wp_post->$field;
 

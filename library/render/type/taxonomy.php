@@ -8,7 +8,7 @@ use q\ui;
 use q\get;
 use q\render;
 
-class category extends render\type {
+class taxonomy extends render\type {
 
 	/**
      * Category handler
@@ -33,7 +33,7 @@ class category extends render\type {
 			h::log( 'No category or corrupt data returned' );
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
 				'value' => 'No category data returned'
@@ -49,7 +49,10 @@ class category extends render\type {
 
 			case 'category_name' :
 
-				$string = isset( $category[0] ) ? $category[0]->name : null ; // category missing ##
+				$string = 
+					isset( $category[0] ) ? 
+					$category[0]->name : 
+					$wp_post->post_type ; // category missing -- default to post type name ##
 
 			break ;
 

@@ -38,11 +38,12 @@ return [
 		'holder'				=> 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgZGF0YS1uYW1lPSJMYXllciAxIiBpZD0iTGF5ZXJfMSIgdmlld0JveD0iMCAwIDUxMiA1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOm5vbmU7c3Ryb2tlOiMwODNiNDM7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS13aWR0aDoyMHB4O30uY2xzLTJ7ZmlsbDojMDgzYjQzO308L3N0eWxlPjwvZGVmcz48dGl0bGUvPjxjaXJjbGUgY2xhc3M9ImNscy0xIiBjeD0iMjU2IiBjeT0iMjY3LjQyIiByPSIzMy45OSIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtMSIgcG9pbnRzPSIzMDIuMiAyMDIuNTIgMjg4LjkgMTc5LjY4IDIyMy4xIDE3OS42OCAyMDkuOCAyMDIuNTIgMTQ0IDIwMi41MiAxNDQgMzMyLjMyIDM2OCAzMzIuMzIgMzY4IDIwMi41MiAzMDIuMiAyMDIuNTIiLz48Y2lyY2xlIGNsYXNzPSJjbHMtMiIgY3g9IjMzNy44IiBjeT0iMjMyLjQ5IiByPSIxMS40OSIvPjwvc3ZnPg==',
 
 		// Golden Ratio ##
-		'ratio' 				=> 1.618,
-		'open' 					=> 9999, // open size ##
-		'open_height' 			=> 600, // open size ##
-		'scale'					=> 1, // scale sizes ##
-		'pixel'					=> 2, // double vision ##
+		'ratio' 					=> 1.618,
+		'open' 						=> 9999, // open size ##
+		'open_height' 				=> 600, // open size ##
+		'scale'						=> 1, // scale sizes ##
+		'pixel'						=> 2, // double vision ##
+		'default'					=> 'horizontal-lg', // default handle ##
 
 		// shape handles ##
 		'handles'					=> [
@@ -82,50 +83,54 @@ return [
 		]
 	],
 
-	// the_content_open() ##
-	'the_content_open'  		=> [
-		'markup' => '<main class="container %classes%">'
+	// the_container_open() ##
+	'container_open'  			=> [
+		'markup' => '<main class="container %classes%">
+			<div class="row">'
 	],
 
-	// the_content_close() ##
-	'the_content_close'  		=> [
-		'markup' => '</main>'
+	// the_container_close() ##
+	'container_close'  			=> [
+		'markup' => '
+			</div>
+		</main>'
 	],
 
 	// acf field groups ##
-	'the_group'  				=> [
+	'group'  				=> [
 		'config' 				=> [ 'run' => true ],
 		// 'filter' => [ 'src' => true ] // add srcsets ##
 	],
 
-	// title ##
-	'the_title'  				=> [
+	// post_title ##
+	'title'  					=> [
 		'markup' 				=> '<h1 class="col-12 the-title text-uppercase">%title%</h1>',
-							],
+	],
 
-	// parent ##
-	'the_parent'  				=> [
+	// post_parent ##
+	'parent'  					=> [
 		'markup' 				=> '<h4 class="col-12 the-parent"><a href="%permalink%">%title%</a></h4>',
 	],
 
-	// the_excerpt() ##
-	'the_excerpt'				=> [
+	// post_excerpt ##
+	'excerpt'					=> [
 		'markup'  				=> '<div class="col-12 mb-3 the-excerpt">%content%</div>',
 		'limit' 				=> 300, // default excerpt length ##
 	],
 
-	// the_content() ##
-	'the_content'  				=> [
+	// post_content ##
+	'content'  				=> [
 		'markup'                => '<div class="col-12 the-content">%content%</div>',
 	],
 
-	// the_category() ##
+	// the_category() ## 
+	// @todo.. we need to work out this with post_meta.. or forget that and just have templates in each template.. ## better
 	'the_category'  => [
 		'markup'                => '<span class="category ml-1 mr-1">in <a href="%permalink%">%title%</a></span>',
 	],
 
 	// get_posts() ##
-	'the_posts'  => [
+	'posts'  => [
 
 		// config ##
 		'config'				=> [ 
@@ -149,8 +154,12 @@ return [
 										<a href="%permalink%" title="%post_title%" class="mb-3">
 											<img class="lazy fit card-img-top" style="height: 200px;" data-src="%src%" src="" />
 										</a>
-										<div class="card-body p-2">
-											<h5 class="card-title"><a href="%permalink%" title="Read More">%post_title%</a></h5>
+										<div class="card-body">
+											<h5 class="card-title">
+												<a href="%post_permalink%">
+													%post_title%
+												</a>
+											</h5>
 											<p class="card-text">%post_excerpt%</p>
 											<p class="card-text">
 												<small class="text-muted">Posted %post_date_human% ago</small>
@@ -158,26 +167,9 @@ return [
 											</p>
 										</div>
 									</div>',
-									/*
-									<div class="card mb-3">
-										<a href="%frontpage_work_top__post_permalink%"><img class="lazy fit card-img-top" src="" data-src="%frontpage_work_top__src%"></a>
-										<div class="card-body">
-											<h5 class="card-title">
-												<a href="%frontpage_work_top__post_permalink%">
-													%frontpage_work_top__post_title%
-												</a>
-											</h5>
-											<p class="card-text">%frontpage_work_top__post_excerpt%</p>
-											<span class="badge badge-pill badge-primary ml-1">
-												%frontpage_work_top__category_name%
-											</span>
-										</div>
-									</div>
-									*/
-								// 'total'
-								// 	=> '<h5 class="col-12 mb-5 mt-2">%total% Results Found.</h5>', // result count ##
+								// no results ##
 								'no_results'			
-									=> '<div class="col-12"><p>We count not find any matching posts, please check again later.</p></div>', // no results ##
+									=> '<div class="col-12"><p>We count not find any matching posts, please check again later.</p></div>', 
 
 								],
 
@@ -195,7 +187,7 @@ return [
 	],
 
 	// search results ##
-	'the_search'  => [
+	'search'  => [
 
 		// config ##
 		'config'				=> [ 
@@ -220,12 +212,16 @@ return [
 
 								// post template ##
 								'posts'	=> 
-									'<div class="col-12 col-md-6 col-lg-4">
-										<a href="%post_permalink%" title="%post_title%">
-											<div class="lazy card-img-top holder-if-empty" data-src="%src%" alt="Open %post_title%" src="%src%"></div>
+									'<div class="card p-0 col-12 col-md-6 col-lg-4 mb-3">
+										<a href="%permalink%" title="%post_title%" class="mb-3">
+											<img class="lazy fit card-img-top" style="height: 200px;" data-src="%src%" src="" />
 										</a>
-										<div class="card-body p-0">
-											<h5 class="card-title"><a href="%post_permalink%" title="Read More">%post_title%</a></h5>
+										<div class="card-body">
+											<h5 class="card-title">
+												<a href="%post_permalink%">
+													%post_title%
+												</a>
+											</h5>
 											<p class="card-text">%post_excerpt%</p>
 											<p class="card-text">
 												<small class="text-muted">Posted %post_date_human% ago</small>
@@ -256,13 +252,14 @@ return [
 	],
 
 	// the_post_single() ##
-	'the_post_single'  => [
+	'post_single'  => [
 		'allow_comments'        => 'allow_comments', // allow comments ##
 		'next_back'            	=> ( h::device() == 'desktop' ) ? false : true, // next / home / back links ##
 	],
 
 	// the_post_meta() ##
-	'the_post_meta'  => [
+	/*
+	'post_meta'  => [
 		'format'				=> [
 									'loop' => 
 										'<div class="the-post-meta">Posted %post_date_human% ago in %the_category%</div>',
@@ -272,9 +269,10 @@ return [
 										</div>'
 								]
 	],
+	*/
 
 	// the_avatar() ##
-	'the_avatar'  => [
+	'avatar'  => [
 		'markup'				=> '<div class="the-avatar">%src%</div>',
 	],
 
@@ -288,14 +286,14 @@ return [
 	],
 
 	// navigation ---------
-	'the_navigation'  => [
+	'navigation'  => [
 		'post_type'             => 'page',
 		'add_parent'            => false,
 		'posts_per_page'        => \get_option( "posts_per_page", 10 ),// per page ##
 	],
 
 	// navigation ---------
-	'the_nav_menu'  => [
+	'nav_menu'  => [
 		// no wrapping ##
 		'items_wrap'        	=> '%3$s',
 		// do not fall back to first non-empty menu
@@ -305,8 +303,8 @@ return [
 		'container'         	=> false,
 	],
 
-	// navigation ---------
-	'the_pagination'  			=> [
+	// use your pagination ---------
+	'pagination'  			=> [
 		'item'             		=> '<li class="%li_class%%active-class%">%item%</li>',
 		'markup'             	=> '<div class="row row justify-content-center mt-5 mb-5"><ul class="pagination">%content%</ul></div>',
 		'end_size'				=> 'desktop' == h::device() ? 0 : 0,

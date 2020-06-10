@@ -97,13 +97,4 @@ class log extends \q\render {
 
     }
 
-
-    public static function backtrace(){
-
-        // h::log( \debug_backtrace() );
-
-        return \debug_backtrace()[2]['function'];
-
-    }
-
 }

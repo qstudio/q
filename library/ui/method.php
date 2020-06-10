@@ -72,7 +72,7 @@ class method extends \Q {
 		// no post set ##
 		if ( ! isset( $args['config']['post'] ) ) {
 
-			$args['config']['post'] = get\wp::the_post();
+			$args['config']['post'] = get\post::object();
 
 		}
 
@@ -83,7 +83,7 @@ class method extends \Q {
 		) {
 
 			// get new post, if corrupt ##
-			$args['config']['post'] = get\wp::the_post( $args );
+			$args['config']['post'] = get\post::object( $args );
 
 		}
 

@@ -31,7 +31,7 @@ class twitter extends \Q {
     {
 
         // check we can get a post object ##
-        if ( ! $the_post = get\wp::the_post() ) { 
+        if ( ! $the_post = get\post::object() ) { 
         
             // h::log( 'No post object' );
 

@@ -108,7 +108,7 @@ class facebook extends \Q {
     {
 
         // check we can get a post object ##
-        if ( ! $the_post = get\wp::the_post() ) { 
+        if ( ! $the_post = get\post::object() ) { 
         
             // h::log( 'No post object' );
 
@@ -133,7 +133,7 @@ class facebook extends \Q {
         $array['title'] = $the_post->post_title;
 
         // get the excerpt ##
-        $string = get\wp::the_excerpt_from_id( $the_post->ID, 200 );
+        $string = get\post::excerpt_from_id( $the_post->ID, 200 );
 
         // clean up ##
         $string = ui\method::rip_tags( $string );
@@ -304,7 +304,7 @@ class facebook extends \Q {
         }
 
         // we need a post to share, so let's see if we have one ##
-        if ( ! $the_post = get\wp::the_post() ) { 
+        if ( ! $the_post = get\post::object() ) { 
         
             h::log( 'No post object found.' );
 

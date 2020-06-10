@@ -6,7 +6,7 @@ use q\core;
 use q\core\helper as h;
 use q\ui;
 use q\plugin;
-// use q\render;
+use q\render;
 
 class get extends \q\render {
 
@@ -23,7 +23,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' => 'Error in passed parameter $args'
@@ -61,7 +61,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' => 'Error extracting field list from passed data'
@@ -84,7 +84,7 @@ class get extends \q\render {
         self::group();
 
         // check if feature is enabled ##
-        if ( ! args::is_enabled() ) {
+        if ( ! render\args::is_enabled() ) {
 
             return false;
 
@@ -98,7 +98,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
 				'value' => 'Fields array is empty, so nothing to process...'
@@ -142,7 +142,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'notice', 
 				'field'	=> __FUNCTION__,
 				'value' => 'Post: '.$post.' has no ACF field data or corrupt data returned'
@@ -179,7 +179,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' => 'No valid ACF field group returned for Group: "'.$group.'"'
@@ -220,7 +220,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' => 'Error in passed $args'
@@ -258,7 +258,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			log::add([
+			render\log::add([
 				'key' => 'error', 
 				'field'	=> __FUNCTION__,
 				'value' => 'Error in passed $args or $fields'

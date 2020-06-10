@@ -9,9 +9,9 @@ use q\core\helper as h;
 use q\theme as theme;
 
 // load it up ##
-\q\core\src::run();
+\q\core\media::run();
 
-class src extends \Q {
+class media extends \Q {
 
     public static function run()
     {

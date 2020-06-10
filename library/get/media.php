@@ -5,8 +5,115 @@ namespace q\get;
 use q\core;
 use q\core\helper as h;
 use q\ui;
+use q\get;
 
 class media extends \Q {
+
+	
+    public static function image_sizes_list()
+    {
+
+        global $_wp_additional_image_sizes; 
+        if( self::$debug ) h::log( $_wp_additional_image_sizes ); 
+
+	}
+	
+
+	/**
+	 * Get information about available image sizes
+	 * 
+	 * @link		https://developer.wordpress.org/reference/functions/get_intermediate_image_sizes/
+	 */
+	function image_sizes( $size = '' ) {
+
+		$wp_additional_image_sizes = \wp_get_additional_image_sizes();
+	
+		$sizes = array();
+		$get_intermediate_image_sizes = \get_intermediate_image_sizes();
+	
+		// Create the full array with sizes and crop info
+		foreach( $get_intermediate_image_sizes as $_size ) {
+			if ( in_array( $_size, array( 'thumbnail', 'medium', 'large' ) ) ) {
+				$sizes[ $_size ]['width'] = \get_site_option( $_size . '_size_w' );
+				$sizes[ $_size ]['height'] = \get_site_option( $_size . '_size_h' );
+				$sizes[ $_size ]['crop'] = (bool) \get_site_option( $_size . '_crop' );
+			} elseif ( isset( $wp_additional_image_sizes[ $_size ] ) ) {
+				$sizes[ $_size ] = array( 
+					'width' => $wp_additional_image_sizes[ $_size ]['width'],
+					'height' => $wp_additional_image_sizes[ $_size ]['height'],
+					'crop' =>  $wp_additional_image_sizes[ $_size ]['crop']
+				);
+			}
+		}
+	
+		// Get only 1 size if found
+		if ( $size ) {
+			if( isset( $sizes[ $size ] ) ) {
+				return $sizes[ $size ];
+			} else {
+				return false;
+			}
+		}
+		return $sizes;
+
+	}
+	
+
+    /**
+     * Check for a return post thumbnail images and exif-data baed on passed settings ##
+     *
+     */
+    public static function the_post_thumbnail( $args = array() )
+    {
+
+        // test incoming args ##
+        // self::log( $args );
+
+        // get the_post ##
+        if ( ! $the_post = self::the_post() ) { return false; }
+
+        // Parse incoming $args into an array and merge it with $defaults - caste to object ##
+        $args = ( object ) \wp_parse_args( $args, \q_theme::$the_post_thumbnail );
+
+        #pr( $args );
+
+        // set-up a new object ##
+        $object = new \stdClass;
+
+        if ( ! \has_post_thumbnail( $the_post->ID ) ) { return false; }
+
+        // self::log( 'Handle: '.$args->handle[self::device()] );
+
+		// show small image, linking to larger image ##
+		$attachment_id = \get_post_thumbnail_id( $the_post->ID );
+        $object->src = \wp_get_attachment_image_src( $attachment_id, $args->handle[h::device()] );
+        $img_alt = \get_post_meta( \get_post_thumbnail_id( $the_post->ID ), '_wp_attachment_image_alt', true);
+		$object->alt = ( $img_alt ? $img_alt : \get_the_title() ) ;
+		
+		// add srcset values ##
+		$object = self::the_srcset( $object );
+
+        // image found ? ##
+        if ( ! $object->src ) { return false; }
+
+        // kick back object ##
+        return $object;
+
+    }
+
+
+
+	/**
+	 * Get srcset and additional attachment meta info
+	 */
+	public static function the_srcset( object $object = null ) {
+
+		// @todo - get values and add ##
+
+		return $object;
+
+	}
+
 
 
     /**

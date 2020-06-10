@@ -4,7 +4,7 @@ namespace q\render;
 
 use q\core\helper as h;
 use q\ui;
-// use q\render;
+use q\render;
 
 class group extends \q\render {
 
@@ -20,18 +20,18 @@ class group extends \q\render {
 		// h::log( $args );
 
         // validate passed args ##
-        if ( ! args::validate( $args ) ) {
+        if ( ! render\args::validate( $args ) ) {
 
-            log::render( $args );
+            render\log::render( $args );
 
             return false;
 
 		}
 		
         // get field names from passed $args ##
-        if ( ! get::fields() ) {
+        if ( ! render\get::fields() ) {
 
-            log::render( $args );
+            render\log::render( $args );
 
             return false;
 
@@ -41,16 +41,16 @@ class group extends \q\render {
 		// running callbacks ##
 		// formatting none string types to strings ##
 		// removing placeholders in markup, if no field data found etc ##
-        fields::prepare();
+        render\fields::prepare();
 
         // Prepare template markup ##
-        markup::prepare();
+        render\markup::prepare();
 
         // optional logging to show removals and stats ##
-        log::render( $args );
+        render\log::render( $args );
 
         // return or echo ##
-        return output::return();
+        return render\output::return();
 
     }
 

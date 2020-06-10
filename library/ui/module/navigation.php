@@ -17,11 +17,11 @@ class navigation extends \Q {
     * @since       1.0.5
     * @return      string   HTML
     */
-    public static function the_navigation( $args = array() )
+    public static function siblings( $args = array() )
     {
 
         // try and data, or kick back false ##
-       // if ( ! $array = wordpress::get_navigation( $args ) ) { return false; }
+       	if ( ! $array = get\navigation::siblings( $args ) ) { return false; }
 
         // handheld navigation ##
         #if ( q_ui::device() == 'handheld' ) {
@@ -67,7 +67,7 @@ class navigation extends \Q {
     * @param       Integer     $origin_id
     * @return type
     */
-    public static function the_multisite_nav_menu( $args = array(), $blog_id = 1 ) {
+    public static function multisite_nav_menu( $args = array(), $blog_id = 1 ) {
 
         #global $blog_id;
         $blog_id = \absint( $blog_id );
@@ -106,7 +106,7 @@ class navigation extends \Q {
     * @param       Integer     $origin_id
     * @return      Array
     */
-    public static function the_multisite_nav_menu_items( $args = array(), $origin_id = 1 ) {
+    public static function multisite_nav_menu_items( $args = array(), $origin_id = 1 ) {
 
         global $blog_id;
         $origin_id = \absint( $origin_id );
@@ -171,7 +171,7 @@ class navigation extends \Q {
     * @since       1.3.3
     * @return      string   HTML
     */
-    public static function the_nav_menu( $args = array(), $blog_id = 1 )
+    public static function nav_menu( $args = array(), $blog_id = 1 )
     {
 
         #h::log( $args );
@@ -191,7 +191,7 @@ class navigation extends \Q {
         // Parse incoming $args into an array and merge it with $defaults - caste to object ##
         $args = ( object )wp_parse_args( 
             $args
-            , core\config::get( 'the_nav_menu' ) 
+            , core\config::get( 'nav_menu' ) 
         );
         
         //$args = \wp_parse_args( $args, self::$the_nav_menu );
@@ -206,7 +206,7 @@ class navigation extends \Q {
         }
 
         // pass to mulltisite handler ##
-        self::the_multisite_nav_menu(
+        self::multisite_nav_menu(
             $args,
             $blog_id
         );
@@ -227,10 +227,10 @@ class navigation extends \Q {
 	* @return      String      HTML
 	* @link	https://gist.github.com/mtx-z/f95af6cc6fb562eb1a1540ca715ed928
     */
-	public static function the_pagination( $args = array(), $return = 'echo' ) {
+	public static function pagination( $args = array(), $return = 'echo' ) {
 
 		// grab array ##
-        if ( ! $array = get\wp::the_pagination( $args ) ) { 
+        if ( ! $array = get\navigation::pagination( $args ) ) { 
 
 			// h::log( 'No pagination...' );
             
@@ -242,7 +242,7 @@ class navigation extends \Q {
 		// h::log( $array );
 
 		// get config ##
-		$config = core\config::get('the_pagination');
+		$config = core\config::get('pagination');
 
 		// format page items ##
 		$items = '';

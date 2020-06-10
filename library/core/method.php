@@ -174,6 +174,8 @@ class method extends \Q {
         
 	}
 	
+	
+
 
 	/**
 	 * Debug Calling class + method / function 
@@ -187,6 +189,7 @@ class method extends \Q {
 
 		// check we have a result ##
 		$backtrace = debug_backtrace();
+		// h::log( $backtrace );
 
 		if (
 			! isset( $backtrace[$level] )
@@ -201,18 +204,34 @@ class method extends \Q {
 		// get defined level of data ##
 		$caller = $backtrace[$level];
 
-		// class::method() ##
+		// class::function() ##
 		if ( 
 			isset( $args['return'] ) 
 			&& 'class_function' == $args['return'] 
-			&& isset( $caller['class'] )
-			&& isset( $caller['function'] )
+			// && isset( $caller['class'] )
+			// && isset( $caller['function'] )
 		) {
 
 			return sprintf(
 				__( '%s::%s()', 'Q' )
-				,  	$caller['class'] 
+				,  	isset($caller['class']) ? $caller['class'].'::' : null
 				,   $caller['function']
+			);
+
+		}
+
+		// file::line() ##
+		if ( 
+			isset( $args['return'] ) 
+			&& 'file_line' == $args['return'] 
+			&& isset( $caller['file'] )
+			&& isset( $caller['line'] )
+		) {
+
+			return sprintf(
+				__( '%s:%d', 'Q' )
+				,   $caller['file']
+				,   $caller['line']
 			);
 
 		}
@@ -231,7 +250,7 @@ class method extends \Q {
 		}
 
 		// default - everything ##
-		$return = sprintf(
+		return sprintf(
 			__( '%s%s() %s:%d', 'Q' )
 			,   isset($caller['class']) ? $caller['class'].'::' : ''
 			,   $caller['function']
@@ -239,17 +258,15 @@ class method extends \Q {
 			,   isset( $caller['line'] ) ? $caller['line'] : 'x'
 		);
 
-		// kick it back ##
-		return $return;
-
 	}
+
 
 
 	
 
     public static function array_to_object( $array ) {
         
-        #wp_die( 'here..' );
+        #h::log( 'here..' );
         if ( ! is_array( $array ) ) {
 
             return $array;
@@ -328,19 +345,29 @@ class method extends \Q {
 	}
 	
 
-	
-    /**
-     * Check if a plugin is active
-     * 
-     * @since       2.0.0
-     * @return      Boolean
-     */
-    public static function plugin_is_active( $plugin ) 
-    {
-        
-        return in_array( $plugin, (array) \get_site_option( 'active_plugins', [] ) );
-    
-    }
+	/**
+	 * search string by array
+	 * 
+	 * @link	https://stackoverflow.com/questions/6284553/using-an-array-as-needles-in-strpos
+	 */
+	public static function strposa($haystack, $needle, $offset=0) 
+	{
+		if( ! is_array( $needle ) ) {
+			
+			$needle = array($needle);
+
+		}
+
+		foreach( $needle as $query ) {
+
+			// stop on first true result ##
+			if( strpos( $haystack, $query, $offset ) !== false) return true;
+		
+		}
+
+		return false;
+
+	}
 
 
     /**
@@ -365,203 +392,9 @@ class method extends \Q {
     }
 
 
-    /**
-    * Get Q Plugin data
-    *
-    * @return   Object
-    * @since    0.3
-    */
-    public static function plugin_data( $refresh = false ){
-
-        if ( $refresh ) {
-
-            #echo 'refrshing stored framework data<br />'; ##
-            \delete_site_option( 'q_plugin_data' ); // delete option ##
-
-        }
-
-        if ( ! $array = \get_site_option( 'q_plugin_data' ) ) {
-
-            $array = array (
-                'version'       => self::version // \Q::version
-            );
-
-            if ( $array ) {
-
-                self::add_update_option( 'q_plugin_data', $array, '', 'yes' );
-
-            }
-
-        }
-
-        return core\method::array_to_object( $array );
-
-    }
 
 
 
-    /**
-    * Get installed theme data
-    *
-    * @return  Object
-    * @since   0.3
-    */
-    public static function theme_data( $refresh = false )
-    {
-
-       if ( $refresh ) {
-
-           #echo 'refrshing stored theme data<br />'; ##
-           \delete_site_option( 'q_theme_data' ); // delete option ##
-
-       }
-
-       // declare global variable ##
-       global $q_theme_data;
-
-       $array = \get_site_option( 'q_theme_data' );
-
-       if ( ! \get_site_option( 'q_theme_data' ) ) {
-
-           #echo 'stored theme option empty<br />';
-           #$array = @file_get_contents( q_get_option("uri_parent")."library/version/");
-
-           if( function_exists( 'wp_get_theme' ) ) {
-               $array = \wp_get_theme( \get_site_option( 'template' ));
-               #$theme_version = $theme_data->Version;
-           } else {
-               $array = \get_theme_data( \get_template_directory() . '/style.css');
-               #$theme_version = $theme_data['Version'];
-           }
-           #$theme_base = get_option('template');
-
-           if ( $array ) {
-
-               self::add_update_option( 'q_theme_data', $array, '', 'yes' );
-               #echo 'stored fresh theme data<br />';
-
-           }
-
-       }
-
-       return core\method::array_to_object( $array );
-
-    }
-
-
-
-
-	/**
-     * Check if a page has children
-     *
-     * @since       1.3.0
-     * @param       integer         $post_id
-     * @return      boolean
-     */
-    public static function has_children( $post_id = null )
-    {
-
-        // nothing to do here ##
-        if ( is_null ( $post_id ) ) { return false; }
-
-        // meta query to allow for inclusion and exclusion of certain posts / pages ##
-        $meta_query =
-                array(
-                    array(
-                        'key'       => 'program_sub_group',
-                        'value'     => '',
-                        'compare'   => '='
-                    )
-                );
-
-        // query for child or sibling's post ##
-        $wp_args = array(
-            'post_type'         => 'page',
-            'orderby'           => 'menu_order',
-            'order'             => 'ASC',
-            'posts_per_page'    => -1,
-            'meta_query'        => $meta_query,
-        );
-
-        #pr( $wp_args );
-
-        $object = new \WP_Query( $wp_args );
-
-        // nothing found - why? ##
-        if ( 0 === $object->post_count ) { return false; }
-
-        // get children ##
-        $children = \get_pages(
-            array(
-                'child_of'      => $post_id,
-                'meta_key'      => '',
-                'meta_value'    => '',
-            )
-        );
-
-        // count 'em ##
-        if( count( $children ) == 0 ) {
-
-            // No children ##
-            return false;
-
-        } else {
-
-            // Has Children ##
-            return true;
-
-        }
-
-    }
-
-
-    public static function list_image_sizes()
-    {
-
-        global $_wp_additional_image_sizes; 
-        if( self::$debug ) h::log( $_wp_additional_image_sizes ); 
-
-	}
-	
-
-	/**
-	 * Get information about available image sizes
-	 * 
-	 * @link		https://developer.wordpress.org/reference/functions/get_intermediate_image_sizes/
-	 */
-	function get_image_sizes( $size = '' ) {
-
-		$wp_additional_image_sizes = wp_get_additional_image_sizes();
-	
-		$sizes = array();
-		$get_intermediate_image_sizes = get_intermediate_image_sizes();
-	
-		// Create the full array with sizes and crop info
-		foreach( $get_intermediate_image_sizes as $_size ) {
-			if ( in_array( $_size, array( 'thumbnail', 'medium', 'large' ) ) ) {
-				$sizes[ $_size ]['width'] = get_option( $_size . '_size_w' );
-				$sizes[ $_size ]['height'] = get_option( $_size . '_size_h' );
-				$sizes[ $_size ]['crop'] = (bool) get_option( $_size . '_crop' );
-			} elseif ( isset( $wp_additional_image_sizes[ $_size ] ) ) {
-				$sizes[ $_size ] = array( 
-					'width' => $wp_additional_image_sizes[ $_size ]['width'],
-					'height' => $wp_additional_image_sizes[ $_size ]['height'],
-					'crop' =>  $wp_additional_image_sizes[ $_size ]['crop']
-				);
-			}
-		}
-	
-		// Get only 1 size if found
-		if ( $size ) {
-			if( isset( $sizes[ $size ] ) ) {
-				return $sizes[ $size ];
-			} else {
-				return false;
-			}
-		}
-		return $sizes;
-
-	}
 
     
 }

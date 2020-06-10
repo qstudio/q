@@ -44,6 +44,7 @@ if ( ! class_exists( 'Q' ) ) {
         const text_domain = 'q-textdomain'; // for translation ##
         static $debug = false; // global debugging ##
 		static $device = false; // current device ##
+		static $log = []; // global log ##
 		
         /// Theme Settings
 		// public static $config = []; // shared config array ##

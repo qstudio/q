@@ -404,6 +404,8 @@ class wp extends \Q {
 		return ui\method::prepare_return( $args, $array );
 
 	}
+
+
 	
 
 	/**
@@ -843,64 +845,6 @@ class wp extends \Q {
 	
 
 
-
-    /**
-     * Check for a return post thumbnail images and exif-data baed on passed settings ##
-     *
-     */
-    public static function the_post_thumbnail( $args = array() )
-    {
-
-        // test incoming args ##
-        // self::log( $args );
-
-        // get the_post ##
-        if ( ! $the_post = self::the_post() ) { return false; }
-
-        // Parse incoming $args into an array and merge it with $defaults - caste to object ##
-        $args = ( object ) \wp_parse_args( $args, \q_theme::$the_post_thumbnail );
-
-        #pr( $args );
-
-        // set-up a new object ##
-        $object = new \stdClass;
-
-        if ( ! \has_post_thumbnail( $the_post->ID ) ) { return false; }
-
-        // self::log( 'Handle: '.$args->handle[self::device()] );
-
-		// show small image, linking to larger image ##
-		$attachment_id = \get_post_thumbnail_id( $the_post->ID );
-        $object->src = \wp_get_attachment_image_src( $attachment_id, $args->handle[h::device()] );
-        $img_alt = \get_post_meta( \get_post_thumbnail_id( $the_post->ID ), '_wp_attachment_image_alt', true);
-		$object->alt = ( $img_alt ? $img_alt : \get_the_title() ) ;
-		
-		// add srcset values ##
-		$object = self::the_srcset( $object );
-
-        // image found ? ##
-        if ( ! $object->src ) { return false; }
-
-        // kick back object ##
-        return $object;
-
-    }
-
-
-
-	/**
-	 * Get srcset and additional attachment meta info
-	 */
-	public static function the_srcset( object $object = null ) {
-
-		// @todo - get values and add ##
-
-		return $object;
-
-	}
-
-
-
 	
     /**
      * Get Sibling pages
@@ -908,7 +852,7 @@ class wp extends \Q {
      * @since       1.0.1
      * @return      string       HTML Menu
      */
-    public static function get_navigation( $args = array() )
+    public static function the_navigation( $args = array() )
     {
 
         // get the_post ##
@@ -1015,7 +959,7 @@ class wp extends \Q {
         #pr( $object->posts );
 
         // allow posts to be filtered ##
-        $posts = \apply_filters( 'q/get/wp/get_navigation', $posts );
+        $posts = \apply_filters( 'q/get/wp/the_navigation', $posts );
 
         // return object ##
         return $posts;
