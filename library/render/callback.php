@@ -22,11 +22,7 @@ class callback extends \q\render {
 			// self::$log['error'][] = 'No field value passed to method.';
 			
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No field value passed to method.'
-			]);
+			h::log( self::$args['group'].'~>e:>No field value passed to method.');
 
             return $value;
 
@@ -38,11 +34,7 @@ class callback extends \q\render {
 			// self::$log['error'][] = 'No value passed to method.';
 			
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No value passed to method.'
-			]);
+			h::log( self::$args['group'].'~>e:>No value passed to method.');
 
             return $value;
 
@@ -60,11 +52,7 @@ class callback extends \q\render {
 			// self::$log['error'][] = 'No callbacks allowed in plugin';
 			
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No callbacks allowed in plugin.'
-			]);
+			h::log( self::$args['group'].'~>e:>No callbacks allowed in plugin.');
 
             return $value;
 
@@ -75,13 +63,6 @@ class callback extends \q\render {
         if ( ! $field_callback = render\fields::get_callback( $field ) ) {
 
 			// self::$log['error'][] = 'No callbacks found for Field: "'.$field.'"';
-			
-			// log ##
-			// render\log::add([
-			// 	'key' => 'notice', 
-			// 	'field'	=> __FUNCTION__,
-			// 	'value' => 'No callbacks found for Field: "'.$field.'"'
-			// ]);
 
             return $value;
 
@@ -99,11 +80,7 @@ class callback extends \q\render {
 			// self::$log['notice'][] = 'No field value found, stopping callback';
 			
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No field value found, stopping callback: "'.$field.'"'
-			]);
+			h::log( self::$args['group'].'~>n:>No field value found, stopping callback: "'.$field.'"');
 
             return $value;
 
@@ -138,11 +115,7 @@ class callback extends \q\render {
 			// self::$log['notice'][] = 'Cannot find callback: "'.$method.'"';
 			
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Cannot find callback: "'.$method.'"'
-			]);
+			h::log( self::$args['group'].'~>n:>Cannot find callback: "'.$method.'"');
 
             return $value;
 
@@ -158,11 +131,7 @@ class callback extends \q\render {
 			// self::$log['notice'][] = 'Method is not callable: "'.$method.'"';
 			
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Method is not callable: "'.$method.'"'
-			]);
+			h::log( self::$args['group'].'~>n:>Method is not callable: "'.$method.'"');
 
             return $value;
 
@@ -195,11 +164,7 @@ class callback extends \q\render {
 			// self::$log['notice'][] = 'Method returned bad data..';
 			
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Method returned bad data..'
-			]);
+			h::log( self::$args['group'].'~>n:>Method return bad data...');
 
             return $value;
 

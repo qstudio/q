@@ -49,12 +49,7 @@ class args extends \q\render {
         ){
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' =>  'Missing required args, so stopping here'
-			]);
-
+			h::log( self::$args['group'].'~>e:>Missing required args, so stopping here' );
 			// h::log( 'Kicked here...' );
 
             return false;
@@ -122,11 +117,7 @@ class args extends \q\render {
 			// self::$log['notice'][] = 'config->run defined as false for Group: '.$args['group'].', so stopping here.. ';
 			
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' =>  'config->run defined as false for: '.$args['group'].', so stopping here.. '
-			]);
+			h::log( self::$args['group'].'~>n:>config->run defined as false for: '.$args['group'].', so stopping here.. ' );
 
             return false;
 
@@ -190,11 +181,7 @@ class args extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Error in passed self::$args'
-			]);
+			h::log( self::$args['group'].'~>e:>Error in passed self::$args');
 
             return false;
 
@@ -218,11 +205,8 @@ class args extends \q\render {
             && ! isset( self::$fields[self::$args['group'].'_enable'] )
         ) {
 
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No enable defined in $args or enable field found for Group: "'.self::$args['group'].'"'
-			]);
+			// log ##
+			h::log( self::$args['group'].'~>n:>No enable defined in $args or enable field found for Group: "'.self::$args['group'].'"');
 
             return true;
 
@@ -235,15 +219,11 @@ class args extends \q\render {
                 && 1 == self::$fields[self::$args['enable']]
             )
             || 
-            1 == self::$fields[self::$args['group'].'_enable']
+            	1 == self::$fields[self::$args['group'].'_enable']
         ) {
 
-			// track removal ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Field Group: "'.self::$args['group'].'" Enabled, continue'
-			]);
+			// log ##
+			h::log( self::$args['group'].'~>n:>Field Group: "'.self::$args['group'].'" Enabled, continue');
 
             // helper::log( self::$args['enable'] .' == 1' );
 
@@ -252,11 +232,7 @@ class args extends \q\render {
         }
 
 		// log ##
-		render\log::add([
-			'key' => 'notice', 
-			'field'	=> __FUNCTION__,
-			'value' => 'Field Group: "'.self::$args['group'].'" NOT Enabled, stopping.'
-		]);
+		h::log( self::$args['group'].'~>n:>Field Group: "'.self::$args['group'].'" NOT Enabled, stopping.');
 
         // helper::log( self::$args['enable'] .' != 1' );
 

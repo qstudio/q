@@ -47,14 +47,10 @@ class src extends render\type {
 		) {
 
 			// h::log( $src );
-			h::log( 'wp_get_attachment_image_src returned bad data' );
+			// h::log( 'wp_get_attachment_image_src returned bad data' );
 
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'wp_get_attachment_image_src returned bad data'
-			]);
+			h::log( self::$args['group'].'~>n:>wp_get_attachment_image_src returned bad data');
 
 			return $string;
 
@@ -102,7 +98,7 @@ class src extends render\type {
 		// check ##
 		if ( is_null( $string ) ) {
 
-			h::log( 'String is empty.. so return null' );
+			h::log( self::$args['group'].'~>n:>String is empty.. so return null' );
 
 		}
 

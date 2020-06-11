@@ -3,7 +3,7 @@
 namespace q\core;
 
 use q\core;
-// use q\core\helper as h;
+use q\core\helper as h;
 
 // run ##
 core\log::run();
@@ -13,15 +13,17 @@ class log extends \Q {
 	// track who called what ##
 	public static 
 		$backtrace 		= false,
-		$delimit 	= [
+		$delimit 		= [
 			'array' 	=> '~>',
 			'value' 	=> ':>'
 		],
-		$special_keys = [
+		$special_keys 	= [
+			'd' 		=> 'debug',
 			'e' 		=> 'error',
 			'n' 		=> 'notice',
 			'l' 		=> 'log'
-		]
+		],
+		$key_array 		= []
 	;
 
 
@@ -37,13 +39,23 @@ class log extends \Q {
 
 
 
-	private static function get_backtrace(){
+	private static function get_backtrace( $args = null ){
 
-		$backtrace_1 = core\method::backtrace([ 'level' => 3, 'return' => 'class_function' ]);
-		$backtrace_2 = core\method::backtrace([ 'level' => 2, 'return' => 'file_line' ]);
+		// called directly, else called from h::log() ##
+		// $level_function = apply_filters( 'q/core/log/traceback/function', 3 );
+		// $level_file = apply_filters( 'q/core/log/traceback/file', 2 );
+
+		$backtrace_1 = core\method::backtrace([ 
+			'level' 	=> \apply_filters( 'q/core/log/traceback/function', 3 ), 
+			'return' 	=> 'class_function' 
+		]);
+		$backtrace_2 = core\method::backtrace([ 
+			'level' 	=> \apply_filters( 'q/core/log/traceback/file', 2 ), 
+			'return' 	=> 'file_line' 
+		]);
 
 		self::$backtrace = ' -> '.$backtrace_1.' - '.$backtrace_2;
-		// self::set( $backtrace );
+		// core\helper::debug( $backtrace );
 		// $log = $log.' - '.$backtrace;
 
 	}
@@ -57,10 +69,12 @@ class log extends \Q {
     public static function set( $args = null ){
 
 		// test ##
-		// self::set( $args );
+		// core\helper::debug( $args );
+
+		// core\helper::debug( 'd:>Problem with passed args' );
 
 		// add info about calling function ##
-		self::get_backtrace();
+		self::get_backtrace( $args );
 		
 		// sanity ##
 		if (
@@ -69,7 +83,7 @@ class log extends \Q {
 			// || ! isset( $args['log'] )
 		){
 
-			self::set( 'n:Problem with passed args' );
+			core\helper::debug( 'd:>Problem with passed args' );
 
 			return false;
 
@@ -81,7 +95,7 @@ class log extends \Q {
 			! $log  = self::translate( $args )
 		){
 
-			// self::set( 'Error in passed log data..' );
+			// core\helper::debug( 'Error in passed log data..' );
 
 			return false;
 
@@ -115,7 +129,7 @@ class log extends \Q {
 			|| is_numeric( $args )
 		){
 
-			// self::set( 'n:>is_array OR is_object or is_int' );
+			// core\helper::debug( 'is_array OR is_object or is_int' );
 			// return self::$log['log'][] = var_export( $args, true ).self::$backtrace;
 			return self::push( 'log', var_export( $args, true ).self::$backtrace );
 			
@@ -126,24 +140,27 @@ class log extends \Q {
 			is_bool( $args )
 		){
 
-			// self::set( 'n:>is_bool' );
+			// core\helper::debug( 'is_bool' );
 			// return self::$log['log'][] = ( true === $args ? 'boolean:true' : 'boolean:false' ).self::$backtrace ;
 			return self::push( 'log', ( true === $args ? 'boolean:true' : 'boolean:false' ).self::$backtrace );
 
 		}
+
+		// filter delimters ##
+		self::$delimit = \apply_filters( 'q/core/log/delimit', self::$delimit );
 
 		// string ##
 		if ( 
 			is_string( $args ) 
 		) {
 
-			// self::set( 'n:>is_string' );
+			// core\helper::debug( 'is_string' );
 
 			// string might be a normal string, or contain markdown to represent an array of data ##
 			// check for fixed pattern 
 			if ( ! core\method::strposa( $args, self::$delimit ) ) {
 
-				// self::set( 'n:>string has no known delimit, so treat as log:>value' );
+				// core\helper::debug( 'string has no known delimit, so treat as log:>value' );
 				// return $args['log'][] = $args.self::$backtrace; 
 				return self::push( 'log', $args.self::$backtrace );
 
@@ -155,16 +172,16 @@ class log extends \Q {
 				&& false !== strpos( $args, self::$delimit['value'] ) 
 			) {
 			
-				// self::set( 'only key:value delimiters found..' );
+				// core\helper::debug( 'only key:value delimiters found..' );
 
 				// get some ##
 				$key_value = explode( self::$delimit['value'], $args );
-				// self::set( $key_value );
+				// core\helper::debug( $key_value );
 
 				$key = $key_value[0];
 				$value = $key_value[1];
 
-				// self::set( "l:>key: $key + value: $value" );
+				// core\helper::debug( "d:>key: $key + value: $value" );
 
 				// return with special key replacement check ##
 				return self::push( self::key_replace( $key ), $value.self::$backtrace );
@@ -177,19 +194,19 @@ class log extends \Q {
 				&& false !== strpos( $args, self::$delimit['value'] ) 
 			) {
 			
-				// self::set( 'both array and value delimiters found..' );
+				// core\helper::debug( 'both array and value delimiters found..' );
 
 				// get some ##
 				$array_key_value = explode( self::$delimit['value'], $args );
-				// self::set( $array_key_value );
+				// core\helper::debug( $array_key_value );
 
 				$value_keys = $array_key_value[0];
 				$value = $array_key_value[1];
 
 				$keys = explode( self::$delimit['array'], $value_keys );
 				
-				// self::set( $keys );
-				// self::set( "l:>$value" );
+				// core\helper::debug( $keys );
+				// core\helper::debug( "l:>$value" );
 
 				return self::push( $keys, $value.self::$backtrace );
 
@@ -210,11 +227,6 @@ class log extends \Q {
 
 		// @todo - sanity ##
 
-		// @todo -- how to add deep keys self::$log[$key][$key] = value ##
-		// pass key as an array ??
-		// loop over each key, chec if set.. if not set ###
-		// then add value ##
-
 		// check if $key already exists ##
 		if ( 
 			is_string( $key )
@@ -232,10 +244,10 @@ class log extends \Q {
 			){
 
 				self::$log[$key] = [];
-				// self::set( "n:>create new empty array for '{$key}'" );
+				// core\helper::debug( "create new empty array for '{$key}'" );
 
 				return self::$log[$key][] = $value;
-				// self::set( "n:>added {value} to '{$key}'" );
+				// core\helper::debug( "added {value} to '{$key}'" );
 
 			} else {
 
@@ -251,15 +263,100 @@ class log extends \Q {
 			&& count( $key ) > 1
 		){
 
-			// self::set( 'Dealing with multi-dimensional array keys' );
-			// self::set( $key );
+			// $key_array = [];
+;
+			// we only go up to 3 levels.. oddly, so give a warning ##
+			// if ( count( $key ) > 3 ) { core\helper::debug( 'The max key depth is 3..' ); }
 
+			// special keys ##
+			// foreach( $key as $k => $v ) {
+
+			// 	// check for special keys ##
+			// 	if ( 1 == strlen( $v ) ) {
+
+			// 		$key[$k] = self::key_replace( $v );
+
+			// 	}
+
+			// }	
+
+			// h::log( self::$log );
+
+			// create array
+			self::$key_array = 
+				array_merge_recursive ( 
+					self::create_multidimensional_array( [], $key, $value ), 
+					self::$key_array 
+				);
+			// h::log( self::$key_array );
+
+			// merge created keys with log ##
+			return self::$log = array_merge( self::$log, self::$key_array );
+
+			// self::$log = array_merge( self::$log, self::$key_array );
+
+			// self::$log = array_merge_recursive( self::$key_array, self::$log );
+
+			// duplicates gone.. hacky ##
+			// self::$log = self::array_unique_multidimensional( self::$log );
+
+			// return self::$log = array_merge_recursive( self::$key_array, self::$log );
+			// h::log( self::$log );
+
+			// self::$log = $merge;
+
+			// check if key exists ##
+
+			// manually ## 
+			/*
+			if (
+				isset( $key[2] )
+			){
+				if ( ! isset( self::$log[ $key[0] ][ $key[1] ][ $key[2] ] ) ) {
+					
+					self::$log[ $key[0] ][ $key[1] ][ $key[2] ] = [];
+				
+				}
+				return self::$log[ $key[0] ][ $key[1] ][ $key[2] ][] = $value;
+			}
+
+			if (
+				isset( $key[1] )
+			){
+
+				if ( ! isset( self::$log[ $key[0] ][ $key[1] ] ) ) {
+
+					self::$log[ $key[0] ][ $key[1] ] = [];
+
+				}
+				return self::$log[ $key[0] ][ $key[1] ][] = $value;
+			}
+
+			if (
+				isset( $key[0] )
+			){
+				if ( ! isset( self::$log[$key[0]] ) ) {
+
+					self::$log[ $key[0] ] = [];
+
+				}
+				return self::$log[ $key[0] ][] = $value;
+			}
+			*/
+
+			/*
 			$md_array = [];
-			$md_array = self::create_multidimensional_array( $md_array, $key, $value ) ;
-			// self::set( $md_array );
+			$md_array = self::create_multidimensional_array( self::$log, $key, $value ) ;
+			// h::log( $md_array );
+			// h::log( self::$log );
 
 			// merge array into self::$log ##
-			self::$log = core\method::parse_args( $md_array, self::$log );
+			// self::$log = core\method::parse_args( $md_array, self::$log );
+			$merge = array_replace_recursive( $md_array, self::$log );
+			h::log( $merge );
+
+			self::$log = $merge
+			*/
 
 		}
 
@@ -269,41 +366,19 @@ class log extends \Q {
 	}
 
 
-	/**
-	 * Special Key replacement 
-	 *
-	 * - e = error
-	 * - n = notice
-	 * - l = log ( default ) 
-	 */
-	private static function key_replace( $key = null ){
-		
-		// @todo -- sanity ##
-
-		// lookfor key
-		if ( 
-			isset( self::$special_keys[$key] )
-		){
-
-			// self::set( "n:>key is special: $key" );
-			return self::$special_keys[$key];
-
-		}
-
-		// self::set( "n:>key is NOT special: $key" );
-		return $key;
-
+	public static function array_unique_multidimensional( Array $input = [] )
+	{
+		$serialized = array_map('serialize', $input);
+		$unique = array_unique($serialized);
+		return array_intersect_key($input, $unique);
 	}
 
-
+	
 
 	/**
 	 * Create Multidimensional array from keys ##
 	 * 
 	 * @link 	https://eval.in/828697 
-	 * 
-	 * $keys = array("aggs","name","aggs","name","aggs");
-	 * $aggs = add_keys_dynamic( [],$keys,"test");
 	 */
 	public static function create_multidimensional_array( $array = [], $keys, $value ){    
 
@@ -329,41 +404,80 @@ class log extends \Q {
 	}
 
 
+
+	/**
+	 * Special Key replacement 
+	 *
+	 * - e = error
+	 * - n = notice
+	 * - l = log ( default ) 
+	 */
+	private static function key_replace( $key = null ){
+		
+		// @todo -- sanity ##
+
+		// filter special keys ##
+		self::$special_keys = \apply_filters( 'q/core/log/special_keys', self::$special_keys );
+
+		// lookfor key
+		if ( 
+			isset( self::$special_keys[$key] )
+		){
+
+			// core\helper::debug( "key is special: $key" );
+			return self::$special_keys[$key];
+
+		}
+
+		// core\helper::debug( "key is NOT special: $key" );
+		return $key;
+
+	}
+
+
 		
     /**
      * Logging function
      * 
      */
-    private static function write( $key = null ){
+    public static function write( $key = null ){
 
 		// test ##
-        // self::set( self::$log );
+		// core\helper::debug( 'd:>write: '.$key );
+		// core\helper::debug( self::$log );
 
 		// sanity ##
-		// ...
+		// @todo ...
 
 		// if key set, check if exists, else bale ##
 		if ( 
-			isset( $key )
+			! is_null( $key )
 			&& ! isset( self::$log[ $key ] ) 
 		) {
 
-			self::set( 'Log key empty: "'.$key.'"' );
+			core\helper::debug( 'd:>Log key requested returned no data: "'.$key.'"' );
 
 			return false;
 
 		}
 
-		// self::set( self::$log );
-
         // option to debug only specific key ##
         $return = 
             isset( $key ) ?
             self::$log[ $key ] : // key group ##
-            self::$log ; // all
+			self::$log ; // all
+			
+		// create named array key, based on passed key, so easier to read log ##
+		if ( ! is_null( $key ) ) { $return = [ $key => $return ]; }
 
-        // log to log ##
-		// self::set( $return );
+		// keys are added sequentially, so we need to reverse to see the actual flow ##
+		if ( is_array( $return ) ) {
+			$return_sorted = [];
+			foreach( $return as $key => $val ) {
+				$return_sorted[$key] = array_reverse( $val, true );
+			} 
+			$return = $return_sorted;
+		}
 
 		// debugging is on in WP, so write to error_log ##
         if ( true === WP_DEBUG ) {
@@ -393,7 +507,7 @@ class log extends \Q {
     private static function clear( $args = null ){
 
 		// test ##
-        // self::set( $args );
+        // core\helper::debug( $args );
 
 		// sanity ##
 		// ...
@@ -404,20 +518,20 @@ class log extends \Q {
 			&& ! isset( self::$log[ $args['key'] ] ) 
 		) {
 
-			self::set( 'n:>Log key empty: "'.$args['key'].'"' );
+			core\helper::debug( 'Log key empty: "'.$args['key'].'"' );
 
 			return false;
 
 		}
 
-		// self::set( self::$log );
+		// core\helper::debug( self::$log );
 
         // option to debug only specific fields ##
         if ( isset( $args['key'] ) ) {
 
 			unset( self::$log[ $args['key'] ] );
 
-			self::set( 'n>Emptied log key: "'.$args['key'].'"' );
+			core\helper::debug( 'n>Emptied log key: "'.$args['key'].'"' );
 
 			return true;
 
@@ -425,7 +539,7 @@ class log extends \Q {
 
 		unset( self::$log );
 
-		self::set( 'n>Emptied all log keys' );
+		core\helper::debug( 'n>Emptied all log keys' );
 		
 		return true;
 
@@ -446,7 +560,7 @@ class log extends \Q {
 			fclose($f);
 
 			// log to log ##
-			self::set( 'n:>Log Emptied: '.date('l jS \of F Y h:i:s A') );
+			core\helper::debug( 'Log Emptied: '.date('l jS \of F Y h:i:s A') );
 
 		}
 
@@ -461,25 +575,31 @@ class log extends \Q {
     public static function shutdown(){
 
 		// filter what to write to log - defaults to "error" key ##
-		$key = \apply_filters( 'q/core/log/default', 'notice' );
+		$key = \apply_filters( 'q/core/log/default', 'error' );
 		// $key = \apply_filters( 'q/core/log/default', null );
 
 		// write specific key, as filter might return false / null ##
 		if( 
 			! $key 
 			|| is_null( $key ) 
-			|| ! isset( self::$log[ $key ] )
+			// || ! isset( self::$log[ $key ] )
 		){
 
-			self::set( 'write all..' );
+			core\helper::debug( 'd:>shutdown -- no key, so write all..' );
 
 			// log all ##
 			return self::write();
 
 		}
 
+		// also log helper ##
+		self::write( 'debug' );
+
 		// log specific key ##
-		return self::write( $key );
+		self::write( $key );
+
+		// done ##
+		return true;
 
 	}
 

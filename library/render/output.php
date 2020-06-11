@@ -19,11 +19,7 @@ class output extends \q\render {
 		){
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => '$output is empty, so nothing to render.. stopping here.'
-			]);
+			h::log( self::$args['group'].'~>e:>$output is empty, so nothing to render.. stopping here.');
 
 			// kick out ##
 			return false;

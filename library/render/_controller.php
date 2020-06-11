@@ -223,8 +223,8 @@ class render extends \Q {
 
 		}
 
-		// log ##
-		h::log( 'No matching method found for: '.$function );
+		// @todo -- check what is going on when this log shows.. ##
+		// h::log( 'No matching method found for: '.$function );
 
 		// kick back nada - as this renders on the UI ##
 		return false;

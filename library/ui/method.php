@@ -183,14 +183,8 @@ class method extends \Q {
 			// || empty( $array )
 		) {
 
-			// h::log( 'Error in passed $args or $array: '.$method );
-
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> $method,
-				'value' => 'Error in passed $args or $array'
-			]);
+			h::log( 'e~>'.$method.':>Error in passed $args or $array' );
 
 			return false;
 
@@ -201,14 +195,8 @@ class method extends \Q {
 			empty( $array )
 		) {
 
-			// h::log( 'Returned $array is empty: '.$method );
-
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> $method,
-				'value' => 'Returned $array is empty'
-			]);
+			h::log( 'e~>'.$method.':>Returned $array is empty' );
 
 			return false;
 
@@ -251,7 +239,7 @@ class method extends \Q {
 		echo $string ;
 
 		// optional logging to show removals and stats ##
-        render\log::render( $args );
+        // render\log::render( $args );
 
 		return true;
 

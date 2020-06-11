@@ -23,12 +23,8 @@ class fields extends \q\render {
             || ! is_array( self::$fields ) 
         ) {
 
-			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Error in $fields array'
-			]);
+			/// log ##
+			h::log( self::$args['group'].'~>e:>Error in $fields array' );
 
             return false;
 
@@ -58,11 +54,7 @@ class fields extends \q\render {
             ) {
 
 				// log ##
-				render\log::add([
-					'key' => 'notice', 
-					'field'	=> __FUNCTION__,
-					'value' =>  'Field: '.$field.' has no value, check for data issues.'
-				]);
+				h::log( self::$args['group'].'~>n:>Field: "'.$field.'" has no value, check for data issues' );
 
 				// h::log( 'Field empty: '.$field );
 
@@ -126,11 +118,7 @@ class fields extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' =>   'No field or value passed to method.'
-			]);
+			h::log( self::$args['group'].'~>n:>No field or value passed to method.' );
 
             return false;
 
@@ -142,11 +130,7 @@ class fields extends \q\render {
         self::$fields[$field] = $value;
 
 		// log ##
-		render\log::add([
-			'key' => 'fields_added', 
-			'field'	=> $field,
-			'value' => log::backtrace()
-		]);
+		h::log( self::$args['group'].'~>fields_added:>"'.$field.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
         return true;
@@ -165,11 +149,7 @@ class fields extends \q\render {
         if ( is_null( $field ) ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No field value passed to method.'
-			]);
+			h::log( self::$args['group'].'~>n:>No field value passed to method.' );
 
             return false;
 
@@ -179,11 +159,7 @@ class fields extends \q\render {
         unset( self::$fields[$field] );
 
         // log ##
-		render\log::add([
-			'key' => 'field_removed', 
-			'field'	=> $field,
-			'value' => core\method::backtrace([ 'level' => 2, 'return' => 'function' ])
-		]);
+		h::log( self::$args['group'].'~>fields_removed:>"'.$field.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
         return true;
@@ -213,11 +189,7 @@ class fields extends \q\render {
             ) {
 
 				// log ##
-				render\log::add([
-					'key' => 'notice', 
-					'field'	=> __FUNCTION__,
-					'value' => 'Field: "'.$field.'" is Type: "'.self::$args['fields'][$key]['type'].'"'
-				]);
+				h::log( self::$args['group'].'~>n:>Field: "'.$field.'" is Type: "'.self::$args['fields'][$key]['type'].'"' );
 
                 return self::$args['fields'][$key]['type'];
 
@@ -245,11 +217,7 @@ class fields extends \q\render {
 		if ( ! isset( self::$args['fields'] ) ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => '"$args["fields"]" is not defined'
-			]);
+			h::log( self::$args['group'].'~>n:>"$args[fields"]" is not defined' );
 
 			return false;
 
@@ -260,11 +228,7 @@ class fields extends \q\render {
         ){
 
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'failed to find Field: "'.$field.'" data in $fields'
-			]);
+			h::log( self::$args['group'].'~>n:>failed to find Field: "'.$field.'" data in $fields' );
 
             return false;
 
@@ -277,11 +241,7 @@ class fields extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Field: "'.$field.'" has no callback defined'
-			]);
+			h::log( self::$args['group'].'~>n:>Field: "'.$field.'" has no callback defined' );
 
             return false;
 
@@ -296,11 +256,7 @@ class fields extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Field: "'.$field.'" has a callback, but it is not correctly formatted - not an array or missing "method" key'
-			]);
+			h::log( self::$args['group'].'~>n:>Field: "'.$field.'" has a callback, but it is not correctly formatted - not an array or missing "method" key' );
 
             return false;
 
@@ -312,11 +268,7 @@ class fields extends \q\render {
         $callback = self::$args['fields'][$key]['callback'];
 
 		// log ##
-		render\log::add([
-			'key' => 'notice', 
-			'field'	=> __FUNCTION__,
-			'value' => 'Field: "'.$field.'" has callback: "'.$callback['method'].'" sending back to caller'
-		]);
+		h::log( self::$args['group'].'~>n:>Field: "'.$field.'" has callback: "'.$callback['method'].'" sending back to caller' );
 
         // filter ##
         $callback = core\filter::apply([ 

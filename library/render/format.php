@@ -15,18 +15,15 @@ class format extends \q\render {
      * @return      String
      */
     public static function field( String $field = null, $value = null ) {
-
-        // sanity ##
+		
+		// h::log( 'd:>Field: '.$field );
+		
+		// sanity ##
         if ( is_null( $field ) ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No field value passed to method.'
-			]);
-
-			// h::log( 'Field value: '.$value );
+			h::log( self::$args['group'].'~>e:>No field value passed to method.');
+			// h::log( 'd:>Field value: '.$value );
 
             return false;
 
@@ -36,13 +33,8 @@ class format extends \q\render {
         if ( is_null( $value ) ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No value passed to method.'
-			]);
-
-			// h::log( 'Field value: '.$value );
+			h::log( self::$args['group'].'~>e:>No value passed to method.');
+			// h::log( 'd:>Field value: '.$value );
 
             return false;
 
@@ -58,11 +50,7 @@ class format extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No formats allowed in plugin or array corrupt'
-			]);
+			h::log( self::$args['group'].'~>e:>No formats allowed in plugin or array corrupt.');
 
             return false;
 
@@ -95,11 +83,7 @@ class format extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Error in parameters passed to check_format'
-			]);
+			h::log( self::$args['group'].'~>e:>Error in parameters passed to check_format');
 
             return false;
 
@@ -126,11 +110,7 @@ class format extends \q\render {
             if ( ! function_exists( $format_value['type'] ) ) {
 
 				// log ##
-				render\log::add([
-					'key' => 'notice', 
-					'field'	=> __FUNCTION__,
-					'value' => 'Function not found: '.$format_value['type']
-				]);
+				h::log( self::$args['group'].'~>n:>Function not found: "'.$format_value['type'].'"');
 
                 continue;
 
@@ -160,11 +140,7 @@ class format extends \q\render {
         if ( false === $tracker ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No valid value type found for field: '.$field.' so assigned: '.$return
-			]);
+			h::log( self::$args['group'].'~>n:>No valid value type found for field: "'.$field.'" so assigned: "'.$return.'"');
 
         }
 
@@ -194,11 +170,7 @@ class format extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Error in parameters passed to "apply", $value returned empty and field removed from $fields'
-			]);
+			h::log( self::$args['group'].'~>e:>Error in parameters passed to "apply", $value returned empty and field removed from $fields');
 
             // this item needs to be removed from self::$fields
             render\fields::remove( $field );
@@ -217,11 +189,7 @@ class format extends \q\render {
         ){
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'handler wrong - class: '.__CLASS__.' / method: '.$format
-			]);
+			h::log( self::$args['group'].'~>e:>handler wrong - class: "'.__CLASS__.'" / method: "'.$format.'"');
 
             // this item needs to be removed from self::$fields
             render\fields::remove( $field );
@@ -423,11 +391,7 @@ class format extends \q\render {
         } else {
 
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Object is not of type WP_Post, so emptied, $value returned empty and field removed from $fields'
-			]);
+			h::log( self::$args['group'].'~>n:>Object is not of type WP_Post, so emptied, $value returned empty and field removed from $fields');
 
             // this item needs to be removed from self::$fields
             render\fields::remove( $field, 'Removed by format_object because Object format is not allowed in $formats' );
@@ -459,11 +423,7 @@ class format extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' =>  'No value or field passed to format_wp_post_object.'
-			]);
+			h::log( self::$args['group'].'~>e:>No value or field passed to format_wp_post_object');
 
             return false;
 
@@ -522,11 +482,7 @@ class format extends \q\render {
 				h::log( 'Field: '.$field.' / '.$type_field.' returned an empty string' );
 
 				// log ##
-				render\log::add([
-					'key' => 'error', 
-					'field'	=> __FUNCTION__,
-					'value' => 'Field: '.$field.' / '.$type_field.' returned an empty string'
-				]);
+				h::log( self::$args['group'].'~>e:Field: "'.$field.' / '.$type_field.'" returned an empty string');
 
 				// @@ todo.. do we need to remove field or markup ?? ##
 

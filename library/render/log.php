@@ -16,38 +16,8 @@ class log extends \q\render {
      */
     public static function add( Array $args = null ){
 
-		if (
-            ! isset( self::$args['config']['debug'] )
-            || false === self::$args['config']['debug']
-        ) {
-
-            // h::log( 'Debugging is turned off for Field Group: "'.self::$args['group'].'"' );
-
-            return false;
-
-        }   
-
-        // h::log( $args );
-		// sanity ##
-		if (
-			! isset( $args )
-			|| is_null( $args )
-			|| ! isset( $args['key'] )
-			|| ! isset( $args['field'] )
-			|| ! isset( $args['value'] )
-		){
-
-			h::log( 'Error in passed args' );
-
-			return false;
-
-		}
-
-		// add ##
-		self::$log[self::$args['group']][$args['key']][$args['field']] = $args['value'];
-
-		// kick back ##
-		return true;
+		// __deprecated ##
+		return false;
 
     }
 
@@ -66,34 +36,14 @@ class log extends \q\render {
             || false === self::$args['config']['debug']
         ) {
 
-            // h::log( 'Debugging is turned off for Field Group: "'.$args['group'].'"' );
+            h::log( 'd:>Debugging is turned off for Field Group: "'.$args['group'].'"' );
 
             return false;
 
         }   
 
-		// we debug by group -- so, if the group is empty, bail ##
-		if ( ! isset( self::$log[ $args['group'] ] ) ) {
-
-			h::log( 'Log Group empty: "'.$args['group'].'"' );
-
-			return false;
-
-		}
-
-		// h::log( self::$log );
-
-        // option to debug only specific fields ##
-        $return = 
-            (
-                isset( $args['debug'] )
-                && isset( self::$log [$args['group'] ][ $args['debug'] ] ) 
-            ) ?
-            self::$log[ $args['group'] ][ $args['debug'] ] :
-            self::$log[ $args['group'] ] ;
-
-        // log to log ##
-        h::log( $return );
+		// debug the group ##
+		return core\log::write( $args['group'] );
 
     }
 

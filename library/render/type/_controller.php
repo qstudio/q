@@ -65,14 +65,8 @@ class type extends render {
 			|| ! is_array( $args )
 		){
 
-			h::log( 'Error in passed $args' );
-
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> $function,
-				'value' => 'Error in pased $args'
-			]);
+			h::log( self::$args['group'].'~>e:Error in passed $args');
 
 			return false;
 
@@ -81,14 +75,8 @@ class type extends render {
 		// $value needs to be a WP_Post object ##
 		if ( ! $args[0] instanceof \WP_Post ) {
 
-			h::log( 'Error in passed $args - not a WP_Post object' );
-
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> $function,
-				'value' => 'Error in pased $args - not a WP_Post object'
-			]);
+			h::log( self::$args['group'].'~>e:Error in pased $args - not a WP_Post object');
 
 			return false;
 
@@ -97,14 +85,8 @@ class type extends render {
 		// $value needs to be a WP_Post object ##
 		if ( ! isset( $args[1] ) ) {
 
-			h::log( 'Error in passed $args - missing type_field' );
-
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> $function,
-				'value' => 'Error in pased $args - missing $type_field'
-			]);
+			h::log( self::$args['group'].'~>e:Error in pased $args - missing type_field');
 
 			return false;
 
@@ -113,14 +95,8 @@ class type extends render {
 		// $value needs to be a WP_Post object ##
 		if ( ! isset( $args[2] ) ) {
 
-			h::log( 'Error in passed $args - missing $field' );
-
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> $function,
-				'value' => 'Error in pased $args - missing $field'
-			]);
+			h::log( self::$args['group'].'~>e:Error in pased $args - missing $field');
 
 			return false;
 
@@ -132,11 +108,7 @@ class type extends render {
 			h::log( 'Value Type not allowed: '.$function );
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> $function,
-				'value' => 'Value Type not allowed: '.$function
-			]);
+			h::log( self::$args['group'].'~>e:Value Type not allowed: "'.$function.'"');
 
 			return $args[0]->$args[1];
 
@@ -177,7 +149,7 @@ class type extends render {
 		}
 
 		// log ##
-		h::log( 'No matching method found for: '.$function );
+		h::log( 'd:>No matching method found for: '.$function );
 
 		// kick back nada - as this renders on the UI ##
 		return false;

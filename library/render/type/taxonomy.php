@@ -30,14 +30,10 @@ class taxonomy extends render\type {
 			|| ! is_array( $category )
 		) {
 
-			h::log( 'No category or corrupt data returned' );
+			// h::log( 'No category or corrupt data returned' );
 
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No category data returned'
-			]);
+			h::log( self::$args['group'].'~>n:No category or corrupt data returned');
 
 			return $string;
 

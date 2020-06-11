@@ -189,7 +189,6 @@ class method extends \Q {
 
 		// check we have a result ##
 		$backtrace = debug_backtrace();
-		// h::log( $backtrace );
 
 		if (
 			! isset( $backtrace[$level] )
@@ -213,7 +212,7 @@ class method extends \Q {
 		) {
 
 			return sprintf(
-				__( '%s::%s()', 'Q' )
+				__( '%s%s()', 'Q' )
 				,  	isset($caller['class']) ? $caller['class'].'::' : null
 				,   $caller['function']
 			);

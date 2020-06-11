@@ -24,11 +24,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' =>  'Error with passed $args'
-			]);
+			h::log( self::$args['group'].'~>e:>Error with passed $args');
 
             return false;
 
@@ -47,13 +43,7 @@ class markup extends \q\render {
 			// cast booleans to integer ##
 			if ( \is_bool( $value ) ) {
 
-				// // log ##
-				// render\log::add([
-				// 	'key' => 'notice', 
-				// 	'field'	=> __FUNCTION__,
-				// 	'value' =>  'The value of: '.$key.' was a boolean, so we cast to an integer'
-				// ]);
-
+				// @todo - is this required ?? ##
 				// $value = (int) $value;
 
 			}
@@ -67,11 +57,7 @@ class markup extends \q\render {
 				// h::log( 'The value of: '.$key.' is not a string or integer - so we cannot render it' );
 
 				// log ##
-				render\log::add([
-					'key' => 'notice', 
-					'field'	=> __FUNCTION__,
-					'value' =>  'The value of: '.$key.' is not a string or integer - so it will be skipper and removed from markup...'
-				]);
+				h::log( self::$args['group'].'~>n:>The value of: "'.$key.'" is not a string or integer - so it will be skipper and removed from markup...');
 
                 unset( self::$fields[$key] );
 
@@ -97,11 +83,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' =>  count( $placeholders ) .' placeholders found in formatted string - these will be removed'
-			]);
+			h::log( self::$args['group'].'~>n:>"'.count( $placeholders ) .'" placeholders found in formatted string - these will be removed');
 
             // helper::log( $placeholders );
 
@@ -147,7 +129,7 @@ class markup extends \q\render {
 			|| ! isset( $args['string'] )
 		){
 
-			h::log( 'Error in passed args to "string" method' );
+			h::log( self::$args['group'].'~>e:>Error in passed args to "string" method' );
 
 			return false;
 
@@ -214,14 +196,8 @@ class markup extends \q\render {
             || is_null( $count )
         ) {
 
-			// self::$log['error'][] = 'No field value or count iterator passed to method.';
-			
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' =>  'No field value or count iterator passed to method.'
-			]);
+			h::log( self::$args['group'].'~>n:>No field value or count iterator passed to method');
 
             return false;
 
@@ -233,14 +209,8 @@ class markup extends \q\render {
         // look for required markup ##
         if ( ! isset( self::$markup[$field] ) ) {
 
-			// self::$log['notice'][] = 'Field: '.$field.' does not have required markup defined in $args -- markup => '.$field;
-			
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' =>  'Field: '.$field.' does not have required markup defined in $args -- markup => '.$field
-			]);
+			h::log( self::$args['group'].'~>n:>Field: "'.$field.'" does not have required markup defined in $args->markup->$field' );
 
             // bale if not found ##
             return false;
@@ -270,14 +240,8 @@ class markup extends \q\render {
             ! self::get_placeholder( $placeholder )
         ) {
 
-			// self::$log['notice'][] = 'Placeholder: '.$placeholder.' is not in the passed markup template';
-			
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Placeholder: '.$placeholder.' is not in the passed markup template'
-			]);
+			h::log( self::$args['group'].'~>n:>Placeholder: "'.$placeholder.'" is not in the passed markup template' );
 
             return false;
 
@@ -291,14 +255,8 @@ class markup extends \q\render {
             ! $placeholders = self::get_placeholders( self::$markup[$field] ) 
         ) {
 
-			// self::$log['notice'][] = 'No placeholders found in passed string';
-			
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No placeholders found in passed string'
-			]);
+			h::log( self::$args['group'].'~>n:>No placeholders found in passed string' );
 
             return false;
 
@@ -357,14 +315,8 @@ class markup extends \q\render {
             is_null( $string ) 
         ) {
 
-			// self::$log['error'][] = 'No string value passed to method.';
-			
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No string value passed to method.'
-			]);
+			h::log( self::$args['group'].'~>e:>No string value passed to method' );
 
             return false;
 
@@ -372,14 +324,8 @@ class markup extends \q\render {
 
         if ( ! preg_match_all('~\%(\w+)\%~', $string, $matches ) ) {
 
-			// self::$log['notice'][] = 'No extra placeholders found in string to clean up - good!.';
-			
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No extra placeholders found in string to clean up - good!.'
-			]);
+			h::log( self::$args['group'].'~>n:>No extra placeholders found in string to clean up - good!' );
 
             return false;
 
@@ -426,14 +372,8 @@ class markup extends \q\render {
 			|| is_null( $markup )
 		) {
 
-			// h::log ('No string value passed to method.');
-			
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No placeholder or markkup value passed to method.'
-			]);
+			h::log( self::$args['group'].'~>e:>No placeholder or markkup value passed to method' );
 
             return false;
 
@@ -452,14 +392,8 @@ class markup extends \q\render {
             $needle != substr( $placeholder, -1 ) // returns last character ##
         ) {
 
-			// self::$log['notice'][] = 'Placeholder is not correctly formatted - missing % at start or end of passed string.';
-			
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Placeholder is not correctly formatted - missing % at start or end of passed string.'
-			]);
+			h::log( self::$args['group'].'~>e:>Placeholder: "'.$placeholder.'" is not correctly formatted - missing % at start or end.' );
 
             return false;
 
@@ -467,9 +401,7 @@ class markup extends \q\render {
 		
 		// h::log( 'Removing placeholder: "'.$placeholder.'"' );
 
-        // remove from args ##
-		// @todo - replace from all values keys in markup ##
-		// @todo -- does this actually work ??
+        // remove placeholder from markup ##
 		$markup = 
 			str_replace( 
             	$placeholder, 
@@ -477,14 +409,10 @@ class markup extends \q\render {
             	$markup
 			);
 		
-		// h::log( $markup );
+		// h::log( 'd:>'.$markup );
 
 		// log ##
-		render\log::add([
-			'key' => 'placeholder_removed', 
-			'field'	=> $placeholder,
-			'value' => core\method::backtrace([ 'level' => 2, 'return' => 'function' ])
-		]);
+		h::log( self::$args['group'].'~>placeholder_removed:>"'.$placeholder.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
         return $markup;

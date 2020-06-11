@@ -90,7 +90,7 @@ class method extends \q\render {
 		// validate passed args ##
         if ( ! $args = render\args::validate( $args ) ) {
 
-            render\log::render( $args );
+            // render\log::render( $args );
 
             return false;
 
@@ -114,11 +114,7 @@ class method extends \q\render {
 			// return false;
 
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' =>  'the_posts did not return any data'
-			]);
+			h::log( self::$args['group'].'~>n:query::posts did not return any data');
 
 		}
 
@@ -129,14 +125,10 @@ class method extends \q\render {
 			// || ! isset( $array['query']->posts ) 
 		){
 
-			h::log( 'Error in data returned from query::posts' );
+			// h::log( 'Error in data returned from query::posts' );
 
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' =>  'Error in data returned from query::posts'
-			]);
+			h::log( self::$args['group'].'~>n:Error in data returned from query::posts');
 
 		}
 		
@@ -146,7 +138,8 @@ class method extends \q\render {
 			|| 0 == count( $array['query']->posts )
 		){
 
-			h::log( 'No results returned from the_posts' );
+			// h::log( 'No results returned from the_posts' );
+			h::log( self::$args['group'].'~>n:No results returned from query::posts');
 
 		// we have posts, so let's add some charm ##
 		} else {
@@ -172,7 +165,7 @@ class method extends \q\render {
         render\markup::prepare();
 
         // optional logging to show removals and stats ##
-        render\log::render( $args );
+        // render\log::render( $args );
 
         // return or echo ##
         return render\output::return();

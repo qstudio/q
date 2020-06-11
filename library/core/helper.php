@@ -260,10 +260,33 @@ class helper extends \Q {
      */
     public static function log( $args = null )
     {
-
-		// pass to log::add();
+		
+		// shift callback level, as we added another level.. ##
+		\add_filter( 
+			'q/core/log/traceback/function', function () {
+			return 4;
+		});
+		\add_filter( 
+			'q/core/log/traceback/file', function () {
+			return 3;
+		});
+		
+		// pass to core\log::set();
 		return core\log::set( $args );
 
+	}
+	
+
+
+	/**
+     * Write to WP Error Log directly, not via core\log
+     *
+     * @since       4.1.0
+     * @return      void
+     */
+    public static function debug( $args = null )
+    {
+		
 		// error_log( $args );
 
 		// sanity ##

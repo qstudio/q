@@ -23,11 +23,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Error in passed parameter $args'
-			]);
+			h::log( self::$args['group'].'~>e:Error in passed parameter $args');
 
             return false;
 
@@ -61,11 +57,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Error extracting field list from passed data'
-			]);
+			h::log( self::$args['group'].'~>e:Error extracting field list from passed data');
 
             return false;
 
@@ -98,11 +90,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Fields array is empty, so nothing to process...'
-			]);
+			h::log( self::$args['group'].'~>n:Fields array is empty, so nothing to process...');
 
             return false;
 
@@ -131,7 +119,12 @@ class get extends \q\render {
 		}
 
         // get fields ##
-		$array = \get_fields( isset( self::$args['config']['post']->ID ) ? self::$args['config']['post']->ID : false );
+		$array = 
+			\get_fields( 
+				isset( self::$args['config']['post']->ID ) ? 
+				self::$args['config']['post']->ID : 
+				false 
+			);
 		
 		// h::log( $array );
 
@@ -142,11 +135,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'notice', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Post: '.$post.' has no ACF field data or corrupt data returned'
-			]);
+			h::log( self::$args['group'].'~>n:Post has no ACF field data or corrupt data returned');
 
             return false;
 
@@ -179,11 +168,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'No valid ACF field group returned for Group: "'.$group.'"'
-			]);
+			h::log( self::$args['group'].'~>e:No valid ACF field group returned for Group: "'.$group.'"');
 
             return false;
 
@@ -220,11 +205,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Error in passed $args'
-			]);
+			h::log( self::$args['group'].'~>e:Error in passed $args');
 
             return false;
 
@@ -258,11 +239,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			render\log::add([
-				'key' => 'error', 
-				'field'	=> __FUNCTION__,
-				'value' => 'Error in passed $args or $fields'
-			]);
+			h::log( self::$args['group'].'~>e:Error in passed $args or $fields');
 
             return false;
 
