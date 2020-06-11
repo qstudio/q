@@ -197,7 +197,7 @@ if ( ! class_exists( 'Q' ) ) {
                 ! class_exists( 'ACF' )
             ) {
 
-                helper::log( 'Q requires ACF to run correctly..' );
+                helper::log( 'e:>Q requires ACF to run correctly..' );
 
                 return false;
 

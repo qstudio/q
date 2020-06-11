@@ -30,8 +30,8 @@ class enqueue extends \Q {
         }
 
         // load templates ##
-        self::load_properties();
-
+		self::load_properties();
+		
         if ( ! \is_admin() ) {
 
             // plugin css / js -- includes defaults and resets and snippets from controllers ##
@@ -70,12 +70,12 @@ class enqueue extends \Q {
 
         // check for what's needed ##
         if (
-            ! class_exists( 'q_theme' )
+            ! class_exists( 'q_theme' ) // how to get around this ?? ##
         ) {
 
-            h::log( 'Q requires q_theme to run correctly..' );
+            h::log( 'e:>@todo --- Q requires q_theme to run correctly..' );
 
-            return false;
+            // return false;
 
         }
 
@@ -456,7 +456,7 @@ class enqueue extends \Q {
             && 1 == self::$options->theme_css
         ) {
 
-            // h::log( 'Running CSS...' );
+            // h::log( 'd:>Running CSS...' );
 
             // IE ##
             if ( theme_h::get( "ui/asset/css/ie.css", "return" ) ) {
@@ -498,7 +498,7 @@ class enqueue extends \Q {
                 // file exists check ##
                 if ( $uri = theme_h::get( "ui/asset/css/".$file, "return" ) ) {
 
-                    // h::log( 'Loading up file: '.$file );
+                    // h::log( 'd:>Loading up file: '.$file );
 
                     \wp_register_style( $handle, $uri, '', \q_theme::version );
                     \wp_enqueue_style( $handle );
@@ -526,7 +526,7 @@ class enqueue extends \Q {
             && 1 == self::$options->theme_scss    
         ) {
 
-            // h::log( 'Running SCSS...' );
+            // h::log( 'd:>Running SCSS...' );
 
             // IE ##
             if ( theme_h::get( "ui/scss/ie.css", "return" ) ) {
@@ -567,10 +567,12 @@ class enqueue extends \Q {
 
 				if ( $found ) break;
 
+				// h::log( "d:>looking for: ui/asset/css/".$file );
+
                 // file exists check ##
                 if ( $uri = theme_h::get( "ui/asset/css/".$file, "return" ) ) {
 
-                    // h::log( 'Loading up file: '.$file );
+                    // h::log( 'd:>Loading up file: '.$file );
 
                     \wp_register_style( $handle, $uri, '', \q_theme::version );
                     \wp_enqueue_style( $handle );
@@ -586,7 +588,7 @@ class enqueue extends \Q {
             }
 
             // no asset found, so note this ##
-            if ( ! $found  ) h::log( 'Error loading SCSS Asset' );
+            if ( ! $found  ) h::log( 'n:>Error loading SCSS Asset' );
 
         }
 
@@ -596,7 +598,13 @@ class enqueue extends \Q {
             && 1 == self::$options->theme_js
         ) {
 
-            \wp_register_script( 'theme-js', theme_h::get( "ui/asset/javascript/scripts.js", 'return' ), array( 'jquery' ), \q_theme::version, true );
+            \wp_register_script( 
+				'theme-js', 
+				theme_h::get( "ui/asset/javascript/scripts.js", 'return' ), 
+				array( 'jquery' ), 
+				\q_theme::version, 
+				true 
+			);
             \wp_enqueue_script( 'theme-js' );
 
             // pass variable values defined in parent class ##
@@ -635,14 +643,14 @@ class enqueue extends \Q {
             // loop over all files in priority, loading whichever is found first ##
             foreach( $files as $file ) {
 
-				// h::log( 'Loading up file: '.$file );
+				// h::log( 'd:>looking up file: '.$file );
 
 				if ( $found ) break;
 
                 // file exists check ##
                 if ( $uri = theme_h::get( "ui/asset/javascript/".$file, "return" ) ) {
 
-                    // h::log( 'Loading up file: '.$file );
+                    // h::log( 'd:>Loading up file: '.$file );
 
                     // \wp_register_style( $handle, $uri, '', \q_theme::version );
 					// \wp_enqueue_style( $handle );

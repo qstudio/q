@@ -11,7 +11,11 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		hub: {
 			all: {
-				src: ['../*/Gruntfile.js'],
+				// src: ['../*/Gruntfile.js'],
+				src: [
+					'../../themes/q*/Gruntfile.js', // q* themes ##
+					'../../plugins/q*/Gruntfile.js' // q* plugins ##
+				], 
 				tasks: 'default'
 		  	},
 		},

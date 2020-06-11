@@ -6,9 +6,9 @@ use q\core;
 use q\core\helper as h;
 
 // custom error handling ##
-ini_set( 'log_errors', 1 );
-ini_set( 'error_log', WP_CONTENT_DIR . '/debug.log' );
-set_error_handler( [ '\\q\\core\\log', 'error_handler' ] );
+// ini_set( 'log_errors', 1 );
+// ini_set( 'error_log', WP_CONTENT_DIR . '/debug.log' );
+// set_error_handler( [ '\\q\\core\\log', 'error_handler' ] );
 
 // run ##
 core\log::run();
@@ -18,7 +18,7 @@ class log extends \Q {
 	// track who called what ##
 	public static 
 		$backtrace 		= false,
-		$delimit 		= [
+		$delimiters 		= [
 			'array' 	=> '~>',
 			'value' 	=> ':>'
 		],
@@ -28,17 +28,44 @@ class log extends \Q {
 			'n' 		=> 'notice',
 			'l' 		=> 'log'
 		],
-		$key_array 		= []
+		$key_array 		= [],
+		$on_run 		= true,
+		$on_shutdown 	= true
 	;
 
 
 	public static function run(){
 
-		// earliest possible action.. empty log
-		self::empty();
+		// filter pre-defined actions ##
+		$on_run 		= \apply_filters( 'q/core/log/on_run', self::$on_run );
+		$on_shutdown 		= \apply_filters( 'q/core/log/on_shutdown', self::$on_shutdown );
 
-		// latest possible action, write to error_log ##
-		register_shutdown_function( [ get_class(), 'shutdown' ] );
+		// on_run set to true ##
+
+		if ( $on_run ) {
+
+			// earliest possible action.. empty log ##
+			self::empty();
+
+			// also, pre-ajax ##
+			if( 
+				defined('DOING_AJAX') 
+				&& DOING_AJAX
+				) {
+
+					// core\helper::debug( 'DOING AJAX...' );
+					self::empty();
+
+			}
+
+		}
+
+		if ( $on_shutdown ) {
+
+			// latest possible action, write to error_log ##
+			register_shutdown_function( [ get_class(), 'shutdown' ] );
+
+		}
 
 	}
 
@@ -152,7 +179,7 @@ class log extends \Q {
 		}
 
 		// filter delimters ##
-		self::$delimit = \apply_filters( 'q/core/log/delimit', self::$delimit );
+		self::$delimiters = \apply_filters( 'q/core/log/delimit', self::$delimiters );
 
 		// string ##
 		if ( 
@@ -163,7 +190,7 @@ class log extends \Q {
 
 			// string might be a normal string, or contain markdown to represent an array of data ##
 			// check for fixed pattern 
-			if ( ! core\method::strposa( $args, self::$delimit ) ) {
+			if ( ! core\method::strposa( $args, self::$delimiters ) ) {
 
 				// core\helper::debug( 'string has no known delimit, so treat as log:>value' );
 				// return $args['log'][] = $args.self::$backtrace; 
@@ -173,14 +200,14 @@ class log extends \Q {
 
 			// string ##
 			if ( 
-				false === strpos( $args, self::$delimit['array'] ) 
-				&& false !== strpos( $args, self::$delimit['value'] ) 
+				false === strpos( $args, self::$delimiters['array'] ) 
+				&& false !== strpos( $args, self::$delimiters['value'] ) 
 			) {
 			
 				// core\helper::debug( 'only key:value delimiters found..' );
 
 				// get some ##
-				$key_value = explode( self::$delimit['value'], $args );
+				$key_value = explode( self::$delimiters['value'], $args );
 				// core\helper::debug( $key_value );
 
 				$key = $key_value[0];
@@ -195,20 +222,20 @@ class log extends \Q {
 
 			// array ##
 			if ( 
-				false !== strpos( $args, self::$delimit['array'] ) 
-				&& false !== strpos( $args, self::$delimit['value'] ) 
+				false !== strpos( $args, self::$delimiters['array'] ) 
+				&& false !== strpos( $args, self::$delimiters['value'] ) 
 			) {
 			
 				// core\helper::debug( 'both array and value delimiters found..' );
 
 				// get some ##
-				$array_key_value = explode( self::$delimit['value'], $args );
+				$array_key_value = explode( self::$delimiters['value'], $args );
 				// core\helper::debug( $array_key_value );
 
 				$value_keys = $array_key_value[0];
 				$value = $array_key_value[1];
 
-				$keys = explode( self::$delimit['array'], $value_keys );
+				$keys = explode( self::$delimiters['array'], $value_keys );
 				
 				// core\helper::debug( $keys );
 				// core\helper::debug( "l:>$value" );
@@ -492,10 +519,11 @@ class log extends \Q {
 				|| is_object( $return ) 
 			) {
 				// error_log( print_r( $return, true ) );
-				trigger_error( print_r( $return, true ) );
+				self::error_log( print_r( $return, true ) );
             } else {
 				// error_log( $return );
-				trigger_error( $return );
+				// trigger_error( $return );
+				self::error_log( $return );
             }
 
 		}
@@ -506,15 +534,19 @@ class log extends \Q {
 	}
 
 
-
-	public static function error_handler( $errType, $errStr, $errFile, $errLine, $errContext )
+	/**
+	 * Replacement error_log function, with custom return format 
+	 * 
+	 * @since 4.1.0
+	 */ 
+	public static function error_log( $log )
 	{
 		
-		$displayErrors = ini_get( 'display_errors' );
+		// $displayErrors 	= ini_get( 'display_errors' );
 		$log_errors     = ini_get( 'log_errors' );
 		$error_log      = ini_get( 'error_log' );
 
-		if( $displayErrors ) echo $errStr.PHP_EOL;
+		// if( $displayErrors ) echo $errStr.PHP_EOL;
 
 		if( $log_errors )
 		{
@@ -523,7 +555,7 @@ class log extends \Q {
 				'%s', 
 				// date('d-m H:i'), 
 				// date('H:i'), 
-				$errStr, 
+				$log, 
 				// $errFile, 
 				// $errLine 
 			);

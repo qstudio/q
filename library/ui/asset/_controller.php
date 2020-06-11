@@ -25,10 +25,10 @@ class asset extends \Q {
     {
 
 		return $array = [
-			'enqueue' => h::get( 'ui/asset/enqueue.php', 'return', 'path' ),
-			'minifier' => h::get( 'ui/asset/minifier.php', 'return', 'path' ),
-			'css' => h::get( 'ui/asset/css.php', 'return', 'path' ),
-			'javascript' => h::get( 'ui/asset/javascript.php', 'return', 'path' )
+			'enqueue' => self::get_plugin_path( 'library/ui/asset/enqueue.php' ),
+			'minifier' => self::get_plugin_path( 'library/ui/asset/minifier.php' ),
+			'css' => self::get_plugin_path( 'library/ui/asset/css.php' ),
+			'javascript' => self::get_plugin_path( 'library/ui/asset/javascript.php' )
 		];
 
     }

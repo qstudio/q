@@ -32,7 +32,7 @@ class src extends render\type {
         // h::log( 'Image handle: '.$handle );
 
 		// start empty ##
-        $string = null;
+        $string = '';
 
         // h::log( 'Image ID: '.$wp_post );
 

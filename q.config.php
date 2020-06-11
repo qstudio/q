@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) OR exit;
 return [
 
 	// comments are ok ##
-	'allow_comments' 		=> true,
+	'allow_comments' 			=> true,
 
 	// date format ##
 	'date_format'       		=> 'F j, Y',

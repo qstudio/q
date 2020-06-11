@@ -27,25 +27,20 @@ class controller extends \Q {
 		return $array = [
 
 			// ui methods ##
-			'method' => h::get( 'ui/method.php', 'return', 'path' ),
+			'method' => self::get_plugin_path( 'library/ui/method.php' ),
 
-			// template config ##
-			'template' => h::get( 'ui/template.php', 'return', 'path' ),
+			// template config @todo... ?? ##
+			'template' => self::get_plugin_path( 'library/ui/template.php' ),
 
 			// widgets... really?? ##
-			'widget' => h::get( 'ui/widget.php', 'return', 'path' ),
+			'widget' => self::get_plugin_path( 'library/ui/widget.php' ),
 
 			// assets ##
-			'asset' => h::get( 'ui//asset/_controller.php', 'return', 'path' ),
+			'asset' => self::get_plugin_path( 'library/ui/asset/_controller.php' ),
 
 			// template modules ##
-			'module' => h::get( 'ui/module/_controller.php', 'return', 'path' ),
+			'module' => self::get_plugin_path( 'library/ui/module/_controller.php' ),
 
-			// render ##
-			// 'render' => h::get( 'ui/render/_controller.php', 'return', 'path' ), // NEW ##
-
-			// 'field' => h::get( 'ui/field/_controller.php', 'return', 'path' ), // @todo - deprecate ##
-			
 		];
 
 

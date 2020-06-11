@@ -3,14 +3,14 @@
 namespace q\core;
 
 use q\core;
-// use q\core\helper as helper;
+use q\core\helper as h;
 // use q\theme\template as template;
 
 // Q Device ##
 use q\device\core\core as device;
 
 // load it up ##
-#\q\core\helper::run();
+#\q\core\h::run();
 
 class helper extends \Q {
 
@@ -61,22 +61,22 @@ class helper extends \Q {
         $needle = '.staging'; # '.qlocal.com';
         
         $urlparts = parse_url( \network_site_url() );
-        // helper::log( $urlparts );
+        // h::log( $urlparts );
         $domain = $urlparts['host'];
         
-        // helper::log( 'network_site_url: '.\network_site_url() );
-        // helper::log( 'domain: '.$domain );
+        // h::log( 'network_site_url: '.\network_site_url() );
+        // h::log( 'domain: '.$domain );
 
         // if ( in_array( $domain, $loopbacks ) ) {
         if ( strpos( $domain, $needle ) !== false ) {
 
-            // helper::log( 'On staging..' );
+            // h::log( 'On staging..' );
 
             return true;
             
 		}
 
-        // helper::log( 'Not on staging...' );
+        // h::log( 'Not on staging...' );
 
         return false;
         
@@ -138,15 +138,19 @@ class helper extends \Q {
         
         #if ( ! defined( 'TEMPLATEPATH' ) ) {
 
-        #    helper::log( 'MISSING for: '.$include.' - AJAX = '.( \wp_doing_ajax() ? 'true' : 'false' ) );
+        #    h::log( 'MISSING for: '.$include.' - AJAX = '.( \wp_doing_ajax() ? 'true' : 'false' ) );
 
-        #}
+		#}
+		
+		// h::log( 'd:>h::get class/include: '.$class.'/'.$include );
 
         // perhaps this is a child theme ##
         if ( 
-            defined( 'Q_CHILD_THEME' )
-            && Q_CHILD_THEME
-            #&& \is_child_theme() 
+            // defined( 'Q_CHILD_THEME' )
+            // && Q_CHILD_THEME
+			// && 
+			// \is_child_theme() 
+			'TEMPLATEPATH' !== 'STYLESHEETPATH'
             && file_exists( \get_stylesheet_directory().'/'.$path.$include )
         ) {
 
@@ -157,8 +161,6 @@ class helper extends \Q {
                 $template = \get_stylesheet_directory().'/'.$path.$include;  // template path ##
 
             }
-
-            #if ( self::$debug ) self::log( 'child theme: '.$template );
 
         }
 
@@ -179,12 +181,13 @@ class helper extends \Q {
 
         // load from extended Plugin ##
         } elseif ( 
-            ! is_null( $class )
+			! is_null( $class )
+			&& method_exists( $class, 'get_plugin_path' )
             && file_exists( call_user_func( array( $class, 'get_plugin_path' ), $path.$include ) )
             // file_exists( self::get_plugin_path( $path.$include ) )
         ) {
 
-            // helper::log( 'helper::get class: '.$class );
+            // h::log( 'd:>h::get class: '.$class );
 
             // $template = self::get_plugin_url( $path.$include ); // plugin URL ##
             $template = call_user_func( array( $class, 'get_plugin_url' ), $path.$include );
@@ -196,7 +199,7 @@ class helper extends \Q {
                 
             } 
 
-            // helper::log( 'extended plugin: '.$template );
+            // h::log( 'extended plugin: '.$template );
 
         }
 
@@ -225,19 +228,19 @@ class helper extends \Q {
             // echo or return string ##
             if ( 'return' === $return ) {
 
-                #if ( self::$debug ) helper::log( 'returned' );
+                #if ( self::$debug ) h::log( 'returned' );
 
                 return $template;
 
             } elseif ( 'require' === $return ) {
 
-                #if ( self::$debug ) helper::log( 'required' );
+                #if ( self::$debug ) h::log( 'required' );
 
                 return require_once( $template );
 
             } else {
 
-                #if ( self::$debug ) helper::log( 'echoed..' );
+                #if ( self::$debug ) h::log( 'echoed..' );
 
                 echo $template;
 
@@ -320,28 +323,16 @@ class helper extends \Q {
 
 		} 
 
-		// we can also log to a property ( self::$log['caller'][].. ) if true === $arsg['internal'] ##
-		// @todo ## 
-
 		// debugging is on in WP, so write to error_log ##
         if ( true === WP_DEBUG ) {
 
-            // $trace = debug_backtrace();
-			// $caller = $trace[1];
+			// get caller ##
 			$backtrace = core\method::backtrace();
 
-            // $suffix = sprintf(
-            //     __( ' - %s%s() %s:%d', 'Q' )
-            //     ,   isset($caller['class']) ? $caller['class'].'::' : ''
-            //     ,   $caller['function']
-            //     ,   isset( $caller['file'] ) ? $caller['file'] : 'n'
-            //     ,   isset( $caller['line'] ) ? $caller['line'] : 'x'
-            // );
-
             if ( is_array( $log ) || is_object( $log ) ) {
-                trigger_error( print_r( $log, true ).' -> '.$backtrace );
+                core\log::error_log( print_r( $log, true ).' -> '.$backtrace );
             } else {
-                trigger_error( $log.' -> '.$backtrace );
+                core\log::error_log( $log.' -> '.$backtrace );
             }
 
 		}
@@ -399,13 +390,13 @@ class helper extends \Q {
         // property already loaded ##
         if ( self::$device ) { 
         
-            // helper::log( '$device set to: '.self::$device );
+            // h::log( '$device set to: '.self::$device );
             
             // filter ##
             $string = \apply_filters( 'q/device/handle', self::$device );
 
             // log ##
-            // helper::log( '$device filtered to: '.self::$device );
+            // h::log( '$device filtered to: '.self::$device );
 
             // kick it back ##
             return $string; 
@@ -482,7 +473,7 @@ class helper extends \Q {
         $string = \apply_filters( 'q/device/handle', $handle );
 
         // log ##
-        // helper::log( '$device filtered to: '.$string );
+        // h::log( '$device filtered to: '.$string );
 
         // kick it back, setting property ##
         return self::$device = $string;

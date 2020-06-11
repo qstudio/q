@@ -22,7 +22,7 @@ class load extends \Q {
 			|| ! is_array( $array )
 		) {
 
-			h::log( 'Error in passed params' );
+			h::log( 'e:>Error in passed params' );
 
 			return false;
 
@@ -39,7 +39,7 @@ class load extends \Q {
 			! $array
 		){
 
-			h::log( 'No libraries to load from: "'.core\method::backtrace([ 'return' => 'class_function' ]).'"' );
+			h::log( 'e:>No libraries to load from: "'.core\method::backtrace([ 'return' => 'class_function' ]).'"' );
 
 		}
 
@@ -54,13 +54,13 @@ class load extends \Q {
 				|| is_null( $value )
 			) {
 
-				h::log( 'Error loading library: '.$key );
+				h::log( 'e:>Error loading library: '.$key );
 
 				continue;
 
 			}
 
-			// h::log( 'Loading: '.$key.' from: '.$value );
+			// h::log( 'd:>Loading: '.$key.' from: '.$value );
 
 			require_once( $value );
 
