@@ -339,9 +339,9 @@ class helper extends \Q {
             // );
 
             if ( is_array( $log ) || is_object( $log ) ) {
-                error_log( print_r( $log, true ).' -> '.$backtrace );
+                trigger_error( print_r( $log, true ).' -> '.$backtrace );
             } else {
-                error_log( $log.' -> '.$backtrace );
+                trigger_error( $log.' -> '.$backtrace );
             }
 
 		}

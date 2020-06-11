@@ -5,6 +5,11 @@ namespace q\core;
 use q\core;
 use q\core\helper as h;
 
+// custom error handling ##
+ini_set( 'log_errors', 1 );
+ini_set( 'error_log', WP_CONTENT_DIR . '/debug.log' );
+set_error_handler( [ '\\q\\core\\log', 'error_handler' ] );
+
 // run ##
 core\log::run();
 
@@ -455,7 +460,7 @@ class log extends \Q {
 			&& ! isset( self::$log[ $key ] ) 
 		) {
 
-			core\helper::debug( 'd:>Log key requested returned no data: "'.$key.'"' );
+			core\helper::debug( '"'.$key.'" Log is empty.' );
 
 			return false;
 
@@ -486,9 +491,11 @@ class log extends \Q {
 				is_array( $return ) 
 				|| is_object( $return ) 
 			) {
-                error_log( print_r( $return, true ) );
+				// error_log( print_r( $return, true ) );
+				trigger_error( print_r( $return, true ) );
             } else {
-                error_log( $return );
+				// error_log( $return );
+				trigger_error( $return );
             }
 
 		}
@@ -498,7 +505,33 @@ class log extends \Q {
 
 	}
 
-	
+
+
+	public static function error_handler( $errType, $errStr, $errFile, $errLine, $errContext )
+	{
+		
+		$displayErrors = ini_get( 'display_errors' );
+		$log_errors     = ini_get( 'log_errors' );
+		$error_log      = ini_get( 'error_log' );
+
+		if( $displayErrors ) echo $errStr.PHP_EOL;
+
+		if( $log_errors )
+		{
+			$message = sprintf( 
+				// '[%s] %s (%s, %s)', 
+				'%s', 
+				// date('d-m H:i'), 
+				// date('H:i'), 
+				$errStr, 
+				// $errFile, 
+				// $errLine 
+			);
+			file_put_contents( $error_log, $message.PHP_EOL, FILE_APPEND );
+		}
+	}
+
+
 
 	/**
      * Clear Temp Log
