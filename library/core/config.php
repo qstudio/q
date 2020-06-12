@@ -16,34 +16,27 @@ class config extends \Q {
 	 */
 	public static function get( $field = null ) {
 
-		// starts with an empty array ##
-		$config = [];
-
-		// load config from JSON ##
-		if (
-			$array = include( self::get_plugin_path('q.config.php') )
-		){
-
-			// h::log( 'd:>'.self::get_plugin_path('q.config.php') );
-
-			// check if we have a 'config' key.. and take that ##
-			if ( is_array( $array ) ) {
-
-				// h::log( 'd:>Q config NOT, empty...loading' );
-
-				// assign ##
-				$config = $array;
-
-			}
-
-		}
+		// try to load config from Q core ##
+		$config = self::get_core();
 
 		// h::log( $config );
-		// h::log( $config[$field] );
+		// h::log( 'd:>'.$config[$field] );
 
 		// filter all config early ##
 		// Q = 1, Q Plugin = 10, Q Parent = 100, Q Child = 1000
 		$config = \apply_filters( 'q/config/get/all', $config );
+
+		// perhaps the filters blitzed config... check for an empty array, if so reload ##
+		if (
+		 	! $config
+		 	|| ! is_array( $config )
+		 	|| empty( $config )
+		){
+
+			// try to load again config from Q core ##
+			$config = self::get_core();
+
+		}
 
 		// now, check if we are looking for a specific field ##
 		if (
@@ -75,5 +68,32 @@ class config extends \Q {
 
 	}
 
+
+	private static function get_core()
+	{
+
+		// load config from JSON ##
+		if (
+			$array = include( self::get_plugin_path('q.config.php') )
+		){
+
+			// h::log( 'd:>'.self::get_plugin_path('q.config.php') );
+
+			// check if we have a 'config' key.. and take that ##
+			if ( is_array( $array ) ) {
+
+				// h::log( 'd:>Q config NOT, empty...loading' );
+
+				// assign ##
+				return $array;
+
+			}
+
+		}
+
+		// bad news ##
+		return [];
+
+	}
 
 }
