@@ -267,7 +267,7 @@ class navigation extends \q\get {
      * @since       1.3.3
      * @return      string       HTML Menu
      */
-    public static function nav_menu( $args = array() )
+    public static function nav_menu_OLD( $args = array() )
     {
 
         // // get the_post ##
@@ -303,6 +303,168 @@ class navigation extends \q\get {
         return false;
 
 	}
+
+
+	
+    /**
+    * Render nav menu
+    *
+    * @since       1.3.3
+    * @return      string   HTML
+    */
+    public static function nav_menu( $args = array(), $blog_id = 1 )
+    {
+
+        #h::log( $args );
+
+        // merge theme_location into passed args ##
+        $args['theme_location'] = isset( $args['theme_location'] ) ? $args['theme_location'] : $args['menu'] ;
+
+        // try and grab data, or kick back false ##
+        // if ( ! $args = wordpress::get_nav_menu( $args ) ) { 
+
+        //      h::log( 'kicked here..' );
+
+        //      return false; 
+            
+        // }
+
+        // Parse incoming $args into an array and merge it with $defaults - caste to object ##
+        $args = ( object )wp_parse_args( 
+            $args
+            , core\config::get( 'nav_menu' ) 
+        );
+        
+        //$args = \wp_parse_args( $args, self::$the_nav_menu );
+		#h::log( $args );
+        
+        if ( ! \has_nav_menu( $args->menu ) ) {
+        
+            // h::log( 'd:>! has nav menu: '.$args->theme_location );
+
+            return false;
+
+        }
+
+        // pass to mulltisite handler ##
+        self::multisite_nav_menu(
+            $args,
+            $blog_id
+        );
+
+?>
+
+<?php
+
+    }
+
+
+
+    /**
+    * Multisite network nav menus
+    *
+    * @link        http://wordpress.stackexchange.com/questions/26367/use-wp-nav-menu-to-display-a-menu-from-another-site-in-a-network-install
+    * @global      Integer     $blog_id
+    * @param       Array       $args
+    * @param       Integer     $origin_id
+    * @return type
+    */
+    public static function multisite_nav_menu( $args = array(), $blog_id = 1 ) {
+
+        #global $blog_id;
+        $blog_id = \absint( $blog_id );
+
+        #h::log( 'nav_menu - $blog_id: '.$blog_id.' / $origin_id: '.$origin_id );
+
+        if ( 
+            ! \is_multisite() 
+        ) {
+
+            #h::log( $args );
+            \wp_nav_menu( $args );
+            
+            return;
+
+        }
+
+        \switch_to_blog( $blog_id );
+        #h::log( 'get_current_blog_id(): '.\get_current_blog_id()  );
+        #h::log( $args );
+	    \wp_nav_menu( $args );
+        \restore_current_blog();
+
+        return;
+
+    }
+
+
+
+    /**
+    * Get Multisite network nav menus items
+    *
+    * @link        http://wordpress.stackexchange.com/questions/26367/use-wp-nav-menu-to-display-a-menu-from-another-site-in-a-network-install
+    * @global      Integer     $blog_id
+    * @param       Array       $args
+    * @param       Integer     $origin_id
+    * @return      Array
+    */
+    public static function multisite_nav_menu_items( $args = array(), $origin_id = 1 ) {
+
+        global $blog_id;
+        $origin_id = \absint( $origin_id );
+
+        #pr( $args );
+
+        // not WP Multisite OR on correct site ##
+        if ( ! \is_multisite() || $origin_id == $blog_id ) {
+
+            $wp_get_nav_menu_items = \wp_get_nav_menu_items( $args );
+
+        } else {
+
+            // switch to the correct blog ##
+            \switch_to_blog( $origin_id );
+
+            // grab the nav menu items ##
+            \wp_get_nav_menu_items( $args );
+
+            // restore the main blog ##
+            \restore_current_blog();
+
+        }
+
+        // nothing found ##
+        if ( ! $wp_get_nav_menu_items ) { return false; }
+
+        #pr( $wp_get_nav_menu_items );
+
+        // drop the top item - as we don't need this ##
+        unset( $wp_get_nav_menu_items[0] );
+
+        // remove custom links and not viewable items ##
+        foreach ( $wp_get_nav_menu_items as $key => $value ) {
+
+            #pr( $value->classes[0] );
+
+            // remove items ##
+            if (
+                    'custom' == $value->object // custom links ##
+                || 'landing-hide' == $value->classes[0] // landing page hiders ##
+            ) {
+
+                #pr( $value->object );
+
+                // out ##
+                unset( $wp_get_nav_menu_items[$key] );
+
+            }
+
+        }
+
+        // return the nav menu items ##
+        return $wp_get_nav_menu_items;
+
+    }
 
 
 }

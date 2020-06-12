@@ -93,14 +93,14 @@ class controller extends \Q {
 
             'q_option_test'   => array(
                 'key' => 'group_q_option_test',
-                'title' => 'Testing Options',
+                'title' => 'Tests & Debugging',
                 'fields' => array(
                     'debug' => array(
                         'key' => 'field_q_option_debug',
-                        'label' => 'Debugging',
+                        'label' => 'Enable Debugging',
                         'name' => 'q_option_debug',
                         'type' => 'true_false',
-                        'instructions' => 'Control plugin debug settings',
+                        // 'instructions' => 'Control plugin debug settings',
                         'required' => 0,
                         'conditional_logic' => 0,
                         'wrapper' => array(

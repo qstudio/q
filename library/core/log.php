@@ -30,7 +30,8 @@ class log extends \Q {
 		],
 		$key_array 		= [],
 		$on_run 		= true,
-		$on_shutdown 	= true
+		$on_shutdown 	= true,
+		$shutdown_key 	= 'error' // control log key ##
 	;
 
 
@@ -640,7 +641,7 @@ class log extends \Q {
     public static function shutdown(){
 
 		// filter what to write to log - defaults to "error" key ##
-		$key = \apply_filters( 'q/core/log/default', 'error' );
+		$key = \apply_filters( 'q/core/log/default', self::$shutdown_key );
 		// $key = \apply_filters( 'q/core/log/default', null );
 
 		// write specific key, as filter might return false / null ##

@@ -148,9 +148,7 @@ class helper extends \Q {
         if ( 
             // defined( 'Q_CHILD_THEME' )
             // && Q_CHILD_THEME
-			// && 
-			// \is_child_theme() 
-			'TEMPLATEPATH' !== 'STYLESHEETPATH'
+			\get_template_directory() !== \get_stylesheet_directory()
             && file_exists( \get_stylesheet_directory().'/'.$path.$include )
         ) {
 

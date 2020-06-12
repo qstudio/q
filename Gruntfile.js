@@ -24,15 +24,15 @@ module.exports = function(grunt) {
 		src: 'library/ui/asset/scss/index.scss',
 
 		// main destination file ##
-		dest: 'library/ui/asset/css/q.scss.theme.css',
+		dest: 'library/ui/asset/css/q.compiled.theme.css',
 
 		// minified destination file ##
-		dest_min: 'library/ui/asset/css/q.scss.theme.min.css',
+		dest_min: 'library/ui/asset/css/q.compiled.theme.min.css',
 
 		// object of files to clean up pre-compile ##
 		clean_dest: [
-			'library/ui/asset/css/q.scss.*.css', // regex to find all generated css files ##
-			'library/ui/asset/css/q.scss.*.map', // regex to find all generated map files ##
+			'library/ui/asset/css/q.compiled.*.css', // regex to find all generated css files ##
+			'library/ui/asset/css/q.compiled.*.map', // regex to find all generated map files ##
 		],
 
 		// scss files to watch ##

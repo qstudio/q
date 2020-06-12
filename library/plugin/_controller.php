@@ -1,28 +1,19 @@
 <?php
 
-namespace q\plugin;
+namespace q;
 
-// use q\core\core as core;
-use q\core\helper as helper;
-// use q\core\config as config;
+use q\core;
+use q\core\helper as h;
 
 // load it up ##
-\q\plugin\controller::run();
+\q\plugin::run();
 
-class controller extends \Q {
+class plugin extends \Q {
 
     public static function run()
     {
 
-        // load templates ##
-        self::load_libraries();
-
-        // if ( ! \is_admin() ) {
-
-        //     // load scripts early, so theme files can override ##
-        //     \add_action( 'wp_enqueue_scripts', array( get_class(), 'wp_enqueue_scripts' ), 2 );
-
-        // }
+        core\load::libraries( self::load() );
 
     }
 
@@ -32,19 +23,50 @@ class controller extends \Q {
     *
     * @since        2.0.0
     */
-    private static function load_libraries()
+    private static function load()
     {
 
-        // plugins ##
-        require_once self::get_plugin_path( 'library/plugin/acf.php' );
-        require_once self::get_plugin_path( 'library/plugin/github.php' );
-        require_once self::get_plugin_path( 'library/plugin/gravityforms.php' );
-        require_once self::get_plugin_path( 'library/plugin/google.php' );
-        // require_once self::get_plugin_path( 'library/plugin/getresponse.php' );
-        require_once self::get_plugin_path( 'library/plugin/facebook.php' );
-        require_once self::get_plugin_path( 'library/plugin/linkedin.php' );
-        require_once self::get_plugin_path( 'library/plugin/twitter.php' );
-        require_once self::get_plugin_path( 'library/plugin/youtube.php' );
+		return $array = [
+
+			// acf ##
+			'acf' => h::get( 'plugin/acf.php', 'return', 'path' ),
+
+			// github ##
+			'github' => h::get( 'plugin/github.php', 'return', 'path' ),
+
+			// gravityforms ##
+			'gravityforms' => h::get( 'plugin/gravityforms.php', 'return', 'path' ),
+
+			// google ##
+			'google' => h::get( 'plugin/google.php', 'return', 'path' ),
+
+			// facebook ##
+			'facebook' => h::get( 'plugin/facebook.php', 'return', 'path' ),
+
+			// linkedin ##
+			'linkedin' => h::get( 'plugin/linkedin.php', 'return', 'path' ),
+
+			// twitter ##
+			'twitter' => h::get( 'plugin/twitter.php', 'return', 'path' ),
+
+			// youtube ##
+			'youtube' => h::get( 'plugin/youtube.php', 'return', 'path' ),
+
+			// actions ##
+			// 'action' => h::get( 'plugin/action.php', 'return', 'path' ),
+
+			// plugins ##
+			// require_once self::get_plugin_path( 'library/plugin/acf.php' );
+			// require_once self::get_plugin_path( 'library/plugin/github.php' );
+			// require_once self::get_plugin_path( 'library/plugin/gravityforms.php' );
+			// require_once self::get_plugin_path( 'library/plugin/google.php' );
+			// // require_once self::get_plugin_path( 'library/plugin/getresponse.php' );
+			// require_once self::get_plugin_path( 'library/plugin/facebook.php' );
+			// require_once self::get_plugin_path( 'library/plugin/linkedin.php' );
+			// require_once self::get_plugin_path( 'library/plugin/twitter.php' );
+			// require_once self::get_plugin_path( 'library/plugin/youtube.php' );
+		
+		];
 
     }
 

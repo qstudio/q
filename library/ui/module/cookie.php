@@ -48,7 +48,7 @@ class cookie extends \Q {
     {
 
         $args = array(
-            'slug'      => 'greenheart_cookie'
+            'slug'      => 'q_module_cookie'
         );
 
         // assign slug ##
@@ -74,14 +74,14 @@ class cookie extends \Q {
         // check if the cookie exists ##
         if( ! self::get() ) {
 
-            h::log( 'First Hit..' );
+            // h::log( 'd:>First Hit..' );
 
             self::$value = 1; // first hit ##
 
         // if not add it ##
         } else {
 
-            h::log( 'Hit Before..' );
+            // h::log( 'd:>Hit Before..' );
 
             self::$value = self::get() + 1 ;
 
@@ -117,7 +117,7 @@ class cookie extends \Q {
 
         if ( headers_sent() ) {
     
-            h::log ("Can't change cookie " . self::$slug . " after sending headers.");
+            // h::log ("d:>Can't change cookie " . self::$slug . " after sending headers.");
 
             return false;
 
@@ -127,9 +127,9 @@ class cookie extends \Q {
         #$set = \setcookie( self::$slug, intval( self::$value ), 365 * DAY_IN_SECONDS, '/', NULL ); // COOKIEPATH, COOKIE_DOMAIN
         $set = setcookie( self::$slug, intval( self::$value ), time() - YEAR_IN_SECONDS, SITECOOKIEPATH );
 
-        h::log( $set );  
+        // h::log( $set );  
 
-        h::log( 'Set with value: '.intval( self::$value ) );
+        // h::log( 'd:>Set with value: '.intval( self::$value ) );
 
         // kick back ##
         return true;
@@ -155,7 +155,7 @@ class cookie extends \Q {
 
         // }
 
-        h::log( $_COOKIE );
+        // h::log( $_COOKIE );
 
         if ( ! isset( $_COOKIE[self::$slug] ) ) {
 
@@ -165,7 +165,7 @@ class cookie extends \Q {
 
         }
 
-        h::log( 'Cookie value: '.$_COOKIE[self::$slug] );
+        // h::log( 'Cookie value: '.$_COOKIE[self::$slug] );
 
         // kick it back ##
         return $_COOKIE[self::$slug];
@@ -246,13 +246,13 @@ class cookie extends \Q {
          
             setcookie( self::$slug, '', time() - 3600, '/' ); // empty value and old timestamp
         
-            h::log( 'Cookie Deleted.' );
+            // h::log( 'd:>Cookie Deleted.' );
 
             return true;
 
         }
 
-        h::log( 'No Cookie Found.' );
+        // h::log( 'd:>No Cookie Found.' );
         
         return false;
 
@@ -274,7 +274,7 @@ class cookie extends \Q {
 
 ?>
 <script>
-var $q_cookie_name = 'greenheart_cookie';
+var $q_cookie_name = 'q_module_cookie';
 var $q_cookie_value = 1;
 var $document = false;
 // var $element = false;
@@ -283,7 +283,7 @@ var className = 'hasScrolled';
 // FINDING AND BINDING
 jQuery( document ).ready( function(){
 
-    // $q_cookie_name = 'greenheart_cookie';
+    // $q_cookie_name = 'q_module_cookie';
     $q_cookie_value = Number( readCookie( $q_cookie_name ) );
     $document = jQuery( document );
     // $element = jQuery('#some-element'),

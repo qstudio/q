@@ -73,14 +73,15 @@ class option extends \Q {
     public static function filter_acf_library( $field )
     {
 
-        // helper::log( $field['choices'] );
+		// h::log( 'd:>here..' );
+        h::log( $field['choices'] );
 
         // empty array ##
         $array = [];
 
         foreach( $field['choices'] as $key => $value ) {
 
-            // helper::log( 'working: '.$key );
+            // h::log( 'working: '.$key );
 
             // add to array ##
             $array[$key] = $value; 
@@ -94,7 +95,7 @@ class option extends \Q {
                 || 2 > count( $type )
             ) {
 
-                // helper::log( 'Skipping: '.$key );
+                // h::log( 'Skipping: '.$key );
 
                 continue;
 
@@ -112,7 +113,7 @@ class option extends \Q {
 			// look for minified library -- only if debuggin ##
             if ( self::$debug ) {
 			
-				$file = helper::get( "theme/".$type_dir."/".$type[1].".min.".$type_ext, 'return' );
+				$file = h::get( "ui/asset/".$type_dir."/".$type[1].".min.".$type_ext, 'return' );
 
 			}
 
@@ -122,24 +123,24 @@ class option extends \Q {
                 // ||
                 // (
                     // self::$debug 
-                    && helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' )
+                    && h::get( "ui/asset/".$type_dir."/".$type[1].".".$type_ext, 'return' )
                 // )
             ) {
 
-                $file = helper::get( "theme/".$type_dir."/".$type[1].".".$type_ext, 'return' ) ;
+                $file = h::get( "ui/asset/".$type_dir."/".$type[1].".".$type_ext, 'return' ) ;
 
             }
 
             // if no type - skip ##
             if ( ! $file ) {
 
-                // // helper::log( 'Skipping: '.$handle.' - File missing...' );
+                h::log( 'd:>Skipping: '.$handle.' - File missing...' );
 
                 continue;
 
             }
 
-            // helper::log( 'Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
+            // h::log( 'Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
 
             // Add link to view ##
             $array[$key] = $value.' ( <a href="'.$file.'" target="_blank">view</a> )';
@@ -161,13 +162,13 @@ class option extends \Q {
 
         if ( ! function_exists( 'acf_add_options_page' ) ) {
 
-            helper::log( 'ACF Missing, please install or activate...' );
+            h::log( 'e:>ACF Plugin Missing, please install or activate...' );
 
             return false;
 
         }
 
-        // helper::log( 'Adding ACF settings page...' );
+        // h::log( 'Adding ACF settings page...' );
 
         \acf_add_options_page( array(
             'page_title' 	=> 'Q Settings',
@@ -222,6 +223,7 @@ class option extends \Q {
                 'key' => 'group_q_option_ui',
                 'title' => 'Asset Inclusion',
                 'fields' => array(
+					/*
                     array(
                         'key' => 'field_q_option_plugin_css',
                         'label' => 'Plugin CSS',
@@ -269,7 +271,63 @@ class option extends \Q {
                         'layout' => 'horizontal',
                         'return_format' => 'value',
                         'save_other_choice' => 0,
-                    ),
+					),
+					*/
+					array(
+                        'key' => 'field_q_option_theme_parent',
+                        'label' => 'Parent Theme -> '.\wp_get_theme()->parent(),
+                        'name' => 'q_option_theme_parent',
+                        'type' => 'checkbox',
+                        'instructions' => 'Valid, if using a child/parent theme',
+                        'required' => 1,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'choices' => array(
+                            'css' => 'CSS',
+                            'js' => 'JS',
+                        ),
+                        'allow_null' => 0,
+                        'other_choice' => 0,
+                        'default_value' => array(
+							0 => 'css',
+							1 => 'js'
+						),
+                        'layout' => 'horizontal',
+                        'return_format' => 'value',
+                        'save_other_choice' => 0,
+					),
+					array(
+                        'key' => 'field_q_option_theme_child',
+                        'label' => 'Child Theme -> '.\wp_get_theme(),
+                        'name' => 'q_option_theme_child',
+                        'type' => 'checkbox',
+                        'instructions' => '',
+                        'required' => 1,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'choices' => array(
+                            'css' => 'CSS',
+                            'js' => 'JS',
+                        ),
+                        'allow_null' => 0,
+                        'other_choice' => 0,
+                        'default_value' => array(
+							0 => 'css',
+							1 => 'js'
+						),
+                        'layout' => 'horizontal',
+                        'return_format' => 'value',
+                        'save_other_choice' => 0,
+					),
+					/*
                     array(
                         'key' => 'field_q_option_theme_css',
                         'label' => 'Theme CSS',
@@ -293,7 +351,9 @@ class option extends \Q {
                         'layout' => 'horizontal',
                         'return_format' => 'value',
                         'save_other_choice' => 0,
-                    ),
+					),
+					*/
+					/*
                     array(
                         'key' => 'field_q_option_theme_scss',
                         'label' => 'Theme SCSS',
@@ -317,7 +377,9 @@ class option extends \Q {
                         'layout' => 'horizontal',
                         'return_format' => 'value',
                         'save_other_choice' => 0,
-                    ),
+					),
+					*/
+					/*
                     array(
                         'key' => 'field_q_option_theme_js',
                         'label' => 'Theme JavaScript',
@@ -341,7 +403,8 @@ class option extends \Q {
                         'layout' => 'horizontal',
                         'return_format' => 'value',
                         'save_other_choice' => 0,
-                    ),
+					),
+					*/
                 ),
                 'location' => array(
                     array(
@@ -364,7 +427,7 @@ class option extends \Q {
 
             'q_option_library' => array(
                 'key' => 'group_q_option_library',
-                'title' => 'CSS & JS Libraries',
+                'title' => 'Assets',
                 'fields' => array(
                     array(
                         'key' => 'field_q_option_library',
@@ -547,9 +610,10 @@ class option extends \Q {
                 'description' => '',
             ),
 
-            'q_option_plugin'   => array(
+			/*
+            'q_option_extension'   => array(
                 'key' => 'group_q_option_plugin',
-                'title' => 'Global Plugins',
+                'title' => 'Extensions',
                 'fields' => array(
                     array(
                         'key' => 'field_q_option_plugin',
@@ -656,8 +720,10 @@ class option extends \Q {
                 'active' => true,
                 'description' => '',
             ),
+			*/
 
-        );
+		);
+		
 
 		// logic to get all or single group ##
 		return $groups;
@@ -679,7 +745,7 @@ class option extends \Q {
         // we need to get all stored options from WP ##
         if ( ! $array = self::wpdb() ) {
 
-            helper::log( 'No stored values found.' );
+            h::log( 'e:>No stored values found.' );
 
             return false;
 
@@ -689,30 +755,30 @@ class option extends \Q {
         // an array with "q_option_" removed and a value of 1 or 0 ##
         if ( ! $object = self::prepare( $array ) ) {
 
-            helper::log( 'Error preparing stored values' );
+            h::log( 'e:>Error preparing stored values' );
 
             return false;
 
         }
 
-        // helper::log( $object );
+        // h::log( $object );
 
         // check if we have an object ##
         if ( ! is_object( $object ) ) {
 
-            helper::log( 'Error converting stored values to object' );    
+            h::log( 'e:>Error converting stored values to object' );    
             
             return false;
 
         }
 
         // test ##
-        // helper::log( $object->debug );
+        // h::log( $object->debug );
 
         // check if we return a single field or the entire array/object ##
         if ( is_null( $field ) ) {
 
-            // helper::log( 'Returning all options.' );
+            // h::log( 'Returning all options.' );
 
             return $object;
 
@@ -721,7 +787,7 @@ class option extends \Q {
             && isset( $object->$field )
         ) {
 
-            // helper::log( 'returning field: '.$field );
+            // h::log( 'returning field: '.$field );
 
             return $object->$field;
 
@@ -744,7 +810,7 @@ class option extends \Q {
 
         if ( self::$query ) {
 
-            // helper::log( 'query already returned, so using stored values...' );
+            // h::log( 'query already returned, so using stored values...' );
 
             return self::$query;
 
@@ -763,7 +829,7 @@ class option extends \Q {
         );
 
         // test ##
-        // helper::log( $query );
+        // h::log( $query );
 
         // validate ##
         if ( 
@@ -772,7 +838,7 @@ class option extends \Q {
             || 0 == count ( $query ) 
         ) {
 
-            // helper::log( 'wpdb failure...' );
+            // h::log( 'wpdb failure...' );
 
             return false;
 
@@ -799,7 +865,7 @@ class option extends \Q {
             || ! is_array( $array )
         ) {
 
-            helper::log( 'Passed Array is corrupt.' );
+            h::log( 'e:>Passed Array is corrupt.' );
 
             return false;
 
@@ -811,7 +877,7 @@ class option extends \Q {
         // loop over each item and remove - some are strings, some are serliazed ##
         foreach ( $array as $item ) {
 
-            // helper::log( $item );
+            // h::log( $item );
 
             // get key ##
             $key = str_replace( 'options_q_option_', '', $item['name'] );
@@ -821,8 +887,8 @@ class option extends \Q {
 
                 $option = unserialize( $item['value'] );
 
-                // helper::log( $option );
-                // helper::log( core::array_to_object( $option ) );
+                // h::log( $option );
+                // h::log( core::array_to_object( $option ) );
 
                 // new sub object ##
                 $option_object = new \stdClass();
@@ -832,7 +898,7 @@ class option extends \Q {
 
                     // if ( 1 == $option_value ) {
 
-                        // helper::log( $option_value );
+                        // h::log( $option_value );
                  
                         $option_object->$option_value = true;
 
@@ -854,7 +920,7 @@ class option extends \Q {
         }
 
         // test ##
-        // helper::log( $array );
+        // h::log( $array );
 
         // validate ##
         if ( 
@@ -862,7 +928,7 @@ class option extends \Q {
             // || 0 == count ( $object ) 
         ) {
 
-            helper::log( 'Prepared object is corrupt.' );
+            h::log( 'e:>Prepared object is corrupt.' );
 
             return false;
 
@@ -886,22 +952,22 @@ class option extends \Q {
         // if debug set in code, use that setting first ##
         if ( self::$debug ) { 
         
-            // helper::log( 'Debug set to true in code, so respect that...' );
+            // h::log( 'Debug set to true in code, so respect that...' );
 
             return self::$debug; 
         
         }
 
-        // helper::log( 'debug set to: '.self::get('debug') );
+        // h::log( 'debug set to: '.self::get('debug') );
 
         // get all stored options ##
         $debug = self::get('debug'); // \get_field( 'q_option_debug', 'option' ); 
         // \get_site_option( 'options_q_option_debug', false );
 
         // check ##
-        // helper::log( \get_field( 'q_option_debug', 'option') );
-        // helper::log( 'debug pulled from options table: '.json_encode( $debug ) );
-        // helper::log( 'debug pulled from options table: '. ( 1 == $debug ? 'True' : 'False' ) );
+        // h::log( \get_field( 'q_option_debug', 'option') );
+        // h::log( 'debug pulled from options table: '.json_encode( $debug ) );
+        // h::log( 'debug pulled from options table: '. ( 1 == $debug ? 'True' : 'False' ) );
 
         // make a real boolean ##
         $debug = ( 
@@ -914,7 +980,7 @@ class option extends \Q {
         ) ;
 
         // check what we got ##
-        // helper::log( 'debug set to: '. ( $debug ? 'True' : 'False' ) );
+        // h::log( 'debug set to: '. ( $debug ? 'True' : 'False' ) );
 
         // update property ##
         self::$debug = $debug;
@@ -941,7 +1007,7 @@ class option extends \Q {
     public static function add_theme_support( $support )
     {
 
-       helper::log( 'add_theme_support is deprecated, please use the new Q settings page and filters.' );
+       h::log( 'd:>add_theme_support is deprecated, please use the new Q settings page and filters.' );
 
        return false;
 
