@@ -29,9 +29,7 @@ class config extends \Q {
 			// check if we have a 'config' key.. and take that ##
 			if ( is_array( $array ) ) {
 
-				// ok.. empty, filter in from other plugins, then check again ##
-				// h::log( 'Q config NOT, empty...loading' );
-				// h::log( $array );
+				// h::log( 'd:>Q config NOT, empty...loading' );
 
 				// assign ##
 				$config = $array;
@@ -45,10 +43,7 @@ class config extends \Q {
 
 		// filter all config early ##
 		// Q = 1, Q Plugin = 10, Q Parent = 100, Q Child = 1000
-		$filter_config = \apply_filters( 'q/config/get/all', $config );
-
-		// merge filtered data into default data ##
-		$config = core\method::parse_args( $filter_config, $config );
+		$config = \apply_filters( 'q/config/get/all', $config );
 
 		// now, check if we are looking for a specific field ##
 		if (

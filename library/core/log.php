@@ -125,7 +125,7 @@ class log extends \Q {
 		// translate pass log
 		// check we have what we need to set a new log point ##
 		if ( 
-			! $log  = self::translate( $args )
+			! $log = self::translate( $args )
 		){
 
 			// core\helper::debug( 'Error in passed log data..' );
@@ -156,15 +156,30 @@ class log extends \Q {
 
 		// arrays and objects are dumped directly ##
 		if ( 
-			is_array( $args )
-			|| is_object( $args )
-			|| is_int( $args )
+			// is_array( $args )
+			// || is_object( $args )
+			is_int( $args )
 			|| is_numeric( $args )
 		){
 
 			// core\helper::debug( 'is_array OR is_object or is_int' );
 			// return self::$log['log'][] = var_export( $args, true ).self::$backtrace;
-			return self::push( 'log', var_export( $args, true ).self::$backtrace );
+			return self::push( 'debug', var_export( $args, true ).self::$backtrace );
+			
+		}
+
+		// arrays and objects are dumped directly ##
+		if ( 
+			is_array( $args )
+			|| is_object( $args )
+			// || is_int( $args )
+			// || is_numeric( $args )
+		){
+
+			// core\helper::debug( 'is_array OR is_object or is_int' );
+			// return self::$log['log'][] = var_export( $args, true ).self::$backtrace;
+			self::push( 'debug', var_export( $args, true ) );
+			return self::push( 'debug', self::$backtrace );
 			
 		}
 
@@ -279,15 +294,17 @@ class log extends \Q {
 				self::$log[$key] = [];
 				// core\helper::debug( "create new empty array for '{$key}'" );
 
-				return self::$log[$key][] = $value;
+				// return self::$log[$key][] = $value;
 				// core\helper::debug( "added {value} to '{$key}'" );
 
-			} else {
+			// } else {
+			}
 
 				// else, add ##
 				return self::$log[$key][] = $value;
+				// return array_unshift( self::$log[$key] , $value );
 
-			}
+			// }
 
 		}
 
@@ -504,13 +521,7 @@ class log extends \Q {
 		if ( ! is_null( $key ) ) { $return = [ $key => $return ]; }
 
 		// keys are added sequentially, so we need to reverse to see the actual flow ##
-		if ( is_array( $return ) ) {
-			$return_sorted = [];
-			foreach( $return as $key => $val ) {
-				$return_sorted[$key] = array_reverse( $val, true );
-			} 
-			$return = $return_sorted;
-		}
+		if ( is_array( $return ) ) { $return = array_reverse( $return ); }
 
 		// debugging is on in WP, so write to error_log ##
         if ( true === WP_DEBUG ) {
@@ -533,6 +544,7 @@ class log extends \Q {
 		return true;
 
 	}
+
 
 
 	/**

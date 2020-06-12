@@ -104,7 +104,7 @@ return [
 
 	// post_title ##
 	'title'  					=> [
-		'markup' 				=> '<h1 class="col-12 the-title text-uppercase">%title%</h1>',
+		'markup' 				=> '<h1 class="col-12 the-title">%title%</h1>',
 	],
 
 	// post_parent ##
