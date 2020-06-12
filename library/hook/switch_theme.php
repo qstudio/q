@@ -10,9 +10,8 @@
  */
 namespace q\hook;
 
-use q\core\core as core;
-use q\core\helper as helper;
-use q\core\options as options;
+use q\core;
+use q\core\helper as h;
 
 // load it up ##
 \q\hook\switch_theme::run();
@@ -21,21 +20,21 @@ class switch_theme extends \Q {
 
     public static function run()
     {
-            
+
         if ( \is_admin() ) { // make sure this is only loaded up in the admin ##
-            
+
             \add_action( 'switch_theme', array ( get_class(), 'switch_theme' ), 1 );
-            
+
         }
-        
+
     }
-    
-    
+
+
     // function on swtich theme ##
     public static function switch_theme(){
 
-        helper::log( 'switched' );
+        h::log( 'switched' );
 
     }
-    
+
 }

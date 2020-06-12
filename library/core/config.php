@@ -12,7 +12,7 @@ class config extends \Q {
 
 
 	/**
-	 * Get stored config setting, merging in any new of changed settings from \q_theme::$config ##
+	 * Get stored config setting, merging in any new of changed settings from extensions ##
 	 */
 	public static function get( $field = null ) {
 
@@ -20,11 +20,11 @@ class config extends \Q {
 		$config = [];
 
 		// load config from JSON ##
-		if ( 
+		if (
 			$array = include( self::get_plugin_path('q.config.php') )
 		){
-		
-			// h::log( self::get_plugin_path('q.config.php') );
+
+			// h::log( 'd:>'.self::get_plugin_path('q.config.php') );
 
 			// check if we have a 'config' key.. and take that ##
 			if ( is_array( $array ) ) {
@@ -44,14 +44,15 @@ class config extends \Q {
 		// h::log( $config[$field] );
 
 		// filter all config early ##
+		// Q = 1, Q Plugin = 10, Q Parent = 100, Q Child = 1000
 		$filter_config = \apply_filters( 'q/config/get/all', $config );
 
 		// merge filtered data into default data ##
 		$config = core\method::parse_args( $filter_config, $config );
 
 		// now, check if we are looking for a specific field ##
-		if ( 
-			is_null( $field ) 
+		if (
+			is_null( $field )
 		) {
 
 			h::log( 'Getting all config data' );
@@ -64,8 +65,8 @@ class config extends \Q {
 		// h::log( 'Looking for specific Field: "'.$field.'"' );
 
 		// check if field is set ##
-		if ( 
-			! isset( $config[$field] ) 
+		if (
+			! isset( $config[$field] )
 		){
 
 			h::log( 'No matching config found for Field: "'.$field.'"' );

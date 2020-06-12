@@ -12,33 +12,33 @@ use q\core\helper as h;
 class widget extends \Q {
 
     // private property ##
-    public static $widgets_add_default = array();
-    public static $widgets_add;
-    public static $widgets_remove = array();
-    
+    public static $add_default = [];
+    public static $add;
+    public static $remove = [];
+
     /**
     * Class Constructor
     */
     public static function run()
     {
-        
+
         // stack up the default widgets ##
-        \add_action( 'widgets_init', array ( get_class(), 'widgets_add_default' ), 1 );
-        
+        \add_action( 'widgets_init', array ( get_class(), 'add_default' ), 1 );
+
         // define widgets to add ##
-        \add_action( 'widgets_init', array ( get_class(), 'widgets_add' ), 2 );
-        
+        \add_action( 'widgets_init', array ( get_class(), 'add' ), 2 );
+
         // add defined widgets ##
-        \add_action( 'widgets_init', array ( get_class(), 'do_widgets_add' ), 3 );
-        
+        \add_action( 'widgets_init', array ( get_class(), 'do_add' ), 3 );
+
         // define widgets to remove ##
-        \add_action( 'widgets_init', array ( get_class(), 'widgets_remove' ), 1 );
-        
+        \add_action( 'widgets_init', array ( get_class(), 'remove' ), 1 );
+
         // remove defined widgets ##
-        \add_action( 'widgets_init', array ( get_class(), 'do_widgets_remove' ), 2 );
-        
+        \add_action( 'widgets_init', array ( get_class(), 'do_remove' ), 2 );
+
     }
-        
+
 
 
     public static function render( $array = null ){
@@ -63,7 +63,7 @@ class widget extends \Q {
             } else {
 
                 h::log( 'Widget Error: '.$array['widget'] );
-               
+
             }
 
         }
@@ -72,98 +72,101 @@ class widget extends \Q {
 
 
 
-        
+
     /**
     * Default list of widgets to activate
-    * 
+    *
     * @since       1.2.0
     * @return      void
     */
-    public static function widgets_add_default()
+    public static function add_default()
     {
-        
-        self::$widgets_add_default = array(
-        
+
+        $array = array(
+
                 'instagram'     => 'instagram' // Instagram ##
-            ,   'gooverseaes'   => 'gooverseas' // Instagram ##
+            // ,   'gooverseaes'   => 'gooverseas' // Instagram ##
             ,   'sharelines'    => 'sharelines' // Facebook / Twitter Share ##
-                        
-        );
-        
+
+		);
+
+		// filterable list ##
+		self::$add_default = \apply_filters( 'q/ui/widget/defaults', $array );
+
     }
-    
-    
-    
+
+
+
     /**
     * Add Widgets
-    * 
+    *
     * See list to define which to add
-    * 
+    *
     * @since       1.0
     * @return      void
     */
-    public static function widgets_add( $widgets )
+    public static function add( $widgets )
     {
-        
+
         // build list of widgets to add ##
-        self::$widgets_add = array();
-        
+        self::$add = array();
+
         // add default widgets ##
-        self::$widgets_add = array_merge( self::$widgets_add_default, self::$widgets_add );
-        
+        self::$add = array_merge( self::$add_default, self::$add );
+
         // add each seleted widget to the load list ##
-        if ( $widgets || is_array( $widgets ) ) { 
-        
+        if ( $widgets || is_array( $widgets ) ) {
+
             // merge extra widgets ##
-            self::$widgets_add = array_merge( self::$widgets_add, $widgets );
-            
+            self::$add = array_merge( self::$add, $widgets );
+
         }
-            
+
         // let's remove duplicate keys - taking the used added ones over the default ##
-        
-        
+
+
     }
-    
-    
+
+
     /**
     * Do Add Widgets
-    * 
+    *
     * @since       1.0
     * @return      void
     */
-    public static function do_widgets_add()
+    public static function do_add()
     {
-        
+
         // sanity check ##
-        if ( ! self::$widgets_add || ! is_array( self::$widgets_add ) ) { return false; }
-        
+        if ( ! self::$add || ! is_array( self::$add ) ) { return false; }
+
         // test ##
-        #wp_die( pr( self::$widgets_add ) );
-        
+        #wp_die( pr( self::$add ) );
+
         // add each seleted widget to the load list ##
-        foreach ( self::$widgets_add as $key => $value ) {
-            
+        foreach ( self::$add as $key => $value ) {
+
             h::get( "theme/widget/{$value}.php", 'require', 'path' );
-                
+
         }
-        
+
     }
-    
-    
+
+
     /**
     * Remove Widgets
-    * 
+    *
     * See list to define which to remove
-    * 
+    *
     * @since       1.0
     * @return      void
     * @todo        Handle extra removals
     */
-    public static function widgets_remove( $widgets ) {
-        
+    public static function remove( $widgets ) {
+
         // build our list of default widgets to remove ##
-        self::$widgets_remove = array(
-            
+        $array = array(
+
             'WP_Widget_Pages' // Pages ##
             /*
             ,'WP_Widget_Search' // Search ##
@@ -178,46 +181,48 @@ class widget extends \Q {
             ,'WP_Widget_RSS'
             ,'WP_Widget_Tag_Cloud'
             */
-            
-        );
-        
+
+		);
+
+		// filterable list ##
+		self::$remove = \apply_filters( 'q/ui/widget/remove', $array );
+
         // handle extra removals ##
         if ( $widgets && is_array( $widgets ) ) {
-            
-            self::$widgets_remove = array_merge( $widgets, self::$widgets_remove );
-            
+
+            self::$remove = array_merge( $widgets, self::$remove );
+
         }
 
     }
-    
-    
+
+
     /**
     * Do Remove Widgets
-    * 
+    *
     * @since       1.0
     * @return      void
     */
-    public static function do_widgets_remove()
+    public static function do_remove()
     {
-        
-        #wp_die( pr(self::$widgets_remove) );
-        if ( 
-            ! self::$widgets_remove 
-            || ! is_array( self::$widgets_remove ) 
-        ) { 
-            
-            return false; 
-            
+
+        // h::log (self::$remove );
+        if (
+            ! self::$remove
+            || ! is_array( self::$remove )
+        ) {
+
+            return false;
+
         }
-        
-        foreach ( self::$widgets_remove as $remove ) {
-            
+
+        foreach ( self::$remove as $remove ) {
+
             \unregister_widget( $remove );
-        
+
         }
-        
+
     }
-    
-    
+
+
 }
-    

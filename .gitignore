@@ -1,5 +1,5 @@
-library/theme/css/q.theme.css
-library/theme/javascript/q.theme.js
+library/ui/css/q.theme.css
+library/ui/javascript/q.theme.js
 .sass-cache/
 node_modules/
 package-lock.json

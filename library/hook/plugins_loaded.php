@@ -2,23 +2,21 @@
 
 /**
  * Hook into plugins_loaded
- * 
+ *
  * clean up things we don't want
  * add things we do want
- * 
+ *
  * filters and actions ##
  *
  * @link        http://codex.wordpress.org/Plugin_API/Action_Reference
  * @since       0.1
- * @author:     Q Studio
- * @URL:        http://qstudio.us/
  */
 
 namespace q\hook;
 
-use q\core\core as core;
-use q\core\helper as helper;
-use q\core\options as options;
+
+use q\core;
+use q\core\helper as h;
 
 // load it up ##
 \q\hook\plugins_loaded::run();
@@ -30,14 +28,14 @@ class plugins_loaded extends \Q {
 
         // empty error log ##
         \add_action( 'plugins_loaded', array ( get_class(), 'empty_error_log' ), 5 );
-            
+
     }
-        
-        
+
+
     /**
      * Empty error log
      */
-    public static function empty_error_log() { 
+    public static function empty_error_log() {
 
         // only run when forced to via query arg ##
         if ( ! isset( $_GET['truncate_debug'] ) ) {
@@ -53,7 +51,7 @@ class plugins_loaded extends \Q {
         }
 
         $f = @fopen( WP_CONTENT_DIR."/debug.log", "r+" );
-        
+
         if ( $f !== false ) {
 
             #wp_die('emptying error log...');
@@ -64,5 +62,4 @@ class plugins_loaded extends \Q {
 
     }
 
-    
 }

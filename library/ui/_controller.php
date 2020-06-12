@@ -29,21 +29,22 @@ class controller extends \Q {
 			// ui methods ##
 			'method' => self::get_plugin_path( 'library/ui/method.php' ),
 
-			// template config @todo... ?? ##
+			// template ##
 			'template' => self::get_plugin_path( 'library/ui/template.php' ),
 
 			// widgets... really?? ##
-			'widget' => self::get_plugin_path( 'library/ui/widget.php' ),
+			'widget' => self::get_plugin_path( 'library/ui/widget/_controller.php' ),
 
 			// assets ##
 			'asset' => self::get_plugin_path( 'library/ui/asset/_controller.php' ),
 
-			// template modules ##
+			// modules ##
 			'module' => self::get_plugin_path( 'library/ui/module/_controller.php' ),
 
 		];
 
 
 	}
-	
+
 }
+

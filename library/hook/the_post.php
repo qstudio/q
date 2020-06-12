@@ -2,18 +2,15 @@
 
 /**
  * Functions hooked to after_setup_theme action in WP
- * 
+ *
  * @link        http://codex.wordpress.org/Plugin_API/Action_Reference
  * @since       0.1
- * @author:     Q Studio
- * @URL:        http://qstudio.us/
  */
 
 namespace q\hook;
 
-use q\core\core as core;
-use q\core\helper as helper;
-use q\core\options as options;
+use q\core;
+use q\core\helper as h;
 
 // load it up ##
 \q\hook\the_post::run();
@@ -22,9 +19,9 @@ class the_post extends \Q {
 
     public static function run()
     {
-            
+
         if ( ! \is_admin() ) {
-        
+
             // clean up gallery output in wp ##
             \add_filter( 'gallery_style', array ( get_class(), 'gallery_style' ) );
 
@@ -54,17 +51,17 @@ class the_post extends \Q {
 
             // gforms anchor - if not using AJAX validation ##
             // add_filter( "gform_confirmation_anchor", '__return_false' );
-            
+
             // Filter WP's the_time() function ##
             \add_filter( 'the_time', array( get_class(), 'the_time' ) );
             \add_filter( 'get_the_time', array( get_class(), 'the_time' ) );
-            
+
         }
-        
+
     }
-    
-    
-    
+
+
+
     /**
      * scripts not to be minifed - by handle ##
      * http://betterwp.net/wordpress-plugins/bwp-minify/#advanced_customization
@@ -76,7 +73,7 @@ class the_post extends \Q {
 
     }
 
-    
+
     /**
      * remove injected CSS from gallery
      */
@@ -84,14 +81,14 @@ class the_post extends \Q {
         return preg_replace("!<style type='text/css'>(.*?)</style>!s", '', $css);
     }
 
-    
+
     //remove WP default gallery css ##
     #add_filter('gallery_style', create_function('$a', 'return "<div class=\'gallery\'>";'));
 
 
     /*
-        * remove the p from around imgs (http://css-tricks.com/snippets/wordpress/remove-paragraph-tags-from-around-images/)
-        */
+	* remove the p from around imgs (http://css-tricks.com/snippets/wordpress/remove-paragraph-tags-from-around-images/)
+	*/
     public static function the_content_images($content){
         return preg_replace('/<p>\s*(<a .*>)?\s*(<img .* \/>)\s*(<\/a>)?\s*<\/p>/iU', '\1\2\3', $content);
     }
@@ -102,14 +99,14 @@ class the_post extends \Q {
      */
     public static function excerpt_more( $more ) {
         global $post;
-        return rtrim( $more,'[&hellip;]' );
+        return rtrim( $more, '[&hellip;]' );
     }
 
 
     /**
      * remove link from the excerpt ##
      */
-    public static function get_the_excerpt( $output ) { 
+    public static function get_the_excerpt( $output ) {
         return preg_replace('/<a[^>]+>Continue reading.*?<\/a>/i','',$output);
     }
 
@@ -123,8 +120,8 @@ class the_post extends \Q {
 
 
     /* *
-        * highlight active post achive date 
-        */
+	* highlight active post achive date
+	*/
     public static function get_archives_link ( $link_html ) {
         global $wp;
         static $current_url;
@@ -169,7 +166,7 @@ class the_post extends \Q {
         if ( !$thumbnail_ID = \get_post_thumbnail_id() ) {
             return $null; // no point carrying on if no thumbnail ID
         }
-        
+
         // temporarily remove the filter, otherwise endless loop!
         \remove_filter('post_gallery', 'exclude_thumbnail_from_gallery');
 
@@ -191,13 +188,13 @@ class the_post extends \Q {
     }
 
 
-    /** 
+    /**
     * Better Time Diff function
-    * 
+    *
     * @link     http://www.jasonbobich.com/wordpress/a-better-way-to-add-time-ago-to-your-wordpress-theme/
     * @since    1.5.1
     */
-    public static function the_time() 
+    public static function the_time()
     {
 
         global $post;
@@ -261,24 +258,24 @@ class the_post extends \Q {
         $output .= __(' ago', 'q-textdomain');
 
         return $output;
-        
+
     }
-    
-    
-    
+
+
+
     /**
     * remove the gallery shortcode from the content
-    * 
+    *
     * @since       1.1.0
     * @example     call using -- add_filter( 'the_content', 'remove_gallery_shortcode', 1 );
     */
-    public static function remove_gallery_shortcode( $content ) 
+    public static function remove_gallery_shortcode( $content )
     {
 
         $expr = '/\[gallery(.*?)\]/i';
         return ("" . preg_replace( $expr, '', $content)); // deletes all existing gallery shortcodes
 
     }
-    
+
 
 }

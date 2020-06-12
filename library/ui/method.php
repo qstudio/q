@@ -13,14 +13,14 @@ class method extends \Q {
 
 	/**
 	 * Prepare passed args ##
-	 * 
+	 *
 	 */
 	public static function prepare_args( $args = [] ) {
 
 		// sanity ##
 		if (
 			// is_null( $args )
-			// || 
+			// ||
 			! is_array( $args )
 		){
 
@@ -34,10 +34,10 @@ class method extends \Q {
 		$method = core\method::backtrace([ 'level' => 2, 'return' => 'function' ]);
 
 		// get stored config - pulls from Q, but available to filter via q/config/get/all ##
-		$config = 
+		$config =
 			( // force config settings to return by passing "config" -> "property" ##
-				isset( $args['config']['load'] ) 
-				&& core\config::get( $args['config']['load'] ) 
+				isset( $args['config']['load'] )
+				&& core\config::get( $args['config']['load'] )
 			) ?
 			core\config::get( $args['config']['load'] ) :
 			core\config::get( $method ) ;
@@ -50,15 +50,15 @@ class method extends \Q {
 		if ( $config ) $args = \wp_parse_args( $args, $config );
 
 		// let's set "group" to calling function, for debugging ##
-		if ( ! isset( $args['group'] ) ) { 
-			$args['group'] = $method; 
+		if ( ! isset( $args['group'] ) ) {
+			$args['group'] = $method;
 		}
-				
+
 		// h::log( $config );
 		// h::log( $args );
 
 		// merge any default args with any pass args ##
-		if ( 
+		if (
 			is_null( $args )
 			|| ! is_array( $args )
 		) {
@@ -68,7 +68,7 @@ class method extends \Q {
 			return false;
 
 		}
-		
+
 		// no post set ##
 		if ( ! isset( $args['config']['post'] ) ) {
 
@@ -77,8 +77,8 @@ class method extends \Q {
 		}
 
 		// validate passed post ##
-		if ( 
-			isset( $args['config']['post'] ) 
+		if (
+			isset( $args['config']['post'] )
 			&& ! $args['config']['post'] instanceof \WP_Post
 		) {
 
@@ -102,13 +102,13 @@ class method extends \Q {
 		return $args;
 
 	}
-	
 
 
-	
+
+
 	/**
 	 * Prepare $array of data to be returned to render
-	 * 
+	 *
 	 */
 	public static function prepare_return( $args = null, $array = null ) {
 
@@ -116,7 +116,7 @@ class method extends \Q {
 		$method = core\method::backtrace([ 'level' => 2, 'return' => 'function' ]);
 
 		// sanity ##
-		if ( 
+		if (
 			is_null( $args )
 			|| ! is_array( $args )
 			|| is_null( $array )
@@ -145,7 +145,7 @@ class method extends \Q {
 		}
 
 		// another sanity check after filters... ##
-		if ( 
+		if (
 			is_null( $array )
 			|| ! is_array( $array )
 		) {
@@ -155,7 +155,7 @@ class method extends \Q {
 			return false;
 
 		}
-		
+
 		// return all arrays ##
 		return $array ;
 
@@ -164,10 +164,10 @@ class method extends \Q {
 
 
 
-	
+
 	/**
 	 * Prepare $array to be rendered
-	 * 
+	 *
 	 */
 	public static function prepare_render( $args = null, $array = null ) {
 
@@ -175,7 +175,7 @@ class method extends \Q {
 		$method = core\method::backtrace([ 'level' => 2, 'return' => 'function' ]);
 
 		// sanity ##
-		if ( 
+		if (
 			is_null( $args )
 			|| ! is_array( $args )
 			|| is_null( $array )
@@ -191,7 +191,7 @@ class method extends \Q {
 		}
 
 		// empty results ##
-		if ( 
+		if (
 			empty( $array )
 		) {
 
@@ -223,7 +223,7 @@ class method extends \Q {
 
 		// filter $string by $method ##
 		$string = \apply_filters( 'q/ui/render/prepare/'.$method.'/string', $string, $args );
-		
+
 		// filter $array by method/template ##
 		if ( $template = ui\template::get() ) {
 
@@ -250,7 +250,7 @@ class method extends \Q {
 	public static function search_the_content( Array $args = null ) {
 
 		// sanity @todo ##
-		if ( 
+		if (
 			is_null( $args )
 			|| ! isset( $args['string'] )
 		) {
@@ -271,7 +271,7 @@ class method extends \Q {
         // $string = $args['string']; #\get_the_content();
         $keys = implode( '|', explode( ' ', $search ) );
 		$string = preg_replace( '/(' . $keys .')/iu', '<mark>\0</mark>', $string );
-		
+
 		// get text length limit ##
 		$length = isset( $args[ 'length' ] ) ? $args['length'] : 200 ;
 
@@ -296,11 +296,11 @@ class method extends \Q {
 
 		// return ##
 		return $string;
-		
+
     }
 
 
-	
+
     /**
      * Format passed date value
      *
@@ -381,7 +381,7 @@ class method extends \Q {
         return $return;
 
     }
-	
+
 
 
 
@@ -408,7 +408,7 @@ class method extends \Q {
 	}
 
 
-	
+
     /**
      * Strip <style> tags from post_content
      *
@@ -418,11 +418,11 @@ class method extends \Q {
      */
     public static function remove_style( $input = null )
     {
-    
+
         if ( is_null ( $input ) ) { return false; }
-    
+
         return preg_replace( '/(<[^>]+) style=".*?"/i', '$1', $input );
-    
+
     }
 
 
@@ -432,43 +432,43 @@ class method extends \Q {
 
         // ----- remove HTML TAGs -----
         $string = preg_replace ('/<[^>]*>/', ' ', $string);
-    
+
         // ----- remove control characters -----
         $string = str_replace("\r", '', $string);    // --- replace with empty space
         $string = str_replace("\n", ' ', $string);   // --- replace with space
         $string = str_replace("\t", ' ', $string);   // --- replace with space
-    
+
         // ----- remove multiple spaces -----
         $string = trim(preg_replace('/ {2,}/', ' ', $string));
-    
+
         return $string;
-    
+
     }
 
 
-	
 
-    public static function chop( $content, $length = 0 ) 
+
+    public static function chop( $content, $length = 0 )
     {
 
         if ( $length > 0 ) { // trim required, perhaps ##
-        
+
             if ( strlen( $content ) > $length ) { // long so chop ##
                 return substr( $content , 0, $length ).'...';
             } else { // no chop ##
                 return $content;
             }
-        
+
         } else { // send as is ##
-        
+
             return $content;
-        
+
         }
 
     }
-	
 
-	public static function load_google_web_fonts( $fonts, $use_fallback = true, $debug = false ) 
+
+	public static function load_google_web_fonts( $fonts, $use_fallback = true, $debug = false )
     {
 
         // bounce to Google method ##
@@ -478,7 +478,7 @@ class method extends \Q {
 
 
 
-	
+
 
 	/**
      * Markup object based on %placeholders% and template
@@ -507,32 +507,13 @@ class method extends \Q {
         }
 
         #helper::log( $data );
-		#helper::log( $markup ); 
+		#helper::log( $markup );
 
 		// get teh markup ##
 		$string = $markup;
 
         // format markup with translated data ##
         foreach( $data as $key => $value ) {
-
-			// // handle array being an array of WP_Post objects ##
-			// if ( is_array( $value ) ) {
-
-			// 	h::log( '$value is an array, so go back for more: '.$key );
-
-			// 	// $string .= self::apply( $markup, $value, $string ); 
-			// 	$value = 'array';
-
-			// }
-
-			// if ( is_object( $value ) ) {
-
-			// 	h::log( '$value is an object, so go back for more: '.$key );
-
-			// 	// $string .= self::apply( $markup, $value, $string ); 
-			// 	$value = 'object';
-
-			// }
 
 			// check on the value ##
 			// h::log( 'key: '.$key.' / value: '.$value );
@@ -545,7 +526,7 @@ class method extends \Q {
                 continue ;
 
 			}
-			
+
 			// template replacement ##
 			$string = str_replace( '%'.$key.'%', $value, $string );
 
@@ -560,7 +541,7 @@ class method extends \Q {
 
 
 
-	
+
     public static function minify( $string = null, $type = 'js' )
     {
 
@@ -595,7 +576,7 @@ class method extends \Q {
 
 
 
-	
+
     /**
     * Strip unwated tags and shortcodes from the_content
     *
@@ -619,5 +600,5 @@ class method extends \Q {
 
     }
 
-    
+
 }
