@@ -44,11 +44,22 @@ class output extends \q\render {
 
             echo self::$output;
 
+			// reset all args ##
+			render\args::reset();
+
+			// stop here ##
             return true;
 
         } else {
 
-            return self::$output;
+			// grab ##
+			$return = self::$output;
+
+			// reset all args ##
+			render\args::reset();
+
+			// return ##
+            return $return;
 
         }
 

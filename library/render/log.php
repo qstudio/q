@@ -27,9 +27,9 @@ class log extends \q\render {
      * Logging function
      * 
      */
-    public static function render( Array $args = null ){
+    public static function set( Array $args = null ){
 
-        // h::log( $args );
+        // h::debug( 'e:>'.$args['group'] );
 
         if (
             ! isset( self::$args['config']['debug'] )

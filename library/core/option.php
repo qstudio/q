@@ -37,7 +37,7 @@ class option extends \Q {
         // \add_filter( 'acf/load_field/name=q_option_library', [ get_class(), 'filter_acf_library' ], 10, 1 );
 
         // add link to view library from
-        \add_filter( 'acf/load_field/name=q_option_library', [ get_class(), 'filter_acf_library' ], 9, 1 );
+        \add_filter( 'acf/load_field/name=q_option_library', [ get_class(), 'filter_acf_library' ], 100, 1 );
         
         // get stored options, early ##
         // \add_action( 'plugins_loaded', [ get_class(), 'get' ], 1 );
@@ -140,7 +140,7 @@ class option extends \Q {
 
             }
 
-            // h::log( 'Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
+            // h::log( 'd:>Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
 
             // Add link to view ##
             $array[$key] = $value.' ( <a href="'.$file.'" target="_blank">view</a> )';
@@ -209,7 +209,7 @@ class option extends \Q {
                         ),
                     ),
                 ),
-                'menu_order' => 0,
+                'menu_order' => 1,
                 'position' => 'normal',
                 'style' => 'default',
                 'label_placement' => 'top',
@@ -223,63 +223,13 @@ class option extends \Q {
                 'key' => 'group_q_option_ui',
                 'title' => 'Asset Inclusion',
                 'fields' => array(
-					/*
-                    array(
-                        'key' => 'field_q_option_plugin_css',
-                        'label' => 'Plugin CSS',
-                        'name' => 'q_option_plugin_css',
-                        'type' => 'radio',
-                        'instructions' => '',
-                        'required' => 1,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'choices' => array(
-                            1 => 'Yes',
-                            0 => 'No',
-                        ),
-                        'allow_null' => 0,
-                        'other_choice' => 0,
-                        'default_value' => 1,
-                        'layout' => 'horizontal',
-                        'return_format' => 'value',
-                        'save_other_choice' => 0,
-                    ),
-                    array(
-                        'key' => 'field_q_option_plugin_js',
-                        'label' => 'Plugin JavaScript',
-                        'name' => 'q_option_plugin_js',
-                        'type' => 'radio',
-                        'instructions' => '',
-                        'required' => 1,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'choices' => array(
-                            1 => 'Yes',
-                            0 => 'No',
-                        ),
-                        'allow_null' => 0,
-                        'other_choice' => 0,
-                        'default_value' => 1,
-                        'layout' => 'horizontal',
-                        'return_format' => 'value',
-                        'save_other_choice' => 0,
-					),
-					*/
 					array(
                         'key' => 'field_q_option_theme_parent',
                         'label' => 'Parent Theme -> '.\wp_get_theme()->parent(),
                         'name' => 'q_option_theme_parent',
                         'type' => 'checkbox',
                         'instructions' => 'Valid, if using a child/parent theme',
-                        'required' => 1,
+                        'required' => 0,
                         'conditional_logic' => 0,
                         'wrapper' => array(
                             'width' => '',
@@ -306,7 +256,7 @@ class option extends \Q {
                         'name' => 'q_option_theme_child',
                         'type' => 'checkbox',
                         'instructions' => '',
-                        'required' => 1,
+                        'required' => 0,
                         'conditional_logic' => 0,
                         'wrapper' => array(
                             'width' => '',
@@ -327,84 +277,6 @@ class option extends \Q {
                         'return_format' => 'value',
                         'save_other_choice' => 0,
 					),
-					/*
-                    array(
-                        'key' => 'field_q_option_theme_css',
-                        'label' => 'Theme CSS',
-                        'name' => 'q_option_theme_css',
-                        'type' => 'radio',
-                        'instructions' => '',
-                        'required' => 1,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'choices' => array(
-                            1 => 'Yes',
-                            0 => 'No',
-                        ),
-                        'allow_null' => 0,
-                        'other_choice' => 0,
-                        'default_value' => 1,
-                        'layout' => 'horizontal',
-                        'return_format' => 'value',
-                        'save_other_choice' => 0,
-					),
-					*/
-					/*
-                    array(
-                        'key' => 'field_q_option_theme_scss',
-                        'label' => 'Theme SCSS',
-                        'name' => 'q_option_theme_scss',
-                        'type' => 'radio',
-                        'instructions' => '',
-                        'required' => 1,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'choices' => array(
-                            1 => 'Yes',
-                            0 => 'No',
-                        ),
-                        'allow_null' => 0,
-                        'other_choice' => 0,
-                        'default_value' => 0,
-                        'layout' => 'horizontal',
-                        'return_format' => 'value',
-                        'save_other_choice' => 0,
-					),
-					*/
-					/*
-                    array(
-                        'key' => 'field_q_option_theme_js',
-                        'label' => 'Theme JavaScript',
-                        'name' => 'q_option_theme_js',
-                        'type' => 'radio',
-                        'instructions' => '',
-                        'required' => 1,
-                        'conditional_logic' => 0,
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'choices' => array(
-                            1 => 'Yes',
-                            0 => 'No',
-                        ),
-                        'allow_null' => 0,
-                        'other_choice' => 0,
-                        'default_value' => 1,
-                        'layout' => 'horizontal',
-                        'return_format' => 'value',
-                        'save_other_choice' => 0,
-					),
-					*/
                 ),
                 'location' => array(
                     array(
@@ -415,14 +287,14 @@ class option extends \Q {
                         ),
                     ),
                 ),
-                'menu_order' => 4,
-                'position' => 'side',
+                'menu_order' => 0,
+                'position' => 'normal',
                 'style' => 'default',
                 'label_placement' => 'top',
                 'instruction_placement' => 'label',
                 'hide_on_screen' => '',
                 'active' => true,
-                'description' => '',
+                // 'description' => 'Control how Q loads assets from the theme or plugins.',
             ), 
 
             'q_option_library' => array(
@@ -443,31 +315,12 @@ class option extends \Q {
                             'id' => '',
                         ),
                         'choices' => array(
-                            // 'js_sly'            => 'Sly Swipe JS',
                             'js_lazy'           => 'Lazy Load JS',
-                            // 'js_snackbar'       => 'Snackbar JS',
-                            // 'js_popper'         => 'Popper JS',
-                            // 'css_snackbar'      => 'Snackbar CSS',
-                            // 'js_stickyfill'     => 'Stickyfill JS',
-                            // 'js_hashchange'     => 'BA Hashchange JS',
-                            // 'css_tubepress'     => 'TubePress CSS',
-                            // 'css_gravityforms'  => 'Gravity Forms CSS',
-                            // 'css_q.wordpress'   => 'Q WordPress CSS',
-                            // 'css_q.global'      => 'Q Global CSS',
-                            // 'css_bs4'           => 'Bootstrap 4 CSS',
-                            // 'css_bsg'           => 'Bootstrap 4 Grid Temp CSS',
                             'js_q.global'       => 'Q Global JS',
-                            // 'js_bs4'            => 'Bootstrap 4 JS',
                         ),
                         'allow_custom' => 0,
                         'default_value' => array(
-                            // 0 => 'css_bootstrapgrid',
-                            // 0 => 'js_sly',
-                            1 => 'js_lazy',
-                            // 2 => 'js_snackbar',
-                            // 3 => 'css_snackbar',
-                            // 4 => 'js_stickyfill',
-                            // 5 => 'css_fa'
+                            1 => 'js_q.global',
                         ),
                         'layout' => 'vertical',
                         'toggle' => 1,

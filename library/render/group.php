@@ -22,7 +22,7 @@ class group extends \q\render {
         // validate passed args ##
         if ( ! render\args::validate( $args ) ) {
 
-            render\log::render( $args );
+            render\log::set( $args );
 
             return false;
 
@@ -31,7 +31,7 @@ class group extends \q\render {
         // get field names from passed $args ##
         if ( ! render\get::fields() ) {
 
-            render\log::render( $args );
+            render\log::set( $args );
 
             return false;
 
@@ -47,7 +47,7 @@ class group extends \q\render {
         render\markup::prepare();
 
         // optional logging to show removals and stats ##
-        render\log::render( $args );
+        render\log::set( $args );
 
         // return or echo ##
         return render\output::return();

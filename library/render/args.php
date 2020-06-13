@@ -151,7 +151,7 @@ class args extends \q\render {
         ]);
 
         // grab all passed args and merge with defaults ##
-        $args = core\method::parse_args( $args, self::$args );
+        $args = core\method::parse_args( $args, self::$args_default );
 		
 		// assign class property ##
 		self::$args = $args;
@@ -186,14 +186,6 @@ class args extends \q\render {
             return false;
 
         }
-
-        /*
-        self::$fields => Array
-        (
-            [0] => frontpage_feature_enable
-            [1] => frontpage_feature
-        )
-         */
 
         // helper::log( self::$fields );
         // helper::log( 'We are looking for field: '.self::$args['enable'] );
@@ -242,6 +234,21 @@ class args extends \q\render {
     }
 
 
+
+	/**
+	 * Empty all render args
+	 * 
+	 * @since 4.0.0
+	 */ 
+	public static function reset(){
+
+		// h::log( 'd:>reset args for: '.self::$args['group'] );
+
+		self::$args = [];
+
+		return true;
+
+	}
 
      
 }

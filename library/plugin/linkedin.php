@@ -120,9 +120,9 @@ class linkedin extends \Q {
         }
 
         // grab the options ##
-        // $q_options = core\option::get();
+        // $option = core\option::get();
 
-        // h::log( $q_options );
+        // h::log( $option );
 
         // bulk if no options found ##
         if ( 
@@ -137,7 +137,7 @@ class linkedin extends \Q {
 
 
         // // check if we have tag_manager defined in config ##
-        // if ( ! isset( $q_options->linkedin ) ) {
+        // if ( ! isset( $option->linkedin ) ) {
 
         //     // h::log( 'linkedin Pixel not defined in config' );
 
@@ -181,9 +181,9 @@ class linkedin extends \Q {
         }
 
         // grab the options ##
-        // $q_options = core\option::get();
+        // $option = core\option::get();
 
-        #h::log( $q_options );
+        #h::log( $option );
 
         // bulk if no options found ##
         if ( 
@@ -197,7 +197,7 @@ class linkedin extends \Q {
         }
 
         // check for UI ##
-        // if ( ! isset( $q_options->linkedin_noscript ) ) { 
+        // if ( ! isset( $option->linkedin_noscript ) ) { 
 
         //     // Log ##
         //     // h::log( 'linkedin No Script not defined' );

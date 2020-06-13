@@ -287,19 +287,19 @@ class wp_head extends \Q {
      */
     public static function webmasters() {
 
-        #global $q_options; // load framework options ##
+        #global $option; // load framework options ##
 
         // instatiate Q_Options Class
-        #$q_options_class = new Q_Options();
+        #$option_class = new Q_Options();
 
         // grab the options ##
-        #$q_options = $q_options_class->options_get();
+        #$option = $option_class->options_get();
 
-        #Q_Control::log( $q_options );
+        #Q_Control::log( $option );
 
-        $q_options = core\option::get();
+        $option = core\option::get();
 
-        $webmasters = $q_options["google_webmasters"];
+        $webmasters = $option["google_webmasters"];
 
         if ( $webmasters && strlen( $webmasters  ) > 1 ) {
 
@@ -359,19 +359,19 @@ class wp_head extends \Q {
 	/*
     public static function google_analytics() {
 
-        #global $q_options; // load framework options ##
+        #global $option; // load framework options ##
 
         // instatiate Q_Options Class
-        #$q_options_class = new Q_Options();
+        #$option_class = new Q_Options();
 
         // grab the options ##
-        #$q_options = $q_options_class->options_get();
+        #$option = $option_class->options_get();
 
-        $q_options = core\option::get();
+        $option = core\option::get();
 
-        #Q_Control::log( $q_options );
+        #Q_Control::log( $option );
 
-        $analytics = $q_options->google_analytics;
+        $analytics = $option->google_analytics;
 
         if ( ! $analytics ) { return false; }
 

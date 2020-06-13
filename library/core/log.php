@@ -23,7 +23,7 @@ class log extends \Q {
 			'value' 	=> ':>'
 		],
 		$special_keys 	= [
-			'd' 		=> 'debug',
+			'd' 		=> 'debug', // shown by default
 			'e' 		=> 'error',
 			'n' 		=> 'notice',
 			'l' 		=> 'log'
@@ -179,7 +179,7 @@ class log extends \Q {
 			// core\helper::debug( 'is_array OR is_object or is_int' );
 			// return self::$log['log'][] = var_export( $args, true ).self::$backtrace;
 			self::push( 'debug', var_export( $args, true ) );
-			return self::push( 'debug', self::$backtrace );
+			return self::push( 'debug', 'Array or Object above from -> '.self::$backtrace );
 			
 		}
 
@@ -669,6 +669,8 @@ class log extends \Q {
 			return self::write();
 
 		}
+
+		// core\helper::debug( 'd:>shutdown -- key passed: '.$key );
 
 		// also log helper ##
 		self::write( 'debug' );

@@ -9,8 +9,6 @@ use q\core\helper as h;
 
 ------- One rendering Engine for all use cases ----------
 
-# HOW TO.. hack into the self::$args.. fields, etc with data from the_posts ... ???
-
 Requirements:
 # pass standerdized args ( markup, callbacks, filter ets )
 # log on global or call specific basis
@@ -42,8 +40,11 @@ class render extends \Q {
 
 	protected static
 
-        // default args to merge with passed array ##
-        $args = [
+        // passed args ##
+        $args = [],
+		
+		// default args to merge with passed array ##
+        $args_default = [
             'config'            => [
                 'run'           => true, // don't run this item ##
                 'debug'         => false, // don't debug this item ##
@@ -126,7 +127,6 @@ class render extends \Q {
         $output = null, // return string ##
         $fields = null, // field names and values ##
         $markup = null, // store local version of passed markup ##
-        // $log = null, // tracking array for feedback ##
         $acf_fields = null // fields grabbed by acf function ##
 
 	;
@@ -183,6 +183,7 @@ class render extends \Q {
 
 			// log activity ##
 			'log' => h::get( 'render/log.php', 'return', 'path' ),
+
 		];
 
 	}

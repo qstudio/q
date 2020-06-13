@@ -352,7 +352,10 @@ class enqueue extends \Q {
 
             }
 
-            $type_dir = ( 'css' == $type[0] ) ? 'css' : 'javascript' ;
+			// fixed location - css or js ##
+			$type_dir = ( 'css' == $type[0] ) ? 'css' : 'javascript' ;
+			
+			// fixed type css or js ##
             $type_ext = ( 'css' == $type[0] ) ? 'css' : 'js' ;
 
             // give it a handle ##
@@ -451,7 +454,7 @@ class enqueue extends \Q {
     public static function wp_enqueue_scripts_theme() 
     {
 
-		// h::debug( self::$options );
+		// h::log( self::$options );
 
         // Load Parent CSS
         if ( 
