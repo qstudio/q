@@ -43,7 +43,7 @@ class log extends \q\render {
         }   
 
 		// debug the group ##
-		return core\log::write( $args['group'] );
+		return core\log::set( $args['group'] );
 
     }
 

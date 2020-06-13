@@ -1,6 +1,6 @@
 <?php
 
-namespace q\theme\widget;
+namespace q\ui\widget;
 
 use q\core\helper as helper;
 use q\core\core as core;
@@ -16,7 +16,7 @@ use q\controller\generic as generic;
  */
 
 // load it up ##
-#\q\theme\widget\instagram::run();
+#\q\ui\widget\instagram::run();
 
 class instagram extends \Q {
 
@@ -46,7 +46,7 @@ class instagram extends \Q {
     {
 
         // add required script ##
-        \wp_register_script( 'q-instagram', helper::get( "theme/javascript/instagram.js", 'return' ), array('jquery'), '2.0.0', false );
+        \wp_register_script( 'q-instagram', helper::get( "ui/asset/javascript/instagram.js", 'return' ), array('jquery'), '2.0.0', false );
         \wp_enqueue_script( 'q-instagram' );
 
 	}

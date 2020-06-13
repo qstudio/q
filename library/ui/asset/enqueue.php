@@ -4,8 +4,6 @@ namespace q\ui;
 
 use q\core;
 use q\core\helper as h;
-// use q\core\options as options;
-// use q\core\wordpress as wordpress;
 
 // Q Theme ##
 use q\theme\core\helper as theme_h;
@@ -17,7 +15,7 @@ class enqueue extends \Q {
 
     // public static $plugin_version;
     public static $plugin_version;
-    public static $options;
+    public static $option;
 
     public static function run()
     {
@@ -50,9 +48,6 @@ class enqueue extends \Q {
             \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_theme' ), 10000 );
 
         }
-
-        // load templates ##
-        // self::load_libraries();
 
     }
 
@@ -98,23 +93,8 @@ class enqueue extends \Q {
         // self::$plugin_version = self::version ;
 
         // grab the options ##
-        self::$options = core\option::get();
-        // h::log( self::$options );
-
-    }
-
-
-
-    /**
-    * Load Libraries
-    *
-    * @since        2.0.0
-    */
-    private static function load_libraries()
-    {
-
-        // ui ##
-        // require_once self::get_plugin_path( 'library/theme/ui.php' );
+        self::$option = core\option::get();
+        // h::log( self::$option );
 
     }
 
@@ -130,13 +110,13 @@ class enqueue extends \Q {
     */
     public static function wp_enqueue_scripts_plugin() {
 
-        // h::log( self::$options );
+        // h::log( self::$option );
         // h::log( 'debug set to: '. ( true === self::$debug ? 'True' : 'False' ) );
 
         if ( 
             ( 
-                isset( self::$options->plugin_css ) 
-                && 1 == self::$options->plugin_css
+                isset( self::$option->plugin_css ) 
+                && 1 == self::$option->plugin_css
             )
             && false === self::$debug 
         ) {
@@ -147,8 +127,8 @@ class enqueue extends \Q {
         }
 
         // if ( 
-        //     isset( self::$options->plugin_css ) 
-        //     && 1 == self::$options->plugin_css
+        //     isset( self::$option->plugin_css ) 
+        //     && 1 == self::$option->plugin_css
         //     // && false === self::$debug 
         // ) {
             
@@ -160,8 +140,8 @@ class enqueue extends \Q {
 
         if ( 
             (
-                isset( self::$options->plugin_js ) 
-                && 1 == self::$options->plugin_js
+                isset( self::$option->plugin_js ) 
+                && 1 == self::$option->plugin_js
             )
             && false === self::$debug 
         ) {
@@ -205,7 +185,7 @@ class enqueue extends \Q {
                 $q_browser['type'] == 'ie8' 
                 || $q_browser['type'] == 'ie7' 
                 || $q_browser['type'] == 'ie6' 
-                && self::$options->plugin_js === TRUE 
+                && self::$option->plugin_js === TRUE 
             )
         ) {
 
@@ -242,7 +222,7 @@ class enqueue extends \Q {
     public static function wp_enqueue_scripts_external() {
 
         // dump - shuold be an interger repesenting how many external libraries are added ##
-        // h::log( self::$options->external );
+        // h::log( self::$option->external );
         // h::log( \get_field( 'q_option_external', 'option' ) );
 
         /*
@@ -255,8 +235,8 @@ class enqueue extends \Q {
 
         // sanity check ##
         if ( 
-            ! isset( self::$options->external )
-            || 1 > self::$options->external
+            ! isset( self::$option->external )
+            || 1 > self::$option->external
         ){
 
             // h::log( 'No external libraries to load' );
@@ -330,10 +310,10 @@ class enqueue extends \Q {
     */
     public static function wp_enqueue_scripts_local() {
 
-        // h::debug( self::$options->library );
+        // h::debug( self::$option->library );
 
         // loop over libraries and include - checking for "min" version is debugging ##
-        foreach( self::$options->library as $key => $value ) {
+        foreach( self::$option->library as $key => $value ) {
 
             // h::log( 'd:>working: '.$key );
 
@@ -454,12 +434,12 @@ class enqueue extends \Q {
     public static function wp_enqueue_scripts_theme() 
     {
 
-		// h::log( self::$options );
+		// h::log( self::$option );
 
         // Load Parent CSS
         if ( 
-            isset( self::$options->theme_parent->css ) 
-            && '1' == self::$options->theme_parent->css    
+            isset( self::$option->theme_parent->css ) 
+            && '1' == self::$option->theme_parent->css    
         ) {
 
             // h::log( 'd:> Loading Parent CSS...' );
@@ -543,8 +523,8 @@ class enqueue extends \Q {
 
 		// Load Child CSS
 		if ( 
-            isset( self::$options->theme_child->css ) 
-            && '1' == self::$options->theme_child->css    
+            isset( self::$option->theme_child->css ) 
+            && '1' == self::$option->theme_child->css    
         ) {
 
             // h::log( 'd:> Loading Child CSS...' );
@@ -629,8 +609,8 @@ class enqueue extends \Q {
 
 		// load parent theme js
         if ( 
-            isset( self::$options->theme_parent->js ) 
-            && '1' == self::$options->theme_parent->js
+            isset( self::$option->theme_parent->js ) 
+            && '1' == self::$option->theme_parent->js
         ) {
 
 			// deprecated scripts.js.. ##
@@ -710,7 +690,7 @@ class enqueue extends \Q {
             }
 
             // no asset found, so note this ##
-            if ( ! $found ) h::log( 'd:>Error loading JS Asset' );
+            if ( ! $found ) h::log( 'd:>Error loading Parent JS Asset' );
 
             // nonce ##
             $nonce = \wp_create_nonce( 'q-'.\get_current_blog_id().'-nonce' );
@@ -727,8 +707,8 @@ class enqueue extends \Q {
 
 		 // load child theme JS
 		 if ( 
-            isset( self::$options->theme_child->js ) 
-            && '1' == self::$options->theme_child->js
+            isset( self::$option->theme_child->js ) 
+            && '1' == self::$option->theme_child->js
         ) {
 
 			// deprecated scripts.js.. ##

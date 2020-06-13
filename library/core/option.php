@@ -74,7 +74,7 @@ class option extends \Q {
     {
 
 		// h::log( 'd:>here..' );
-        h::log( $field['choices'] );
+        // h::log( $field['choices'] );
 
         // empty array ##
         $array = [];
@@ -463,15 +463,14 @@ class option extends \Q {
                 'description' => '',
             ),
 
-			/*
             'q_option_extension'   => array(
-                'key' => 'group_q_option_plugin',
+                'key' => 'group_q_option_extension',
                 'title' => 'Extensions',
                 'fields' => array(
                     array(
-                        'key' => 'field_q_option_plugin',
-                        'label' => 'Plugins',
-                        'name' => 'q_option_plugin',
+                        'key' => 'field_q_option_extension',
+                        'label' => 'Modular Features',
+                        'name' => 'q_option_extension',
                         'type' => 'checkbox',
                         'instructions' => '',
                         'required' => 0,
@@ -482,77 +481,19 @@ class option extends \Q {
                             'id' => '',
                         ),
                         'choices' => array(
-                            'brandbar'  => 'Global Brand Bar',
-                            // 'promo'     => 'Promotion',
-                            'consent'   => 'Consent System',
-                            'ticker'    => 'News Ticker',
+							'consent'   => 'Consent System',
+                            'brandbar'  => '@todo from QP -> Brand Bar',
+                            'banner'    => '@todo from QP -> News Banner',
                         ),
                         'allow_custom' => 0,
                         'default_value' => array(
-                            0 => 'q-gh-brand-bar',
-                            1 => 'q-gh-consent',
+                            0 => 'consent',
                         ),
                         'layout' => 'vertical',
                         'toggle' => 0,
                         'return_format' => 'value',
                         'save_custom' => 0,
                     ),
-
-                    array(
-                        'key' => 'field_q_option_plugin_ticker_title',
-                        'label' => 'Ticker Title',
-                        'name' => 'q_option_plugin_ticker_title',
-                        'type' => 'text',
-                        'instructions' => 'Add short Ticker Title here ( Max 60 Chars )',
-                        'required' => 1,
-                        'conditional_logic' => array (
-                            array (
-                                array (
-                                    'field' => 'field_q_option_plugin',
-                                    'operator' => '==',
-                                    'value' => 'ticker',
-                                ),
-                            ),
-                        ),
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'default_value' => 'Coronavirus Update',
-                        'placeholder' => '',
-                        'prepend' => '',
-                        'append' => '',
-                        'maxlength' => '60',
-                        'readonly' => 0,
-                        'disabled' => 0,
-                    ),
-
-                    array(
-                        'key' => 'field_q_option_plugin_ticker_url',
-                        'label' => 'Ticker URL',
-                        'name' => 'q_option_plugin_ticker_url',
-                        'type' => 'url',
-                        'instructions' => 'Enter the full URL',
-                        'required' => 1,
-                        'conditional_logic' => array (
-                            array (
-                                array (
-                                    'field' => 'field_q_option_plugin',
-                                    'operator' => '==',
-                                    'value' => 'ticker',
-                                ),
-                            ),
-                        ),
-                        'wrapper' => array(
-                            'width' => '',
-                            'class' => '',
-                            'id' => '',
-                        ),
-                        'default_value' => 'https://greenheart.org/blog/exchange/coronavirus-update/',
-                        'placeholder' => '',
-                    ),
-
 
                 ),
                 'location' => array(
@@ -573,7 +514,6 @@ class option extends \Q {
                 'active' => true,
                 'description' => '',
             ),
-			*/
 
 		);
 		

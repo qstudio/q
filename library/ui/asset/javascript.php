@@ -1,14 +1,13 @@
 <?php
 
-namespace q\controller;
+namespace q\ui\asset;
 
-use q\core\core as core;
-use q\core\helper as helper;
-use q\core\config as config;
-use q\controller\generic as generic;
+use q\core;
+use q\core\helper as h;
+use q\ui;
 
 // load it up ##
-\q\controller\javascript::run();
+\q\ui\asset\javascript::run();
 
 class javascript extends \Q {
     
@@ -256,8 +255,7 @@ Date:       {$date}
             default:
 
                 //  file ##
-                // $file = self::get_plugin_path( 'library/theme/javascript/q.theme.js' );
-                $file = \q_theme::get_plugin_path( 'library/theme/javascript/q.theme.js' );
+                $file = \q_theme::get_parent_theme_path( '/library/ui/asset/javascript/q.theme.js' );
 
                 // helper::log( 'File: '.$file );
                 // helper::log( 'File: '.$file );
@@ -274,7 +272,7 @@ Date:       {$date}
                 $string .= implode( "", self::$array );
 
                 // mimnify ##
-                $string = generic::minify( $string, 'js' );
+                $string = ui\method::minify( $string, 'js' );
 
                 // add header to empty string ##
                 $string = self::header().$string;

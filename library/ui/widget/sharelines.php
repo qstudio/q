@@ -14,7 +14,7 @@ use q\core;
  */
 
 // load it up ##
-\q\theme\widget\sharelines::run();
+\q\ui\widget\sharelines::run();
 
 class sharelines extends \Q {
 
@@ -388,7 +388,7 @@ class sharelines extends \Q {
     public static function assets()
     {
 
-        \wp_register_style( 'q-sharelines-css', h::get( "theme/css/widget.sharelines.css", 'return' ) );
+        \wp_register_style( 'q-sharelines-css', h::get( "theme/asset/css/widget.sharelines.css", 'return' ) );
         \wp_enqueue_style( 'q-sharelines-css' );
 
 	}

@@ -260,50 +260,6 @@ class navigation extends \q\get {
     }
 	
 
-	
-    /**
-     * get nav_menu based on parent page slug
-     *
-     * @since       1.3.3
-     * @return      string       HTML Menu
-     */
-    public static function nav_menu_OLD( $args = array() )
-    {
-
-        // // get the_post ##
-        // if ( ! $the_post = get\post::object() ) { return false; }
-
-        // #self::log( $args );
-
-        // // Parse incoming $args into an array and merge it with $defaults - caste to object ##
-        // $args = ( object )\wp_parse_args( 
-        //     $args
-        //     , \q_theme::$the_nav_menu 
-		// );
-		
-		// global arg validator ##
-		if ( ! $args = ui\method::prepare_args( $args ) ){ 
-		
-			help::log( 'Bailing..' ); 
-		
-			return false; 
-		
-		}
-
-        #self::log( $args );
-
-        if ( \has_nav_menu( $args->menu ) ) {
-        
-            #self::log( 'has nav menu..' );
-
-            return $args;
-
-        }
-
-        return false;
-
-	}
-
 
 	
     /**

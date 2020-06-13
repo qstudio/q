@@ -5,11 +5,6 @@ namespace q\core;
 use q\core;
 use q\core\helper as h;
 
-// custom error handling ##
-// ini_set( 'log_errors', 1 );
-// ini_set( 'error_log', WP_CONTENT_DIR . '/debug.log' );
-// set_error_handler( [ '\\q\\core\\log', 'error_handler' ] );
-
 // run ##
 core\log::run();
 

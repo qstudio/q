@@ -7,7 +7,10 @@ use q\core\helper as h; // helper shortcut ##
 use q\plugin; // plugins ## 
 use q\ui; // template, ui, markup... ##
 use q\get; // wp, db, data lookups ##
-use q\render;
+use q\render; // self ##
+
+// Q Theme ##
+use q\theme;
 
 class method extends \q\render {
 
@@ -147,7 +150,7 @@ class method extends \q\render {
 			// define all required fields for markup ##
 			self::$fields = [
 				'total' 		=> $array['query']->found_posts, // total posts ##
-				'pagination'	=> ui\navigation::pagination( $array, 'return' ), // get pagination ##
+				'pagination'	=> theme\ui\module\navigation::pagination( $array, 'return' ), // get pagination ##
 				'posts'			=> $array['query']->posts // array of WP_Posts ##
 			];
 

@@ -1,0 +1,291 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Q Meet Our Students\n"
+"POT-Creation-Date: 2015-01-11 10:52+0100\n"
+"PO-Revision-Date: 2015-01-11 10:53+0100\n"
+"Last-Translator: Ray <ray@qstudio.us>\n"
+"Language-Team: Q Studio <team@qstudio.us>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.1\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: .\n"
+
+#: ../q-meet-our-students.php:152
+msgid "Search Countries"
+msgstr ""
+
+#: ../q-meet-our-students.php:153
+msgid "Popular Countries"
+msgstr ""
+
+#: ../q-meet-our-students.php:154
+msgid "All Countries"
+msgstr ""
+
+#: ../q-meet-our-students.php:157
+msgid "Edit Country"
+msgstr ""
+
+#: ../q-meet-our-students.php:158
+msgid "Update Country"
+msgstr ""
+
+#: ../q-meet-our-students.php:159
+msgid "Add New Country"
+msgstr ""
+
+#: ../q-meet-our-students.php:160
+msgid "New Country Name"
+msgstr ""
+
+#: ../q-meet-our-students.php:161
+msgid "Separate Countries with commas"
+msgstr ""
+
+#: ../q-meet-our-students.php:162
+msgid "Add or remove Countries"
+msgstr ""
+
+#: ../q-meet-our-students.php:163
+msgid "Choose from the most used Countries"
+msgstr ""
+
+#: ../q-meet-our-students.php:164
+msgid "No Countries found."
+msgstr ""
+
+#: ../q-meet-our-students.php:165
+msgid "Countries"
+msgstr ""
+
+#: ../q-meet-our-students.php:189
+msgid "Search Interests"
+msgstr ""
+
+#: ../q-meet-our-students.php:190
+msgid "Popular Interests"
+msgstr ""
+
+#: ../q-meet-our-students.php:191
+msgid "All Interests"
+msgstr ""
+
+#: ../q-meet-our-students.php:194
+msgid "Edit Interest"
+msgstr ""
+
+#: ../q-meet-our-students.php:195
+msgid "Update Interest"
+msgstr ""
+
+#: ../q-meet-our-students.php:196
+msgid "Add New Interest"
+msgstr ""
+
+#: ../q-meet-our-students.php:197
+msgid "New Interest Name"
+msgstr ""
+
+#: ../q-meet-our-students.php:198
+msgid "Separate Interests with commas"
+msgstr ""
+
+#: ../q-meet-our-students.php:199
+msgid "Add or remove Interests"
+msgstr ""
+
+#: ../q-meet-our-students.php:200
+msgid "Choose from the most used Interests"
+msgstr ""
+
+#: ../q-meet-our-students.php:201
+msgid "No Interests found."
+msgstr ""
+
+#: ../q-meet-our-students.php:202
+msgid "Interests"
+msgstr ""
+
+#: ../q-meet-our-students.php:227
+msgid "Search Ages"
+msgstr ""
+
+#: ../q-meet-our-students.php:228
+msgid "Popular Ages"
+msgstr ""
+
+#: ../q-meet-our-students.php:229
+msgid "All Ages"
+msgstr ""
+
+#: ../q-meet-our-students.php:232
+msgid "Edit Age"
+msgstr ""
+
+#: ../q-meet-our-students.php:233
+msgid "Update Age"
+msgstr ""
+
+#: ../q-meet-our-students.php:234
+msgid "Add New Age"
+msgstr ""
+
+#: ../q-meet-our-students.php:235
+msgid "New Age Name"
+msgstr ""
+
+#: ../q-meet-our-students.php:236
+msgid "Separate Ages with commas"
+msgstr ""
+
+#: ../q-meet-our-students.php:237
+msgid "Add or remove Ages"
+msgstr ""
+
+#: ../q-meet-our-students.php:238
+msgid "Choose from the most used Ages"
+msgstr ""
+
+#: ../q-meet-our-students.php:239
+msgid "No Ages found."
+msgstr ""
+
+#: ../q-meet-our-students.php:240
+msgid "Ages"
+msgstr ""
+
+#: ../q-meet-our-students.php:264
+msgid "Search Genders"
+msgstr ""
+
+#: ../q-meet-our-students.php:265
+msgid "Popular Genders"
+msgstr ""
+
+#: ../q-meet-our-students.php:266
+msgid "All Genders"
+msgstr ""
+
+#: ../q-meet-our-students.php:269
+msgid "Edit Gender"
+msgstr ""
+
+#: ../q-meet-our-students.php:270
+msgid "Update Gender"
+msgstr ""
+
+#: ../q-meet-our-students.php:271
+msgid "Add New Gender"
+msgstr ""
+
+#: ../q-meet-our-students.php:272
+msgid "New Gender Name"
+msgstr ""
+
+#: ../q-meet-our-students.php:273
+msgid "Separate Genders with commas"
+msgstr ""
+
+#: ../q-meet-our-students.php:274
+msgid "Add or remove Genders"
+msgstr ""
+
+#: ../q-meet-our-students.php:275
+msgid "Choose from the most used Genders"
+msgstr ""
+
+#: ../q-meet-our-students.php:276
+msgid "No Genders found."
+msgstr ""
+
+#: ../q-meet-our-students.php:277
+msgid "Genders"
+msgstr ""
+
+#: ../q-meet-our-students.php:307 ../q-meet-our-students.php:308
+msgid "Student"
+msgstr ""
+
+#: ../q-meet-our-students.php:309 ../q-meet-our-students.php:310
+#: ../q-meet-our-students.php:312 ../q-meet-our-students.php:320
+msgid "Add Student"
+msgstr ""
+
+#: ../q-meet-our-students.php:311
+msgid "Edit Student"
+msgstr ""
+
+#: ../q-meet-our-students.php:313
+msgid "All Students"
+msgstr ""
+
+#: ../q-meet-our-students.php:314
+msgid "View Student"
+msgstr ""
+
+#: ../q-meet-our-students.php:315
+msgid "Search Students"
+msgstr ""
+
+#: ../q-meet-our-students.php:318
+msgid "No Students found"
+msgstr ""
+
+#: ../q-meet-our-students.php:322
+msgid "No Students found in Trash"
+msgstr ""
+
+#: ../q-meet-our-students.php:324
+msgid "Students"
+msgstr ""
+
+#: ../q-meet-our-students.php:361
+msgid "Student Filters"
+msgstr ""
+
+#: ../q-meet-our-students.php:363
+msgid "Student Filters."
+msgstr ""
+
+#: ../q-meet-our-students.php:385
+msgid "Student Saved"
+msgstr ""
+
+#: ../q-meet-our-students.php:386
+msgid "Error"
+msgstr ""
+
+#: ../q-meet-our-students.php:487
+msgid "Apply Now"
+msgstr ""
+
+#: ../q-meet-our-students.php:798
+msgid "Save Student"
+msgstr ""
+
+#: ../q-meet-our-students.php:802
+msgid "Age"
+msgstr ""
+
+#: ../q-meet-our-students.php:804
+msgid "Country"
+msgstr ""
+
+#: ../q-meet-our-students.php:806
+msgid "Start Date"
+msgstr ""
+
+#: ../q-meet-our-students.php:808
+msgid "Gender"
+msgstr ""
+
+#: ../q-meet-our-students.php:861
+msgid "Cancel"
+msgstr ""

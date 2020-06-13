@@ -1,14 +1,14 @@
 <?php
 
-namespace q\controller;
+namespace q\ui\asset;
 
-use q\core\core as core;
-use q\core\helper as helper;
-use q\core\config as config;
-use q\controller\generic as generic;
+
+use q\core\core;
+use q\core\helper as h;
+use q\ui;
 
 // load it up ##
-\q\controller\css::run();
+\q\ui\asset\css::run();
 
 class css extends \Q {
     
@@ -19,7 +19,7 @@ class css extends \Q {
     public static function run()
     {
 
-        // helper::log( 'style file loaded...' );
+        // h::log( 'style file loaded...' );
 
         // add CSS to head if debugging or file if not ##
         \add_action( 'wp_head', [ get_class(), 'wp_head' ], 10000000000 );
@@ -31,8 +31,8 @@ class css extends \Q {
     public static function args( $args = false )
     {
 
-        #helper::log( 'passed args to class' );
-        #helper::log( $args );
+        #h::log( 'passed args to class' );
+        #h::log( $args );
 
         // update passed args ##
         self::$args = \wp_parse_args( $args, self::$args );
@@ -93,7 +93,7 @@ Priority: {$priority}
             || ! isset( $args["method"] )
         ){
 
-            helper::log( 'Missing args..' );
+            h::log( 'Missing args..' );
 
             return false;
 
@@ -104,15 +104,15 @@ Priority: {$priority}
             || ! is_callable( array( $args['view'], $args['method'] ) )
         ){
 
-            helper::log( 'handler wrong - class: '.$args['view'].' / method: '.$args['method'] );
+            h::log( 'handler wrong - class: '.$args['view'].' / method: '.$args['method'] );
 
             return false;
 
         }
 
-        // helper::log( 'add css from - class: '.$args['view'].' / method: '.$args['method'] );
+        // h::log( 'add css from - class: '.$args['view'].' / method: '.$args['method'] );
 
-        // helper::log( self::$args );
+        // h::log( self::$args );
         ob_start();
 
         // call class method and pass arguments ##
@@ -126,13 +126,13 @@ Priority: {$priority}
 
         if ( ! $data ) {
             
-            helper::log( 'Handler method returned bad data..' );
+            h::log( 'Handler method returned bad data..' );
 
             return false;
 
         }
 
-        // helper::log( $data );
+        // h::log( $data );
 
         // add script ##
         self::add( $data, $args["priority"], $args["handle"] ) ;
@@ -154,12 +154,12 @@ Priority: {$priority}
     public static function add( $string = null, $priority = 10, $comment = false )
     {
 
-        // helper::log( 'CSS render called for: '.$comment .' --- length: '. strlen( $string ) );
+        // h::log( 'CSS render called for: '.$comment .' --- length: '. strlen( $string ) );
 
         // sanity ##
         if ( is_null( $string ) ) {
 
-            #helper::log( 'nothing passed to renderer...' );
+            #h::log( 'nothing passed to renderer...' );
 
             return false;
 
@@ -209,8 +209,8 @@ Date:       {$date}
     public static function wp_head()
     {
 
-        // helper::log( 'css header called...' );
-        #helper::log( self::$array );
+        // h::log( 'css header called...' );
+        #h::log( self::$array );
 
         // sanity ##
         if ( 
@@ -218,7 +218,7 @@ Date:       {$date}
             || ! array_filter( self::$array )
         ) {
 
-            helper::log( 'array is empty.' );
+            h::log( 'array is empty.' );
 
             return false;
 
@@ -246,7 +246,7 @@ Date:       {$date}
                 // wrap in tags ##
                 $string = self::add_tag( $string );
 
-                #helper::log( $string );
+                #h::log( $string );
 
                 // echo back into the end of the markup ##
                 echo $string;
@@ -258,15 +258,14 @@ Date:       {$date}
             default:
 
                 //  file ##
-                // $file = self::get_plugin_path( 'library/theme/css/q.theme.css' );
-                $file = \q_theme::get_plugin_path( 'library/theme/css/q.theme.css' );
+                $file = \q_theme::get_parent_theme_path( '/library/ui/asset/css/q.theme.css' );
 
-                // helper::log( 'File: '.$file );
-                // helper::log( 'Theme File: '.$file );
+                // h::log( 'File: '.$file );
+                // h::log( 'Theme File: '.$file );
 
                 if ( ! file_exists( $file ) ) {
 
-                    // helper::log( 'theme/css/q.theme.css missing, so creating..' );
+                    // h::log( 'theme/css/q.theme.css missing, so creating..' );
 
                     touch( $file ) ;
 
@@ -276,7 +275,7 @@ Date:       {$date}
                 $string .= implode( "", self::$array );
 
                 // mimnify ##
-                $string = generic::minify( $string, 'css' );
+                $string = ui\method::minify( $string, 'css' );
 
                 // add header to empty string ##
                 $string = self::header().$string;
@@ -320,7 +319,7 @@ Date:       {$date}
 
             \delete_site_transient( 'q_css_length' );
 
-            helper::log( 'Force refresh of CSS file..' );
+            h::log( 'Force refresh of CSS file..' );
 
             return false;
 
@@ -331,7 +330,7 @@ Date:       {$date}
             is_null( $length ) 
         ) {
 
-            #helper::log( 'Error in passed parameters.' );
+            #h::log( 'Error in passed parameters.' );
 
             // defer to negative ##
             return false;
@@ -341,25 +340,25 @@ Date:       {$date}
         // get the stored file length from teh database ##
         if ( false === ( $stored_length = \get_site_transient( 'q_css_length' ) ) ) {
 
-            #helper::log( 'Nothing found in transients.' );
+            #h::log( 'Nothing found in transients.' );
 
             return false;
 
         }
 
         // log ##
-        #helper::log( 'stored length: '.$stored_length );
+        #h::log( 'stored length: '.$stored_length );
 
         // compare lengths ##
         if ( $length == $stored_length ) {
 
-            #helper::log( 'File is unchanged ( '.$length.' == '.$stored_length.' ), so not remaking' );
+            #h::log( 'File is unchanged ( '.$length.' == '.$stored_length.' ), so not remaking' );
 
             return true;
 
         }
 
-        #helper::log( 'File length is different ( '.$length.' != '.$stored_length.' ), so remaking' );
+        #h::log( 'File length is different ( '.$length.' != '.$stored_length.' ), so remaking' );
 
         return false;
 

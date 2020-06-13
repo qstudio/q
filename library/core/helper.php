@@ -376,11 +376,58 @@ class helper extends \Q {
 
 
 
+	/** 
+     * Check which consent is given by the user via a stored cookie
+     * 
+     * @since 4.0.0
+     * */
+    public static function consent( $setting = null ): bool
+    {
+
+        if ( is_null( $setting ) ) {
+
+            // h::log( 'd:>No setting passed, default to true.' );
+
+            return true;
+
+        }
+
+        if ( 
+			! class_exists( '\q\extension\consent' )
+        ) {
+
+            // h::log( 'd:>Consent Class not found, default to true' );
+
+            // no ##
+            return true;
+
+        }
+
+        if (
+            ! \q\extension\consent\cookie::is_active( $setting ) 
+        ) {
+
+            // h::log( 'd:>Setting not allowed: '.$setting );
+
+            // no ##
+            return false;
+
+        }
+
+        // h::log( 'd:>Setting allowed: '.$setting );
+
+        // ok ##
+        return true;
+
+    }
+
+
+
     /**
     * Get current device type from "Device Theme Switcher"
     *
     * @since       0.1
-    * @return      string      Device slug
+	* @return      string      Device slug
     */
     public static function device()
     {
@@ -401,6 +448,8 @@ class helper extends \Q {
         
         }
 
+		h::log( 'd:> @todo -- change reference to look as q/extension/device ##' );
+		// @todo -- change reference to look as q/extension/device ##
         // we have a new simpler device handler - q_device - check if the class is available ##
         if ( 
             class_exists( 'q_device' ) 

@@ -31,7 +31,7 @@ class load extends \Q {
 		// filter, so other plugins can control - inject, remove ##
 		$array = core\filter::apply([
 			'parameters'    => [ 'array' => $array ], // pass ( $string ) as single array ##
-            'filter'        => 'q/ui/module/load/'.core\method::backtrace([ 'return' => 'class' ]), // filter handle ##
+            'filter'        => 'q/core/load/'.core\method::backtrace([ 'return' => 'class' ]), // filter handle ##
             'return'        => $array
 		]);
 
@@ -39,7 +39,7 @@ class load extends \Q {
 			! $array
 		){
 
-			h::log( 'e:>No libraries to load from: "'.core\method::backtrace([ 'return' => 'class_function' ]).'"' );
+			h::log( 'e:>No libraries to load from: "'.core\method::backtrace([ 'return' => 'class_function', 'level' => 2 ]).'"' );
 
 		}
 
@@ -54,7 +54,7 @@ class load extends \Q {
 				|| is_null( $value )
 			) {
 
-				h::log( 'e:>Error loading library: '.$key );
+				h::log( 'e:>Error loading library: '.$key.' from: "'.core\method::backtrace([ 'return' => 'class_function', 'level' => 2 ]).'"' );
 
 				continue;
 

@@ -1,0 +1,9 @@
+th.column-sticky { width: 60px; }
+a.q-sticky { width:24px; height:30px; display:block; background: url("images/star.png") no-repeat -44px -50px; }
+a.q-sticky.is-sticky { width:24px; height:30px; display:block; background: url("images/star.png") no-repeat 0px -50px; }
+a.q-sticky:hover { background: url("images/star.png") no-repeat -22px -50px; }
+#q-sticky-meta { border-bottom:none; }
+span.post-state { display: none; }
+#q-sticky-meta a.q-sticky { width:20px; height:20px; position:relative; top:4px; display:inline-block; background-position:-47px -49px; }
+#q-sticky-meta a.q-sticky.is-sticky { background-position:-3px -49px; }
+#q-sticky-meta a.q-sticky:hover { background-position:-25px -49px; }

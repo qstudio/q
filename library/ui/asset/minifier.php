@@ -1,13 +1,13 @@
 <?php
 
-namespace q\ui;
+namespace q\ui\asset;
 
 use q\core;
 use q\core\helper as h;
 use MatthiasMullie\Minify;
 
 // load it up ##
-\q\ui\minifier::run();
+\q\ui\asset\minifier::run();
 
 class minifier extends \Q {
 
