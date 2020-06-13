@@ -44,8 +44,8 @@ class args extends \q\render {
             // || ! is_array( $args['fields'] )
             // || ! isset( $args['group'] ) // @todo --- this is specific to the_group calls ##
             || ! isset( $args['markup'] )
-            || ! is_array( $args['markup'] )
-            || ! isset( $args['markup']['template'] )
+            // || ! is_array( $args['markup'] )
+            // || ! isset( $args['markup']['template'] )
         ){
 
 			// log ##
@@ -160,7 +160,21 @@ class args extends \q\render {
         // h::log( $args );
 
         // grab args->markup ##
-        self::$markup = $args['markup'];
+		self::$markup = $args['markup'];
+		
+		// if no template send, assign to main markup ##
+		// if ( 
+		// 	! isset( $args['markup']['template'] ) 
+		// 	&& ! is_array( $args['markup'] )
+		// ) {
+
+		// 	// make array ##
+		// 	self::$markup = [];
+
+		// 	// add template key with passed markup ##
+		// 	self::$markup['template'] = $args['markup'];
+
+		// }
 
         // return args for validation ##
         return $args;

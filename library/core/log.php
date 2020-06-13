@@ -21,7 +21,8 @@ class log extends \Q {
 			'd' 		=> 'debug', // shown by default
 			'e' 		=> 'error',
 			'n' 		=> 'notice',
-			'l' 		=> 'log'
+			'l' 		=> 'log',
+			't'			=> '@todo'
 		],
 		$key_array 		= [],
 		$on_run 		= true,
@@ -31,6 +32,9 @@ class log extends \Q {
 
 
 	public static function run(){
+
+		// empty log ??
+		// self::$log = [];
 
 		// filter pre-defined actions ##
 		$on_run 		= \apply_filters( 'q/core/log/on_run', self::$on_run );
@@ -111,7 +115,7 @@ class log extends \Q {
 			// || ! isset( $args['log'] )
 		){
 
-			core\helper::debug( 'd:>Problem with passed args' );
+			// core\helper::debug( 'd:>Problem with passed args' );
 
 			return false;
 
@@ -411,13 +415,6 @@ class log extends \Q {
 	}
 
 
-	public static function array_unique_multidimensional( Array $input = [] )
-	{
-		$serialized = array_map('serialize', $input);
-		$unique = array_unique($serialized);
-		return array_intersect_key($input, $unique);
-	}
-
 	
 
 	/**
@@ -488,7 +485,7 @@ class log extends \Q {
     public static function write( $key = null ){
 
 		// test ##
-		// core\helper::debug( 'd:>write: '.$key );
+		// self::set( 'write: '.$key );
 		// core\helper::debug( self::$log );
 
 		// sanity ##
@@ -500,23 +497,38 @@ class log extends \Q {
 			&& ! isset( self::$log[ $key ] ) 
 		) {
 
-			core\helper::debug( '"'.$key.'" Log is empty.' );
+			// self::set( '"'.$key.'" Log is empty.' );
 
 			return false;
 
 		}
 
-        // option to debug only specific key ##
-        $return = 
-            isset( $key ) ?
-            self::$log[ $key ] : // key group ##
-			self::$log ; // all
+		// option to debug only specific key ##
+		if ( isset( $key ) ) {
+			
+			$return = self::$log[ $key ];  // key group ##
+
+			// empty log key ##
+			unset( self::$log[ $key ] );
+
+        } else {
+
+			$return = self::$log ; // all
+
+			// empty log ##
+			unset( self::$log );
+			self::$log = [];
+
+		}
 			
 		// create named array key, based on passed key, so easier to read log ##
 		if ( ! is_null( $key ) ) { $return = [ $key => $return ]; }
 
 		// keys are added sequentially, so we need to reverse to see the actual flow ##
 		if ( is_array( $return ) ) { $return = array_reverse( $return ); }
+
+		// clean up ##
+		// $return = self::array_unique_multidimensional( $return );
 
 		// debugging is on in WP, so write to error_log ##
         if ( true === WP_DEBUG ) {
@@ -534,10 +546,22 @@ class log extends \Q {
             }
 
 		}
-		
+
 		// done ##
 		return true;
 
+	}
+
+
+	public static function array_unique_multidimensional($input)
+	{
+
+		$serialized = array_map('serialize', $input);
+
+		$unique = array_unique($serialized);
+
+		return array_intersect_key($input, $unique);
+	
 	}
 
 
@@ -569,6 +593,12 @@ class log extends \Q {
 			);
 			file_put_contents( $error_log, $message.PHP_EOL, FILE_APPEND );
 		}
+
+		// empty log ??
+		// self::$log = [];
+
+		return true;
+
 	}
 
 
@@ -633,7 +663,7 @@ class log extends \Q {
 			fclose($f);
 
 			// log to log ##
-			core\helper::debug( 'Log Emptied: '.date('l jS \of F Y h:i:s A') );
+			// core\helper::debug( 'Log Emptied: '.date('l jS \of F Y h:i:s A') );
 
 		}
 
@@ -658,18 +688,38 @@ class log extends \Q {
 			// || ! isset( self::$log[ $key ] )
 		){
 
-			core\helper::debug( 'd:>shutdown -- no key, so write all..' );
+			// core\helper::debug( 'd:>shutdown -- no key, so write all..' );
 
 			// log all ##
 			return self::write();
 
 		}
-
-		// core\helper::debug( 'd:>shutdown -- key passed: '.$key );
+		
+		// multiple logs ##
+		// h::debug( $key );
 
 		// also log debug, if debugging... ##
 		if ( \Q::$debug ) self::write( 'debug' );
 
+		if ( is_array( $key ) ) {
+
+			// h::debug( 'd:>key is an array, looping..' );
+
+			foreach( $key as $k => $v ) {
+
+				// h::debug( 'd:>key is: '.$v );
+
+				// log specific key ##
+				self::write( $v );
+
+			}
+
+			return true;
+
+		}
+
+		// core\helper::debug( 'd:>shutdown -- key passed: '.$key );
+		
 		// log specific key ##
 		self::write( $key );
 

@@ -107,7 +107,7 @@ class method extends \q\render {
 			'total' 		=> '0', // set to zero string value ##
 			'pagination' 	=> null, // empty field.. ##
 			// 'pagination' = false, // don't load pagination ##
-			'posts' 		=> $args['markup']['no_results'] // replace posts with no_results markup ## is this right ?? ##
+			'posts' 		=> $args['no_results'] // replace posts with no_results markup ## is this right ?? ##
 		];
 
         // pass to get_posts -- and validate that we get an array back ##
@@ -343,12 +343,31 @@ class method extends \q\render {
 
 
 	/**
-	 * Helper Method to get the_fields - ui\field\render() ##
+	 * Helper Method to render::group - ui\field\render() ##
 	 */
 	public static function group( Array $args = null ){
 
 		// bounce on, and return array ##
 		return group::render( $args );
+
+	}
+
+
+
+
+	/**
+	 * Helper Method to render:field - ui\field\render() ##
+	 */
+	public static function field( Array $args = null ){
+
+		// global arg validator ##
+		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
+
+		// get content - returns array with key 'content' ##
+		$array = get\post::field( $args );
+
+        // return ##
+		return ui\method::prepare_render( $args, $array );
 
 	}
 

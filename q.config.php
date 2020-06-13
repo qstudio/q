@@ -97,9 +97,14 @@ return [
 	],
 
 	// acf field groups ##
-	'group'  				=> [
+	'group'  					=> [
 		'config' 				=> [ 'run' => true ],
 		// 'filter' => [ 'src' => true ] // add srcsets ##
+	],
+
+	// single field ##
+	'field'  					=> [
+		'markup' 				=> '<span class="the-field the-field-%field%">%value%</span>',
 	],
 
 	// post_title ##
@@ -141,8 +146,8 @@ return [
 								],
 		
 		// UI ##
-		'markup'				=> [ 
-								'template'=> 
+								// wrapper ##
+								'markup'=> 
 									'<div class="col-12 the-posts">
 										<div class="row"><h5 class="col-12 mt-2">%total% Results Found.</h5></div>
 										<div class="row mt-3">%posts%</div>
@@ -171,7 +176,6 @@ return [
 								'no_results'			
 									=> '<div class="col-12"><p>We count not find any matching posts, please check again later.</p></div>', 
 
-								],
 
 		// config ##
 		'wp_query_args'			=> [
@@ -193,13 +197,12 @@ return [
 		'config'				=> [ 
 									// 'run' => true, 
 									'debug' => false, 
-									// 'load' => 'the_posts'  // change loaded config ##
+									// 'load' => 'posts'  // change loaded config ##
 								],
 		
 		// UI ##
-		'markup'				=> [ 
 								// main template ##
-								'template' => 
+								'markup' => 
 									'<div class="col-12 the-posts">
 										<div class="row"><h5 class="col-12 mt-2">%total% Results Found.</h5></div>
 										<div class="row mt-3">%posts%</div>
@@ -234,7 +237,6 @@ return [
 								'no_results'			
 									=> '<div class="col-12"><p>We count not find any matching posts, please check again later.</p></div>', 
 
-								],
 
 		// config ##
 		'wp_query_args'			=> [
@@ -253,6 +255,7 @@ return [
 
 	// the_post_single() ##
 	'post_single'  => [
+		// ...
 		'allow_comments'        => 'allow_comments', // allow comments ##
 		'next_back'            	=> ( h::device() == 'desktop' ) ? false : true, // next / home / back links ##
 	],

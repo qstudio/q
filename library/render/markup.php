@@ -11,7 +11,7 @@ class markup extends \q\render {
 
     /**
      * Apply Markup changes to passed template
-     * find all placeholders in self::$markup['template'] and replace with matching values in self::$fields
+     * find all placeholders in self::$markup and replace with matching values in self::$fields
      * 
      */
     public static function prepare(){
@@ -20,7 +20,7 @@ class markup extends \q\render {
         if (
             ! isset( self::$fields )
             || ! is_array( self::$fields )
-            || ! isset( self::$markup['template'] )
+            || ! isset( self::$markup )
         ) {
 
 			// log ##
@@ -28,14 +28,14 @@ class markup extends \q\render {
 
             return false;
 
-        }
-
+		}
+		
         // test ##
         // helper::log( self::$fields );
-        // helper::log( self::$markup['template'] );
+        // helper::log( self::$markup );
 
         // new string to hold output ## 
-        $string = self::$markup['template'];
+        $string = self::$markup;
 
         // loop over each field, replacing placeholders with values ##
         foreach( self::$fields as $key => $value ) {
@@ -141,9 +141,9 @@ class markup extends \q\render {
 		$key = $args['key'];
 
 		// look for wrapper in markup ##
-		if ( isset( self::$markup[$key] ) ) {
+		if ( isset( self::$args[$key] ) ) {
 
-			$markup = self::$markup[ $key ];
+			$markup = self::$args[ $key ];
 
 			// filter ##
 			$string = core\filter::apply([ 
@@ -207,7 +207,7 @@ class markup extends \q\render {
         // helper::log( 'Update template markup for field: '.$field.' @ count: '.$count );
 
         // look for required markup ##
-        if ( ! isset( self::$markup[$field] ) ) {
+        if ( ! isset( self::$args[$field] ) ) {
 
 			// log ##
 			h::log( self::$args['group'].'~>n:>Field: "'.$field.'" does not have required markup defined in $args->markup->$field' );
@@ -218,7 +218,7 @@ class markup extends \q\render {
         }
 
         // get markup ##
-        // $markup = self::$markup[$field];
+        // $markup = self::$args[$field];
 
         // helper::log( $markup );
         /*
@@ -252,7 +252,7 @@ class markup extends \q\render {
 
         // get all placeholders from markup->$field ##
         if ( 
-            ! $placeholders = self::get_placeholders( self::$markup[$field] ) 
+            ! $placeholders = self::get_placeholders( self::$args[$field] ) 
         ) {
 
 			// log ##
@@ -279,22 +279,22 @@ class markup extends \q\render {
         // helper::log( $new_placeholders );
 
         // generate new markup from template with new_placeholders ##
-        $new_markup = str_replace( $placeholders, $new_placeholders, self::$markup[$field] );
+        $new_markup = str_replace( $placeholders, $new_placeholders, self::$args[$field] );
 
         // helper::log( $new_markup );
 
         // use strpos to get location of %placeholder ##
-        $position = strpos( self::$markup['template'], $placeholder );
+        $position = strpos( self::$markup, $placeholder );
         // helper::log( 'Position: '.$position );
 
         // add new markup to $template as defined position - don't replace %placeholder% yet... ##
-        $new_template = substr_replace( self::$markup['template'], $new_markup, $position, 0 );
+        $new_template = substr_replace( self::$markup, $new_markup, $position, 0 );
 
         // test ##
         // helper::log( $new_template );
 
         // push back to store markup ##
-        self::$markup['template'] = $new_template;
+        self::$markup = $new_template;
 
         // kick back ##
         return true;
@@ -345,9 +345,12 @@ class markup extends \q\render {
      * @todo - work on passed params 
      *  
      */
-    public static function get_placeholder( string $placeholder = null, $template = 'template' ) {
-        
-        if ( ! substr_count( self::$markup[$template], $placeholder ) ) {
+    public static function get_placeholder( string $placeholder = null, $field = null ) {
+		
+		// if $markup template passed, check there, else check self::$markup ##
+		$markup = is_null( $field ) ? self::$markup : self::$args[$field] ;
+
+        if ( ! substr_count( $markup, $placeholder ) ) {
 
             return false;
 
@@ -380,7 +383,7 @@ class markup extends \q\render {
 		}
 		
 		// where are we replacing ##
-		// $markup = ! \is_null( $markup ) ? $markup : self::$markup['template'] ;
+		// $markup = ! \is_null( $markup ) ? $markup : self::$markup ;
 
 		// h::log( $markup );
 

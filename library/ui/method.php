@@ -19,14 +19,14 @@ class method extends \Q {
 
 		// sanity ##
 		if (
-			// is_null( $args )
-			// ||
-			! is_array( $args )
+		// 	// is_null( $args )
+		// 	// ||
+		 	! is_array( $args )
 		){
 
-			h::log( 'Error in passed args' );
+		 	h::log( 'e:>Error in passed args' );
 
-			return false;
+		 	return false;
 
 		}
 
@@ -202,14 +202,14 @@ class method extends \Q {
 
 		}
 
-		// h::log( '$method: '.$method );
+		// h::log( 'd:>$method: '.$method );
 		// h::log( $args );
 		// h::log( $array );
 
 		// no markup passed ##
 		if ( ! isset( $args['markup'] ) ) {
 
-			h::log( 'Missing "markup", returning false.' );
+			h::log( 'e~>'.$method.':Missing "markup", returning false.' );
 
 			return false;
 
@@ -500,7 +500,7 @@ class method extends \Q {
             )
         ) {
 
-            helper::log( 'missing parameters' );
+            helper::log( 'e:>missing parameters' );
 
             return false;
 

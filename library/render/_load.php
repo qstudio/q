@@ -153,6 +153,9 @@ class render extends \Q {
 			// validate and assign args ##
 			'args' => h::get( 'render/args.php', 'return', 'path' ),
 
+			// acf field handler ##
+			'field' => h::get( 'render/field.php', 'return', 'path' ), 
+
 			// render group() ##
 			'group' => h::get( 'render/group.php', 'return', 'path' ),
 
@@ -211,6 +214,34 @@ class render extends \Q {
 
 		// test namespace ##
 		// h::log( __NAMESPACE__ );
+
+		// group_ methods ##
+		if ( 
+			'group_' === substr( $function, 0, 6 ) 
+		) {
+
+			// take the second part of the function name as the group value ##
+			$args['group'] = str_replace( 'group_', '', $function );
+
+			// call it ##
+			return render\group::render( $args );
+
+		}
+
+		// field methods ##
+		if ( 
+			'field_' === substr( $function, 0, 6 ) 
+			// && \method_exists( __NAMESPACE__.'\render\fiel', $function ) // && exists ##
+			// && \is_callable([ __NAMESPACE__.'\render\method', $function ]) // && exists ##
+		) {
+
+			// take the second part of the function name as the field value ##
+			$args['field'] = str_replace( 'field_', '', $function );
+
+			// call it ##
+			return render\field::field( $args );
+
+		}
 
 		// look fo rmatching method to $function ##
 		if (

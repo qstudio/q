@@ -317,13 +317,13 @@ class format extends \q\render {
         }
 
         // remove placeholder from markup template
-        self::$markup['template'] = render\markup::remove_placeholder( '%'.$field.'%', self::$markup['template'] );
+        self::$markup = render\markup::remove_placeholder( '%'.$field.'%', self::$markup );
 
         // delete sending field ##
         render\fields::remove( $field, 'Removed by format_array after working' );
 
         // checkout markup ##
-        // h::log( self::$markup['template'] );
+        // h::log( self::$markup );
 
         // returning false will delete the original passed field ##
         return true;

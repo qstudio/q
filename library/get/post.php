@@ -83,6 +83,43 @@ class post extends \q\get {
     }
 
 
+
+
+	
+	
+    /**
+     * Get Post field from acf, format if required and markup
+     *
+     * @since       4.0.0
+     */
+    public static function field( $args = null )
+    {
+
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+			|| ! isset( $args['field'] )
+		){
+
+			h::log( 'e:>Error in passed args' );
+
+			return false;
+
+		}
+
+		// pst ID ##
+		$post_id = isset( $args['config']['post'] ) ? $args['config']['post']->ID : null ;
+
+		// get field ##
+		$value = \get_field( $args['field'], $post_id );
+		
+		// return ##
+		return $value;
+
+	}
+
+
 	
     /**
      * Generic H1 title tag

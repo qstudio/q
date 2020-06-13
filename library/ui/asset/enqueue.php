@@ -68,7 +68,7 @@ class enqueue extends \Q {
             ! class_exists( 'q_theme' ) // how to get around this ?? ##
         ) {
 
-            h::log( 'e:>@todo --- Q requires q_theme to run correctly..' );
+            // h::log( 'e:>@todo --- Q requires q_theme to run correctly..' );
 
             // return false;
 
