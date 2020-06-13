@@ -1,17 +1,15 @@
 <?php
 
-namespace q\device\core;
+namespace q\extension\device;
 
-use q\device\core\core as core;
-use q\device\core\helper as helper;
-
-// piggyback Q helper ##
-// use q\core\helper as q_helper;
+use q\core;
+use q\core\helper as h;
+use q\extension;
 
 // load it up ##
-\q\device\core\core::run();
+\q\extension\device\method::run();
 
-class core extends \q_device {
+class method extends extension\device {
 
     public static function run()
     {
@@ -121,7 +119,7 @@ class core extends \q_device {
         // check if we already have a $get object ##
         if ( ! self::$get ) {
 
-            helper::log( 'We need to start a new Mobile Detect check' );
+            h::log( 'd:>We need to start a new Mobile Detect check' );
 
             // start a new detection ##
             core::get();
@@ -158,7 +156,7 @@ class core extends \q_device {
 
             default :
 
-                helper::log( 'There is no test for device: '.$device );
+                h::log( 'd:>There is no test for device: '.$device );
 
                 return false;
 
@@ -180,7 +178,7 @@ class core extends \q_device {
             || ! is_array( $array ) 
         ){
 
-            helper::log( 'Error in passed array' );
+            h::log( 'd:>Error in passed array' );
 
             return [];
 

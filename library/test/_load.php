@@ -97,11 +97,12 @@ class test extends \Q {
                 'fields' => array(
                     'debug' => array(
                         'key' => 'field_q_option_debug',
-                        'label' => 'Enable Debugging',
+                        'label' => 'Debugging',
                         'name' => 'q_option_debug',
-                        'type' => 'true_false',
-                        // 'instructions' => 'Control plugin debug settings',
-                        'required' => 0,
+                        'type' => 'radio',
+                        'instructions' => 'Global plugin debug setting',
+						'required' => 1,
+						'layout' => 'horizontal',			
                         'conditional_logic' => 0,
                         'wrapper' => array(
                             'width' => '',
@@ -109,10 +110,14 @@ class test extends \Q {
                             'id' => '',
                         ),
                         'allow_custom' => 0,
-                        'default_value' => 0,
-                        'ui' => 0,
-                        'ui_on_text' => '',
-                        'ui_off_text' => '',
+                        'choices' 	=> array(
+                            'on' 	=> 'On',
+                            'off'   => 'Off',
+                        ),
+                        'default_value' => array(
+                            0 		=> 'off',
+                        ),
+						// 'description' => 'dfdf',
                     ),
                     'test' => array(
                         'key' => 'field_q_option_test',

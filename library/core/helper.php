@@ -7,7 +7,7 @@ use q\core\helper as h;
 // use q\theme\template as template;
 
 // Q Device ##
-use q\device\core\core as device;
+// use q\device\core\core as device;
 
 // load it up ##
 #\q\core\h::run();
@@ -448,14 +448,12 @@ class helper extends \Q {
         
         }
 
-		h::log( 'd:> @todo -- change reference to look as q/extension/device ##' );
-		// @todo -- change reference to look as q/extension/device ##
-        // we have a new simpler device handler - q_device - check if the class is available ##
+        // we have a new simpler device handler extension - check if the class is available ##
         if ( 
-            class_exists( 'q_device' ) 
+            class_exists( '\q\extension\device\method' ) 
         ) {
 
-            $handle = device::handle();
+            $handle = \q\extension\device\method::handle();
 
         // or use the device-theme-switcher if active ##
         } else if ( 
@@ -506,12 +504,14 @@ class helper extends \Q {
         // backup to mobile ##
         } else {
 
+			// self::log( 'd:>assign default handle' );
+
             $handle = 'handheld'; // defaults to mobile ##
 
         }
 
         // check what we have ##
-        // self::log( 'handle: '.$handle );
+        // self::log( 'd:>handle: '.$handle );
 
         // set and return the property value ##
         // return self::$device = $handle;

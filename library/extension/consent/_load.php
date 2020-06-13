@@ -40,6 +40,19 @@ class consent extends \Q {
 	public static function run()
     {
 
+		// h::log( core\option::get('extension') );
+		
+		if ( 
+			! isset( core\option::get('extension')->consent )
+			|| true !== core\option::get('extension')->consent 
+		){
+
+			h::log( 'd:>Consent is not enabled.' );
+
+			return false;
+
+		}
+
         core\load::libraries( self::load() );
 
     }

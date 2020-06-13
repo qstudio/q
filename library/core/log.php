@@ -667,8 +667,8 @@ class log extends \Q {
 
 		// core\helper::debug( 'd:>shutdown -- key passed: '.$key );
 
-		// also log helper ##
-		self::write( 'debug' );
+		// also log debug, if debugging... ##
+		if ( \Q::$debug ) self::write( 'debug' );
 
 		// log specific key ##
 		self::write( $key );

@@ -34,8 +34,8 @@ class extension extends \Q {
 			// consent ##
 			'consent' => h::get( 'extension/consent/_load.php', 'return', 'path' ),
 
-			// todo -- device ##
-			'device' => h::get( 'extension/device.php', 'return', 'path' ),
+			// device ##
+			'device' => h::get( 'extension/device/_load.php', 'return', 'path' ),
 
 			// github ##
 			'github' => h::get( 'extension/github.php', 'return', 'path' ),

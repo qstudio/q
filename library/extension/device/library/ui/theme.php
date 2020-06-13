@@ -1,16 +1,15 @@
 <?php
 
-namespace q\device\theme;
+namespace q\extension\device;
 
-use q\device\core\core as core;
-use q\device\core\is as is;
-use q\device\core\config as config;
-use q\device\core\helper as helper;
+use q\core;
+use q\core\helper as h;
+use q\extension;
 
 // load it up ##
-\q\device\theme\controller::run();
+\q\extension\device\theme::run();
 
-class controller extends \q_device {
+class theme extends extension\device {
 
     public static function run()
     {
@@ -77,7 +76,7 @@ class controller extends \q_device {
         $array = array_unique( $array );
 
         // merge into $classes ##
-        $classes = array_merge( $classes, core::prefix( $array, 'browsers-' ), core::prefix( $array, 'device-' ) );
+        $classes = array_merge( $classes, method::prefix( $array, 'browsers-' ), method::prefix( $array, 'device-' ) );
 
         // test ##
         // helper::log( $classes );

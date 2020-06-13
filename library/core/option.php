@@ -81,7 +81,8 @@ class option extends \Q {
 
         foreach( $field['choices'] as $key => $value ) {
 
-            // h::log( 'working: '.$key );
+			// h::log( 'working: '.$key );
+			$location = "Plugin";
 
             // add to array ##
             $array[$key] = $value; 
@@ -138,12 +139,15 @@ class option extends \Q {
 
                 continue;
 
-            }
+			}
+			
+			// find location ##
+			if ( false !== strpos( $file, 'themes' ) ) { $location = 'Theme'; }
 
             // h::log( 'd:>Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
 
             // Add link to view ##
-            $array[$key] = $value.' ( <a href="'.$file.'" target="_blank">view</a> )';
+            $array[$key] = '<strong>'.$value.'</strong> from '.$location.' ( <a href="'.$file.'" target="_blank">view</a> )';
 
         }
 
@@ -469,7 +473,7 @@ class option extends \Q {
                 'fields' => array(
                     array(
                         'key' => 'field_q_option_extension',
-                        'label' => 'Modular Features',
+                        'label' => 'Development Modules',
                         'name' => 'q_option_extension',
                         'type' => 'checkbox',
                         'instructions' => '',
@@ -482,12 +486,12 @@ class option extends \Q {
                         ),
                         'choices' => array(
 							'consent'   => 'Consent System',
-                            'brandbar'  => '@todo from QP -> Brand Bar',
-                            'banner'    => '@todo from QP -> News Banner',
+							'device'   	=> 'Device Detection',
                         ),
                         'allow_custom' => 0,
                         'default_value' => array(
-                            0 => 'consent',
+							0 => 'consent',
+							1 => 'device',
                         ),
                         'layout' => 'vertical',
                         'toggle' => 0,
@@ -755,17 +759,17 @@ class option extends \Q {
 
         // get all stored options ##
         $debug = self::get('debug'); // \get_field( 'q_option_debug', 'option' ); 
-        // \get_site_option( 'options_q_option_debug', false );
+        // \delete_site_option( 'options_q_option_debug', false );
 
         // check ##
         // h::log( \get_field( 'q_option_debug', 'option') );
-        // h::log( 'debug pulled from options table: '.json_encode( $debug ) );
+        // h::log( 'd:>debug pulled from options table: '.json_encode( $debug ) );
         // h::log( 'debug pulled from options table: '. ( 1 == $debug ? 'True' : 'False' ) );
 
         // make a real boolean ##
         $debug = ( 
             ( 
-                '1' == $debug
+                'on' == $debug
                 || true === $debug 
             ) ? 
             true : 
@@ -773,7 +777,7 @@ class option extends \Q {
         ) ;
 
         // check what we got ##
-        // h::log( 'debug set to: '. ( $debug ? 'True' : 'False' ) );
+        // h::log( 'd:>debug set to: '. ( $debug ? 'True' : 'False' ) );
 
         // update property ##
         self::$debug = $debug;

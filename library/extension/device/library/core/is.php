@@ -1,17 +1,15 @@
 <?php
 
-namespace q\device\core;
+namespace q\extension\device;
 
-use q\device\core\core as core;
-use q\device\core\helper as helper;
-
-// piggyback Q helper ##
-use q\core\helper as q_helper;
+use q\core;
+use q\core\helper as h;
+use q\extension;
 
 // load it up ##
-// \q\device\core\is::run();
+\q\extension\device\is::run();
 
-class is extends \q_device {
+class is extends extension\device {
 
 
     /**
@@ -21,8 +19,8 @@ class is extends \q_device {
     {
 
         if ( 
-            ! core::get()->isMobile() 
-            && ! core::get()->isTablet()
+            ! method::get()->isMobile() 
+            && ! method::get()->isTablet()
         ){
 
             // helper::log( 'is::desktop' );
@@ -47,7 +45,7 @@ class is extends \q_device {
     {
 
         if ( 
-            core::get()->isMobile() 
+            method::get()->isMobile() 
         ){
 
             // helper::log( 'is::mobile' );
@@ -73,7 +71,7 @@ class is extends \q_device {
     {
 
         if ( 
-            core::get()->isTablet()
+            method::get()->isTablet()
         ){
 
             // helper::log( 'is::tablet' );
@@ -98,8 +96,8 @@ class is extends \q_device {
     {
 
         if ( 
-            core::get()->isMobile() 
-            || core::get()->isTablet()
+            method::get()->isMobile() 
+            || method::get()->isTablet()
         ){
 
             // helper::log( 'is::handheld' );
@@ -124,7 +122,7 @@ class is extends \q_device {
     {
 
         if ( 
-            core::get()->isiOS() 
+            method::get()->isiOS() 
         ){
 
             // helper::log( 'is::iOS' );
