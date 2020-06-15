@@ -27,6 +27,7 @@ class args extends \q\render {
 
 		// test ##
 		// h::log( $config );
+		h::log( 'method: '.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]) );
 
 		// Parse incoming $args into an array and merge it with $config defaults ##
 		// allows specific calling methods to alter passed $args ##

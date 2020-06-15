@@ -41,7 +41,9 @@ class render extends \Q {
 	protected static
 
         // passed args ##
-        $args = [],
+        $args = [
+			'fields'	=> []
+		],
 		
 		// default args to merge with passed array ##
         $args_default = [
@@ -89,6 +91,7 @@ class render extends \Q {
 
 		// allowed field types ##
         $type = [
+			'repeater'       	=> [],
 			'post'       		=> [],
 			'src'             	=> [],
 			'category'       	=> [],
@@ -163,6 +166,9 @@ class render extends \Q {
 			// most "the_" functions will require some logic
 			'method' => h::get( 'render/method.php', 'return', 'path' ),
 
+			// ui render methods - content, title, excerpt etc
+			'ui' => h::get( 'render/ui.php', 'return', 'path' ),
+
 			// check callbacks on defined fields ## 
 			// @todo - allow to be passed from calling method ['callback' => 'srcset' ] etc ##
 			'callback' => h::get( 'render/callback.php', 'return', 'path' ),
@@ -196,11 +202,11 @@ class render extends \Q {
 	 * bounce to function getter ##
 	 * function name can be any of the following patterns:
 	 * 
-	 * group
-	 * the_%%%
-	 * 
-	 * field_FIELDNAME // @todo
-	 * type_IMAGE || ARRAY || WP_Object etc // @todo
+	 * group__
+	 * block__
+	 * field__
+	 * content, title, excerpt etc..
+	 * type__ ?? needed ??
 	 */
 	public static function __callStatic( $function, $args ){	
 
@@ -236,8 +242,7 @@ class render extends \Q {
 
 		}
 
-		/*
-		@todo...
+		//@todo...
 		// field methods ##
 		if ( 
 			'field__' === substr( $function, 0, 7 ) 
@@ -256,45 +261,79 @@ class render extends \Q {
 			}
 
 			// call it ##
-			return render\field::render( $args );
+			return render\field::run( $args );
 
 		}
-		*/
 
 		/*
 		@todo...
-		// set_ methods ##
+		// block_ methods ##
+		// allows to pass markup and ui method names - 
+		// render\block__post_meta([ 'You are viewing post {title} in {category_name} from {post_data_human} ]);
 		if ( 
-			'set__' === substr( $function, 0, 5 ) 
-			|| 'set' === substr( $function, 0, 3 ) 
+			'block__' === substr( $function, 0, 7 ) 
+			|| 'block' === substr( $function, 0, 5 ) 
 		) {
 
 			// take the second part of the function name as the group value ##
 			if ( false !== strpos( $function, '__' ) ) {
 				
-				$args['set'] = str_replace( 'set__', '', $function );
+				$args['group'] = str_replace( 'block__', '', $function );
+				$args['block'] = str_replace( 'block__', '', $function );
 
 				// note ##
-				h::log('d:>Set assigned: '.$args['set']);
+				h::log('d:>BLock assigned: '.$args['block']);
 
 			}
 
 			// call it ##
-			return render\set::render( $args );
+			return render\block::run( $args );
+
+		}
+		*/
+
+
+		/*
+		@todo...
+		// type_ methods ##
+		// allows to render\type__src( $args );
+		if ( 
+			'type__' === substr( $function, 0, 5 ) 
+			|| 'type' === substr( $function, 0, 3 ) 
+		) {
+
+			// take the second part of the function name as the group value ##
+			if ( false !== strpos( $function, '__' ) ) {
+				
+				$args['group'] = str_replace( 'type__', '', $function );
+				$args['type'] = str_replace( 'type__', '', $function );
+
+				// note ##
+				h::log('d:>Type assigned: '.$args['type']);
+
+			}
+
+			// call it ##
+			return render\type::run( $args );
 
 		}
 		*/
 
 		// look for matching method to $function ##
 		if (
-			\method_exists( __NAMESPACE__.'\render\method', $function ) // && exists ##
-			&& \is_callable([ __NAMESPACE__.'\render\method', $function ]) // && exists ##
+			\method_exists( __NAMESPACE__.'\render\ui', $function ) // && exists ##
+			&& \is_callable([ __NAMESPACE__.'\render\ui', $function ]) // && is callable ##
 		) {
 
 			// h::log( 'Found function: "q\ui\render\method::'.$function.'()"' );
 
+			// assign config to load ##
+			$args['group'] = $function;
+			$args['config']['load'] = $function;
+
 			// call it ##
-			return render\method::{$function}( $args );
+			return render\method::run( $args, $function );
+			// return render\method::{$function}( $args );
 
 		}
 

@@ -167,22 +167,47 @@ class fields extends \q\render {
     }
 
 
-
     
     /**
      * Try to get field type from passed key and field name
      * 
      * @return  boolean
      */
-    public static function get_type( $field ){
+    public static function get_type( $field = null ){
 
-        // helper::log( 'Checking Type of Field: "'.$field.'"' );
+		// sanity ##
+		if(
+			is_null( $field )
+			|| ! isset( self::$args['fields'] )
+		){
+
+			h::log( 'd:>No $field passed to method or args->fields empty' );
+
+			return false;
+
+		}
+
+		// h::log( 'd:>Checking Type of Field: "'.$field.'"' );
+		
+		// shortcut check for ui\method gather data ##
+		if ( 
+			isset( $args['type'] ) 
+			&& array_key_exists( $args['type'], render\type::get_allowed() )
+		){
+
+			h::log( 'd:>Shortcut to type passed in args: '.$args['type'] );
+
+			return $args['type'];
+
+		}
 
         if ( 
-            $key = core\method::array_search( 'key', 'field_'.$field, self::$args['fields'] )
+			// self::is_array_of_arrays( $field )
+			// || 
+			$key = core\method::array_search( 'key', 'field_'.$field, self::$args['fields'] )
         ){
 
-            // helper::log( self::$args['fields'][$key] );
+            // h::log( self::$args['fields'][$key] );
 
             if ( 
                 isset( self::$args['fields'][$key]['type'] )
@@ -200,7 +225,38 @@ class fields extends \q\render {
         // kick it back ##
         return false;
 
-    }
+	}
+	
+
+	public static function is_array_of_arrays( $array = null ) {
+
+		// sanity ##
+		if(
+			is_null( $array )
+			|| ! is_array( $array )
+		){
+
+			h::log( 'e:>Error in passed args or not array' );
+
+			return false;
+
+		}
+
+		foreach ( $array as $key => $value ) {
+
+			if ( is_array( $value ) ) {
+
+				h::log( 'd:>is_array' );
+
+				return $key;
+
+			}
+			  
+		}
+		
+		return false;
+	  
+	}
 
 
 

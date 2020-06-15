@@ -104,7 +104,7 @@ class markup extends \q\render {
         ]); 
 
         // check ##
-        // helper::log( $string );
+        // h::log( 'd:>'.$string );
 
         // apply to class property ##
         self::$output = $string;
@@ -248,7 +248,7 @@ class markup extends \q\render {
         }
 
         // so, we have the repeater markup to copy, placeholder in template to locate new markup ... 
-        // && we need to find all placeholders in markup and append field__ID__PLACEHOLDER
+        // && we need to find all placeholders in markup and append field__X__PLACEHOLDER
 
         // get all placeholders from markup->$field ##
         if ( 
@@ -293,7 +293,7 @@ class markup extends \q\render {
         // test ##
         // helper::log( $new_template );
 
-        // push back to store markup ##
+        // push back into main stored markup ##
         self::$markup = $new_template;
 
         // kick back ##
@@ -310,7 +310,7 @@ class markup extends \q\render {
      */
     public static function get_placeholders( string $string = null ) {
         
-        // @todo - sanity ##
+        // sanity ##
         if (
             is_null( $string ) 
         ) {

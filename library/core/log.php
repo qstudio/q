@@ -285,7 +285,7 @@ class log extends \Q {
 
 			// take first array value, if array, else key.. ##
 			$key = is_array( $key ) ? $key[0] : $key ;
-		
+
 			if ( 
 				! isset( self::$log[$key] )
 			){
@@ -299,11 +299,15 @@ class log extends \Q {
 			// } else {
 			}
 
-				// else, add ##
-				return self::$log[$key][] = $value;
-				// return array_unshift( self::$log[$key] , $value );
+			// check if value already added ##
+			// if ( self::in_multidimensional_array( $value, self::$log[$key] ) ){
+
+			// 	return false;
 
 			// }
+
+			// else, add ##
+			return self::$log[$key][] = $value;
 
 		}
 
@@ -414,6 +418,30 @@ class log extends \Q {
 
 	}
 
+
+
+	public static function in_multidimensional_array( $needle, $haystack ) {
+
+		foreach( $haystack as $key => $value ) {
+
+		   $current_key = $key;
+
+		   if( 
+			   $needle === $value 
+			   || ( 
+				   is_array( $value ) 
+				   && self::in_multidimensional_array( $needle, $value ) !== false 
+				)
+			) {
+
+				return $current_key;
+
+			}
+		}
+
+		return false;
+
+	}
 
 	
 

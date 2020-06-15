@@ -308,9 +308,9 @@ class post extends \q\get {
 
 			// h::log( 'Here..' );
 
-            $array[0]['permalink'] = \get_permalink( $object->ID );
-            $array[0]['slug'] = $object->post_name;
-            $array[0]['title'] = $object->post_title;
+            $array['permalink'] = \get_permalink( $object->ID );
+            $arrayx['slug'] = $object->post_name;
+            $array['title'] = $object->post_title;
 
 		// is singular post ##
 		} elseif ( \is_single( $args['config']['post'] ) ) {
@@ -352,9 +352,9 @@ class post extends \q\get {
 
 			}
 
-			$array[0]['permalink'] = \get_category_link( $terms[0] );
-			$array[0]['slug'] = $terms[0]->slug;
-			$array[0]['title'] = $terms[0]->name;
+			$array['permalink'] = \get_category_link( $terms[0] );
+			$array['slug'] = $terms[0]->slug;
+			$array['title'] = $terms[0]->name;
 
 		}
 

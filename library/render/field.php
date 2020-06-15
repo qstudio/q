@@ -11,11 +11,11 @@ class field extends \q\render {
 
 	public static function __callStatic( $function, $args ) {
 
-        return self::render( $args ); 
+        return self::run( $args ); 
 	
 	}
 
-	public static function render( $args = null ){
+	public static function run( $args = null ){
 
         // global arg validator ##
 		// if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
@@ -30,15 +30,15 @@ class field extends \q\render {
 		}
 
 		// build $args['fields'] -- @todo -- this can be moved to a pre-function call ##
-		self::$args['fields'] = [];
+		// self::$args['fields'] = [];
 
 		// h::log( 'd:>markup: '.$args['markup'] );
 		// h::log( 'd:>field: '.$args['field'] );
 
 		// build fields array with default values ##
-		self::$fields = [
+		render\method::set_fields([
 			$args['field'] => get\post::field( $args )
-		];
+		]);
 
 		// empty ##
 		// $array = [];
@@ -61,17 +61,17 @@ class field extends \q\render {
 		// filter field data ##
 		// self::$fields = \apply_filters( 'q/render/field/'.$args['field'], self::$fields, self::$args );
 
-		h::log( self::$fields );
+		// h::log( self::$fields );
 
 		// check each field data and apply numerous filters ##
 		render\fields::prepare();
 
-		h::log( self::$fields );
+		// h::log( self::$fields );
 
 		// Prepare template markup ##
 		render\markup::prepare();
 
-		h::log( 'd:>markup: '.$args['markup'] );
+		// h::log( 'd:>markup: '.$args['markup'] );
 
         // optional logging to show removals and stats ##
         // render\log::set( $args );

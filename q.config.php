@@ -112,23 +112,24 @@ return [
 
 	// post_title ##
 	'title'  					=> [
-		'markup' 				=> '<div class="row pb-2"><h1 class="col-12 the-title">%title%</h1></div>',
+		'markup' 				=> '<h1 class="pb-2 col-12 the-title">%title%</h1>',
 	],
 
 	// post_parent ##
 	'parent'  					=> [
-		'markup' 				=> '<div class="row pb-1"><h4 class="col-12 the-parent"><a href="%permalink%">%title%</a></h4></div>',
+		'markup' 				=> '<h4 class="pb-1 col-12 the-parent"><a href="%permalink%">%title%</a></h4>',
+		// 'type'					=> 'repeater'
 	],
 
 	// post_excerpt ##
 	'excerpt'					=> [
-		'markup'  				=> '<div class="row pb-1"><div class="col-12 mb-3 the-excerpt">%content%</div></div>',
+		'markup'  				=> '<div class="pb-1 col-12 mb-3 the-excerpt">%content%</div>',
 		'limit' 				=> 300, // default excerpt length ##
 	],
 
 	// post_content ##
 	'content'  				=> [
-		'markup'                => '<div class="row pb-1"><div class="col-12 the-content">%content%</div></div>',
+		'markup'                => '<div class="pb-1 col-12 the-content">%content%</div>',
 	],
 
 	// get_posts() ##
@@ -138,19 +139,17 @@ return [
 		'config'				=> [ 
 									// 'run' => true, 
 									'debug' => false, 
-									// 'load' => 'the_posts'  // change loaded config ##
+									// 'load' => 'posts'  // change loaded config ##
 									// 'srcset' => true // add srcsets ##
 								],
 		
 		// UI ##
 								// wrapper ##
 								'markup'=> 
-									'<div class="row pb-1">
-										<div class="col-12 the-posts">
-											<div class="row"><h5 class="col-12 mt-2">%total% Results Found.</h5></div>
-											<div class="row mt-3">%posts%</div>
-											<div class="row"><div class="col-12">%pagination%</div></div>
-										</div>
+									'<div class="pb-1 col-12 the-posts">
+										<div class="row"><h5 class="col-12 mt-2">%total% Results Found.</h5></div>
+										<div class="row mt-3">%posts%</div>
+										<div class="row"><div class="col-12">%pagination%</div></div>
 									</div>',
 								// post template ##
 								'posts'	=> 
@@ -173,7 +172,7 @@ return [
 									</div>',
 								// no results ##
 								'no_results'			
-									=> '<div class="col-12"><p>We count not find any matching posts, please check again later.</p></div>', 
+									=> '<div class="col-12"><p>We cannot not find any matching posts, please check again later.</p></div>', 
 
 
 		// config ##
@@ -330,8 +329,8 @@ return [
 
 	// use your pagination ---------
 	'pagination'  			=> [
-		'item'             		=> '<li class="%li_class%%active-class%">%item%</li>',
-		'markup'             	=> '<div class="row row justify-content-center mt-5 mb-5"><ul class="pagination">%content%</ul></div>',
+		'markup'             	=> '<li class="%li_class%%active-class%">%item%</li>',
+		'wrap'             		=> '<div class="row row justify-content-center mt-5 mb-5"><ul class="pagination">%content%</ul></div>',
 		'end_size'				=> 'desktop' == h::device() ? 0 : 0,
 		'mid_size'				=> 'desktop' == h::device() ? 4 : 0,
 		'prev_text'				=> 'desktop' == h::device() ? '&lsaquo; '.\__('Previous', 'q-textdomain' ) : '&lsaquo;',

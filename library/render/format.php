@@ -263,7 +263,7 @@ class format extends \q\render {
      * Format Array values
      * These need to be looped over and each value passed back into the format() process
      * 
-     * Array data "SHOULD" come from a repeater
+     * Array data "MIGHT" come from a repeater -- or from another UI method which has gather data ##
      * which has one single %placeholder% and markup in a property with a name matching key to the field name
      * we need to update the template based on number of array items and defined markup with numbered values ##
      * 
@@ -279,7 +279,7 @@ class format extends \q\render {
         // add check to see if array is a collection of array - as exported by repeater fields ##
         if ( 'repeater' == render\fields::get_type( $field ) ) {
 
-            // h::log( 'Array is a repeater' );
+            // h::log( 'd:>Array is a repeater' );
 
             self::format_array_repeater( $value, $field );
 

@@ -53,7 +53,7 @@ class taxonomy extends \q\get {
 				
 		){
 
-			h::log( 'e:>Returned terms good' );
+			// h::log( 'e:>Returned terms good' );
 
 			// we expect an array with 1 key [0] of WP_Term object - validate ##
 			if (
@@ -62,7 +62,7 @@ class taxonomy extends \q\get {
 				&& $object_terms[0] instanceof \WP_Term
 			){
 
-				h::log( 'e:>Term object good, getting ID' );
+				// h::log( 'e:>Term object good, getting ID' );
 
 				$active_term_id = $object_terms[0]->term_id; 
 
