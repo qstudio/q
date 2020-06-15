@@ -35,7 +35,11 @@ class output extends \q\render {
 			], 
             'filter'        => 'q/render/output/'.self::$args['group'], // filter handle ##
             'return'        => self::$output
-        ]); 
+		]); 
+		
+		// h::log( 'd:>still here..' );
+		
+		h::log( self::$output );
 
         // helper::log( self::$output );
 

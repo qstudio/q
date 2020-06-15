@@ -107,7 +107,7 @@ class method extends \q\render {
 			'total' 		=> '0', // set to zero string value ##
 			'pagination' 	=> null, // empty field.. ##
 			// 'pagination' = false, // don't load pagination ##
-			'posts' 		=> $args['no_results'] // replace posts with no_results markup ## is this right ?? ##
+			'posts' 		=> $args['no_results'] // replace posts with no_results markup ##
 		];
 
         // pass to get_posts -- and validate that we get an array back ##
@@ -168,7 +168,7 @@ class method extends \q\render {
         render\markup::prepare();
 
         // optional logging to show removals and stats ##
-        // render\log::render( $args );
+        // render\log::set( $args );
 
         // return or echo ##
         return render\output::return();
@@ -294,7 +294,6 @@ class method extends \q\render {
 		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
 
 		// get parent - returns false OR array with key 'title, slug, permalink' ##
-		// $array = get\wp::the_parent( $args );
 		$array = get\post::parent( $args );
 
         // return ##

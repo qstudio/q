@@ -497,9 +497,40 @@ class option extends \Q {
                         'toggle' => 0,
                         'return_format' => 'value',
                         'save_custom' => 0,
-                    ),
+					),
+					
+					array(
+						'key' => 'field_q_option_extension_consent',
+						'label' => 'Privacy URL',
+						'name' => 'q_option_extension_consent',
+						'type' => 'post_object',
+						'instructions' => '',
+						'required' => 1,
+						'conditional_logic' => array(
+							array(
+								array(
+									'field' => 'field_q_option_extension',
+									'operator' => '==',
+									'value' => 'consent',
+								),
+							),
+						),
+						'wrapper' => array(
+							'width' => '',
+							'class' => '',
+							'id' => '',
+						),
+						'post_type' => array(
+							0 => 'page',
+						),
+						'taxonomy' => '',
+						'allow_null' => 0,
+						'multiple' => 0,
+						'return_format' => 'id',
+						'ui' => 1,
+					),
 
-                ),
+				),
                 'location' => array(
                     array(
                         array(

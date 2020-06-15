@@ -11,6 +11,22 @@ use q\render;
 
 class method extends \Q {
 
+
+	/**
+	 * Check is the current template matches the controller
+	 * 
+	 * @since 4.0.0
+	*/
+	public static function showing_view( $file = null ): bool {
+
+		// h::log( 'd:>temp: '.ui\template::get() );
+		// h::log( 'd:>file: '.$file  );
+
+		return ui\template::get() == trim( $file ) ;
+
+	}
+
+
 	/**
 	 * Prepare passed args ##
 	 *
@@ -123,7 +139,7 @@ class method extends \Q {
 			|| ! is_array( $array )
 		) {
 
-			h::log( 'Error in passed $args or $array' );
+			h::log( 'e~>'.$method.':>Error in passed $args or $array' );
 
 			return false;
 
@@ -150,7 +166,7 @@ class method extends \Q {
 			|| ! is_array( $array )
 		) {
 
-			h::log( 'Error in passed $args or $array' );
+			h::log( 'e~>'.$method.':>Error in passed $args or $array' );
 
 			return false;
 
@@ -206,6 +222,30 @@ class method extends \Q {
 		// h::log( $args );
 		// h::log( $array );
 
+		// if no markup sent.. ##
+		if ( 
+			! isset( $args['markup'] )
+			&& is_array( $args ) 
+		) {
+
+			// default -- almost useless - but works for single values.. ##
+			$args['markup'] = '%value%';
+
+			foreach( $args as $k => $v ) {
+
+				if ( is_string( $v ) ) {
+
+					// take first string value in $args markup ##
+					$args['markup'] = $v;
+
+					break;
+
+				}
+
+			}
+
+		}
+
 		// no markup passed ##
 		if ( ! isset( $args['markup'] ) ) {
 
@@ -219,7 +259,7 @@ class method extends \Q {
 		$array = \apply_filters( 'q/ui/render/prepare/'.$method.'/array', $array, $args );
 
 		// do markup ##
-		$string = self::markup( $args['markup'], $array );
+		$string = self::markup( $args['markup'], $array, $args );
 
 		// filter $string by $method ##
 		$string = \apply_filters( 'q/ui/render/prepare/'.$method.'/string', $string, $args );
@@ -479,6 +519,122 @@ class method extends \Q {
 
 
 
+	/**
+     * Markup object based on %placeholders% and template
+     *
+     * @since    2.0.0
+     * @return   Mixed
+     */
+    public static function markup( $markup = null, $data = null, $args = [] )
+    {
+
+        // sanity ##
+        if (
+            is_null( $markup )
+            || is_null( $data )
+            ||
+            (
+                ! is_array( $data )
+                && ! is_object( $data )
+            )
+        ) {
+
+            helper::log( 'e:>missing parameters' );
+
+            return false;
+
+        }
+
+        // h::log( $data );
+		#helper::log( $markup );
+
+		// empty ##
+		$return = '';
+
+        // format markup with translated data ##
+        foreach( $data as $key => $value ) {
+
+			// @todo -- this really should go to render/formatter ###
+			h::log( 't:>we need to be able to pass any data to the formatter - string, int, array, object.. and get the same results..' );
+
+			if (
+				is_array( $value )
+			){
+
+				// check on the value ##
+				// h::log( 'd:>key: '.$key.' is array - going deeper..' );
+
+				$return_inner = $markup;
+
+				foreach( $value as $k => $v ) {
+
+					// $string_inner = $markup;
+
+					// check on the value ##
+					// h::log( 'd:>key: '.$k.' / value: '.$v );
+
+					// only replace keys found in markup ##
+					if ( false === strpos( $return_inner, '%'.$k.'%' ) ) {
+
+						h::log( 'd:>skipping '.$k );
+		
+						continue ;
+		
+					}
+
+					// template replacement ##
+					$return_inner = str_replace( '%'.$k.'%', $v, $return_inner );
+
+				}
+
+				$return .= $return_inner;
+
+				continue;
+
+			}
+
+			// get new markup row ##
+			$return .= $markup;
+
+			// check on the value ##
+			// h::log( 'd:>key: '.$key.' / value: '.$value );
+
+            // only replace keys found in markup ##
+            if ( false === strpos( $return, '%'.$key.'%' ) ) {
+
+                h::log( 'd:>skipping '.$key );
+
+                continue ;
+
+			}
+
+			// template replacement ##
+			$return = str_replace( '%'.$key.'%', $value, $return );
+
+		}
+
+		// h::log( $args );
+
+		// wrap string in defined string ?? ##
+		if ( isset( $args['wrap'] ) ) {
+
+			h::log( 'wrapping string before return.' );
+
+			// template replacement ##
+			$return = str_replace( '%content%', $return, $args['wrap'] );
+
+		}
+
+        // h::log( $return );
+
+        // return markup ##
+        return $return;
+
+    }
+
+
+
+
 
 	/**
      * Markup object based on %placeholders% and template
@@ -486,7 +642,7 @@ class method extends \Q {
      * @since    2.0.0
      * @return   Mixed
      */
-    public static function markup( $markup = null, $data = null )
+    public static function markup_OG( $markup = null, $data = null )
     {
 
         // sanity ##
@@ -509,7 +665,13 @@ class method extends \Q {
         #helper::log( $data );
 		#helper::log( $markup );
 
-		// get teh markup ##
+		// @todo -- wrapping markup should be applied - $ags['wrap] ##
+		h::log( 't:>wrapping markup should be applied from $ags->wrap with placeholder %content%' );
+
+		// @todo -- this should really deal with arrays of data ##
+		h::log( 't:>extend to accept and validate arrays of data...' );
+
+		// get the markup ##
 		$string = $markup;
 
         // format markup with translated data ##

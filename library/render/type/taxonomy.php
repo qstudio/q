@@ -28,6 +28,7 @@ class taxonomy extends render\type {
 		if ( 
 			! $category
 			|| ! is_array( $category )
+			|| ! isset( $category[0] )
 		) {
 
 			// h::log( 'No category or corrupt data returned' );
@@ -76,7 +77,6 @@ class taxonomy extends render\type {
         return $string;
 
     }
-
 
 
 }

@@ -217,33 +217,75 @@ class render extends \Q {
 
 		// group_ methods ##
 		if ( 
-			'group_' === substr( $function, 0, 6 ) 
+			'group__' === substr( $function, 0, 7 ) 
+			|| 'group' === substr( $function, 0, 5 ) 
 		) {
 
 			// take the second part of the function name as the group value ##
-			$args['group'] = str_replace( 'group_', '', $function );
+			if ( false !== strpos( $function, '__' ) ) {
+				
+				$args['group'] = str_replace( 'group__', '', $function );
+
+				// note ##
+				// h::log('d:>Group assigned: '.$args['group']);
+
+			}
 
 			// call it ##
-			return render\group::render( $args );
+			return render\group::run( $args );
 
 		}
 
+		/*
+		@todo...
 		// field methods ##
 		if ( 
-			'field_' === substr( $function, 0, 6 ) 
-			// && \method_exists( __NAMESPACE__.'\render\fiel', $function ) // && exists ##
-			// && \is_callable([ __NAMESPACE__.'\render\method', $function ]) // && exists ##
+			'field__' === substr( $function, 0, 7 ) 
+			|| 'field' === substr( $function, 0, 5 ) 
 		) {
 
-			// take the second part of the function name as the field value ##
-			$args['field'] = str_replace( 'field_', '', $function );
+			// take the second part of the function name as the group value ##
+			if ( false !== strpos( $function, '__' ) ) {
+				
+				$args['group'] = str_replace( 'field__', '', $function );
+				$args['field'] = str_replace( 'field__', '', $function );
+
+				// note ##
+				// h::log('d:>Field assigned: '.$args['field']);
+
+			}
 
 			// call it ##
-			return render\field::field( $args );
+			return render\field::render( $args );
 
 		}
+		*/
 
-		// look fo rmatching method to $function ##
+		/*
+		@todo...
+		// set_ methods ##
+		if ( 
+			'set__' === substr( $function, 0, 5 ) 
+			|| 'set' === substr( $function, 0, 3 ) 
+		) {
+
+			// take the second part of the function name as the group value ##
+			if ( false !== strpos( $function, '__' ) ) {
+				
+				$args['set'] = str_replace( 'set__', '', $function );
+
+				// note ##
+				h::log('d:>Set assigned: '.$args['set']);
+
+			}
+
+			// call it ##
+			return render\set::render( $args );
+
+		}
+		*/
+
+		// look for matching method to $function ##
 		if (
 			\method_exists( __NAMESPACE__.'\render\method', $function ) // && exists ##
 			&& \is_callable([ __NAMESPACE__.'\render\method', $function ]) // && exists ##

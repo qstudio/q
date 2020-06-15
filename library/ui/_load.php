@@ -32,7 +32,7 @@ class controller extends \Q {
 			// template ##
 			'template' => self::get_plugin_path( 'library/ui/template.php' ),
 
-			// widgets... really?? ##
+			// widgets ##
 			'widget' => self::get_plugin_path( 'library/ui/widget/_load.php' ),
 
 			// assets ##

@@ -22,7 +22,7 @@ class log extends \Q {
 			'e' 		=> 'error',
 			'n' 		=> 'notice',
 			'l' 		=> 'log',
-			't'			=> '@todo'
+			't'			=> 'todo'
 		],
 		$key_array 		= [],
 		$on_run 		= true,
@@ -716,12 +716,16 @@ class log extends \Q {
 
 			return true;
 
+		// log specific key ##
+		} else {
+
+			// core\helper::debug( 'd:>shutdown -- key passed: '.$key );
+			self::write( $key );
+
 		}
 
-		// core\helper::debug( 'd:>shutdown -- key passed: '.$key );
-		
-		// log specific key ##
-		self::write( $key );
+		// also log @todo, if debugging... ##
+		if ( \Q::$debug ) self::write( 'todo' );
 
 		// done ##
 		return true;

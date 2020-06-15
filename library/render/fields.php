@@ -73,8 +73,8 @@ class fields extends \q\render {
             // Note - field includes a list of standard callbacks, which can be extended via the filter q/render/callbacks/get ##
             $value = render\callback::field( $field, $value );
 
-            // helper::log( 'After callback -- field: '.$field .' With Value:' );
-            // helper::log( $value );
+            // h::log( 'd:>After callback -- field: '.$field .' With Value:' );
+            // h::log( $value );
 
             // filter field before format ##
             $field = core\filter::apply([ 
@@ -83,7 +83,7 @@ class fields extends \q\render {
                 'return'        => $field
 			]); 
 			
-			// h::log( 'Field value: '.$value );
+			// h::log( 'd:>Field value: '.$value );
 
             // Format each field value based on type ( int, string, array, WP_Post Object ) ##
             // each item is filtered as looped over -- q/render/field/GROUP/FIELD - ( $args, $fields ) ##

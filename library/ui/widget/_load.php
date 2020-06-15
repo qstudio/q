@@ -22,6 +22,8 @@ class widget extends \Q {
     public static function run()
     {
 
+		h::log( 'HERE..' );
+
         // stack up the default widgets ##
         \add_action( 'widgets_init', array ( get_class(), 'add_default' ), 1 );
 
@@ -62,7 +64,7 @@ class widget extends \Q {
 
             } else {
 
-                h::log( 'Widget Error: '.$array['widget'] );
+                h::log( 'e:>Widget Error: '.$array['widget'] );
 
             }
 
@@ -141,10 +143,12 @@ class widget extends \Q {
         if ( ! self::$add || ! is_array( self::$add ) ) { return false; }
 
         // test ##
-        #wp_die( pr( self::$add ) );
+        // h::log( self::$add );
 
         // add each seleted widget to the load list ##
         foreach ( self::$add as $key => $value ) {
+
+			// h::log( "d:>add: ui/widget/{$value}.php" );
 
             h::get( "ui/widget/{$value}.php", 'require', 'path' );
 

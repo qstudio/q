@@ -210,7 +210,7 @@ class markup extends \q\render {
         if ( ! isset( self::$args[$field] ) ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>Field: "'.$field.'" does not have required markup defined in $args->markup->$field' );
+			h::log( self::$args['group'].'~>n:>Field: "'.$field.'" does not have required markup defined in $args->$field' );
 
             // bale if not found ##
             return false;

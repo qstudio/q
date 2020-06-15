@@ -25,6 +25,8 @@ class sharelines extends \Q {
     public static function run()
     {
 
+		// h::log( 'd:>SL here..' );
+
         // add acf fields ##
         \add_action( 'acf/init', array( get_class(), 'add_acf_fields' ), 1 );
 
@@ -388,7 +390,7 @@ class sharelines extends \Q {
     public static function assets()
     {
 
-        \wp_register_style( 'q-sharelines-css', h::get( "theme/asset/css/widget.sharelines.css", 'return' ) );
+        \wp_register_style( 'q-sharelines-css', h::get( "ui/asset/css/widget.sharelines.css", 'return' ) );
         \wp_enqueue_style( 'q-sharelines-css' );
 
 	}
@@ -660,7 +662,7 @@ class sharelines extends \Q {
         // no sharelines found ##
         if ( ! self::has_sharelines() ) { 
             
-            // h::log( 'No Sharelines' );
+            // h::log( 'd:>No Sharelines' );
             
             return false; 
         

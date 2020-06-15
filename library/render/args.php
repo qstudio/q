@@ -43,7 +43,7 @@ class args extends \q\render {
             // || ! isset( $args['fields'] )
             // || ! is_array( $args['fields'] )
             // || ! isset( $args['group'] ) // @todo --- this is specific to the_group calls ##
-            || ! isset( $args['markup'] )
+            // || ! isset( $args['markup'] )
             // || ! is_array( $args['markup'] )
             // || ! isset( $args['markup']['template'] )
         ){
@@ -114,8 +114,6 @@ class args extends \q\render {
             false === $args['config']['run']
         ){
 
-			// self::$log['notice'][] = 'config->run defined as false for Group: '.$args['group'].', so stopping here.. ';
-			
 			// log ##
 			h::log( self::$args['group'].'~>n:>config->run defined as false for: '.$args['group'].', so stopping here.. ' );
 
@@ -159,23 +157,33 @@ class args extends \q\render {
         // test ##
         // h::log( $args );
 
-        // grab args->markup ##
+		// if no markup sent.. ##
+		if ( 
+			! isset( $args['markup'] )
+			&& is_array( $args ) 
+		) {
+
+			// default -- almost useless - but works for single values.. ##
+			$args['markup'] = '%value%';
+
+			foreach( $args as $k => $v ) {
+
+				if ( is_string( $v ) ) {
+
+					// take first string value in $args markup ##
+					$args['markup'] = $v;
+
+					break;
+
+				}
+
+			}
+
+		}
+
+        // assign markup ##
 		self::$markup = $args['markup'];
 		
-		// if no template send, assign to main markup ##
-		// if ( 
-		// 	! isset( $args['markup']['template'] ) 
-		// 	&& ! is_array( $args['markup'] )
-		// ) {
-
-		// 	// make array ##
-		// 	self::$markup = [];
-
-		// 	// add template key with passed markup ##
-		// 	self::$markup['template'] = $args['markup'];
-
-		// }
-
         // return args for validation ##
         return $args;
 

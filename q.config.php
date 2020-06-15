@@ -85,8 +85,10 @@ return [
 
 	// the_container_open() ##
 	'container_open'  			=> [
-		'markup' => '<main class="container %classes%">
-			<div class="row">'
+		'markup' => '
+		<main class="container %classes%">
+			<div class="row">
+		'
 	],
 
 	// the_container_close() ##
@@ -104,34 +106,29 @@ return [
 
 	// single field ##
 	'field'  					=> [
-		'markup' 				=> '<span class="the-field the-field-%field%">%value%</span>',
+		'config' 				=> [ 'run' => true ],
+		// 'markup' 				=> '<span class="the-field the-field-%field%">%value%</span>',
 	],
 
 	// post_title ##
 	'title'  					=> [
-		'markup' 				=> '<h1 class="col-12 the-title">%title%</h1>',
+		'markup' 				=> '<div class="row pb-2"><h1 class="col-12 the-title">%title%</h1></div>',
 	],
 
 	// post_parent ##
 	'parent'  					=> [
-		'markup' 				=> '<h4 class="col-12 the-parent"><a href="%permalink%">%title%</a></h4>',
+		'markup' 				=> '<div class="row pb-1"><h4 class="col-12 the-parent"><a href="%permalink%">%title%</a></h4></div>',
 	],
 
 	// post_excerpt ##
 	'excerpt'					=> [
-		'markup'  				=> '<div class="col-12 mb-3 the-excerpt">%content%</div>',
+		'markup'  				=> '<div class="row pb-1"><div class="col-12 mb-3 the-excerpt">%content%</div></div>',
 		'limit' 				=> 300, // default excerpt length ##
 	],
 
 	// post_content ##
 	'content'  				=> [
-		'markup'                => '<div class="col-12 the-content">%content%</div>',
-	],
-
-	// the_category() ## 
-	// @todo.. we need to work out this with post_meta.. or forget that and just have templates in each template.. ## better
-	'the_category'  => [
-		'markup'                => '<span class="category ml-1 mr-1">in <a href="%permalink%">%title%</a></span>',
+		'markup'                => '<div class="row pb-1"><div class="col-12 the-content">%content%</div></div>',
 	],
 
 	// get_posts() ##
@@ -148,10 +145,12 @@ return [
 		// UI ##
 								// wrapper ##
 								'markup'=> 
-									'<div class="col-12 the-posts">
-										<div class="row"><h5 class="col-12 mt-2">%total% Results Found.</h5></div>
-										<div class="row mt-3">%posts%</div>
-										<div class="row"><div class="col-12">%pagination%</div></div>
+									'<div class="row pb-1">
+										<div class="col-12 the-posts">
+											<div class="row"><h5 class="col-12 mt-2">%total% Results Found.</h5></div>
+											<div class="row mt-3">%posts%</div>
+											<div class="row"><div class="col-12">%pagination%</div></div>
+										</div>
 									</div>',
 								// post template ##
 								'posts'	=> 
@@ -203,10 +202,12 @@ return [
 		// UI ##
 								// main template ##
 								'markup' => 
-									'<div class="col-12 the-posts">
-										<div class="row"><h5 class="col-12 mt-2">%total% Results Found.</h5></div>
-										<div class="row mt-3">%posts%</div>
-										<div class="row"><div class="col-12">%pagination%</div></div>
+									'<div class="row pb-1">
+											<div class="col-12 the-posts">
+											<div class="row"><h5 class="col-12 mt-2">%total% Results Found.</h5></div>
+											<div class="row mt-3">%posts%</div>
+											<div class="row"><div class="col-12">%pagination%</div></div>
+										</div>
 									</div>',
 
 								// highlight ##
@@ -253,26 +254,47 @@ return [
 		'allow_comments'        => false, // show comment count - might slow up query ##
 	],
 
-	// the_post_single() ##
+	// template::single_post --- how to make this load ?? ##
 	'post_single'  => [
 		// ...
 		'allow_comments'        => 'allow_comments', // allow comments ##
 		'next_back'            	=> ( h::device() == 'desktop' ) ? false : true, // next / home / back links ##
 	],
 
-	// the_post_meta() ##
-	/*
-	'post_meta'  => [
-		'format'				=> [
-									'loop' => 
-										'<div class="the-post-meta">Posted %post_date_human% ago in %the_category%</div>',
-									'single' => 
-										'<div class="the-post-meta">
-											Posted %post_date_human% ago in %the_category%, Tagged %the_tags% | %the_comments%
-										</div>'
-								]
+	// get/taxonomy/terms
+	'terms'		=> [
+		'markup'             	=> '<a class="list-group-item list-group-item-action%active%" href="%permalink%">%title%</a>',
+		'wrap'             		=> '<div class="row"><div class="col-12 list-group list-group-flush list-group navigation navigation-terms">%content%</div></div>',
+		'args' => [
+			'taxonomy' 			=> 'category',
+			'hide_empty' 		=> true,
+			'parent'   			=> 0
+		]
 	],
-	*/
+
+	// category() ## 
+	// @todo.. we need to work out this with post_meta.. or forget that and just have templates in each template.. ## better
+	'category'  => [
+		'markup'                => '<span class="category ml-1 mr-1">in <a href="%permalink%">%title%</a></span>',
+	],
+
+	// single post_meta ##
+	'single_post_meta'  => [
+		'markup'				=> '<div class="row pb-1">
+										<div class="col-12 the-post-meta">
+											Posted %post_date_human% ago in %{category}%, Tagged %{tags}% | <a href="#comment">%comments%</a>
+										</div>
+									</div>'
+	],
+
+	// loop post_meta -- for search reults ##
+	'loop_post_meta'  => [
+		'markup'				=> '<div class="row pb-1">
+										<div class="col-12 the-post-meta">
+											Posted %post_date_human% ago in %the_category%
+										</div>
+									</div>',
+	],
 
 	// the_avatar() ##
 	'avatar'  => [

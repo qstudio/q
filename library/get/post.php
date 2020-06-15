@@ -84,6 +84,49 @@ class post extends \q\get {
 
 
 
+	
+    /**
+     * Get post object terms
+     *
+     * @since       4.0.0
+     */
+    public static function object_terms( $args = null )
+    {
+
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+			// || ! isset( $args['taxonomy'] )
+		){
+
+			h::log( 'e:>Error in passed args' );
+
+			return false;
+
+		}
+
+		// taxonomy -- defaults to category ##
+		$taxonomy = isset( $args['taxonomy'] ) ? $args['taxonomy'] : 'category' ; 
+		// h::log( 'd:>'.$taxonomy );
+
+		// post ID ##
+		$post_id = isset( $args['config']['post'] ) ? $args['config']['post']->ID : null ;
+		// h::log( 'd:>post_id: '.$post_id );
+
+		// $args ##
+		$args = isset( $args['args'] ) ? $args['args'] : null ;
+		// h::log( $args );
+
+		// get field ##
+		$array = \wp_get_post_terms( $post_id, $taxonomy, $args );
+
+		// h::log( $array );
+		
+		// return
+		return ui\method::prepare_return( $args, $array );
+
+	}
 
 	
 	
@@ -114,6 +157,8 @@ class post extends \q\get {
 		// get field ##
 		$value = \get_field( $args['field'], $post_id );
 		
+		// we need to pass this thru filters - but return expects an array.... ##
+
 		// return ##
 		return $value;
 
@@ -246,7 +291,7 @@ class post extends \q\get {
 			|| ! is_array( $args )
 		){
 
-			h::log( 'Error in passed args' );
+			h::log( 'e:>Error in passed args' );
 
 			return false;
 
@@ -261,27 +306,55 @@ class post extends \q\get {
 			&& $args['config']['post']->post_parent
 		) {
 
-			h::log( 'Here..' );
+			// h::log( 'Here..' );
 
-			// $array['text'] = __( "View More", 'q-textdomain' );
-            $array['permalink'] = \get_permalink( $object->ID );
-            $array['slug'] = $object->post_name;
-            $array['title'] = $object->post_title;
+            $array[0]['permalink'] = \get_permalink( $object->ID );
+            $array[0]['slug'] = $object->post_name;
+            $array[0]['title'] = $object->post_title;
 
 		// is singular post ##
 		} elseif ( \is_single( $args['config']['post'] ) ) {
 
-			// h::log( 'Get category title..' );
+			// h::log( 'd:>Get category title..' );
 
 			// $args->ID = $the_post->post_parent;
 			if ( 
-				! $array = get\taxonomy::category([ 'post' => $args['config']['post'] ])
+				! $terms = self::object_terms([ 
+					'config' 		=> [ 
+						'post'		=> $args['config']['post']
+					],
+					'taxonomy'		=> 'category',
+					'args' 			=> [
+						'number'	=> 1
+					]
+				])
+					
 			){
+
+				h::log( 'e:>Returned terms empty' );
 
 				return false;
 
 			}
 
+			// h::log( $terms );
+
+			// we expect an array with 1 key [0] of WP_Term object - validate ##
+			if (
+				! is_array( $terms )
+				|| ! isset( $terms[0] )
+				|| ! $terms[0] instanceof \WP_Term
+			){
+
+				h::log( 'e:>Error in returned terms data' );
+
+				return false;
+
+			}
+
+			$array[0]['permalink'] = \get_category_link( $terms[0] );
+			$array[0]['slug'] = $terms[0]->slug;
+			$array[0]['title'] = $terms[0]->name;
 
 		}
 

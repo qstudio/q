@@ -10,11 +10,11 @@ class group extends \q\render {
 
 	public static function __callStatic( $function, $args ) {
 
-        return self::render( $args ); 
+        return self::run( $args ); 
 	
 	}
 
-	public static function render( $args = null ){
+	public static function run( $args = null ){
 
 		// return h::log( 'hello here..' );
 		// h::log( $args );
@@ -35,13 +35,17 @@ class group extends \q\render {
 
             return false;
 
-        }
+		}
+		
+		// h::log( self::$fields );
 
 		// Now we can loop over each field ---
 		// running callbacks ##
 		// formatting none string types to strings ##
 		// removing placeholders in markup, if no field data found etc ##
-        render\fields::prepare();
+		render\fields::prepare();
+		
+		// h::log( self::$fields );
 
         // Prepare template markup ##
         render\markup::prepare();
