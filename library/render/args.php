@@ -58,7 +58,7 @@ class args extends \q\render {
 		}
 
 		// assign "group" - this is used by group to pull acf fields, or to know the calling method for the_ calls ##
-		$args['group'] = isset( $args['group'] ) ? $args['group'] : core\method::backtrace([ 'level' => 2, 'return' => 'function' ]) ;
+		$args['group'] = isset( $args['method'] ) ? $args['method'] : core\method::backtrace([ 'level' => 2, 'return' => 'function' ]) ;
 
 		// h::log( $args['config']['post'] );
 

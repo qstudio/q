@@ -239,54 +239,22 @@ class render extends \Q {
 
 		}
 
-		// h::log( 'd:>search if -- class: '.$class.'::'.$method.' available' );
+		h::log( 'd:>search if -- class: '.$class.'::'.$method.' available' );
 
 		// look for matching method to $function ##
-		$namespace = __NAMESPACE__."\\render\\".$class;
-		// render\ui::run();
-		// h::log( 'd:>'.__NAMESPACE__ .' --- '.$namespace );
+		$namespace = '\\q\\render\\method\\'.$class;
+		render\ui::run();
+		h::log( 'd:>'.__NAMESPACE__ .' --- '.$namespace );
 		if (
-			class_exists( $namespace ) // && exists ##
-			// && is_callable([ $namespace, $method ]) // && is callable ##
+			method_exists( $namespace, $function ) // && exists ##
+			// && \is_callable([ __NAMESPACE__.'\\render\\'.$class, $function ]) // && is callable ##
 		) {
 
-			// h::log( 'd:>class: '.$class.'::'.$method.' available' );
-
-			// @todo - we need to make this more generic ##
-			// $args['group'] = $method;
-			// $args['field'] = $method;
-			$args['method'] = $method; // @todo --- use to control group, field, block .... etc ##
-			
-			// define config for all in class --i.e "group" ##
-			//@todo - could add group__NAME config, to share over templates ???
-			h::log( 't:>add group__NAME config setitngs to share config over templates...' );
-			$args['config']['load'] = $class;
-
-			// define config for post, block, type, ui ##
-			if(
-				'post' == $class 
-				|| 'block' == $class
-				|| 'type' == $class
-				|| 'ui' == $class
-			){ 
-
-				// h::log( 'd:>config for class: '.$class.' set to: '.$class.'_'.$method );
-
-				$args['config']['load'] = $class.'_'.$method;
-
-			} else {
-
-				//
-
-			}
-
-			// call render method ##
-			// return render\ui::open( $args );
-			return $namespace::run( $args, $method );
+			h::log( 'd:>class: '.$class.'::'.$mthod.' available' );
 
 		}
 
-		// return;
+		return;
 		/*
 		// test namespace ##
 		// h::log( __NAMESPACE__ );
@@ -403,7 +371,7 @@ class render extends \Q {
 		*/
 
 		// @todo -- check what is going on when this log shows.. ##
-		h::log( 'e:>No matching method found for: '.$class.'::'.$method );
+		// h::log( 'No matching method found for: '.$function );
 
 		// kick back nada - as this renders on the UI ##
 		return false;

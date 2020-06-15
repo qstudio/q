@@ -14,7 +14,7 @@ class group extends \q\render {
 	
 	}
 
-	public static function run( $args = null ){
+	public static function run( $args = null, $method = null ){
 
 		// return h::log( 'hello here..' );
 		// h::log( $args );

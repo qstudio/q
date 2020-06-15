@@ -102,6 +102,38 @@ class fields extends \q\render {
     }
 
 
+	
+	/**
+	 * Define $fields args for render methods
+	 * 
+	 * @since 4.0.0
+	*/
+	public static function define( $array = null ){
+
+		// sanity ##
+		if (
+			is_null( $array )
+			|| ! is_array( $array )
+		){
+
+			h::log( 'e:>Error in pased $args' );
+
+			return false;
+
+		}
+
+		// h::log( $array );
+
+		foreach( $array as $key => $value ) {
+
+			self::$fields[$key] = $value;
+
+		}
+
+		return true;
+
+	}	
+
 
 
     

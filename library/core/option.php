@@ -504,7 +504,7 @@ class option extends \Q {
 						'label' => 'Privacy URL',
 						'name' => 'q_option_extension_consent',
 						'type' => 'post_object',
-						'instructions' => '',
+						'instructions' => 'Required for the Consent System to work.',
 						'required' => 1,
 						'conditional_logic' => array(
 							array(

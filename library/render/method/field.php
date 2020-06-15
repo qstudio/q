@@ -15,7 +15,7 @@ class field extends \q\render {
 	
 	}
 
-	public static function run( $args = null ){
+	public static function run( $args = null, $method = null ){
 
         // global arg validator ##
 		// if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }

@@ -13,7 +13,6 @@ use q\theme;
 
 class post extends \q\get {
 
-
     /**
      * Method to clean up calling and checking for the global $post object
      * Allows $post to be passed

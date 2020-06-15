@@ -83,8 +83,8 @@ return [
 		]
 	],
 
-	// the_container_open() ##
-	'container_open'  			=> [
+	// ui opener ##
+	'ui_open'  			=> [
 		'markup' => '
 		<main class="container %classes%">
 			<div class="row">
@@ -92,7 +92,7 @@ return [
 	],
 
 	// the_container_close() ##
-	'container_close'  			=> [
+	'ui_close'  			=> [
 		'markup' => '
 			</div>
 		</main>'
@@ -111,29 +111,29 @@ return [
 	],
 
 	// post_title ##
-	'title'  					=> [
+	'post_title'  				=> [
 		'markup' 				=> '<h1 class="pb-2 col-12 the-title">%title%</h1>',
 	],
 
 	// post_parent ##
-	'parent'  					=> [
+	'post_parent'  				=> [
 		'markup' 				=> '<h4 class="pb-1 col-12 the-parent"><a href="%permalink%">%title%</a></h4>',
 		// 'type'					=> 'repeater'
 	],
 
 	// post_excerpt ##
-	'excerpt'					=> [
+	'post_excerpt'				=> [
 		'markup'  				=> '<div class="pb-1 col-12 mb-3 the-excerpt">%content%</div>',
 		'limit' 				=> 300, // default excerpt length ##
 	],
 
 	// post_content ##
-	'content'  				=> [
+	'post_content'  			=> [
 		'markup'                => '<div class="pb-1 col-12 the-content">%content%</div>',
 	],
 
 	// get_posts() ##
-	'posts'  => [
+	'post_query'  => [
 
 		// config ##
 		'config'				=> [ 

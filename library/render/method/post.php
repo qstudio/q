@@ -12,55 +12,69 @@ use q\render; // self ##
 // Q Theme ##
 use q\theme;
 
-class ui extends \q\render {
+class post extends \q\render {
 
 
-	/**
-     * Open .content HTML
-     *
-     * @since       1.0.2
-     * @return      string   HTML
-     */
-    public static function container_open( $args = null )
-    {
+	public static function __callStatic( $function, $args ) {
 
-		// global arg validator ##
-		// if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
-        
-		render\method::set_fields([
-			'classes' => get\theme::body_class( $args ) // grab classes ##
-		]);
-
-        // return ##
-		// return ui\method::prepare_render( $args, $array );
-
+        return self::run( $args ); 
+	
 	}
 
+	public static function run( $args = null, $method = null ){
+
+		// return h::log( 'hello here..' );
+
+        // validate passed args ##
+        if ( ! render\args::validate( $args ) ) {
+
+			render\log::set( $args );
+			
+			// h::log( 'd:>Bunked here..' );
+
+            return false;
+
+		}
+
+		// h::log( $args );
+
+		// run method to populate field data ##
+		// $method = $args['config']['method'];
+		if (
+			! \method_exists( get_class(), $method ) // && exists ##
+		) {
+
+			h::log( 'd:>Cannot locate method: '.$method );
+
+		}
+
+		// call render method ##
+		self::{ $method }( self::$args );
+		// h::log( self::$fields );
+
+		// Now we can loop over each field ---
+		// running callbacks ##
+		// formatting none string types to strings ##
+		// removing placeholders in markup, if no field data found etc ##
+		render\fields::prepare();
+		
+		// h::log( self::$fields );
+
+        // Prepare template markup ##
+        render\markup::prepare();
+
+        // optional logging to show removals and stats ##
+        render\log::set( $args );
+
+        // return or echo ##
+        return render\output::return();
+
+	}
 	
 
-	/**
-     * Open .content HTML
-     *
-     * @since       1.0.2
-     * @return      string   HTML
-     */
-    public static function container_close( $args = null )
-    {
 
-		// global arg validator ##
-		// if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
+	// ---------- methods ##
 
-        // set-up new array -- nothing really to do ##
-		// $array[] = [];
-		// grab classes ##
-		render\method::set_fields([
-			'oh' => '' // hack.. nothing to pass here ##
-		]);
-
-        // return ##
-		// return ui\method::prepare_render( $args, $array );
-
-	}
 
 
 
@@ -78,7 +92,7 @@ class ui extends \q\render {
 
 		// get title - returns array with key 'title' ##
 		// $array = get\post::title( $args );
-		render\method::set_fields(
+		render\fields::define(
 			get\post::title( $args )
 		);
 
@@ -94,7 +108,7 @@ class ui extends \q\render {
     *
     * @since       1.0.2
     */
-    public static function posts( $args = [] )
+    public static function query( $args = [] )
     {
 
 		// validate passed args ##
@@ -112,7 +126,7 @@ class ui extends \q\render {
 		// self::$args['fields'] = [];
 
 		// build fields array with default values ##
-		render\method::set_fields([
+		render\fields::define([
 			'total' 		=> '0', // set to zero string value ##
 			'pagination' 	=> null, // empty field.. ##
 			'posts' 		=> $args['no_results'] // replace posts with no_results markup ##
@@ -164,8 +178,8 @@ class ui extends \q\render {
 
 		}
 
-		// filter fields by template ##
-		self::$fields = \apply_filters( 'q/render/posts/'.ui\template::get(), self::$fields, self::$args );
+		// // filter fields by template ##
+		// self::$fields = \apply_filters( 'q/render/posts/'.ui\template::get(), self::$fields, self::$args );
 
 		// ok ##
 		return true;
@@ -307,7 +321,7 @@ class ui extends \q\render {
 		// get parent - returns false OR array with key 'title, slug, permalink' ##
 		// $array = get\post::parent( $args );
 		// h::log( $array );
-		render\method::set_fields( get\post::parent( $args ) ) ;
+		render\fields::define( get\post::parent( $args ) ) ;
 
         // return ##
 		// return ui\method::prepare_render( $args, $array );
@@ -327,7 +341,7 @@ class ui extends \q\render {
 		// get title - returns array with key 'title' ##
 		// $array = get\wp::the_excerpt( $args );
 		// $array = get\post::excerpt( $args );
-		render\method::set_fields( get\post::excerpt( $args ) ) ;
+		render\fields::define( get\post::excerpt( $args ) ) ;
 
         // return ##
 		// return ui\method::prepare_render( $args, $array );
@@ -347,7 +361,7 @@ class ui extends \q\render {
 
 		// get content - returns array with key 'content' ##
 		// $array = get\post::content( $args );
-		render\method::set_fields( get\post::content( $args ) ) ;
+		render\fields::define( get\post::content( $args ) ) ;
 
         // return ##
 		// return ui\method::prepare_render( $args, $array );
@@ -356,34 +370,34 @@ class ui extends \q\render {
 
 
 
-	/**
-	 * Helper Method to render::group - ui\field\render() ##
-	 */
-	public static function group( Array $args = null ){
+	// /**
+	//  * Helper Method to render::group - ui\field\render() ##
+	//  */
+	// public static function group( Array $args = null ){
 
-		// bounce on, and return array ##
-		return group::render( $args );
+	// 	// bounce on, and return array ##
+	// 	return group::render( $args );
 
-	}
-
-
+	// }
 
 
-	/**
-	 * Helper Method to render:field - ui\field\render() ##
-	 */
-	public static function field( Array $args = null ){
 
-		// global arg validator ##
-		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
 
-		// get content - returns array with key 'content' ##
-		$array = get\post::field( $args );
+	// /**
+	//  * Helper Method to render:field - ui\field\render() ##
+	//  */
+	// public static function field( Array $args = null ){
 
-        // return ##
-		return ui\method::prepare_render( $args, $array );
+	// 	// global arg validator ##
+	// 	if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
 
-	}
+	// 	// get content - returns array with key 'content' ##
+	// 	$array = get\post::field( $args );
+
+    //     // return ##
+	// 	return ui\method::prepare_render( $args, $array );
+
+	// }
 
 
 	
