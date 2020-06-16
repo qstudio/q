@@ -29,15 +29,15 @@ class field extends \q\render {
 
 		}
 
-		// build $args['fields'] -- @todo -- this can be moved to a pre-function call ##
-		// self::$args['fields'] = [];
+		// build $args['field'] -- @todo -- this can be moved to a pre-function call ##
+		$args['field'] = $method;
 
 		// h::log( 'd:>markup: '.$args['markup'] );
 		// h::log( 'd:>field: '.$args['field'] );
 
 		// build fields array with default values ##
-		render\method::set_fields([
-			$args['field'] => get\post::field( $args )
+		render\fields::define([
+			$method => get\post::field( $args )
 		]);
 
 		// empty ##

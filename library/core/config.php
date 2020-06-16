@@ -10,6 +10,8 @@ use q\theme as theme;
 
 class config extends \Q {
 
+	private static
+		$core = false;
 
 	/**
 	 * Get stored config setting, merging in any new of changed settings from extensions ##
@@ -72,6 +74,15 @@ class config extends \Q {
 	private static function get_core()
 	{
 
+		// use cached version ##
+		if( self::$core ){
+
+			h::log( 'Returning cached version of core config' );
+
+			return self::$core;
+
+		}
+
 		// load config from JSON ##
 		if (
 			$array = include( self::get_plugin_path('q.config.php') )
@@ -83,6 +94,9 @@ class config extends \Q {
 			if ( is_array( $array ) ) {
 
 				// h::log( 'd:>Q config NOT, empty...loading' );
+
+				// set property ##
+				self::$core = $array;
 
 				// assign ##
 				return $array;

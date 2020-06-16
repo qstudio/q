@@ -488,13 +488,13 @@ class method extends \Q {
 
 
 
-    public static function chop( $content, $length = 0 )
+    public static function chop( $content, $length = 0, $preprend = '...' )
     {
 
         if ( $length > 0 ) { // trim required, perhaps ##
 
             if ( strlen( $content ) > $length ) { // long so chop ##
-                return substr( $content , 0, $length ).'...';
+                return substr( $content , 0, $length ).$preprend;
             } else { // no chop ##
                 return $content;
             }
@@ -576,7 +576,7 @@ class method extends \Q {
 					// only replace keys found in markup ##
 					if ( false === strpos( $return_inner, '%'.$k.'%' ) ) {
 
-						h::log( 'd:>skipping '.$k );
+						// h::log( 'd:>skipping '.$k );
 		
 						continue ;
 		

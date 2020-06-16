@@ -83,7 +83,7 @@ return [
 		]
 	],
 
-	// ui opener ##
+	// ui open ##
 	'ui_open'  			=> [
 		'markup' => '
 		<main class="container %classes%">
@@ -91,7 +91,7 @@ return [
 		'
 	],
 
-	// the_container_close() ##
+	// ui close() ##
 	'ui_close'  			=> [
 		'markup' => '
 			</div>
@@ -339,8 +339,8 @@ return [
 		'last_text'				=> \__('Last', 'q-textdomain' ).' &raquo',
 		'li_class'				=> 'page-item',
 		'class_link_item'		=> 'page-link',
-		'class_link_first' 		=> 'page-link page-first d-none d-md-block',
-		'class_link_last' 		=> 'page-link page-last d-none d-md-block'
+		'class_link_first' 		=> 'd-none d-md-inline page-link page-first d-none d-md-block',
+		'class_link_last' 		=> 'd-none d-md-inline page-link page-last d-none d-md-block'
 	],
 
 ];

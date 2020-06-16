@@ -10,12 +10,14 @@ use q\render;
 
 class args extends \q\render {
 	
-    public static function validate( $args = null ) {
+    public static function validate( $args = null, $process = null ) {
 
 		// h::log( core\method::backtrace([ 'level' => 2, 'return' => 'function' ]) );
 		// h::log( $args );
 
 		// get stored config - pulls from Q, but available to filter via q/config/get/all ##
+		// @todo -- core\config::load( $args['config']['load'] ); -- checks for template specific config + ui\template::get();
+		h::log( 't:>add group__NAME config settings to share config over templates...' );
 		$config = 
 			( // force config settings to return by passing "config" -> "property" ##
 				isset( $args['config'] ) 
@@ -23,11 +25,12 @@ class args extends \q\render {
 				&& core\config::get( $args['config']['load'] ) 
 			) ?
 			core\config::get( $args['config']['load'] ) :
-			core\config::get( core\method::backtrace([ 'level' => 2, 'return' => 'function' ]) ) ; // get config based on calling function ##
+			// core\config::get( core\method::backtrace([ 'level' => 4, 'return' => 'function' ]) ) ; // get config based on calling function ##
+			$process ;
 
 		// test ##
 		// h::log( $config );
-		h::log( 'method: '.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]) );
+		// h::log( 'd:>method: '.core\method::backtrace([ 'level' => 4, 'return' => 'function' ]) );
 
 		// Parse incoming $args into an array and merge it with $config defaults ##
 		// allows specific calling methods to alter passed $args ##
@@ -50,7 +53,7 @@ class args extends \q\render {
         ){
 
 			// log ##
-			h::log( self::$args['group'].'~>e:>Missing required args, so stopping here' );
+			h::log( self::$args['process'].'~>e:>Missing required args, so stopping here' );
 			// h::log( 'Kicked here...' );
 
             return false;
@@ -58,7 +61,8 @@ class args extends \q\render {
 		}
 
 		// assign "group" - this is used by group to pull acf fields, or to know the calling method for the_ calls ##
-		$args['group'] = isset( $args['method'] ) ? $args['method'] : core\method::backtrace([ 'level' => 2, 'return' => 'function' ]) ;
+		// $args['group'] = isset( $args['process'] ) ? $args['process'] : core\method::backtrace([ 'level' => 2, 'return' => 'function' ]) ;
+		$args['group'] = $process;
 
 		// h::log( $args['config']['post'] );
 

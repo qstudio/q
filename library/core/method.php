@@ -219,6 +219,22 @@ class method extends \Q {
 
 		}
 
+		// config class_function() ##
+		if ( 
+			isset( $args['return'] ) 
+			&& 'config' == $args['return'] 
+			// && isset( $caller['class'] )
+			// && isset( $caller['function'] )
+		) {
+
+			return sprintf(
+				__( '%s%s()', 'Q' )
+				,  	isset($caller['class']) ? $caller['class'].'_' : null
+				,   $caller['function']
+			);
+
+		}
+
 		// file::line() ##
 		if ( 
 			isset( $args['return'] ) 

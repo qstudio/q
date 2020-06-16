@@ -473,7 +473,7 @@ class option extends \Q {
                 'fields' => array(
                     array(
                         'key' => 'field_q_option_extension',
-                        'label' => 'Development Modules',
+                        'label' => 'Modules to extend functionality',
                         'name' => 'q_option_extension',
                         'type' => 'checkbox',
                         'instructions' => '',

@@ -154,10 +154,16 @@ class post extends \q\get {
 		$post_id = isset( $args['config']['post'] ) ? $args['config']['post']->ID : null ;
 
 		// get field ##
-		$value = \get_field( $args['field'], $post_id );
-		
-		// we need to pass this thru filters - but return expects an array.... ##
+		if ( $value = \get_field( $args['field'], $post_id ) ) {
 
+			h::log( 't:>we need to pass this thru filters - but return expects an array');
+
+			return $value;
+
+		}
+
+		h::log( 'e:>get_field retuned no data - field: "'.$args['field'].'"');
+		
 		// return ##
 		return $value;
 

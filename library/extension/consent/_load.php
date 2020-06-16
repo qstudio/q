@@ -53,6 +53,8 @@ class consent extends \Q {
 
 		}
 
+		// @todo -- add admin controls to selected privacy page, block delete.. custom fields etc..
+
         core\load::libraries( self::load() );
 
     }

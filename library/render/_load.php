@@ -226,6 +226,17 @@ class render extends \Q {
 		
 		}
 
+		// check class__method is formatted correctly ##
+		if ( 
+			false === strpos( $function, '__' )
+		){
+
+			h::log( 'e:>Error in passed render method: "'.$function.'" - should have format CLASS__MOETHOD' );
+
+			return false;
+
+		}	
+
 		// we expect all render methods to have standard format CLASS__METHOD ##	
 		list( $class, $method ) = explode( '__', $function );
 
@@ -255,11 +266,11 @@ class render extends \Q {
 			// @todo - we need to make this more generic ##
 			// $args['group'] = $method;
 			// $args['field'] = $method;
-			$args['method'] = $method; // @todo --- use to control group, field, block .... etc ##
+			// $args['method'] = $method; // @todo --- use to control group, field, block .... etc ##
 			
-			// define config for all in class --i.e "group" ##
+			// define config for all in class -- i.e "group" ##
 			//@todo - could add group__NAME config, to share over templates ???
-			h::log( 't:>add group__NAME config setitngs to share config over templates...' );
+			// h::log( 't:>add group__NAME config settings to share config over templates...' );
 			$args['config']['load'] = $class;
 
 			// define config for post, block, type, ui ##
@@ -279,6 +290,9 @@ class render extends \Q {
 				//
 
 			}
+
+			// set global proces tracker ##
+			$args['process'] = $method;
 
 			// call render method ##
 			// return render\ui::open( $args );

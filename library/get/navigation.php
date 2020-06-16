@@ -112,21 +112,26 @@ class navigation extends \q\get {
 		}
 
 		// test ##
-        // h::log( $pages );
+		// h::log( $pages );
+		// h::log( 'd:>paged: '.\get_query_var( 'paged' ) );
 
 		// empty array ##
 		$array = [];
 
-		// prepare first item ##
-		$link_first = '?paged=1'.$fragement;
-		$array[] = '<li class="'.$config['li_class'].'"><a class="'.$config['class_link_first'].'" rel="1" href="'.\esc_url( $link_first ).'">'.$config['first_text'].'</a></li>';
+		// prepare first item -- unless on first page ##
+		if ( 0 != \get_query_var( 'paged' ) ) {
+			$link_first = '?paged=1'.$fragement;
+			$array[] = '<li class="'.$config['li_class'].'"><a class="'.$config['class_link_first'].'" rel="1" href="'.\esc_url( $link_first ).'">'.$config['first_text'].'</a></li>';
+		}
 
 		// merge pagination into links ##
 		$array = array_merge( $array, $paginate_links ) ;
 
 		// prepare last item ##
-		$link_last = '?paged='.$total.$fragement;
-		$array[] = '<li class="'.$config['li_class'].'"><a class="'.$config['class_link_last'].'" rel="'.$total.'" href="'.\esc_url( $link_last ).'">'.$config['last_text'].'</a></li>';
+		if ( $total != \get_query_var( 'paged' ) ) {
+			$link_last = '?paged='.$total.$fragement;
+			$array[] = '<li class="'.$config['li_class'].'"><a class="'.$config['class_link_last'].'" rel="'.$total.'" href="'.\esc_url( $link_last ).'">'.$config['last_text'].'</a></li>';
+		}
 
 		// test ##
         // h::log( $array );

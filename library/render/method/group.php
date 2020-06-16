@@ -14,13 +14,16 @@ class group extends \q\render {
 	
 	}
 
-	public static function run( $args = null, $method = null ){
+	public static function run( $args = [], $process = null ){
 
-		// return h::log( 'hello here..' );
+		// assign "group" - this is used by group to pull acf fields, or to know the calling method for the_ calls ##
+		// $args['group'] = isset( $args['method'] ) ? $args['method'] : core\method::backtrace([ 'level' => 2, 'return' => 'function' ]) ;
+		// $args['group'] = $method;
+
 		// h::log( $args );
 
         // validate passed args ##
-        if ( ! render\args::validate( $args ) ) {
+        if ( ! render\args::validate( $args, $process ) ) {
 
             render\log::set( $args );
 

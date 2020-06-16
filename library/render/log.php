@@ -36,18 +36,23 @@ class log extends \q\render {
             || false === self::$args['config']['debug']
         ) {
 
-            // h::log( 'd:>Debugging is turned OFF for Field Group: "'.$args['group'].'"' );
+            h::log( 'd:>Debugging is turned OFF for : "'.$args['process'].'"' );
 
             return false;
 
         }   
 
-		// h::log( 'd:>Debugging is turned ON for Field Group: "'.$args['group'].'"' );
+		// h::log( 'd:>Debugging is turned ON for : "'.$args['process'].'"' );
 
 		// filter in group to debug ##
-		\add_filter( 'q/core/log/default', function( $key ) use ( $args ){ return 
-			is_array( $key ) ? array_push( $key, $args['group'] ) : [ $key, $args['group'] ]; 
-		});
+		\add_filter( 'q/core/log/debug', function( $key ) use ( $args ){ 
+			// h::log( $key );
+			$return = is_array( $key ) ? array_merge( $key, [ $args['process'] ] ) : [ $key, $args['process'] ]; 
+			// h::log( $return );
+			return 
+				$return;
+			}
+		);
 
 		// return ##
 		return true; 
