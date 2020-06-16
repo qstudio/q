@@ -106,6 +106,7 @@ class config extends \Q {
 		}
 
 		// bad news ##
+		h::log( 'e:>Q config core empty, this should not happen, really..' );
 		return [];
 
 	}
