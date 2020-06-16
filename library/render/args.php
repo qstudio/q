@@ -18,7 +18,10 @@ class args extends \q\render {
 		// get stored config - pulls from Q, but available to filter via q/config/get/all ##
 		// @todo -- core\config::load( $args['config']['load'] ); -- checks for template specific config + ui\template::get();
 		h::log( 't:>add group__NAME config settings to share config over templates...' );
-		$config = 
+
+		$config = core\config::get_lookup( $args );
+
+		/*
 			( // force config settings to return by passing "config" -> "property" ##
 				isset( $args['config'] ) 
 				&& isset( $args['config']['load'] ) 
@@ -27,6 +30,7 @@ class args extends \q\render {
 			core\config::get( $args['config']['load'] ) :
 			// core\config::get( core\method::backtrace([ 'level' => 4, 'return' => 'function' ]) ) ; // get config based on calling function ##
 			$process ;
+		*/
 
 		// test ##
 		// h::log( $config );

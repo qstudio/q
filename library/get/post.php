@@ -156,7 +156,7 @@ class post extends \q\get {
 		// get field ##
 		if ( $value = \get_field( $args['field'], $post_id ) ) {
 
-			h::log( 't:>we need to pass this thru filters - but return expects an array');
+			// h::log( 't:>we need to pass this thru filters - but return expects an array');
 
 			return $value;
 

@@ -305,7 +305,7 @@ class fields extends \q\render {
 		if ( ! isset( self::$args['fields'] ) ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>"$args[fields"]" is not defined' );
+			h::log( self::$args['group'].'~>n:>"$args[fields]" is not defined' );
 
 			return false;
 

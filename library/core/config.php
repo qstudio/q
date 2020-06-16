@@ -11,7 +11,13 @@ use q\theme as theme;
 class config extends \Q {
 
 	private static
-		$core = false;
+		$core = false, // core config ##
+		$filtered = false, // filtered config ##
+		$lookup = [
+			'shared'
+		]
+	;
+
 
 	/**
 	 * Get stored config setting, merging in any new of changed settings from extensions ##
@@ -26,7 +32,10 @@ class config extends \Q {
 
 		// filter all config early ##
 		// Q = 1, Q Plugin = 10, Q Parent = 100, Q Child = 1000
-		$config = \apply_filters( 'q/config/get/all', $config );
+		$config = 
+			true === self::$filtered ? 
+			self::$filtered : // use stored filtered config ##
+			self::$filtered = \apply_filters( 'q/config/get/all', $config ) ; // filter in config and store to property ##
 
 		// perhaps the filters blitzed config... check for an empty array, if so reload ##
 		if (
@@ -71,6 +80,91 @@ class config extends \Q {
 	}
 
 
+	/**
+	 * Try to get configuration, based on normal requirements ##
+	 * 
+	 * 
+	*/
+	public static function get_lookup( $args = null ){
+
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+		){
+
+			h::log('e:>Error in passed args');
+
+			return false;
+
+		}
+
+		// get all config ##
+		$config = self::get();
+
+		// start blank ##
+		$return = false;
+
+		// generic back up ##
+		if ( 
+			isset( $args['proces'] )
+			&& isset( $config[ $args['proces'] ] ) 
+		) {
+
+			$return = $config[ $args['proces'] ];
+
+			// h::log( 'd~>get_config:>return set to: '.$return );
+
+		}
+
+		// config load is defined in render/load - so most have it set ##
+		// this will either be set to a class, like "group" or a class_method - like "post_title"
+		if ( 
+			isset( $args['config'] ) 
+			&& isset( $args['config']['load'] ) 
+			// && core\config::get( $args['config']['load'] )			
+			&& isset( $config[ $args['config']['load'] ] ) 
+		){
+	
+			$return = $config[ $args['config']['load'] ];
+	
+			// h::log( 'd~>get_config:>return set to: '.$args['config']['load'] );
+
+			// look for predefined extensions of config->load ##
+			$lookups = self::get_lookups();
+
+			if ( 
+				is_array( $lookups ) 
+			){
+
+				foreach( $lookups as $lookup ) {
+
+					// h::log( 'd~>get_config:>looking for: '.$args['config']['load'].'_'.$lookup );
+
+					if ( 
+						// isset( $args['config'] ) 
+						// && isset( $args['config']['load'] ) 
+						// && core\config::get( $args['config']['load'] )			
+						isset( $config[ $args['config']['load'].'_'.$lookup ] ) 
+					){
+				
+						$return = $config[ $args['config']['load'].'_'.$lookup ];
+				
+						// h::log( 'd~>get_config:>return set to: '.$args['config']['load'].'_'.$lookup );
+
+					}
+
+				}
+
+			}
+
+		} 
+
+		return $return;
+
+	}
+
+
 	private static function get_core()
 	{
 
@@ -106,9 +200,20 @@ class config extends \Q {
 		}
 
 		// bad news ##
-		h::log( 'e:>Q config core empty, this should not happen, really..' );
+		h::log( 'e~>Config:>Q config core empty, this should not happen, really..' );
 		return [];
 
 	}
+
+	/**
+     * Run defined callbacks on fields ##
+     * 
+     */
+    public static function get_lookups()
+    {
+
+        return \apply_filters( 'q/core/config/lookup', self::$lookup );
+
+    }
 
 }

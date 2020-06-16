@@ -218,6 +218,8 @@ class render extends \Q {
 	 */
 	public static function __callStatic( $function, $args ){	
 
+		// $sdfsdf = $that;
+
 		// take first array item, unwrap array - __callStatic wraps the array in an array ##
 		if ( is_array( $args ) && isset( $args[0] ) ) { 
 			
@@ -241,14 +243,14 @@ class render extends \Q {
 		list( $class, $method ) = explode( '__', $function );
 
 		// define config to load, if not passed ##
-		if (
-			! isset( $args['config']['load'] )
-		){
+		// if (
+		// 	! isset( $args['config']['load'] )
+		// ){
 
-			// h::log( 'd:>do we need to force the config??' );
-			// $args['config']['load'] = $class.'_'.$method;
+		// 	// h::log( 'd:>do we need to force the config??' );
+		// 	// $args['config']['load'] = $class.'_'.$method;
 
-		}
+		// }
 
 		// h::log( 'd:>search if -- class: '.$class.'::'.$method.' available' );
 

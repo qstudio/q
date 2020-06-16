@@ -13,6 +13,7 @@ class log extends \Q {
 
 	// track who called what ##
 	public static 
+		$file				= \WP_CONTENT_DIR."/debug.log",
 		$empty 				= false, // track emptied ##
 		$backtrace 			= false,
 		$backtrace_key 		= false,
@@ -37,28 +38,24 @@ class log extends \Q {
 
 	public static function run(){
 
-		// empty log ??
-		// self::$log = [];
-
 		// filter pre-defined actions ##
-		$on_run 		= \apply_filters( 'q/core/log/on_run', self::$on_run );
+		$on_run 			= \apply_filters( 'q/core/log/on_run', self::$on_run );
 		$on_shutdown 		= \apply_filters( 'q/core/log/on_shutdown', self::$on_shutdown );
 
 		// on_run set to true ##
-
 		if ( $on_run ) {
 
 			// earliest possible action.. empty log ##
-			self::empty(); // 
+			self::empty();  
 
 			// also, pre-ajax ##
 			if( 
 				defined('DOING_AJAX') 
 				&& DOING_AJAX
-				) {
+			) {
 
-					// core\helper::debug( 'DOING AJAX...' );
-					self::empty();
+				// core\helper::debug( 'DOING AJAX...' );
+				self::empty();
 
 			}
 
@@ -147,6 +144,19 @@ class log extends \Q {
 		return true;
 
 	}
+
+
+
+	/**
+	 * Hardcore way to directl set a log key and value.. no safety here..
+	*/
+	public static function set_to( $key = null, $value = null ){
+
+		// sanity @todo ##
+		self::$log[$key] = $value;
+
+	}
+	
 	
 
 	/**
@@ -596,9 +606,6 @@ class log extends \Q {
 		// self::set( 'write: '.$key );
 		// core\helper::debug( self::$log );
 
-		// sanity ##
-		// @todo ...
-
 		// if key set, check if exists, else bale ##
 		if ( 
 			! is_null( $key )
@@ -699,12 +706,11 @@ class log extends \Q {
 				// $errFile, 
 				// $errLine 
 			);
-			file_put_contents( $error_log, $message.PHP_EOL, FILE_APPEND );
+			// file_put_contents( $error_log, $message.PHP_EOL, FILE_APPEND );
+			file_put_contents( self::$file, $message.PHP_EOL, FILE_APPEND );
 		}
 
-		// empty log ??
-		// self::$log = [];
-
+		// ok ##
 		return true;
 
 	}
@@ -764,10 +770,11 @@ class log extends \Q {
      */
     private static function empty( $args = null ){
 
-		// empty once ##
+		// empty once -- commented out.. ##
 		if( self::$empty ) { return false; }
 
-        $f = @fopen( WP_CONTENT_DIR."/debug.log", "r+" );
+		// $f = @fopen( WP_CONTENT_DIR."/debug.log", "r+" );
+		$f = @fopen( self::$file, "r+" );
 		if ( $f !== false ) {
 			
 			ftruncate($f, 0);
@@ -781,8 +788,95 @@ class log extends \Q {
 
 		}
 
+	}
+	
+
+
+	private static function php_error(){
+
+		// h::debug( 'fatal...' );
+
+		$error = error_get_last();
+
+		if(
+			$error !== NULL 
+		){
+
+			self::set_to( 'php', self::php_error_decode( $error['type'], $error['message'], $error['file'], $error['line'] ) );
+
+			self::write();
+
+			return true;
+
+		}
+
+		return false;
+		
     }
 
+
+
+	private static function php_error_decode( $errno, $errstr, $errfile, $errline ) {
+
+        switch ($errno){
+
+            case E_ERROR: // 1 //
+                $typestr = 'E_ERROR'; break;
+            case E_WARNING: // 2 //
+                $typestr = 'E_WARNING'; break;
+            case E_PARSE: // 4 //
+                $typestr = 'E_PARSE'; break;
+            case E_NOTICE: // 8 //
+                $typestr = 'E_NOTICE'; break;
+            case E_CORE_ERROR: // 16 //
+                $typestr = 'E_CORE_ERROR'; break;
+            case E_CORE_WARNING: // 32 //
+                $typestr = 'E_CORE_WARNING'; break;
+            case E_COMPILE_ERROR: // 64 //
+                $typestr = 'E_COMPILE_ERROR'; break;
+            case E_CORE_WARNING: // 128 //
+                $typestr = 'E_COMPILE_WARNING'; break;
+            case E_USER_ERROR: // 256 //
+                $typestr = 'E_USER_ERROR'; break;
+            case E_USER_WARNING: // 512 //
+                $typestr = 'E_USER_WARNING'; break;
+            case E_USER_NOTICE: // 1024 //
+                $typestr = 'E_USER_NOTICE'; break;
+            case E_STRICT: // 2048 //
+                $typestr = 'E_STRICT'; break;
+            case E_RECOVERABLE_ERROR: // 4096 //
+                $typestr = 'E_RECOVERABLE_ERROR'; break;
+            case E_DEPRECATED: // 8192 //
+                $typestr = 'E_DEPRECATED'; break;
+            case E_USER_DEPRECATED: // 16384 //
+                $typestr = 'E_USER_DEPRECATED'; break;
+        }
+
+        $message =
+            $typestr .
+            ': ' . $errstr .
+            ' in ' . $errfile .
+            ' on line ' . $errline .
+            PHP_EOL;
+
+        // if(($errno & E_FATAL) && ENV === 'production'){
+
+        //     header('Location: 500.html');
+        //     header('Status: 500 Internal Server Error');
+
+        // }
+
+        // if ( 
+		// 	! ( $errno && ERROR_REPORTING ) 
+		// ){
+		
+		// 	return;
+			
+		// }
+
+    	return sprintf( '%s', $message );
+
+    }
 	
 
 	/**
@@ -793,6 +887,9 @@ class log extends \Q {
 
 		// empty log ##
 		self::empty();
+
+		// check for fatal error ##
+		self::php_error();
 
 		// filter what to write to log - defaults to "error" key ##
 		$key = \apply_filters( 'q/core/log/default', self::$shutdown_key );

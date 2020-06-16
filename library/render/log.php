@@ -36,7 +36,7 @@ class log extends \q\render {
             || false === self::$args['config']['debug']
         ) {
 
-            h::log( 'd:>Debugging is turned OFF for : "'.$args['process'].'"' );
+            // h::log( 'd:>Debugging is turned OFF for : "'.$args['process'].'"' );
 
             return false;
 

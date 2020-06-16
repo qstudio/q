@@ -65,7 +65,7 @@ class method extends \Q {
 		// allows specific calling methods to alter passed $args ##
 		if ( $config ) $args = \wp_parse_args( $args, $config );
 
-		// let's set "group" to calling function, for debugging ##
+		// let's set "group" to calling function, for debugging --- @todo, this really should be "process"... ##
 		if ( ! isset( $args['group'] ) ) {
 			$args['group'] = $method;
 		}
@@ -521,6 +521,7 @@ class method extends \Q {
 
 	/**
      * Markup object based on %placeholders% and template
+	 * This feature is not for formatting data, just applying markup to pre-formatted data
      *
      * @since    2.0.0
      * @return   Mixed
@@ -553,9 +554,6 @@ class method extends \Q {
 
         // format markup with translated data ##
         foreach( $data as $key => $value ) {
-
-			// @todo -- this really should go to render/formatter ###
-			h::log( 't:>we need to be able to pass any data to the formatter - string, int, array, object.. and get the same results..' );
 
 			if (
 				is_array( $value )

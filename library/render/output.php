@@ -37,10 +37,6 @@ class output extends \q\render {
             'return'        => self::$output
 		]); 
 		
-		// h::log( 'd:>still here..' );
-		
-		h::log( self::$output );
-
         // helper::log( self::$output );
 
         // either return or echo ##
