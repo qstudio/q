@@ -37,11 +37,11 @@ module.exports = function(grunt) {
 
 		// scss files to watch ##
 		watch_scss: [
-			'library/ui/asset/scss/view/*.scss', // regex to track all Template files ##
-			'library/ui/asset/scss/ui/*.scss', // regex to track all UI files ##
-			'library/ui/asset/scss/q/*.scss', // regex to track all config files ##
-			'library/ui/asset/scss/module/*.scss', // regex to track all config files ##
-			'library/ui/asset/scss/bootstrap/*.scss', // regex to track main Bootstrap include ##
+			'library/ui/asset/scss/*.scss', // regex to track all sass ##
+			// 'library/ui/asset/scss/ui/*.scss', // regex to track all UI files ##
+			// 'library/ui/asset/scss/q/*.scss', // regex to track all config files ##
+			// 'library/ui/asset/scss/module/*.scss', // regex to track all config files ##
+			// 'library/ui/asset/scss/bootstrap/*.scss', // regex to track main Bootstrap include ##
 		],
 
 		// php files to watch ##
@@ -78,13 +78,13 @@ module.exports = function(grunt) {
 			// track changes to scss src files ##
 			'sass': {
 				'options': {
-					'livereload': live_reload, // dedicated port for live reload ##
+					// 'livereload': live_reload, // dedicated port for live reload ##
 				},
-				'files':
-					'<%= watch_scss %>'
+				'files': {}
+					// '<%= watch_scss %>'
 				,
 				'tasks': [
-					'default',  // only run sass to rebuild main .css file ##
+					// 'default',  // only run sass to rebuild main .css file ##
 				]
 			},
 			/*
@@ -134,15 +134,15 @@ module.exports = function(grunt) {
 	// Development tasks Tasks ##
 	grunt.registerTask( 'default', [
 		// 'clean', // clean up old compilled files ##
-		'dart-sass', // Dart SASS ##
+		// 'dart-sass', // Dart SASS ##
 		// 'postcss', // post processing formating ## ##
 	]);
 
 	// Prepare for deployment Tasks ##
 	grunt.registerTask( 'deploy', [
-		'clean', // clean up old compilled files ##
-		'dart-sass', // Dart SASS ##
-		'postcss', // post processing formating ## ##
+		// 'clean', // clean up old compilled files ##
+		// 'dart-sass', // Dart SASS ##
+		// 'postcss', // post processing formating ## ##
 	]);
 
 	// Watch Task ##
