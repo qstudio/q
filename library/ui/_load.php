@@ -26,17 +26,17 @@ class controller extends \Q {
 
 		return $array = [
 
-			// ui methods ##
-			'method' => self::get_plugin_path( 'library/ui/method.php' ),
+			// add assets ##
+			'enqueue' => self::get_plugin_path( 'library/ui/enqueue.php' ),
 
-			// template ##
-			'template' => self::get_plugin_path( 'library/ui/template.php' ),
+			// minification ##
+			'minifier' => self::get_plugin_path( 'library/ui/minifier.php' ),
 
-			// widgets ##
-			'widget' => self::get_plugin_path( 'library/ui/widget/_load.php' ),
+			// css renderer ##
+			'css' => self::get_plugin_path( 'library/ui/css.php' ),
 
-			// assets ##
-			'asset' => self::get_plugin_path( 'library/ui/asset/_load.php' ),
+			// js renderer ##
+			'javascript' => self::get_plugin_path( 'library/ui/javascript.php' )
 
 		];
 

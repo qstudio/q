@@ -6,6 +6,7 @@ namespace q\get;
 use q\core;
 use q\core\helper as h;
 use q\ui;
+use q\render;
 use q\get;
 
 // Q Theme ##
@@ -19,7 +20,7 @@ class taxonomy extends \q\get {
 	public static function terms( $args = null ){
 
 		// global arg validator ##
-		if ( ! $args = ui\method::prepare_args( $args ) ){ 
+		if ( ! $args = render\args::prepare( $args ) ){ 
 	   
 			// h::log( 'Bailing..' ); 
 		
@@ -102,70 +103,10 @@ class taxonomy extends \q\get {
 		// h::log( $array );
 
 		// return ##
-		return ui\method::prepare_return( $args, $array );
+		return get\method::prepare_return( $args, $array );
 
 	}
 
-
-
-
-
-	/**
-	 * Helper Method to get category
-	 */
-	public static function category( $args = null ){
-
-		h::log( 'e:>replaced by terms() method' );
-		return false;
-		/*
-
-		// global arg validator ##
-		if ( ! $args = ui\method::prepare_args( $args ) ){ 
-	   
-		   // h::log( 'Bailing..' ); 
-	   
-		   return false; 
-	   
-	   }
-
-	   // try and get_post_categories ##
-	   if ( 
-		   ! $get_the_category = \get_the_category( $args['post']->ID )
-	   ){
-
-		   h::log( 'd:>No categories found for Post: '.$args['post']->post_title );
-
-		   return false;
-
-	   }
-
-	   // we only want the first array item ##
-	   $category = $get_the_category[0];
-
-	   // test ##
-	   // h::log( $category );
-
-	   // categories ##
-	   if (
-		   ! is_object( $category )
-		   || ! $category instanceof \WP_Term
-	   ) {
-
-		   h::log( 'e:>Error in returned category' );
-
-		   return false;
-
-	   }
-
-	   $array['permalink'] = \get_category_link( $category );
-	   $array['slug'] = $category->slug;
-	   $array['title'] = $category->cat_name;
-
-	   // return ##
-	   return ui\method::prepare_return( $args, $array );
-	   */
-
-   }
 
 
 }

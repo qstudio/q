@@ -17,9 +17,6 @@ class field extends \q\render {
 
 	public static function run( $args = null, $method = null ){
 
-        // global arg validator ##
-		// if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
-
 		// validate passed args ##
         if ( ! render\args::validate( $args ) ) {
 
@@ -29,7 +26,8 @@ class field extends \q\render {
 
 		}
 
-		// build $args['field'] -- @todo -- this can be moved to a pre-function call ##
+		// build $args['field'] -- 
+		// @todo -- this can be moved to a pre-function call ##
 		$args['field'] = $method;
 
 		// h::log( 'd:>markup: '.$args['markup'] );
@@ -39,27 +37,6 @@ class field extends \q\render {
 		render\fields::define([
 			$method => get\post::field( $args )
 		]);
-
-		// empty ##
-		// $array = [];
-
-		// field ##
-		// $array['field'] = $args['field'];
-
-        // grab classes ##
-		// $array['value'] = get\post::field( $args );
-
-		// @todo -- pass field by render/format ##
-		// h::log( 't:>pass field by render/format' );
-		// $array['value'] =  render\format::field( $field, $value );
-
-		// h::log( $array );
-
-        // return ##
-		// return ui\method::prepare_render( $args, $array );
-
-		// filter field data ##
-		// self::$fields = \apply_filters( 'q/render/field/'.$args['field'], self::$fields, self::$args );
 
 		// h::log( self::$fields );
 

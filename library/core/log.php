@@ -886,10 +886,10 @@ class log extends \Q {
     public static function shutdown(){
 
 		// empty log ##
-		self::empty();
+		// self::empty();
 
 		// check for fatal error ##
-		self::php_error();
+		// self::php_error();
 
 		// filter what to write to log - defaults to "error" key ##
 		$key = \apply_filters( 'q/core/log/default', self::$shutdown_key );

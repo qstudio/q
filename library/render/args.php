@@ -4,11 +4,12 @@ namespace q\render;
 
 use q\core;
 use q\core\helper as h;
-use q\ui;
+use q\view;
 use q\get;
 use q\render;
 
 class args extends \q\render {
+
 	
     public static function validate( $args = null, $process = null ) {
 
@@ -16,7 +17,7 @@ class args extends \q\render {
 		// h::log( $args );
 
 		// get stored config - pulls from Q, but available to filter via q/config/get/all ##
-		// @todo -- core\config::load( $args['config']['load'] ); -- checks for template specific config + ui\template::get();
+		// @todo -- core\config::load( $args['config']['load'] ); -- checks for template specific config + view\is::get();
 		h::log( 't:>add group__NAME config settings to share config over templates...' );
 
 		$config = core\config::get_lookup( $args );
@@ -133,7 +134,101 @@ class args extends \q\render {
         // ok - should be good ##
         return $args;
 
-    }
+	}
+	
+
+
+
+	/**
+	 * Prepare passed args ##
+	 * @todo --- merge with validate args.. resolve config issues ##
+	 *
+	 */
+	public static function prepare( $args = [] ) {
+
+		// sanity ##
+		if (
+		 	! is_array( $args )
+		){
+
+		 	h::log( 'e:>Error in passed args' );
+
+		 	return false;
+
+		}
+
+		// get calling method for filters ##
+		$method = core\method::backtrace([ 'level' => 2, 'return' => 'function' ]);
+
+		// get stored config - pulls from Q, but available to filter via q/config/get/all ##
+		$config =
+			( // force config settings to return by passing "config" -> "property" ##
+				isset( $args['config']['load'] )
+				&& core\config::get( $args['config']['load'] )
+			) ?
+			core\config::get( $args['config']['load'] ) :
+			core\config::get( $method ) ;
+
+		// test ##
+		// h::log( $config );
+
+		// Parse incoming $args into an array and merge it with $config defaults ##
+		// allows specific calling methods to alter passed $args ##
+		if ( $config ) $args = \wp_parse_args( $args, $config );
+
+		// let's set "group" to calling function, for debugging --- @todo, this really should be "process"... ##
+		if ( ! isset( $args['group'] ) ) {
+			$args['group'] = $method;
+		}
+
+		// h::log( $config );
+		// h::log( $args );
+
+		// merge any default args with any pass args ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+		) {
+
+			h::log( 'Error in passed $args' );
+
+			return false;
+
+		}
+
+		// no post set ##
+		if ( ! isset( $args['config']['post'] ) ) {
+
+			$args['config']['post'] = get\post::object();
+
+		}
+
+		// validate passed post ##
+		if (
+			isset( $args['config']['post'] )
+			&& ! $args['config']['post'] instanceof \WP_Post
+		) {
+
+			// get new post, if corrupt ##
+			$args['config']['post'] = get\post::object( $args );
+
+		}
+
+		// last check ##
+		if ( ! $args['config']['post'] ) {
+
+			h::log( 'Error with post object, validate - returned as null.' );
+
+			$args['config']['post'] = null;
+
+			// return false;
+
+		}
+
+		// kick back args ##
+		return $args;
+
+	}
 
 
 
@@ -152,7 +247,7 @@ class args extends \q\render {
 		
 		// apply template level filter to $args - specific calls should be controlled by parameters included directly ##
         self::$args = core\filter::apply([
-			'filter'        => 'q/render/args/'.ui\template::get(),
+			'filter'        => 'q/render/args/'.view\is::get(),
 			'parameters'    => self::$args,
 			'return'        => self::$args
         ]);

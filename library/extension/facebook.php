@@ -5,7 +5,7 @@ namespace q\extension;
 // Q ##
 use q\core;
 use q\core\helper as h;
-use q\ui;
+use q\render;
 use q\get;
 
 // load it up ##
@@ -137,7 +137,7 @@ class facebook extends \Q {
         $string = get\post::excerpt_from_id( $the_post->ID, 200 );
 
         // clean up ##
-        $string = ui\method::rip_tags( $string );
+        $string = render\method::rip_tags( $string );
 
         // replacements ##
         $string = str_replace( "\"", "'", $string );

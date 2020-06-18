@@ -7,6 +7,7 @@ use q\core;
 use q\core\helper as h;
 use q\ui;
 use q\get;
+use q\render;
 
 // Q Theme ##
 use q\theme;
@@ -123,7 +124,7 @@ class post extends \q\get {
 		// h::log( $array );
 		
 		// return
-		return ui\method::prepare_return( $args, $array );
+		return get\method::prepare_return( $args, $array );
 
 	}
 
@@ -274,7 +275,7 @@ class post extends \q\get {
         }
 
 		// return ##
-		return ui\method::prepare_return( $args, $array );
+		return get\method::prepare_return( $args, $array );
 
 	}
 
@@ -366,7 +367,7 @@ class post extends \q\get {
 		// h::log( $array );
 
         // return ##
-		return ui\method::prepare_return( $args, $array );
+		return get\method::prepare_return( $args, $array );
 
 	}
 	
@@ -381,14 +382,27 @@ class post extends \q\get {
     public static function excerpt( $args = null )
     {
 
-        // global arg validator ##
-		if ( ! $args = ui\method::prepare_args( $args ) ){ 
+        // // global arg validator ##
+		// if ( ! $args = render\args::prepare( $args ) ){ 
 		
-			// h::log( 'Bailing..' ); 
+		// 	// h::log( 'Bailing..' ); 
 		
-			return false; 
+		// 	return false; 
 		
+		// }
+
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+		){
+
+			h::log( 'e:>Error in passed args' );
+
+			return false;
+
 		}
+
 
         // set-up new array ##
 		$array = [];
@@ -434,7 +448,7 @@ class post extends \q\get {
 		}
 		
 		// return ##
-		return ui\method::prepare_return( $args, $array );
+		return get\method::prepare_return( $args, $array );
 
 	}
 
@@ -515,12 +529,12 @@ class post extends \q\get {
 		$array = [];
 
 		// get the post_content with filters applied ##
-		$array['content'] = \apply_filters( 'the_content', ui\method::clean( \get_post_field( 'post_content', $args['config']['post'] ) ) );
+		$array['content'] = \apply_filters( 'the_content', render\method::clean( \get_post_field( 'post_content', $args['config']['post'] ) ) );
 
 		// h::log( $array );
 
 		// return ##
-		return ui\method::prepare_return( $args, $array );
+		return get\method::prepare_return( $args, $array );
 
 	}
 

@@ -154,6 +154,9 @@ class render extends \Q {
 
 		return $array = [
 			
+			// methods ##
+			'method' => h::get( 'render/method.php', 'return', 'path' ),
+
 			// validate and assign args ##
 			'args' => h::get( 'render/args.php', 'return', 'path' ),
 

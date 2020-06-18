@@ -21,8 +21,10 @@ Requirements:
 
 Modules:
 # group - render field data from ACF field group
-# the_ || wordpress - the_posts, the_title etc.. include getters and render methods
+# post - wordpress posts, title etc.. include getters and render methods
+# ui - layout elements
 # field ( deal with single use case post_fields )
+~ block - reusable blocks
 ~ type ( src, video, gallery?? etc )
 
 filters:
@@ -153,6 +155,9 @@ class render extends \Q {
     {
 
 		return $array = [
+
+			// methods ##
+			'method' => h::get( 'render/method.php', 'return', 'path' ),
 			
 			// validate and assign args ##
 			'args' => h::get( 'render/args.php', 'return', 'path' ),
@@ -192,6 +197,10 @@ class render extends \Q {
 
 			// post objects content, title, excerpt etc ##
 			'post' => h::get( 'render/method/post.php', 'return', 'path' ),
+
+			// perhaps type css ##
+			// perhaps type js ##
+			// perhaps type font ##
 
 			// navigation features ##
 			// 'nav' => h::get( 'render/method/navigation.php', 'return', 'path' ),

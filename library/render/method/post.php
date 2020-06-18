@@ -87,17 +87,10 @@ class post extends \q\render {
      */
     public static function title( $args = null ) {
 
-		// global arg validator ##
-		// if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
-
 		// get title - returns array with key 'title' ##
-		// $array = get\post::title( $args );
 		render\fields::define(
 			get\post::title( $args )
 		);
-
-        // return ##
-		// return ui\method::prepare_render( $args, $array );
 
     }
 
@@ -111,19 +104,7 @@ class post extends \q\render {
     public static function query( $args = [] )
     {
 
-		// validate passed args ##
-        // if ( ! $args = render\args::validate( $args ) ) {
-
-        //     // render\log::render( $args );
-
-        //     return false;
-
-		// }
-
 		// h::log( $args );
-
-		// build $args['fields'] -- @todo -- this can be removed due to args...##
-		// self::$args['fields'] = [];
 
 		// build fields array with default values ##
 		render\fields::define([
@@ -133,7 +114,6 @@ class post extends \q\render {
 		]);
 
         // pass to get_posts -- and validate that we get an array back ##
-        // if ( ! $array = get\wp::the_posts( $args ) ) {
 		if ( ! $array = get\query::posts( $args ) ) {
 
 			// return false;
@@ -172,31 +152,14 @@ class post extends \q\render {
 			// define all required fields for markup ##
 			self::$fields = [
 				'total' 		=> $array['query']->found_posts, // total posts ##
-				'pagination'	=> theme\ui\module\navigation::pagination( $array, 'return' ), // get pagination ##
+				'pagination'	=> theme\module\navigation::pagination( $array, 'return' ), // get pagination ##
 				'posts'			=> $array['query']->posts // array of WP_Posts ##
 			];
 
 		}
 
-		// // filter fields by template ##
-		// self::$fields = \apply_filters( 'q/render/posts/'.ui\template::get(), self::$fields, self::$args );
-
 		// ok ##
 		return true;
-
-		// h::log( self::$fields );
-
-		// check each field data and apply numerous filters ##
-		// render\fields::prepare();
-
-		// // Prepare template markup ##
-        // render\markup::prepare();
-
-        // // optional logging to show removals and stats ##
-        // // render\log::set( $args );
-
-        // // return or echo ##
-        // return render\output::return();
 
     }
 
@@ -210,16 +173,10 @@ class post extends \q\render {
 	 */
 	public static function parent( $args = null ){
 
-		// global arg validator ##
-		// if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
-
 		// get parent - returns false OR array with key 'title, slug, permalink' ##
-		// $array = get\post::parent( $args );
-		// h::log( $array );
-		render\fields::define( get\post::parent( $args ) ) ;
-
-        // return ##
-		// return ui\method::prepare_render( $args, $array );
+		render\fields::define( 
+			get\post::parent( $args ) 
+		);
 
 	}
 
@@ -230,16 +187,9 @@ class post extends \q\render {
 	 */
 	public static function excerpt( $args = null ){
 
-		// global arg validator ##
-		// if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
-
-		// get title - returns array with key 'title' ##
-		// $array = get\wp::the_excerpt( $args );
-		// $array = get\post::excerpt( $args );
-		render\fields::define( get\post::excerpt( $args ) ) ;
-
-        // return ##
-		// return ui\method::prepare_render( $args, $array );
+		render\fields::define( 
+			get\post::excerpt( $args ) 
+		);
 
 	}
 
@@ -251,48 +201,13 @@ class post extends \q\render {
 	 */
 	public static function content( Array $args = null ){
 
-		// global arg validator ##
-		// if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
-
 		// get content - returns array with key 'content' ##
-		// $array = get\post::content( $args );
-		render\fields::define( get\post::content( $args ) ) ;
-
-        // return ##
-		// return ui\method::prepare_render( $args, $array );
+		render\fields::define( 
+			get\post::content( $args ) 
+		);
 
 	}
 
-
-
-	// /**
-	//  * Helper Method to render::group - ui\field\render() ##
-	//  */
-	// public static function group( Array $args = null ){
-
-	// 	// bounce on, and return array ##
-	// 	return group::render( $args );
-
-	// }
-
-
-
-
-	// /**
-	//  * Helper Method to render:field - ui\field\render() ##
-	//  */
-	// public static function field( Array $args = null ){
-
-	// 	// global arg validator ##
-	// 	if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
-
-	// 	// get content - returns array with key 'content' ##
-	// 	$array = get\post::field( $args );
-
-    //     // return ##
-	// 	return ui\method::prepare_render( $args, $array );
-
-	// }
 
 
 	
@@ -300,13 +215,13 @@ class post extends \q\render {
 	public static function the_category( Array $args = null ) {
 
 		// global arg validator ##
-		if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
+		if ( ! $args = render\args::prepare( $args ) ){ return false; }
 
 		// get title - returns array with key 'title' ##
 		$array = get\wp::the_category( $args );
 
         // return ##
-		return ui\method::prepare_render( $args, $array );
+		return ui\method::prepare( $args, $array );
 
 	}
 
@@ -386,7 +301,7 @@ class post extends \q\render {
 
 		}
 
-		$string = ui\method::markup( $args['markup'], $array );
+		$string = render\method::markup( $args['markup'], $array );
 
 		// h::log( $string );
 

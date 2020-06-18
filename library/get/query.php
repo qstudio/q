@@ -84,7 +84,7 @@ class query extends \q\get {
 		// h::log( $array );
 
 		// filter and return array ##
-		return ui\method::prepare_return( $args, $array );
+		return get\method::prepare_return( $args, $array );
 
     }
 

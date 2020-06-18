@@ -130,8 +130,9 @@ class theme extends \q\get {
 	{
 
 		$theme = \wp_get_theme(); // gets the current theme
+		// h::log( $theme );
 
-		if ( $theme->parent_theme ) {
+		if ( $theme->template ) {
 			return true;
 		}
 

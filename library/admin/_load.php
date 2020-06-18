@@ -35,6 +35,9 @@ class admin extends \Q {
 			// actions ##
 			'action' => h::get( 'admin/action.php', 'return', 'path' ),
 
+			// options ##
+			'option' => h::get( 'admin/option.php', 'return', 'path' ),
+
 		];
 
     }

@@ -225,7 +225,13 @@ if ( ! class_exists( 'Q' ) ) {
 			require_once self::get_plugin_path( 'library/get/_load.php' );
 
 			// render engine ##
-            require_once self::get_plugin_path( 'library/render/_load.php' );
+			require_once self::get_plugin_path( 'library/render/_load.php' );
+			
+			// widgets ##
+			require_once self::get_plugin_path( 'library/widget/_load.php' );
+
+			// view ##
+			require_once self::get_plugin_path( 'library/view/_load.php' );
 
 			// theme ##
 			require_once self::get_plugin_path( 'library/ui/_load.php' );

@@ -18,7 +18,7 @@ class block extends \q\render {
 	public static function run( $args = null ){
 
         // global arg validator ##
-		// if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
+		// if ( ! $args = render\args::prepare( $args ) ){ return false; }
 
 		// validate passed args ##
         if ( ! render\args::validate( $args ) ) {
@@ -56,7 +56,7 @@ class block extends \q\render {
 		// h::log( $array );
 
         // return ##
-		// return ui\method::prepare_render( $args, $array );
+		// return ui\method::prepare( $args, $array );
 
 		// filter field data ##
 		// self::$fields = \apply_filters( 'q/render/field/'.$args['field'], self::$fields, self::$args );

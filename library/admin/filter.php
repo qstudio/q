@@ -23,9 +23,6 @@ class filter extends \Q {
 
         }
 
-        // remove "url" field from comments ##
-        \add_filter( 'comment_form_default_fields', array( get_class(), 'comment_form_default_fields' ) );
-
     }
 
 
@@ -79,29 +76,6 @@ class filter extends \Q {
 
         // then we return the $post_mime_types variable
         return $post_mime_types;
-
-    }
-
-
-    
-    /**
-     * Filter to remove URL field from comments form
-     *
-     * @since       1.6.1
-     * @param       Array  $fields
-     * @return      Array
-     */
-    public static function comment_form_default_fields( $fields )
-    {
-
-        if ( isset( $fields['url'] ) ) {
-
-            unset($fields['url']);
-
-        }
-
-        // kick it back ##
-        return $fields;
 
     }
 

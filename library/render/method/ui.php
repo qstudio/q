@@ -88,15 +88,9 @@ class ui extends \q\render {
     public static function open( $args = null )
     {
 
-		// global arg validator ##
-		// if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
-        
 		render\fields::define([
 			'classes' => get\theme::body_class( $args ) // grab classes ##
 		]);
-
-        // return ##
-		// return ui\method::prepare_render( $args, $array );
 
 	}
 
@@ -111,18 +105,11 @@ class ui extends \q\render {
     public static function close( $args = null )
     {
 
-		// global arg validator ##
-		// if ( ! $args = ui\method::prepare_args( $args ) ){ return false; }
-
         // set-up new array -- nothing really to do ##
-		// $array[] = [];
 		// grab classes ##
 		render\fields::define([
 			'oh' => '' // hack.. nothing to pass here ##
 		]);
-
-        // return ##
-		// return ui\method::prepare_render( $args, $array );
 
 	}
 

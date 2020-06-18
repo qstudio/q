@@ -26,6 +26,9 @@ class get extends \Q {
 
 		return $array = [
 
+			// methods ##
+			'method' => h::get( 'get/method.php', 'return', 'path' ),
+
 			// taxonomy object ##
 			'plugin' => h::get( 'get/plugin.php', 'return', 'path' ),
 

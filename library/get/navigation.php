@@ -6,6 +6,7 @@ namespace q\get;
 use q\core;
 use q\core\helper as h;
 use q\ui;
+use q\render;
 use q\get;
 
 // Q Theme ##
@@ -24,7 +25,7 @@ class navigation extends \q\get {
     {
 
 		// global arg validator ##
-		if ( ! $args = ui\method::prepare_args( $args ) ){ 
+		if ( ! $args = render\args::prepare( $args ) ){ 
 		
 			help::log( 'Bailing..' ); 
 		

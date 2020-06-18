@@ -47,7 +47,7 @@ class action extends \Q {
     public static function admin_enqueue_scripts() {
 
         // add JS ## -- after all dependencies ##
-        \wp_enqueue_script( 'q-admin-js', h::get( "theme/javascript/q.admin.global.js", 'return' ), array( 'jquery' ), self::version );
+        \wp_enqueue_script( 'q-admin-js', h::get( "ui/javascript/admin/global.js", 'return' ), array( 'jquery' ), self::version );
 
         // nonce ##
         $nonce = \wp_create_nonce( 'q-admin-nonce' );
@@ -60,11 +60,11 @@ class action extends \Q {
         ));
 
         // add snackbar CSS ##
-        \wp_register_style( 'q-snackbar-admin', h::get( "theme/css/snackbar.min.css", 'return' ), '', self::version, 'all' );
+        \wp_register_style( 'q-snackbar-admin', h::get( "ui/css/vendor/snackbar.min.css", 'return' ), '', self::version, 'all' );
         \wp_enqueue_style( 'q-snackbar-admin' );
 
         // add snackbar JS ##
-        \wp_register_script( 'q-snackbar-admin', h::get( "theme/javascript/snackbar.min.js", 'return' ), array( 'jquery' ), self::version );
+        \wp_register_script( 'q-snackbar-admin', h::get( "ui/javascript/vendor/snackbar.min.js", 'return' ), array( 'jquery' ), self::version );
         \wp_enqueue_script( 'q-snackbar-admin' );
 
     }

@@ -80,6 +80,8 @@ class config extends \Q {
 	}
 
 
+
+
 	/**
 	 * Try to get configuration, based on normal requirements ##
 	 * 
@@ -165,6 +167,8 @@ class config extends \Q {
 	}
 
 
+
+
 	private static function get_core()
 	{
 
@@ -205,6 +209,8 @@ class config extends \Q {
 
 	}
 
+
+
 	/**
      * Run defined callbacks on fields ##
      * 
@@ -214,6 +220,8 @@ class config extends \Q {
 
         return \apply_filters( 'q/core/config/lookup', self::$lookup );
 
-    }
+	}
+	
+	
 
 }
