@@ -3,6 +3,7 @@
 namespace q\core;
 
 use q\core;
+use q\extension;
 use q\core\helper as h;
 // use q\theme\template as template;
 
@@ -113,7 +114,7 @@ class helper extends \Q {
 
     /**
     * check if a file exists with environmental fallback
-    * first check the active theme ( pulling info from "device-theme-switcher" ), then the plugin
+    * first check the active theme, then the plugin
     *
     * @param    $include        string      Include file with path ( from library/  ) to include. i.e. - templates/loop-nothing.php
     * @param    $return         string      return method ( echo, return, require )
@@ -376,55 +377,8 @@ class helper extends \Q {
 
 
 
-	/** 
-     * Check which consent is given by the user via a stored cookie
-     * 
-     * @since 4.0.0
-     * */
-    public static function consent( $setting = null ): bool
-    {
-
-        if ( is_null( $setting ) ) {
-
-            // h::log( 'd:>No setting passed, default to true.' );
-
-            return true;
-
-        }
-
-        if ( 
-			! class_exists( '\q\extension\consent' )
-        ) {
-
-            // h::log( 'd:>Consent Class not found, default to true' );
-
-            // no ##
-            return true;
-
-        }
-
-        if (
-            ! \q\extension\consent\cookie::is_active( $setting ) 
-        ) {
-
-            // h::log( 'd:>Setting not allowed: '.$setting );
-
-            // no ##
-            return false;
-
-        }
-
-        // h::log( 'd:>Setting allowed: '.$setting );
-
-        // ok ##
-        return true;
-
-    }
-
-
-
     /**
-    * Get current device type from "Device Theme Switcher"
+    * Get current device type
     *
     * @since       0.1
 	* @return      string      Device slug
@@ -450,56 +404,13 @@ class helper extends \Q {
 
         // we have a new simpler device handler extension - check if the class is available ##
         if ( 
-            class_exists( '\q\extension\device\method' ) 
+			class_exists( '\q\theme\extension\device\method' ) 
+			&& isset( core\option::get('extension')->device )
+			&& true === core\option::get('extension')->device 
         ) {
-
-            $handle = \q\extension\device\method::handle();
-
-        // or use the device-theme-switcher if active ##
-        } else if ( 
-
-            function_exists( 'is_plugin_active' ) 
-            && \is_plugin_active( "device-theme-switcher/dts_controller.php" ) 
-
-        ) {
-
-            // Access the device theme switcher object anywhere in themes or plugins
-            // http://wordpress.org/plugins/device-theme-switcher/installation/
-            global $dts;
-
-            // device check ##
-            if ( is_null ( $dts ) ) {
-
-                $handle = 'desktop';
-
-            } else {
-
-                // theme overwrite approved ##
-                if ( ! empty($dts->{$dts->theme_override . "_theme"})) {
-
-                    #pr('option 1');
-                    $handle = $dts->{$dts->theme_override . "_theme"}["stylesheet"];
-
-                // device selected theme loading ##
-                } elseif ( ! empty($dts->{$dts->device . "_theme"})) {
-
-                    #pr('option 2');
-                    $handle = $dts->{$dts->device . "_theme"}["stylesheet"];
-
-                // fallback to active theme ##
-                } else {
-
-                    #pr('option 3');
-                    $handle = $dts->active_theme["stylesheet"];
-
-                }
-
-            }
-
-            #pr($dts);
-
-            // clean up ##
-            $handle = ( $handle && false !== strpos( $handle, 'desktop' ) ) ? 'desktop' : 'handheld' ;
+			
+			self::log( 'Device Extension Found..' );
+            $handle = \q\theme\extension\device\method::handle();
 
         // backup to mobile ##
         } else {
@@ -526,6 +437,85 @@ class helper extends \Q {
         return self::$device = $string;
 
     }
+
+
+
+
+	/** 
+     * Check which consent is given by the user via a stored cookie
+     * 
+     * @since 4.0.0
+     * */
+    public static function consent( $setting = null ): bool
+    {
+
+        if ( is_null( $setting ) ) {
+
+            // h::log( 'd:>No setting passed, default to true.' );
+
+            return true;
+
+        }
+
+        if ( 
+			! class_exists( '\q\theme\extension\consent' )
+			|| ! isset( core\option::get('extension')->consent )
+			|| true !== core\option::get('extension')->consent 
+        ) {
+
+            // self::log( 'd:>Consent Class not found, default to true' );
+
+            // no ##
+            return true;
+
+        }
+
+        if (
+            ! \q\theme\extension\consent\cookie::is_active( $setting ) 
+        ) {
+
+            // self::log( 'd:>Setting not allowed: '.$setting );
+
+            // no ##
+            return false;
+
+        }
+
+        // self::log( 'd:>Setting allowed: '.$setting );
+
+        // ok ##
+        return true;
+
+    }
+
+
+	
+    /**
+    * Get current browser client
+    *
+    * @since       0.1
+	* @return      string      Device slug
+	*/
+	/*
+    public static function client()
+    {
+
+        if ( 
+            class_exists( '\q\extension\device\method' ) 
+        ) {
+
+			return extension\device\method::client();
+			
+		} else {
+
+			// unknown ##
+			return false;
+
+		}
+
+	}
+	*/
+
 
 
 

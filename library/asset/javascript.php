@@ -215,7 +215,7 @@ Date:       {$date}
             || ! array_filter( self::$array )
         ) {
 
-            helper::log( 'array is empty.' );
+            h::log( 'd:>array is empty.' );
 
             return false;
 
@@ -255,7 +255,7 @@ Date:       {$date}
             default:
 
                 //  file ##
-                $file = \q_theme::get_parent_theme_path( '/library/asset/javascript/q/theme.js' );
+                $file = \q_theme::get_parent_theme_path( '/library/asset/js/module/theme.js' );
 
                 // helper::log( 'File: '.$file );
                 // helper::log( 'File: '.$file );

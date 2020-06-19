@@ -257,7 +257,7 @@ Date:       {$date}
             default:
 
                 //  file ##
-                $file = \q_theme::get_parent_theme_path( '/library/asset/css/q/theme.css' );
+                $file = \q_theme::get_parent_theme_path( '/library/asset/css/module/theme.css' );
 
                 // h::log( 'File: '.$file );
                 // h::log( 'Theme File: '.$file );

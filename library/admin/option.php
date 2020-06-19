@@ -81,7 +81,7 @@ class option extends \Q {
 		if ( get\theme::is_child() ){
 
 			// all assets are loading from parent
-			h::log( 'e:>current theme is child.' );
+			// h::log( 'e:>current theme is child.' );
 
 		}
 
@@ -111,40 +111,49 @@ class option extends \Q {
 
             }
 
-            $type_dir = ( 'css' == $type[0] ) ? 'css' : 'javascript' ;
+            $type_dir = ( 'css' == $type[0] ) ? 'css' : 'js' ;
             $type_ext = ( 'css' == $type[0] ) ? 'css' : 'js' ;
 
             // give it a handle ##
-            $handle = 'q-'.$key;
+			$handle = 'q-'.$key;
+
+			// min if debugging ##
+			$min = self::$debug ? '' : '.min' ;
+
+			// complete file ##
+			$file_lookup = "asset/".$type_dir."/vendor/".$type[1].$min.".".$type_ext;
+
+			// h::log( 'd:>File lookup: '.$file_lookup );
 
 			// default ##
 			$file = false;
 
 			// look for minified library -- only if debugging ##
-            if ( self::$debug ) {
+            // if ( self::$debug ) {
 			
-				$file = h::get( "ui/".$type_dir."/vendor/".$type[1].".min.".$type_ext, 'return' );
+			// 	$file = h::get( "asset/".$type_dir."/vendor/".$type[1].".min.".$type_ext, 'return' );
 
-			}
+			// }
 
             // if not debugging, check if we can find a non-min version ##
-            if ( 
-                ! $file
+            // if ( 
+				$file = h::get( $file_lookup, 'return' ) ;
+                // ! $file
                 // ||
                 // (
                     // self::$debug 
-                    && h::get( "ui/".$type_dir."/vendor/".$type[1].".".$type_ext, 'return' )
+                    // && h::get( "asset/".$type_dir."/vendor/".$type[1].".".$type_ext, 'return' )
                 // )
-            ) {
+            // ) {
 
-                $file = h::get( "ui/".$type_dir."/vendor/".$type[1].".".$type_ext, 'return' ) ;
+                // $file = h::get( $file_lookup, 'return' ) ;
 
-            }
+            // }
 
             // if no type - skip ##
             if ( ! $file ) {
 
-                h::log( 'd:>Skipping: '.$handle.' - File missing...' );
+                h::log( 'd:>Skipping: '.$file_lookup.' - File missing...' );
 
                 continue;
 
@@ -153,7 +162,7 @@ class option extends \Q {
 			// find location ##
 			if ( false !== strpos( $file, 'child' ) ) { $location = 'Child'; }
 
-            h::log( 'd:>Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
+            // h::log( 'd:>Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
 
             // Add link to view ##
             $array[$key] = '<strong>'.$value.'</strong> from '.$location.' ( <a href="'.$file.'" target="_blank">view</a> )';
@@ -223,7 +232,7 @@ class option extends \Q {
                         ),
                     ),
                 ),
-                'menu_order' => 1,
+                'menu_order' => 3,
                 'position' => 'normal',
                 'style' => 'default',
                 'label_placement' => 'top',
@@ -242,7 +251,7 @@ class option extends \Q {
                         'label' => 'Parent Theme -> '.\wp_get_theme()->parent(),
                         'name' => 'q_option_theme_parent',
                         'type' => 'checkbox',
-                        'instructions' => 'Valid, if using a child/parent theme',
+                        'instructions' => 'Parent themes define features and UI, which can be extended by Child Themes',
                         'required' => 0,
                         'conditional_logic' => 0,
                         'wrapper' => array(
@@ -269,7 +278,7 @@ class option extends \Q {
                         'label' => 'Child Theme -> '.\wp_get_theme(),
                         'name' => 'q_option_theme_child',
                         'type' => 'checkbox',
-                        'instructions' => '',
+                        'instructions' => 'Valid, if using a <a href="https://developer.wordpress.org/themes/advanced-topics/child-themes/" target="_blank">child theme</a>',
                         'required' => 0,
                         'conditional_logic' => 0,
                         'wrapper' => array(
@@ -320,7 +329,7 @@ class option extends \Q {
                         'label' => 'Local',
                         'name' => 'q_option_library',
                         'type' => 'checkbox',
-                        'instructions' => '',
+                        'instructions' => 'Learn to add additional <a href="#" target="_blank">Local Assets</a>',
                         'required' => 0,
                         'conditional_logic' => 0,
                         'wrapper' => array(
@@ -328,10 +337,7 @@ class option extends \Q {
                             'class' => '',
                             'id' => '',
                         ),
-                        'choices' => array(
-                            // 'js_lazy'           => 'Lazy Load JS',
-                            // 'js_q.global'       => 'Q Global JS',
-                        ),
+                        'choices' => array(),
                         'allow_custom' => 0,
                         'default_value' => array(
                             1 => 'js_q.global',
@@ -494,50 +500,13 @@ class option extends \Q {
                             'class' => '',
                             'id' => '',
                         ),
-                        'choices' => array(
-							'consent'   => 'Consent System',
-							'device'   	=> 'Device Detection',
-                        ),
+                        'choices' => array(),
                         'allow_custom' => 0,
-                        'default_value' => array(
-							0 => 'consent',
-							1 => 'device',
-                        ),
+                        'default_value' => array(),
                         'layout' => 'vertical',
                         'toggle' => 0,
                         'return_format' => 'value',
                         'save_custom' => 0,
-					),
-					
-					array(
-						'key' => 'field_q_option_extension_consent',
-						'label' => 'Privacy URL',
-						'name' => 'q_option_extension_consent',
-						'type' => 'post_object',
-						'instructions' => 'Required for the Consent System to work.',
-						'required' => 1,
-						'conditional_logic' => array(
-							array(
-								array(
-									'field' => 'field_q_option_extension',
-									'operator' => '==',
-									'value' => 'consent',
-								),
-							),
-						),
-						'wrapper' => array(
-							'width' => '',
-							'class' => '',
-							'id' => '',
-						),
-						'post_type' => array(
-							0 => 'page',
-						),
-						'taxonomy' => '',
-						'allow_null' => 0,
-						'multiple' => 0,
-						'return_format' => 'id',
-						'ui' => 1,
 					),
 
 				),
@@ -550,8 +519,8 @@ class option extends \Q {
                         ),
                     ),
                 ),
-                'menu_order' => 3,
-                'position' => 'side',
+                'menu_order' => 2,
+                'position' => 'normal',
                 'style' => 'default',
                 'label_placement' => 'top',
                 'instruction_placement' => 'label',

@@ -6,7 +6,7 @@ use q\core;
 use q\core\helper as h;
 
 // Q Theme ##
-use q\theme\core\helper as theme_h;
+// use q\theme\core\helper as theme_h;
 
 // load it up ##
 \q\asset\enqueue::run();
@@ -33,19 +33,19 @@ class enqueue extends \Q {
         if ( ! \is_admin() ) {
 
             // plugin css / js -- includes defaults and resets and snippets from controllers ##
-            \add_action( 'wp_enqueue_scripts', array( get_class(), 'wp_enqueue_scripts_plugin' ), 1 );
+            // \add_action( 'wp_enqueue_scripts', array( get_class(), 'wp_enqueue_scripts_plugin' ), 1 );
 
             // plugins and enhanecments ##
-            \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_general' ), 2 );
+            // \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_general' ), 2 );
 
             // local external scripts ##
             \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_external' ), 3 );
 
             // local optional scripts ##
-            \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_local' ), 4 );
+            // \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_local' ), 4 );
 
             // css / js from theme ##
-            \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_theme' ), 10000 );
+            // \add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_theme' ), 10000 );
 
         }
 
