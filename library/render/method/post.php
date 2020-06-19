@@ -221,7 +221,7 @@ class post extends \q\render {
 		$array = get\wp::the_category( $args );
 
         // return ##
-		return ui\method::prepare( $args, $array );
+		return render\method::prepare( $args, $array );
 
 	}
 

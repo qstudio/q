@@ -1,6 +1,6 @@
 <?php
 
-namespace q\ui;
+namespace q\asset;
 
 use q\core;
 use q\core\helper as h;
@@ -9,7 +9,7 @@ use q\core\helper as h;
 use q\theme\core\helper as theme_h;
 
 // load it up ##
-\q\ui\enqueue::run();
+\q\asset\enqueue::run();
 
 class enqueue extends \Q {
 
@@ -121,7 +121,7 @@ class enqueue extends \Q {
             && false === self::$debug 
         ) {
 
-            \wp_register_style( 'q-plugin-css-theme', theme_h::get( "ui/css/q/theme.css", 'return' ), array(), self::version, 'all' );
+            \wp_register_style( 'q-plugin-css-theme', theme_h::get( "asset/css/q/theme.css", 'return' ), array(), self::version, 'all' );
             \wp_enqueue_style( 'q-plugin-css-theme' );
 
         }
@@ -133,7 +133,7 @@ class enqueue extends \Q {
         // ) {
             
         //     // @TODO - what is this file?? ##
-        //     \wp_register_style( 'q-plugin-index-css', h::get( "ui/css/index.css", 'return' ), array(), self::version, 'all' );
+        //     \wp_register_style( 'q-plugin-index-css', h::get( "asset/css/index.css", 'return' ), array(), self::version, 'all' );
         //     \wp_enqueue_style( 'q-plugin-index-css' );
 
         // }
@@ -149,7 +149,7 @@ class enqueue extends \Q {
             // h::log( 'Adding q.theme.js' );
 
             // add JS ## -- after all dependencies ##
-            \wp_enqueue_script( 'q-plugin-js-theme', theme_h::get( "ui/javascript/q/theme.js", 'return' ), array( 'jquery' ), self::version );
+            \wp_enqueue_script( 'q-plugin-js-theme', theme_h::get( "asset/javascript/q/theme.js", 'return' ), array( 'jquery' ), self::version );
             
             // pass variable values defined in parent class ##
             \wp_localize_script( 'q-plugin-js-theme', 'q_theme_js', array(
@@ -189,7 +189,7 @@ class enqueue extends \Q {
             )
         ) {
 
-            \wp_register_script( 'q-html5', h::get( "ui/javascript/vendor/html5.js", 'return' ), array(), self::version, 'all' );
+            \wp_register_script( 'q-html5', h::get( "asset/javascript/vendor/html5.js", 'return' ), array(), self::version, 'all' );
             \wp_enqueue_script( 'q-html5' );
 
         }
@@ -348,7 +348,7 @@ class enqueue extends \Q {
 			$handle = 'q-local-'.$key;
 			
 			// directory ##
-			$directory = 'ui/'.$type_dir.'/vendor/';
+			$directory = 'asset/'.$type_dir.'/vendor/';
 
             // array for files ##
 			$files = [];
@@ -368,8 +368,8 @@ class enqueue extends \Q {
 				// load first found file ##
 				if ( $found ) break;
 
-				// $file_uri = h::get( '/library/ui/css/'.$file );
-				// $file_path = \q_theme::get_parent_theme_path( '/library/ui/css/'.$file );
+				// $file_uri = h::get( '/library/asset/css/'.$file );
+				// $file_path = \q_theme::get_parent_theme_path( '/library/asset/css/'.$file );
 
 				// h::log( 'd:>looking up file: '.$directory.$file );
 
@@ -377,7 +377,7 @@ class enqueue extends \Q {
                 if ( 
 					// file_exists( $file_path )
 					$load = h::get( $directory.$file, 'return' )
-					// "ui/".$type_dir."/".$type[1].".".$type_ext, 'return'
+					// "asset/".$type_dir."/".$type[1].".".$type_ext, 'return'
 				) {
 
                     // h::log( 'd:>Loading up file: '.$directory.$file );
@@ -422,43 +422,43 @@ class enqueue extends \Q {
             // Debugging, so load non-minified version from q_theme library ##
             if ( 
                 self::$debug
-                && theme_h::get( "ui/".$type_dir."/".$type[1].".".$type_ext, 'return' )
+                && theme_h::get( "asset/".$type_dir."/".$type[1].".".$type_ext, 'return' )
             ) {
 
-                $file = theme_h::get( "ui/".$type_dir."/".$type[1].".".$type_ext, 'return' ) ;
+                $file = theme_h::get( "asset/".$type_dir."/".$type[1].".".$type_ext, 'return' ) ;
 
                 // h::log( 'd:> - Adding '.$type_dir.'/'.$type[1].'.min.'.$type_ext.' from Q Theme' ) ;
 
             // load minified version from Q Theme ##
             } else if (
-                theme_h::get( "ui/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) 
+                theme_h::get( "asset/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) 
             ) {
 
-                $file = theme_h::get( "ui/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) ;
+                $file = theme_h::get( "asset/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) ;
 
                 // h::log( 'd:>Adding '.$type_dir.'/'.$type[1].'.min.'.$type_ext.' from Q Theme' );
 
             // check for non-minified version in Q library, if debugging ##
             } else if ( 
                 self::$debug
-                && h::get( "ui/".$type_dir."/".$type[1].".".$type_ext, 'return' ) 
+                && h::get( "asset/".$type_dir."/".$type[1].".".$type_ext, 'return' ) 
             ) {
 
-                $file = h::get( "ui/".$type_dir."/".$type[1].".".$type_ext, 'return' );
+                $file = h::get( "asset/".$type_dir."/".$type[1].".".$type_ext, 'return' );
 
                 // h::log( 'd:> - Adding '.$type_dir.'/'.$type[1].'.'.$type_ext.' from Q' );
                 
             // load minified version from Q ## 
-            } else if ( h::get( "ui/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) ) {
+            } else if ( h::get( "asset/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) ) {
 
-                $file = h::get( "ui/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) ;
+                $file = h::get( "asset/".$type_dir."/".$type[1].".min.".$type_ext, 'return' ) ;
 
                 // h::log( 'd:>Adding '.$type_dir.'/'.$type[1].'.min.'.$type_ext.' from Q' );
 
             // final fallback - non minified on Q ##
             } else {
 
-                $file = h::get( "ui/".$type_dir."/".$type[1].".".$type_ext, 'return' );
+                $file = h::get( "asset/".$type_dir."/".$type[1].".".$type_ext, 'return' );
 
                 // h::log( 'd:>Final fallback - Adding '.$type_dir.'/'.$type[1].'.'.$type_ext.' from Q' );
 
@@ -524,11 +524,11 @@ class enqueue extends \Q {
             // IE ##
             if ( 
 				file_exists( 
-					$file_path_ie = \q_theme::get_parent_theme_path( '/library/ui/css/ie.css' )
+					$file_path_ie = \q_theme::get_parent_theme_path( '/library/asset/css/ie.css' )
 				)
 			) {
 
-				$file_uri_ie = \q_theme::get_parent_theme_url( '/library/ui/css/ie.css' );
+				$file_uri_ie = \q_theme::get_parent_theme_url( '/library/asset/css/ie.css' );
          
                 \wp_enqueue_style( 'q-parent-ie-css', $file_uri_ie, '', \q_theme::version );
                 \wp_style_add_data( 'q-parent-ie-css', 'conditional', 'IE' );
@@ -544,22 +544,25 @@ class enqueue extends \Q {
             $min = ( true === \q_theme::$debug ) ? '' : '.min' ;
             
             // handle ##
-            $handle = 'q-parent-theme-css';
+			$handle = 'q-parent-theme-css';
+			
+			// base file name ##
+			$base = 'theme';
 
             // array for files ##
             $files = [];
 
-            // q_theme/library/ui/css/2.desktop.css ## network site + device
-            $files[] = "".\get_current_blog_id().".".h::device()."$min.css";
+            // library/asset/css/theme.2.desktop(.min).css ## network site + device
+            $files[] = $base.".".\get_current_blog_id().".".h::device()."$min.css";
 
-            // q_theme/library/ui/css/2.theme.css ## network site + all devices
-            $files[] = "".\get_current_blog_id().".theme$min.css";
+            // library/asset/css/theme.2(.min).css ## network site + all devices
+            $files[] = $base.".".\get_current_blog_id()."$min.css";
 
-            // q_theme/library/ui/css/1.desktop.css ## all network sites + device
-            $files[] = "1.".h::device()."$min.css";
+            // library/asset/css/theme.desktop(.min).css ## all network sites + device
+            $files[] = $base.".".h::device()."$min.css";
 
-            // q_theme/library/ui/theme.css ## all networks + all devices
-            $files[] = "theme$min.css";
+            // library/asset/theme(.min).css ## all networks + all devices
+            $files[] = "$base$min.css";
 
             // loop over all files in priority, loading whichever is found first ##
             foreach( $files as $file ) {
@@ -567,8 +570,8 @@ class enqueue extends \Q {
 				// load first found file ##
 				if ( $found ) break;
 
-				$file_uri = \q_theme::get_parent_theme_url( '/library/ui/css/'.$file );
-				$file_path = \q_theme::get_parent_theme_path( '/library/ui/css/'.$file );
+				$file_uri = \q_theme::get_parent_theme_url( '/library/asset/css/'.$file );
+				$file_path = \q_theme::get_parent_theme_path( '/library/asset/css/'.$file );
 
 				// h::log( 'd:>looking up file: '.$file_uri );
 
@@ -609,11 +612,11 @@ class enqueue extends \Q {
             // IE ##
             if ( 
 				file_exists( 
-					$file_path_ie = \q_theme::get_child_theme_path( '/library/ui/css/ie.css' )
+					$file_path_ie = \q_theme::get_child_theme_path( '/library/asset/css/ie.css' )
 				)
 			) {
 
-				$file_uri_ie = \q_theme::get_child_theme_url( '/library/ui/css/ie.css' );
+				$file_uri_ie = \q_theme::get_child_theme_url( '/library/asset/css/ie.css' );
          
                 \wp_enqueue_style( 'q-child-ie-css', $file_uri_ie, '', \q_theme::version );
                 \wp_style_add_data( 'q-child-ie-css', 'conditional', 'IE' );
@@ -629,22 +632,25 @@ class enqueue extends \Q {
             $min = ( true === \q_theme::$debug ) ? '' : '.min' ;
             
             // handle ##
-            $handle = 'q-child-theme-css';
+			$handle = 'q-child-theme-css';
+			
+			// base file name ##
+			$base = 'theme';
 
             // array for files ##
             $files = [];
 
-            // q_theme/library/ui/css/2.desktop.css ## network site + device
-            $files[] = "".\get_current_blog_id().".".h::device()."$min.css";
+            // library/asset/css/theme.2.desktop(.min).css ## network site + device
+            $files[] = $base.".".\get_current_blog_id().".".h::device()."$min.css";
 
-            // q_theme/library/ui/css/2.theme.css ## network site + all devices
-            $files[] = "".\get_current_blog_id().".theme$min.css";
+            // library/asset/css/theme.2(.min).css ## network site + all devices
+            $files[] = $base.".".\get_current_blog_id()."$min.css";
 
-            // q_theme/library/ui/css/1.desktop.css ## all network sites + device
-            $files[] = "1.".h::device()."$min.css";
+            // library/asset/css/theme.desktop(.min).css ## all network sites + device
+            $files[] = $base.".".h::device()."$min.css";
 
-            // q_theme/library/ui/css/theme.css ## all networks + all devices
-            $files[] = "theme$min.css";
+            // library/asset/css/theme(.min).css ## all networks + all devices
+            $files[] = "$base$min.css";
 
             // loop over all files in priority, loading whichever is found first ##
             foreach( $files as $file ) {
@@ -652,8 +658,8 @@ class enqueue extends \Q {
 				// load first found file ##
 				if ( $found ) break;
 
-				$file_uri = \q_theme::get_child_theme_url( '/library/ui/css/'.$file );
-				$file_path = \q_theme::get_child_theme_path( '/library/ui/css/'.$file );
+				$file_uri = \q_theme::get_child_theme_url( '/library/asset/css/'.$file );
+				$file_path = \q_theme::get_child_theme_path( '/library/asset/css/'.$file );
 
 				// h::log( 'd:>looking up file: '.$file_uri );
 
@@ -694,7 +700,7 @@ class enqueue extends \Q {
 			/*
             \wp_register_script( 
 				'q-parent-theme-js', 
-				theme_h::get( "ui/javascript/scripts.js", 'return' ), 
+				theme_h::get( "asset/javascript/scripts.js", 'return' ), 
 				array( 'jquery' ), 
 				\q_theme::version, 
 				true 
@@ -718,22 +724,25 @@ class enqueue extends \Q {
             $min = ( true === \q_theme::$debug ) ? '' : '.min' ;
             
             // handle ##
-            $handle = 'q-parent-theme-js';
+			$handle = 'q-parent-theme-js';
+			
+			// base file name ##
+			$base = 'theme';
 
             // array for files ##
             $files = [];
 
-            // q_theme/library/ui/javascript/q.2.desktop.js ## network site + device
-            $files[] = "q.".\get_current_blog_id().".".h::device()."$min.js";
+            // library/asset/javascript/theme.2.desktop(.min).js ## network site + device
+            $files[] = $base.".".\get_current_blog_id().".".h::device()."$min.js";
 
-            // q_theme/library/ui/javascript/q.2.theme.js ## network site + all devices
-            $files[] = "q.".\get_current_blog_id().".theme$min.js";
+            // library/asset/javascript/theme.2.theme(.min).js ## network site + all devices
+            $files[] = $base.".".\get_current_blog_id()."$min.js";
 
-            // q_theme/library/ui/javascript/q.1.desktop.js ## all network sites + device
-            $files[] = "q.1.".h::device()."$min.js";
+            // library/asset/javascript/theme.1.desktop(.min).js ## all network sites + device
+            $files[] = $base.".1.".h::device()."$min.js";
 
-            // q_theme/library/ui/javascript/q.1.theme.js ## all networks + all devices
-            $files[] = "q.1.theme$min.js";
+            // library/asset/javascript/theme(.min).js ## all networks + all devices
+            $files[] = "$base$min.js";
 
             // loop over all files in priority, loading whichever is found first ##
             foreach( $files as $file ) {
@@ -741,8 +750,8 @@ class enqueue extends \Q {
 				// load first found file ##
 				if ( $found ) break;
 
-				$file_uri = \q_theme::get_parent_theme_url( '/library/ui/javascript/'.$file );
-				$file_path = \q_theme::get_parent_theme_path( '/library/ui/javascript/'.$file );
+				$file_uri = \q_theme::get_parent_theme_url( '/library/asset/javascript/'.$file );
+				$file_path = \q_theme::get_parent_theme_path( '/library/asset/javascript/'.$file );
 
 				// h::log( 'd:>looking up file: '.$file_uri );
 
@@ -792,7 +801,7 @@ class enqueue extends \Q {
 			/*
             \wp_register_script( 
 				'q-parent-theme-js', 
-				theme_h::get( "ui/javascript/scripts.js", 'return' ), 
+				theme_h::get( "asset/javascript/scripts.js", 'return' ), 
 				array( 'jquery' ), 
 				\q_theme::version, 
 				true 
@@ -816,22 +825,25 @@ class enqueue extends \Q {
             $min = ( true === \q_theme::$debug ) ? '' : '.min' ;
             
             // handle ##
-            $handle = 'q-child-theme-js';
+			$handle = 'q-child-theme-js';
+			
+			// base file name ##
+			$base = 'theme';
 
             // array for files ##
             $files = [];
 
-            // q_theme/library/ui/javascript/q.2.desktop.js ## network site + device
-            $files[] = "q.".\get_current_blog_id().".".h::device()."$min.js";
+            // library/asset/javascript/theme.2.desktop(.min).js ## network site + device
+            $files[] = $base.".".\get_current_blog_id().".".h::device()."$min.js";
 
-            // q_theme/library/ui/javascript/q.2.theme.js ## network site + all devices
-            $files[] = "q.".\get_current_blog_id().".theme$min.js";
+            // library/asset/javascript/theme.2(.min).js ## network site + all devices
+            $files[] = $base.".".\get_current_blog_id().".$min.js";
 
-            // q_theme/library/ui/javascript/q.1.desktop.js ## all network sites + device
-            $files[] = "q.1.".h::device()."$min.js";
+            // library/asset/javascript/theme.desktop(.min).js ## all network sites + device
+            $files[] = $base.".".h::device()."$min.js";
 
-            // q_theme/library/ui/javascript/q.1.theme.js ## all networks + all devices
-            $files[] = "q.1.theme$min.js";
+            // library/asset/javascript/theme(.min).js ## all networks + all devices
+            $files[] = "$base$min.js";
 
             // loop over all files in priority, loading whichever is found first ##
             foreach( $files as $file ) {
@@ -839,17 +851,17 @@ class enqueue extends \Q {
 				// load first found file ##
 				if ( $found ) break;
 
-				$file_uri = \q_theme::get_child_theme_url( '/library/ui/javascript/'.$file );
-				$file_path = \q_theme::get_child_theme_path( '/library/ui/javascript/'.$file );
+				$file_uri = \q_theme::get_child_theme_url( '/library/asset/javascript/'.$file );
+				$file_path = \q_theme::get_child_theme_path( '/library/asset/javascript/'.$file );
 
-				// h::log( 'd:>looking up file: '.$file_uri );
+				h::log( 'd:>looking up file: '.$file_uri );
 
                 // file exists check ##
                 if ( 
 					file_exists( $file_path )
 				) {
 
-                    // h::log( 'd:>Loading up file: '.$file_uri );
+                    h::log( 'd:>Loading up file: '.$file_uri );
 
 					\wp_register_script( $handle, $file_uri, array( 'jquery' ), \q_theme::version, true );
                     \wp_enqueue_script( $handle );

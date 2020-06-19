@@ -4,7 +4,7 @@ namespace q\extension;
 
 use q\core;
 use q\core\helper as h;
-use q\ui;
+use q\asset;
 
 // load it up ##
 \q\extension\youtube::run();
@@ -29,7 +29,7 @@ class youtube extends \Q {
     public static function wp_footer()
     {
 
-        ui\javascript::ob_get([
+        asset\javascript::ob_get([
             'view'      => get_class(), 
             'method'    => 'javascript',
             'priority'  => 10,
@@ -148,7 +148,7 @@ function q_get_youtube_id( url ) {
     public static function wp_head()
     {
 
-        ui\css::ob_get([
+        asset\css::ob_get([
             'view'      => get_class(), 
             'method'    => 'css',
             'priority'  => 10,

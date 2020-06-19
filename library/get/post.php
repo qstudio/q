@@ -422,7 +422,7 @@ class post extends \q\get {
 
             $array['content'] =
                 \get_the_author_meta( 'description' ) ?
-                ui\markup::chop( nl2br( \get_the_author_meta( 'description' ), intval( $args['limit'] ) ) ) :
+                render\method::chop( nl2br( \get_the_author_meta( 'description' ), intval( $args['limit'] ) ) ) :
                 self::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ) );
 
         } else if (
@@ -436,7 +436,7 @@ class post extends \q\get {
 
             $array['content'] =
                 \category_description() ?
-                ui\markup::chop( nl2br( \category_description(), intval( $args['limit'] ) ) ) :
+                render\method::chop( nl2br( \category_description(), intval( $args['limit'] ) ) ) :
                 self::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ) );
 
         } else {

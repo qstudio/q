@@ -203,9 +203,6 @@ class media extends \Q {
         // test if we got any images ##
         if ( ! $gallery  ) { return false; }
 
-        // close content area ##
-        if ( $args->layout == 'full_width' ) ui\render::the_content_close();
-
         // test the gallery array ##
         #pr( $gallery );
 
@@ -220,9 +217,6 @@ class media extends \Q {
 <?php
 
         }
-
-        // reopen content area ##
-        if ( $args->layout == 'full_width' ) theme::the_content_open();
 
     }
 

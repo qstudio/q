@@ -1,14 +1,14 @@
 <?php
 
-namespace q\ui;
+namespace q;
 
 use q\core;
 use q\core\helper as h;
 
 // load it up ##
-\q\ui\controller::run();
+\q\asset::run();
 
-class controller extends \Q {
+class asset extends \Q {
 
 	public static function run(){
 
@@ -27,16 +27,16 @@ class controller extends \Q {
 		return $array = [
 
 			// add assets ##
-			'enqueue' => self::get_plugin_path( 'library/ui/enqueue.php' ),
+			'enqueue' => self::get_plugin_path( 'library/asset/enqueue.php' ),
 
 			// minification ##
-			'minifier' => self::get_plugin_path( 'library/ui/minifier.php' ),
+			'minifier' => self::get_plugin_path( 'library/asset/minifier.php' ),
 
 			// css renderer ##
-			'css' => self::get_plugin_path( 'library/ui/css.php' ),
+			'css' => self::get_plugin_path( 'library/asset/css.php' ),
 
 			// js renderer ##
-			'javascript' => self::get_plugin_path( 'library/ui/javascript.php' )
+			'javascript' => self::get_plugin_path( 'library/asset/javascript.php' )
 
 		];
 

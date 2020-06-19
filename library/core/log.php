@@ -3,7 +3,7 @@
 namespace q\core;
 
 use q\core;
-use q\ui;
+use q\render;
 use q\core\helper as h;
 
 // run ##
@@ -492,7 +492,7 @@ class log extends \Q {
 		if ( is_null( $string ) ) { return false; }
 
 		return 
-			ui\method::chop( 
+			render\method::chop( 
 				str_replace(
 					[ '-', '_' ], "", // replace ##
 					strtolower( 

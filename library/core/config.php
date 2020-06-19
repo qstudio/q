@@ -101,6 +101,8 @@ class config extends \Q {
 
 		}
 
+		h::log( 't:>add group__NAME config settings to share config over templates...' );
+
 		// get all config ##
 		$config = self::get();
 

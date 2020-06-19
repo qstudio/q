@@ -84,11 +84,11 @@ class post extends render\type {
 				if ( \is_search() ) {
 
 					$string = 
-						ui\method::search_the_content([
+						render\method::search_the_content([
 							'string' 	=> \apply_filters( 'q/get/wp/post_content', $wp_post->post_content ),
 							'limit'		=> self::$args['length']
 						]) ? 
-						ui\method::search_the_content([
+						render\method::search_the_content([
 							'string' 	=> \strip_shortcodes(\apply_filters( 'q/get/wp/post_content', $wp_post->post_content )),
 							'limit'		=> self::$args['length']
 						]) : 
@@ -109,7 +109,7 @@ class post extends render\type {
 			) 
 		) {
 
-			// h::log( 'Field: "'.$field.'" value magically set to: '.ui\method::chop( $wp_post->$type_field, 50 ) );
+			// h::log( 'Field: "'.$field.'" value magically set to: '.render\method::chop( $wp_post->$type_field, 50 ) );
 
 			$string = $wp_post->$type_field;
 

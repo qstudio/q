@@ -234,7 +234,7 @@ if ( ! class_exists( 'Q' ) ) {
 			require_once self::get_plugin_path( 'library/view/_load.php' );
 
 			// theme ##
-			require_once self::get_plugin_path( 'library/ui/_load.php' );
+			require_once self::get_plugin_path( 'library/asset/_load.php' );
 
 			// extensions ##
 			require_once self::get_plugin_path( 'library/extension/_load.php' );

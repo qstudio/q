@@ -18,8 +18,6 @@ class args extends \q\render {
 
 		// get stored config - pulls from Q, but available to filter via q/config/get/all ##
 		// @todo -- core\config::load( $args['config']['load'] ); -- checks for template specific config + view\is::get();
-		h::log( 't:>add group__NAME config settings to share config over templates...' );
-
 		$config = core\config::get_lookup( $args );
 
 		/*
