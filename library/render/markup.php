@@ -9,6 +9,18 @@ use q\render;
 
 class markup extends \q\render {
 
+
+	public static function pre_format(){
+
+		// pre-format markup to extract comments ##
+		render\markup::comments();
+
+		// search for config settings in markup, such as "src" handle ##
+		render\markup::config();
+
+	}
+
+
     /**
      * Apply Markup changes to passed template
      * find all placeholders in self::$markup and replace with matching values in self::$fields
@@ -32,11 +44,14 @@ class markup extends \q\render {
 		
         // test ##
         // helper::log( self::$fields );
-        // helper::log( self::$markup );
+		// helper::log( self::$markup );
+		
+		// pre-format markup to extract comments ##
+		// self::comments();
 
         // new string to hold output ## 
-        $string = self::$markup;
-
+		$string = self::$markup;
+		
         // loop over each field, replacing placeholders with values ##
         foreach( self::$fields as $key => $value ) {
 
@@ -57,7 +72,7 @@ class markup extends \q\render {
 				// h::log( 'The value of: '.$key.' is not a string or integer - so we cannot render it' );
 
 				// log ##
-				h::log( self::$args['group'].'~>n:>The value of: "'.$key.'" is not a string or integer - so it will be skipper and removed from markup...');
+				h::log( self::$args['group'].'~>n:>The value of: "'.$key.'" is not a string or integer - so it will be skipped and removed from markup...');
 
                 unset( self::$fields[$key] );
 
@@ -112,9 +127,259 @@ class markup extends \q\render {
         // return ##
         return true;
 
-    }
+	}
+	
 
 
+	/**
+	 * Scan for comments in markup and convert to placeholders and $fields
+	 * 
+	 * @since 4.1.0
+	*/
+	public static function comments(){
+
+		// h::log( $args['key'] );
+
+		// get markup ##
+		$string = self::$markup;
+
+		// sanity ##
+		if (  
+			! $string
+			|| is_null( $string )
+			// || ! isset( $args['key'] )
+			// || ! isset( $args['value'] )
+			// || ! isset( $args['string'] )
+		){
+
+			h::log( self::$args['group'].'~>e:>Error in $markup' );
+
+			return false;
+
+		}
+
+		// h::log('d:>'.$string);
+
+		// get all comments, add markup to $markup->$field ##
+		// $matches = [];
+		$regex_find = \apply_filters( 'q/render/markup/comments/regex/find', "/\<!--(.*?)--\>/s" );
+		if ( 
+			preg_match_all( $regex_find, $string, $matches, PREG_OFFSET_CAPTURE ) 
+		){
+
+			// strip all comment blocks, we don't need them now ##
+			$regex_remove = \apply_filters( 'q/render/markup/comments/regex/remove', "/<!--.*?-->/ms" );
+			self::$markup = preg_replace( $regex_remove, "", self::$markup );
+		
+			// preg_match_all( '/%[^%]*%/', $string, $matches, PREG_SET_ORDER );
+			// h::debug( $matches );
+
+			// sanity ##
+			if ( 
+				! $matches
+				|| ! isset( $matches[1] ) 
+				|| ! $matches[1]
+			){
+
+				h::log( 'e:>Error in returned matches array' );
+
+				return false;
+
+			}
+
+			foreach( $matches[1] as $match => $value ) {
+
+				// position to add placeholder ##
+				if ( 
+					! is_array( $value )
+					|| ! isset( $value[0] ) 
+					|| ! isset( $value[1] ) 
+					|| ! isset( $matches[0][$match][1] )
+				) {
+
+					h::log( 'e:>Error in returned matches - no position' );
+
+					continue;
+
+				}
+
+				$position = $matches[0][$match][1]; // take from first array ##
+				// h::log( 'd:>position: '.$position );
+				// h::log( 'd:>position from 1: '.$matches[0][$match][1] ); 
+
+				// foreach( $matches[1][0][0] as $k => $v ){
+				$delimiter = \apply_filters( 'q/render/markup/comments/delimiter', "::" );
+				list( $field, $markup ) = explode( $delimiter, $value[0] );
+
+				// sanity ##
+				if ( 
+					! isset( $field ) 
+					|| ! isset( $markup ) 
+				){
+
+					h::log( 'e:>Error in returned match key or value' );
+
+					continue; 
+
+				}
+
+				// clean up ##
+				$field = trim($field);
+				$markup = trim($markup);
+
+				// test what we have ##
+				// h::log( "d:>field: ".$field );
+				// h::log( "d:>markup: ".$markup );
+
+				// so, we can add a new field value to $args array based on the field name - with the markup as value
+				self::$args[$field] = $markup;
+
+				// and now we need to add a placeholder "%$field%" before this comment block at $position ##
+				self::set_placeholder( "%$field%", $markup, $position );
+
+			}
+
+			// ok - done ##
+			return true;
+
+		}
+
+		// kick it back ##
+		return false;
+
+
+	}
+
+
+
+
+	/**
+	 * Scan config in markup and convert to $fields
+	 * 
+	 * @since 4.1.0
+	*/
+	public static function config(){
+
+		// h::log( $args['key'] );
+
+		// get markup ##
+		$string = self::$markup;
+
+		// sanity ##
+		if (  
+			! $string
+			|| is_null( $string )
+			// || ! isset( $args['key'] )
+			// || ! isset( $args['value'] )
+			// || ! isset( $args['string'] )
+		){
+
+			h::log( self::$args['group'].'~>e:>Error in $markup' );
+
+			return false;
+
+		}
+
+		// h::log('d:>'.$string);
+
+		// get all placeholders from markup string ##
+        if ( 
+            ! $placeholders = self::get_placeholders( $string ) 
+        ) {
+
+			h::log( self::$args['group'].'~>d:>No placeholders found in $markup');
+
+			return false;
+
+		}
+
+		// log ##
+		// h::log( self::$args['group'].'~>n:>"'.count( $placeholders ) .'" placeholders found in string');
+		h::log( self::$args['group'].'~>d:>"'.count( $placeholders ) .'" placeholders found in string');
+
+		// h::log( self::$args['group'].'~>d:>'.$placeholders );
+
+		// remove any leftover placeholders in string ##
+		foreach( $placeholders as $key => $value ) {
+
+			// h::log( self::$args['group'].'~>d:>'.$value );
+
+			// now, we need to look for the config pattern, defined as field(setting:value;) and try to handle any data found ##
+			$regex_find = \apply_filters( 'q/render/markup/config/regex/find', '/\((.*?)\)/s' );
+			if ( 
+				preg_match( $regex_find, $value, $matches ) 
+			){
+
+				// h::log( $matches );
+
+				// sanity ##
+				if ( 
+					! $matches
+					|| ! isset( $matches[0] ) 
+					|| ! $matches[0]
+				){
+
+					h::log( self::$args['group'].'~>e:>Error in returned matches array' );
+
+					continue;
+
+				}
+
+				// h::log( $matches[0] );
+				list( $config_setting, $config_value ) = str_replace( [ '(', ')' ], '', explode( ':', $matches[0] ) );
+
+				// sanity ##
+				if ( 
+					! isset( $config_setting ) 
+					|| ! isset( $config_value ) 
+				){
+
+					h::log( 'e:>Error in returned match config or value' );
+
+					continue; 
+
+				}
+
+				// clean up ##
+				$config_setting = trim($config_setting);
+				$config_value = str_replace( ';', '', trim($config_value) );
+
+				// get field ##
+				$field = str_replace( '%', '', $value );
+
+				// check if field is sub field i.e: "post__title" ##
+				if ( false !== strpos( $field, '__' ) ) {
+
+					$field_array = explode( '__', $field );
+
+					$field = $field_array[0]; // take first part ##
+
+				}
+
+				// matches[0] contains the whole string matched - for example "(handle:square;)" ##
+				// we can use this to work out the new_placeholder value
+				$placeholder = $value;
+				$new_placeholder = explode( '(', $placeholder )[0].'%';
+
+				// test what we have ##
+				// h::log( "d:>placeholder: ".$value );
+				// h::log( "d:>new_placeholder: ".$new_placeholder);
+				// h::log( "d:>field: ".$field );
+				// h::log( "d:>config_setting: ".$config_setting );
+				// h::log( "d:>config_value: ".$config_value );
+
+				// @todo - add config handler... based on field type ( field[1] from explode above )##
+				self::$args['img'][$config_setting][$field] = $config_value;
+
+				// now, edit the placeholder, to remove the config ##
+				render\markup::edit_placeholder( $value, $new_placeholder );
+
+			}
+		
+        }
+
+
+	}
 
 
 	public static function string( $args = null ){
@@ -185,7 +450,7 @@ class markup extends \q\render {
 
 
     /**
-     * Update Markup based for passed field ##
+     * Update Markup base for passed field ##
      * 
      */
     public static function set_markup( string $field = null, $count = null ){
@@ -322,7 +587,9 @@ class markup extends \q\render {
 
         }
 
-        if ( ! preg_match_all('~\%(\w+)\%~', $string, $matches ) ) {
+		$regex_find = \apply_filters( 'q/render/markup/placeholders/get', '~\%(.*?)\%~' );
+		// if ( ! preg_match_all('~\%(\w+)\%~', $string, $matches ) ) {
+        if ( ! preg_match_all( $regex_find, $string, $matches ) ) {
 
 			// log ##
 			h::log( self::$args['group'].'~>n:>No extra placeholders found in string to clean up - good!' );
@@ -338,6 +605,7 @@ class markup extends \q\render {
         return $matches[0];
 
     }
+
 
 
     /**
@@ -358,6 +626,125 @@ class markup extends \q\render {
 
         // good ##
         return true;
+
+	}
+
+
+
+	/**
+     * Edit %placeholder% in self:$args['markup']
+     * 
+     */
+    public static function edit_placeholder( string $placeholder = null, $new_placeholder = null ) {
+
+        // sanity ##
+        if (
+			is_null( $placeholder ) 
+			|| is_null( $new_placeholder )
+		) {
+
+			// log ##
+			h::log( self::$args['group'].'~>e:>No placeholder or new_placeholder value passed to method' );
+
+            return false;
+
+		}
+		
+        // check if placeholder is correctly formatted --> %STRING% ##
+        $needle = '%';
+        if (
+            $needle != $placeholder[0] // returns first character ## 
+			|| $needle != substr( $placeholder, -1 ) // returns last character ##
+			|| $needle != $new_placeholder[0] // returns first character ## 
+            || $needle != substr( $new_placeholder, -1 ) // returns last character ##
+        ) {
+
+			// log ##
+			h::log( self::$args['group'].'~>e:>Placeholder is not correctly formatted - missing % at start or end.' );
+			// h::log( 'd:>Placeholder is not correctly formatted - missing % at start or end.' );
+
+            return false;
+
+		}
+		
+		// ok - we should be good to search and replace old for new ##
+		$string = str_replace( $placeholder, $new_placeholder, self::$markup );
+
+		// test new string ##
+		// h::log( 'd:>'.$string );
+
+		// overwrite markup property ##
+		self::$markup = $string;
+
+		// kick back ##
+		return true;
+
+	}
+	
+	
+
+	/**
+     * Set %placeholder% in self:$args['markup'] at defined position
+     * 
+     */
+    public static function set_placeholder( string $placeholder = null, $markup = null, $position = null ) {
+
+        // sanity ##
+        if (
+			is_null( $placeholder ) 
+			|| is_null( $markup )
+			|| is_null( $position )
+		) {
+
+			// log ##
+			h::log( self::$args['group'].'~>e:Error in data passed to method' );
+
+            return false;
+
+		}
+		
+		// where are we replacing ##
+		// $markup = ! \is_null( $markup ) ? $markup : self::$markup ;
+
+		// h::log( $markup );
+
+        // check if placeholder is correctly formatted --> %STRING% ##
+        $needle = '%';
+        if (
+            $needle != $placeholder[0] // returns first character ## 
+            || 
+            $needle != substr( $placeholder, -1 ) // returns last character ##
+        ) {
+
+			// log ##
+			h::log( self::$args['group'].'~>e:>Placeholder: "'.$placeholder.'" is not correctly formatted - missing % at start or end.' );
+
+            return false;
+
+		}
+		
+		// h::log( 'd:>Adding placeholder: "'.$placeholder.'"' );
+
+		// use strpos to get location of %placeholder ##
+		// $position = strpos( self::$markup, $placeholder );
+		// helper::log( 'Position: '.$position );
+
+		// add new placeholder to $template as defined position - don't replace %placeholder% yet... ##
+		$new_template = substr_replace( self::$markup, $placeholder, $position, 0 );
+
+		// test ##
+		// h::log( 'd:>'.$new_template );
+
+		// push back into main stored markup ##
+		self::$markup = $new_template;
+		
+		// h::log( 'd:>'.$markup );
+
+		// log ##
+		// h::log( self::$args['group'].'~>placeholder_added:>"'.$placeholder.'" @position: "'.$position.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
+
+        // positive ##
+        return $markup;
 
     }
 

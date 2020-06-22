@@ -409,7 +409,7 @@ class helper extends \Q {
 			&& true === core\option::get('extension')->device 
         ) {
 			
-			self::log( 'Device Extension Found..' );
+			// self::log( 'd:>Device Extension Found..' );
             $handle = \q\theme\extension\device\method::handle();
 
         // backup to mobile ##

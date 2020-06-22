@@ -25,7 +25,7 @@ class log extends \Q {
 			'd' 			=> 'debug', // shown by default
 			'e' 			=> 'error',
 			'n' 			=> 'notice',
-			'l' 			=> 'log',
+			// 'l' 			=> 'log',
 			't'				=> 'todo'
 		],
 		$key_array 			= [],
@@ -128,7 +128,7 @@ class log extends \Q {
 
 		}
 
-		// translate pass log
+		// translate passed log
 		// check we have what we need to set a new log point ##
 		if ( 
 			! $log = self::translate( $args )
@@ -148,7 +148,7 @@ class log extends \Q {
 
 
 	/**
-	 * Hardcore way to directl set a log key and value.. no safety here..
+	 * Hardcore way to directly set a log key and value.. no safety here..
 	*/
 	public static function set_to( $key = null, $value = null ){
 
@@ -197,8 +197,8 @@ class log extends \Q {
 
 			// core\helper::debug( 'is_array OR is_object or is_int' );
 			// return self::$log['log'][] = var_export( $args, true ).self::$backtrace;
-			self::push( 'debug', var_export( $args, true ) );
-			return self::push( 'debug', 'Array or Object above from -> '.self::$backtrace, self::$backtrace_key );
+			self::push( 'debug', 'Array or Object below from -> '.self::$backtrace, self::$backtrace_key );
+			return self::push( 'debug', var_export( $args, true ), self::$backtrace_key );
 			
 		}
 
@@ -209,7 +209,7 @@ class log extends \Q {
 
 			// core\helper::debug( 'is_bool' );
 			// return self::$log['log'][] = ( true === $args ? 'boolean:true' : 'boolean:false' ).self::$backtrace ;
-			return self::push( 'log', ( true === $args ? 'boolean:true' : 'boolean:false' ).self::$backtrace, self::$backtrace_key );
+			return self::push( 'debug', ( true === $args ? 'boolean:true' : 'boolean:false' ).self::$backtrace, self::$backtrace_key );
 
 		}
 
@@ -229,7 +229,7 @@ class log extends \Q {
 
 				// core\helper::debug( 'string has no known delimit, so treat as log:>value' );
 				// return $args['log'][] = $args.self::$backtrace; 
-				return self::push( 'log', $args.self::$backtrace, self::$backtrace_key );
+				return self::push( 'debug', $args.self::$backtrace, self::$backtrace_key );
 
 			}
 
@@ -311,7 +311,7 @@ class log extends \Q {
 			){
 
 				self::$log[$key] = [];
-				// core\helper::debug( "create new empty array for '{$key}'" );
+				// h::debug( 'd:> create new empty array for "'.$key.'"' );
 
 				// return self::$log[$key][] = $value;
 				// core\helper::debug( "added {value} to '{$key}'" );
@@ -336,30 +336,34 @@ class log extends \Q {
 				isset(self::$log[$key][$new_key]) 
 			){
 
-				// h::debug( 'e:> exists: '.$new_key );
+				// h::debug( 'd:> array key exists: "'.$new_key.'"' );
 
 				if( is_array( self::$log[$key][$new_key] ) ) {
 
-					// h::debug( 'e:> is_array: '.$new_key );
+					// h::debug( 'd:> is_array: "'.$new_key.'"' );
 
 					// check if the value has been added already ##
 					if ( in_array( $value, self::$log[$key][$new_key] ) ) {
 
-						// h::debug( 'e:> '.$new_key.' value already exists, so skip' );
+						// h::debug( 'd:> "'.$new_key.'" value already exists, so skip' );
 
 						return false;
 
 					}
+
+					// h::debug( 'd:> add value: "'.json_encode($value).'" to: "'.$new_key.'"' );
 
 					// add value to array ##
 					return self::$log[$key][$new_key][] = $value;
 
 				} else {
 
-					// h::debug( 'e:> create new array: '.$new_key );
+					// h::debug( 'd:> create new empty array in: "'.$new_key.'"' );
 
 					// create new key ##
 					self::$log[$key][$new_key] = [];
+
+					// h::debug( 'd:> add value: "'.json_encode($value).'" to: "'.$new_key.'"' );
 
 					// add value to array ##
 					return self::$log[$key][$new_key][] = $value;
@@ -368,10 +372,15 @@ class log extends \Q {
 
 			} else {
 
-				// h::debug( 'e:> add value to: '.$new_key );
+				// h::debug( 'd:> create new empty array in: "'.$new_key.'"' );
+
+				// create new key ##
+				self::$log[$key][$new_key] = [];
+
+				// h::debug( 'd:> add value: "'.json_encode($value).'" to: "'.$new_key.'"' );
 
 				// else, add as new key ##
-				return self::$log[$key][$new_key] = $value;
+				return self::$log[$key][$new_key][] = $value;
 
 			}
 

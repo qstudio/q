@@ -80,6 +80,48 @@ class ui extends \q\render {
 
 
 	/**
+     * get_header
+     *
+     * @since       1.0.2
+     * @return      string   HTML
+     */
+    public static function header( $args = null )
+    {
+
+		$name = null;
+		if ( isset( $args['name'] ) ) {
+			$name = $args['name'];
+		}
+		\do_action( 'get_header', $name );
+
+		return theme\furniture\header::render( $args );
+
+	}
+
+
+
+	/**
+     * get_footer
+     *
+     * @since       1.0.2
+     * @return      string   HTML
+     */
+    public static function footer( $args = null )
+    {
+
+		$name = null;
+		if ( isset( $args['name'] ) ) {
+			$name = $args['name'];
+		}
+		\do_action( 'get_footer', $name );
+
+		return theme\furniture\footer::render( $args );
+
+	}
+
+
+
+	/**
      * Open .content HTML
      *
      * @since       1.0.2

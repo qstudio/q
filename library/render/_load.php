@@ -242,7 +242,7 @@ class render extends \Q {
 			false === strpos( $function, '__' )
 		){
 
-			h::log( 'e:>Error in passed render method: "'.$function.'" - should have format CLASS__MOETHOD' );
+			h::log( 'e:>Error in passed render method: "'.$function.'" - should have format CLASS__METHOD' );
 
 			return false;
 

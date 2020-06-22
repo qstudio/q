@@ -285,6 +285,9 @@ class args extends \q\render {
 
         // assign markup ##
 		self::$markup = $args['markup'];
+
+		// pre-format markup ##
+		render\markup::pre_format();
 		
         // return args for validation ##
         return $args;

@@ -54,7 +54,7 @@ class config extends \Q {
 			is_null( $field )
 		) {
 
-			h::log( 'Getting all config data' );
+			// h::log( 'd:>Getting all config data' );
 
 			// kick back ##
 			return $config;
@@ -68,7 +68,7 @@ class config extends \Q {
 			! isset( $config[$field] )
 		){
 
-			h::log( 'No matching config found for Field: "'.$field.'"' );
+			h::log( 'd:>No matching config found for Field: "'.$field.'"' );
 
 			return false;
 
@@ -177,7 +177,7 @@ class config extends \Q {
 		// use cached version ##
 		if( self::$core ){
 
-			h::log( 'Returning cached version of core config' );
+			// h::log( 'd:>Returning cached version of core config' );
 
 			return self::$core;
 
@@ -206,7 +206,7 @@ class config extends \Q {
 		}
 
 		// bad news ##
-		h::log( 'e~>Config:>Q config core empty, this should not happen, really..' );
+		// h::log( 'e~>Config:>Q config core empty, this should not happen, really..' );
 		return [];
 
 	}

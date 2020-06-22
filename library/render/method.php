@@ -448,7 +448,7 @@ class method extends \q\render {
 		// wrap string in defined string ?? ##
 		if ( isset( $args['wrap'] ) ) {
 
-			h::log( 'wrapping string before return.' );
+			// h::log( 'd:>wrapping string before return.' );
 
 			// template replacement ##
 			$return = str_replace( '%content%', $return, $args['wrap'] );
@@ -590,7 +590,67 @@ class method extends \q\render {
         // kick back the cleaned string ##
         return $string;
 
-    }
+	}
+	
+
+
+	/**
+	 * Check if a string starts with a specific string
+	 * 
+	 * @since 4.1.0
+	*/
+	public static function starts_with( $haystack = null, $needle = null ){
+
+		// sanity ##
+		if (
+			is_null( $haystack )
+			|| is_null( $needle )
+		){
+			
+			h::log('e:>Error in passed params');
+
+			return false;
+
+		}
+
+		$length = strlen($needle);
+		
+		return ( substr( $haystack, 0, $length ) === $needle );
+	 
+	}
+
+
+
+	/**
+	 * Check if a string ends with a specific string
+	 * 
+	 * @since 4.1.0
+	*/
+	public static function ends_with( $haystack = null, $needle = null ){
+
+		// sanity ##
+		if (
+			is_null( $haystack )
+			|| is_null( $needle )
+		){
+			
+			h::log('e:>Error in passed params');
+
+			return false;
+
+		}
+
+	    $length = strlen( $needle );
+		
+		if ( $length == 0 ) {
+
+        	return true;
+		
+		}
+
+		return ( substr( $haystack, -$length ) === $needle );
+
+	}
 
 
 }
