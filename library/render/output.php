@@ -42,7 +42,9 @@ class output extends \q\render {
         // either return or echo ##
         if ( 'echo' === self::$args['config']['return'] ) {
 
-            echo self::$output;
+			// h::log( self::$output );
+
+			echo self::$output;
 
 			// reset all args ##
 			render\args::reset();

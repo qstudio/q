@@ -14,7 +14,7 @@ use q\theme;
 
 class post extends \q\render {
 
-
+	/** MAGIC */
 	public static function __callStatic( $function, $args ) {
 
         return self::run( $args ); 
@@ -22,8 +22,6 @@ class post extends \q\render {
 	}
 
 	public static function run( $args = null, $method = null ){
-
-		// return h::log( 'hello here..' );
 
         // validate passed args ##
         if ( ! render\args::validate( $args ) ) {

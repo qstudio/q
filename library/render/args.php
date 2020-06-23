@@ -15,7 +15,8 @@ class args extends \q\render {
 
 		// h::log( $args );
 
-		// get stored config - pulls from Q, but available to filter via q/config/get/all ##
+		// get stored config via lookup, fallback 
+		// pulls from Q, but available to filter via q/config/get/all ##
 		$config = core\config::get_lookup( $args );
 
 		// test ##
@@ -115,14 +116,16 @@ class args extends \q\render {
 
 	/**
 	 * Prepare passed args ##
-	 * @todo --- merge with validate args.. resolve config issues ##
 	 *
 	 */
-	public static function prepare( $args = [] ) {
+	public static function prepare( $args = null ) {
+
+		h::log( 't:>merge with args::validate, just need to get config right..' );
 
 		// sanity ##
 		if (
-		 	! is_array( $args )
+			is_null( $args )
+		 	|| ! is_array( $args )
 		){
 
 		 	h::log( 'e:>Error in passed args' );
@@ -132,44 +135,75 @@ class args extends \q\render {
 		}
 
 		// get calling method for filters ##
-		$method = core\method::backtrace([ 'level' => 2, 'return' => 'function' ]);
+		$process = core\method::backtrace([ 'level' => 2, 'return' => 'function' ]);
 
-		// get stored config - pulls from Q, but available to filter via q/config/get/all ##
-		$config =
-			( // force config settings to return by passing "config" -> "property" ##
-				isset( $args['config']['load'] )
-				&& core\config::get( $args['config']['load'] )
-			) ?
-			core\config::get( $args['config']['load'] ) :
-			core\config::get( $method ) ;
+		// let's set "process" to calling function, for debugging ##
+		if ( ! isset( $args['process'] ) ) {
+			$args['process'] = $process;
+		}
+
+		// define config for all in class -- i.e "group" ##
+		$args['controller'] = 'null';
+
+		// get stored config via lookup, fallback 
+		// pulls from Q, but available to filter via q/config/get/all ##
+		$config = core\config::get_lookup( $args );
 
 		// test ##
 		// h::log( $config );
 
 		// Parse incoming $args into an array and merge it with $config defaults ##
 		// allows specific calling methods to alter passed $args ##
-		if ( $config ) $args = \wp_parse_args( $args, $config );
+		if ( $config ) $args = core\method::parse_args( $args, $config );
 
-		// let's set "group" to calling function, for debugging --- @todo, this really should be "process"... ##
-		// h::log( 't:>change group to process....' );
-		if ( ! isset( $args['process'] ) ) {
-			$args['process'] = $method;
+		// h::log( $config );
+
+        // checks on required fields in $args array ##
+        if (
+			// ! isset( $args )
+			is_null( $args )
+            || ! is_array( $args )
+        ){
+
+			// log ##
+			h::log( self::$args['process'].'~>e:>Missing required args, so stopping here' );
+			
+			// h::log( 'Kicked here...' );
+
+            return false;
+
 		}
+
+		// get stored config - pulls from Q, but available to filter via q/config/get/all ##
+		// $config =
+		// 	( // force config settings to return by passing "config" -> "property" ##
+		// 		isset( $args['config']['load'] )
+		// 		&& core\config::get( $args['config']['load'] )
+		// 	) ?
+		// 	core\config::get( $args['config']['load'] ) :
+		// 	core\config::get( $method ) ;
+
+		// // test ##
+		// // h::log( $config );
+
+		// // Parse incoming $args into an array and merge it with $config defaults ##
+		// // allows specific calling methods to alter passed $args ##
+		// if ( $config ) $args = \wp_parse_args( $args, $config );
 
 		// h::log( $config );
 		// h::log( $args );
 
 		// merge any default args with any pass args ##
-		if (
-			is_null( $args )
-			|| ! is_array( $args )
-		) {
+		// if (
+		// 	is_null( $args )
+		// 	|| ! is_array( $args )
+		// ) {
 
-			h::log( 'Error in passed $args' );
+		// 	h::log( 'Error in passed $args' );
 
-			return false;
+		// 	return false;
 
-		}
+		// }
 
 		// no post set ##
 		if ( ! isset( $args['config']['post'] ) ) {

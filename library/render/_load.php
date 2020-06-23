@@ -24,7 +24,7 @@ Modules:
 # post - wordpress posts, title etc.. include getters and render methods
 # ui - layout elements
 # field ( deal with single use case post_fields )
-~ block - reusable blocks
+~ partial - reusable blocks or code, like buttons or post_meta items
 ~ type ( src, video, gallery?? etc )
 
 filters:
@@ -139,6 +139,9 @@ class render extends \Q {
 	
 	public static $log = null; // tracking array for feedback ##
 
+	/**
+	 * Fire things up
+	*/
 	public static function run(){
 
 		core\load::libraries( self::load() );
@@ -149,7 +152,7 @@ class render extends \Q {
     /**
     * Load Libraries
     *
-    * @since        2.0.0
+    * @since        4.1.0
     */
     public static function load()
     {
@@ -215,15 +218,18 @@ class render extends \Q {
 
 	}
 	
+
+
 	/** 
 	 * bounce to function getter ##
 	 * function name can be any of the following patterns:
 	 * 
-	 * group__
-	 * block__
-	 * field__
-	 * content, title, excerpt etc..
-	 * type__ ?? needed ??
+	 * group__  acf field group
+	 * block__  ??
+	 * field__  single post meta field ( can be any type, such as repeater )
+	 * partial__  snippets, code, blocks, collections like post_meta
+	 * post__  content, title, excerpt etc..
+	 * type__  ?? needed ??
 	 */
 	public static function __callStatic( $function, $args ){	
 
@@ -251,31 +257,32 @@ class render extends \Q {
 		// we expect all render methods to have standard format CLASS__METHOD ##	
 		list( $class, $method ) = explode( '__', $function );
 
-		// define config to load, if not passed ##
-		// if (
-		// 	! isset( $args['config']['load'] )
-		// ){
+		// sanity ##
+		if ( 
+			! $class
+			|| ! $method
+		){
+		
+			h::log( 'e:>Error in passed render method: "'.$function.'" - should have format CLASS__METHOD' );
 
-		// 	// h::log( 'd:>do we need to force the config??' );
-		// 	// $args['config']['load'] = $class.'_'.$method;
+			return false;
 
-		// }
+		}
 
 		// h::log( 'd:>search if -- class: '.$class.'::'.$method.' available' );
 
-		// look for matching method to $function ##
+		// look for matching class to $class ##
 		$namespace = __NAMESPACE__."\\render\\".$class;
-		// render\ui::run();
 		// h::log( 'd:>'.__NAMESPACE__ .' --- '.$namespace );
+
 		if (
 			class_exists( $namespace ) // && exists ##
-			// && is_callable([ $namespace, $method ]) // && is callable ##
 		) {
 
-			// h::log( 'd:>class: '.$class.'::'.$method.' available' );
+			// h::log( 'd:>class: '.$class.' available' );
 
 			// define config for all in class -- i.e "group" ##
-			$args['config']['load'] = $class;
+			$args['controller'] = $class;
 
 			// define config for post, block, type, ui ## - i.e. ui_open or post_title ##
 			if(
@@ -287,11 +294,7 @@ class render extends \Q {
 
 				// h::log( 'd:>config for class: '.$class.' set to: '.$class.'_'.$method );
 
-				$args['config']['load'] = $class.'_'.$method;
-
-			} else {
-
-				//
+				$args['controller'] = $class.'_'.$method;
 
 			}
 
@@ -303,7 +306,6 @@ class render extends \Q {
 			return $namespace::run( $args, $method );
 
 		}
-
 
 		// @todo -- check what is going on when this log shows.. ##
 		h::log( 'e:>No matching method found for: '.$class.'::'.$method );

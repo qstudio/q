@@ -22,9 +22,6 @@ class ui extends \q\render {
 
 	public static function run( $args = null, $method = null ){
 
-		// h::log( 'd:>hello here..' );
-		// $args['config']['load'] = 'ui_'.$method;
-
         // validate passed args ##
         if ( ! render\args::validate( $args ) ) {
 
@@ -36,15 +33,14 @@ class ui extends \q\render {
 
 		}
 
-		// h::log( $args );
-
 		// run method to populate field data ##
-		// $method = $args['config']['method'];
 		if (
 			! \method_exists( get_class(), $method ) // && exists ##
 		) {
 
 			h::log( 'd:>Cannot locate method: '.$method );
+
+			return false;
 
 		}
 
@@ -130,7 +126,7 @@ class ui extends \q\render {
     public static function open( $args = null )
     {
 
-		render\fields::define([
+		return render\fields::define([
 			'classes' => get\theme::body_class( $args ) // grab classes ##
 		]);
 
@@ -149,7 +145,7 @@ class ui extends \q\render {
 
         // set-up new array -- nothing really to do ##
 		// grab classes ##
-		render\fields::define([
+		return render\fields::define([
 			'oh' => '' // hack.. nothing to pass here ##
 		]);
 

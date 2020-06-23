@@ -109,17 +109,19 @@ class config extends \Q {
 
 		// load default config - the go specific > generic - stopping when a new config is found ##
 		$lookups = [
+
 			// i.e: frontpage_group_frontpage_work
-			'template_type_process' => view\is::get().'_'.$args['config']['load'].'_'.$args['process'],
+			'template_type_process' => view\is::get().'_'.$args['controller'].'_'.$args['process'],
 
 			// i.e: group_frontpage_work
-			'type_process' => $args['config']['load'].'_'.$args['process'],
+			'type_process' => $args['controller'].'_'.$args['process'],
 
 			// i.e: frontpage_work
 			'process' => $args['process'],
 
 			// i.e: group
-			'config_load' => $args['config']['load']
+			'config_load' => $args['controller']
+			
 		];
 
 		// filter lookups, if users want to add more or re-order ##
@@ -147,7 +149,7 @@ class config extends \Q {
 				$return = $config[ $v ];
 
 				// ok ##
-				h::log( 'd:>config set to "'.$k.'": "'.$v.'"' );
+				// h::log( 'd:>config set to "'.$k.'": "'.$v.'"' );
 
 				// update tracker ##
 				$found = true;

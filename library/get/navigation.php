@@ -33,6 +33,8 @@ class navigation extends \q\get {
 		
 		}
 
+		h::log( $args );
+
 		if ( 
 			isset( $args['query'] )
 		) {
