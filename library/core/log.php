@@ -989,6 +989,7 @@ class log extends \Q {
 
 		// done ##
 		return true;
+		
 
 	}
 
