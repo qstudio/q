@@ -217,7 +217,7 @@ Date:       {$date}
             || ! array_filter( self::$array )
         ) {
 
-            h::log( 'array is empty.' );
+            // h::log( 'd:>array is empty.' );
 
             return false;
 

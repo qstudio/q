@@ -24,7 +24,7 @@ class fields extends \q\render {
         ) {
 
 			/// log ##
-			h::log( self::$args['group'].'~>e:>Error in $fields array' );
+			h::log( self::$args['process'].'~>e:>Error in $fields array' );
 
             return false;
 
@@ -33,14 +33,14 @@ class fields extends \q\render {
         // filter $args now that we have fields data from ACF ##
         self::$args = core\filter::apply([ 
             'parameters'    => [ 'fields' => self::$fields, 'args' => self::$args ], // pass ( $fields, $args ) as single array ##
-            'filter'        => 'q/render/fields/prepare/before/args/'.self::$args['group'], // filter handle ##
+            'filter'        => 'q/render/fields/prepare/before/args/'.self::$args['process'], // filter handle ##
             'return'        => self::$args
         ]); 
 
         // filter all fields before processing ##
         self::$fields = core\filter::apply([ 
             'parameters'    => [ 'fields' => self::$fields, 'args' => self::$args ], // pass ( $fields, $args ) as single array ##
-            'filter'        => 'q/render/fields/prepare/before/fields/'.self::$args['group'], // filter handle ##
+            'filter'        => 'q/render/fields/prepare/before/fields/'.self::$args['process'], // filter handle ##
             'return'        => self::$fields
         ]); 
 
@@ -54,7 +54,7 @@ class fields extends \q\render {
             ) {
 
 				// log ##
-				h::log( self::$args['group'].'~>n:>Field: "'.$field.'" has no value, check for data issues' );
+				h::log( self::$args['process'].'~>n:>Field: "'.$field.'" has no value, check for data issues' );
 
 				// h::log( 'Field empty: '.$field );
 
@@ -65,7 +65,7 @@ class fields extends \q\render {
             // filter field before callback ##
             $field = core\filter::apply([ 
                 'parameters'    => [ 'field' => $field, 'value' => $value, 'args' => self::$args, 'fields' => self::$fields ], // params
-                'filter'        => 'q/render/fields/prepare/before/callback/'.self::$args['group'].'/'.$field, // filter handle ##
+                'filter'        => 'q/render/fields/prepare/before/callback/'.self::$args['process'].'/'.$field, // filter handle ##
                 'return'        => $field
             ]); 
 
@@ -79,7 +79,7 @@ class fields extends \q\render {
             // filter field before format ##
             $field = core\filter::apply([ 
                 'parameters'    => [ 'field' => $field, 'value' => $value, 'args' => self::$args, 'fields' => self::$fields ], // params
-                'filter'        => 'q/render/fields/prepare/before/format/'.self::$args['group'].'/'.$field, // filter handle ##
+                'filter'        => 'q/render/fields/prepare/before/format/'.self::$args['process'].'/'.$field, // filter handle ##
                 'return'        => $field
 			]); 
 			
@@ -95,7 +95,7 @@ class fields extends \q\render {
         // filter all fields ##
         self::$fields = core\filter::apply([ 
             'parameters'    => [ 'fields' => self::$fields, 'args' => self::$args ], // pass ( $fields, $args ) as single array ##
-            'filter'        => 'q/render/fields/prepare/after/fields/'.self::$args['group'], // filter handle ##
+            'filter'        => 'q/render/fields/prepare/after/fields/'.self::$args['process'], // filter handle ##
             'return'        => self::$fields
         ]); 
 
@@ -150,7 +150,7 @@ class fields extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>No field or value passed to method.' );
+			h::log( self::$args['process'].'~>n:>No field or value passed to method.' );
 
             return false;
 
@@ -162,7 +162,7 @@ class fields extends \q\render {
         self::$fields[$field] = $value;
 
 		// log ##
-		h::log( self::$args['group'].'~>fields_added:>"'.$field.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
+		h::log( self::$args['process'].'~>fields_added:>"'.$field.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
         return true;
@@ -181,7 +181,7 @@ class fields extends \q\render {
         if ( is_null( $field ) ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>No field value passed to method.' );
+			h::log( self::$args['process'].'~>n:>No field value passed to method.' );
 
             return false;
 
@@ -191,7 +191,7 @@ class fields extends \q\render {
         unset( self::$fields[$field] );
 
         // log ##
-		h::log( self::$args['group'].'~>fields_removed:>"'.$field.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
+		h::log( self::$args['process'].'~>fields_removed:>"'.$field.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
         return true;
@@ -246,7 +246,7 @@ class fields extends \q\render {
             ) {
 
 				// log ##
-				h::log( self::$args['group'].'~>n:>Field: "'.$field.'" is Type: "'.self::$args['fields'][$key]['type'].'"' );
+				h::log( self::$args['process'].'~>n:>Field: "'.$field.'" is Type: "'.self::$args['fields'][$key]['type'].'"' );
 
                 return self::$args['fields'][$key]['type'];
 
@@ -305,7 +305,7 @@ class fields extends \q\render {
 		if ( ! isset( self::$args['fields'] ) ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>"$args[fields]" is not defined' );
+			h::log( self::$args['process'].'~>n:>"$args[fields]" is not defined' );
 
 			return false;
 
@@ -316,7 +316,7 @@ class fields extends \q\render {
         ){
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>failed to find Field: "'.$field.'" data in $fields' );
+			h::log( self::$args['process'].'~>n:>failed to find Field: "'.$field.'" data in $fields' );
 
             return false;
 
@@ -329,7 +329,7 @@ class fields extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>Field: "'.$field.'" has no callback defined' );
+			h::log( self::$args['process'].'~>n:>Field: "'.$field.'" has no callback defined' );
 
             return false;
 
@@ -344,7 +344,7 @@ class fields extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>Field: "'.$field.'" has a callback, but it is not correctly formatted - not an array or missing "method" key' );
+			h::log( self::$args['process'].'~>n:>Field: "'.$field.'" has a callback, but it is not correctly formatted - not an array or missing "method" key' );
 
             return false;
 
@@ -356,12 +356,12 @@ class fields extends \q\render {
         $callback = self::$args['fields'][$key]['callback'];
 
 		// log ##
-		h::log( self::$args['group'].'~>n:>Field: "'.$field.'" has callback: "'.$callback['method'].'" sending back to caller' );
+		h::log( self::$args['process'].'~>n:>Field: "'.$field.'" has callback: "'.$callback['method'].'" sending back to caller' );
 
         // filter ##
         $callback = core\filter::apply([ 
             'parameters'    => [ 'callback' => $callback, 'field' => $field, 'args' => self::$args, 'fiekds' => self::$fields ], // params ##
-            'filter'        => 'q/render/fields/get_callback/'.self::$args['group'].'/'.$field, // filter handle ##
+            'filter'        => 'q/render/fields/get_callback/'.self::$args['process'].'/'.$field, // filter handle ##
             'return'        => $callback
         ]); 
 

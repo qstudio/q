@@ -36,7 +36,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>e:>Error with passed $args');
+			h::log( self::$args['process'].'~>e:>Error with passed $args');
 
             return false;
 
@@ -72,7 +72,7 @@ class markup extends \q\render {
 				// h::log( 'The value of: '.$key.' is not a string or integer - so we cannot render it' );
 
 				// log ##
-				h::log( self::$args['group'].'~>n:>The value of: "'.$key.'" is not a string or integer - so it will be skipped and removed from markup...');
+				h::log( self::$args['process'].'~>n:>The value of: "'.$key.'" is not a string or integer - so it will be skipped and removed from markup...');
 
                 unset( self::$fields[$key] );
 
@@ -98,7 +98,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>"'.count( $placeholders ) .'" placeholders found in formatted string - these will be removed');
+			h::log( self::$args['process'].'~>n:>"'.count( $placeholders ) .'" placeholders found in formatted string - these will be removed');
 
             // helper::log( $placeholders );
 
@@ -114,7 +114,7 @@ class markup extends \q\render {
         // filter ##
         $string = core\filter::apply([ 
             'parameters'    => [ 'string' => $string ], // pass ( $string ) as single array ##
-            'filter'        => 'q/render/markup/'.self::$args['group'], // filter handle ##
+            'filter'        => 'q/render/markup/'.self::$args['process'], // filter handle ##
             'return'        => $string
         ]); 
 
@@ -152,7 +152,7 @@ class markup extends \q\render {
 			// || ! isset( $args['string'] )
 		){
 
-			h::log( self::$args['group'].'~>e:>Error in $markup' );
+			h::log( self::$args['process'].'~>e:>Error in $markup' );
 
 			return false;
 
@@ -274,7 +274,7 @@ class markup extends \q\render {
 			// || ! isset( $args['string'] )
 		){
 
-			h::log( self::$args['group'].'~>e:>Error in $markup' );
+			h::log( self::$args['process'].'~>e:>Error in $markup' );
 
 			return false;
 
@@ -287,22 +287,22 @@ class markup extends \q\render {
             ! $placeholders = self::get_placeholders( $string ) 
         ) {
 
-			h::log( self::$args['group'].'~>d:>No placeholders found in $markup');
+			h::log( self::$args['process'].'~>d:>No placeholders found in $markup');
 
 			return false;
 
 		}
 
 		// log ##
-		// h::log( self::$args['group'].'~>n:>"'.count( $placeholders ) .'" placeholders found in string');
-		h::log( self::$args['group'].'~>d:>"'.count( $placeholders ) .'" placeholders found in string');
+		// h::log( self::$args['process'].'~>n:>"'.count( $placeholders ) .'" placeholders found in string');
+		h::log( self::$args['process'].'~>d:>"'.count( $placeholders ) .'" placeholders found in string');
 
-		// h::log( self::$args['group'].'~>d:>'.$placeholders );
+		// h::log( self::$args['process'].'~>d:>'.$placeholders );
 
 		// remove any leftover placeholders in string ##
 		foreach( $placeholders as $key => $value ) {
 
-			// h::log( self::$args['group'].'~>d:>'.$value );
+			// h::log( self::$args['process'].'~>d:>'.$value );
 
 			// now, we need to look for the config pattern, defined as field(setting:value;) and try to handle any data found ##
 			$regex_find = \apply_filters( 'q/render/markup/config/regex/find', '/\((.*?)\)/s' );
@@ -319,7 +319,7 @@ class markup extends \q\render {
 					|| ! $matches[0]
 				){
 
-					h::log( self::$args['group'].'~>e:>Error in returned matches array' );
+					h::log( self::$args['process'].'~>e:>Error in returned matches array' );
 
 					continue;
 
@@ -394,7 +394,7 @@ class markup extends \q\render {
 			|| ! isset( $args['string'] )
 		){
 
-			h::log( self::$args['group'].'~>e:>Error in passed args to "string" method' );
+			h::log( self::$args['process'].'~>e:>Error in passed args to "string" method' );
 
 			return false;
 
@@ -413,7 +413,7 @@ class markup extends \q\render {
 			// filter ##
 			$string = core\filter::apply([ 
 				'parameters'    => [ 'string' => $string ], // pass ( $string ) as single array ##
-				'filter'        => 'q/render/markup/wrap/'.self::$args['group'].'/'.$key, // filter handle ##
+				'filter'        => 'q/render/markup/wrap/'.self::$args['process'].'/'.$key, // filter handle ##
 				'return'        => $string
 			]); 
 
@@ -428,7 +428,7 @@ class markup extends \q\render {
 		// filter ##
 		$string = core\filter::apply([ 
              'parameters'    => [ 'string' => $string ], // pass ( $string ) as single array ##
-             'filter'        => 'q/render/markup/string/before/'.self::$args['group'].'/'.$key, // filter handle ##
+             'filter'        => 'q/render/markup/string/before/'.self::$args['process'].'/'.$key, // filter handle ##
              'return'        => $string
         ]); 
 
@@ -438,7 +438,7 @@ class markup extends \q\render {
 		// filter ##
 		$string = core\filter::apply([ 
              'parameters'    => [ 'string' => $string ], // pass ( $string ) as single array ##
-             'filter'        => 'q/render/markup/string/after/'.self::$args['group'].'/'.$key, // filter handle ##
+             'filter'        => 'q/render/markup/string/after/'.self::$args['process'].'/'.$key, // filter handle ##
              'return'        => $string
         ]); 
 
@@ -462,7 +462,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>No field value or count iterator passed to method');
+			h::log( self::$args['process'].'~>n:>No field value or count iterator passed to method');
 
             return false;
 
@@ -475,7 +475,7 @@ class markup extends \q\render {
         if ( ! isset( self::$args[$field] ) ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>Field: "'.$field.'" does not have required markup defined in $args->$field' );
+			h::log( self::$args['process'].'~>n:>Field: "'.$field.'" does not have required markup defined in $args->$field' );
 
             // bale if not found ##
             return false;
@@ -506,7 +506,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>Placeholder: "'.$placeholder.'" is not in the passed markup template' );
+			h::log( self::$args['process'].'~>n:>Placeholder: "'.$placeholder.'" is not in the passed markup template' );
 
             return false;
 
@@ -521,7 +521,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>No placeholders found in passed string' );
+			h::log( self::$args['process'].'~>n:>No placeholders found in passed string' );
 
             return false;
 
@@ -581,7 +581,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>e:>No string value passed to method' );
+			h::log( self::$args['process'].'~>e:>No string value passed to method' );
 
             return false;
 
@@ -592,7 +592,7 @@ class markup extends \q\render {
         if ( ! preg_match_all( $regex_find, $string, $matches ) ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>No extra placeholders found in string to clean up - good!' );
+			h::log( self::$args['process'].'~>n:>No extra placeholders found in string to clean up - good!' );
 
             return false;
 
@@ -644,7 +644,7 @@ class markup extends \q\render {
 		) {
 
 			// log ##
-			h::log( self::$args['group'].'~>e:>No placeholder or new_placeholder value passed to method' );
+			h::log( self::$args['process'].'~>e:>No placeholder or new_placeholder value passed to method' );
 
             return false;
 
@@ -660,7 +660,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>e:>Placeholder is not correctly formatted - missing % at start or end.' );
+			h::log( self::$args['process'].'~>e:>Placeholder is not correctly formatted - missing % at start or end.' );
 			// h::log( 'd:>Placeholder is not correctly formatted - missing % at start or end.' );
 
             return false;
@@ -697,7 +697,7 @@ class markup extends \q\render {
 		) {
 
 			// log ##
-			h::log( self::$args['group'].'~>e:Error in data passed to method' );
+			h::log( self::$args['process'].'~>e:Error in data passed to method' );
 
             return false;
 
@@ -717,7 +717,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>e:>Placeholder: "'.$placeholder.'" is not correctly formatted - missing % at start or end.' );
+			h::log( self::$args['process'].'~>e:>Placeholder: "'.$placeholder.'" is not correctly formatted - missing % at start or end.' );
 
             return false;
 
@@ -741,7 +741,7 @@ class markup extends \q\render {
 		// h::log( 'd:>'.$markup );
 
 		// log ##
-		// h::log( self::$args['group'].'~>placeholder_added:>"'.$placeholder.'" @position: "'.$position.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
+		// h::log( self::$args['process'].'~>placeholder_added:>"'.$placeholder.'" @position: "'.$position.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
         return $markup;
@@ -763,7 +763,7 @@ class markup extends \q\render {
 		) {
 
 			// log ##
-			h::log( self::$args['group'].'~>e:>No placeholder or markkup value passed to method' );
+			h::log( self::$args['process'].'~>e:>No placeholder or markkup value passed to method' );
 
             return false;
 
@@ -783,7 +783,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>e:>Placeholder: "'.$placeholder.'" is not correctly formatted - missing % at start or end.' );
+			h::log( self::$args['process'].'~>e:>Placeholder: "'.$placeholder.'" is not correctly formatted - missing % at start or end.' );
 
             return false;
 
@@ -802,7 +802,7 @@ class markup extends \q\render {
 		// h::log( 'd:>'.$markup );
 
 		// log ##
-		h::log( self::$args['group'].'~>placeholder_removed:>"'.$placeholder.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
+		h::log( self::$args['process'].'~>placeholder_removed:>"'.$placeholder.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
         return $markup;

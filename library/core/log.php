@@ -224,7 +224,8 @@ class log extends \Q {
 			// core\helper::debug( 'is_string' );
 
 			// string might be a normal string, or contain markdown to represent an array of data ##
-			// check for fixed pattern 
+
+			// no fixed pattern ##
 			if ( ! core\method::strposa( $args, self::$delimiters ) ) {
 
 				// core\helper::debug( 'string has no known delimit, so treat as log:>value' );
@@ -294,6 +295,9 @@ class log extends \Q {
 
 		// @todo - sanity ##
 
+		// grab reference of self::$log ##
+		$log = self::$log;
+
 		// check if $key already exists ##
 		if ( 
 			is_string( $key )
@@ -306,83 +310,63 @@ class log extends \Q {
 			// take first array value, if array, else key.. ##
 			$key = is_array( $key ) ? $key[0] : $key ;
 
+			// h::debug( $log );
+
 			if ( 
-				! isset( self::$log[$key] )
+				! isset( $log[$key] )
+				// && empty( $log[$key] )
+				// && ! $log[$key]
+				// && ! is_array( $log[$key] )
+				// && array_filter( $log[$key] ) == []
 			){
 
-				self::$log[$key] = [];
+				$log[$key] = [];
 				// h::debug( 'd:> create new empty array for "'.$key.'"' );
 
-				// return self::$log[$key][] = $value;
-				// core\helper::debug( "added {value} to '{$key}'" );
-
-			// } else {
 			}
 
 			// new key is based on the class_method called when the log was set ##
-			// this key might already exist, if so, add as a new value ##
+			// this key might already exist, if so, add as a new array key + value ##
 			$new_key = isset( $new_key ) ? $new_key : self::get_acronym( $value ) ;
-			// $new_key = self::get_acronym( $value ) ;
 
-			// check if value already added ##
-			// if ( self::in_multidimensional_array( $value, self::$log[$key] ) ){
+			// make new key safe ??
+			// $new_key = str_replace( [ '\\','::' ], '_', $new_key );
 
-			// 	return false;
-
-			// }
+			// new key ??
+			// h::debug( 'd:>new_key: "'.$new_key.'"' );
 
 			// key already exists ##
 			if ( 
-				isset(self::$log[$key][$new_key]) 
+				! isset( $log[$key][$new_key] ) 
+				// && empty( $log[$key][$new_key] )
+				// && ! $log[$key][$new_key]
+				// && ! is_array( $log[$key] )
+				// && array_filter( $log[$key][$new_key] ) == []
 			){
 
-				// h::debug( 'd:> array key exists: "'.$new_key.'"' );
+				// h::debug( 'd:>create new empty array in: "'.$key.'->'.$new_key.'"' );
 
-				if( is_array( self::$log[$key][$new_key] ) ) {
-
-					// h::debug( 'd:> is_array: "'.$new_key.'"' );
-
-					// check if the value has been added already ##
-					if ( in_array( $value, self::$log[$key][$new_key] ) ) {
-
-						// h::debug( 'd:> "'.$new_key.'" value already exists, so skip' );
-
-						return false;
-
-					}
-
-					// h::debug( 'd:> add value: "'.json_encode($value).'" to: "'.$new_key.'"' );
-
-					// add value to array ##
-					return self::$log[$key][$new_key][] = $value;
-
-				} else {
-
-					// h::debug( 'd:> create new empty array in: "'.$new_key.'"' );
-
-					// create new key ##
-					self::$log[$key][$new_key] = [];
-
-					// h::debug( 'd:> add value: "'.json_encode($value).'" to: "'.$new_key.'"' );
-
-					// add value to array ##
-					return self::$log[$key][$new_key][] = $value;
-
-				}
-
-			} else {
-
-				// h::debug( 'd:> create new empty array in: "'.$new_key.'"' );
-
-				// create new key ##
-				self::$log[$key][$new_key] = [];
-
-				// h::debug( 'd:> add value: "'.json_encode($value).'" to: "'.$new_key.'"' );
-
-				// else, add as new key ##
-				return self::$log[$key][$new_key][] = $value;
+				// create new key as empty array ##
+				$log[$key][$new_key] = [];
 
 			}
+
+			// check if the value has been added already ##
+			if ( in_array( $value, $log[$key][$new_key], true ) ) {
+
+				// h::debug( 'd:> "'.$key.'->'.$new_key.'" value already exists, so skip' );
+
+				return false;
+
+			}
+
+			// h::debug( 'd:> add value to: '.$key.'->'.$new_key.'"' );
+
+			// add value to array ##
+			$log[$key][$new_key][] = $value;
+
+			// kick back ##
+			return self::$log = $log;
 
 		}
 
@@ -391,8 +375,25 @@ class log extends \Q {
 			&& count( $key ) > 1
 		){
 
+			/*
+			// old way, with fancy loop ##
+			// create array
+			self::$key_array = 
+				array_merge_recursive ( 
+					self::create_multidimensional_array( [], $key, $value ), 
+					self::$key_array 
+				);
+			// h::log( self::$key_array );
+
+			// merge created keys with log ##
+			return self::$log = array_merge( $log, self::$key_array );
+			*/
+
+			//
+
+
 			// $key_array = [];
-;
+
 			// we only go up to 3 levels.. oddly, so give a warning ##
 			// if ( count( $key ) > 3 ) { core\helper::debug( 'The max key depth is 3..' ); }
 
@@ -408,19 +409,9 @@ class log extends \Q {
 
 			// }	
 
-			// h::log( self::$log );
+			// h::log( $log );
 
-			// create array
-			self::$key_array = 
-				array_merge_recursive ( 
-					self::create_multidimensional_array( [], $key, $value ), 
-					self::$key_array 
-				);
-			// h::log( self::$key_array );
-
-			// merge created keys with log ##
-			return self::$log = array_merge( self::$log, self::$key_array );
-
+			
 			// self::$log = array_merge( self::$log, self::$key_array );
 
 			// self::$log = array_merge_recursive( self::$key_array, self::$log );
@@ -436,42 +427,70 @@ class log extends \Q {
 			// check if key exists ##
 
 			// manually ## 
-			/*
 			if (
 				isset( $key[2] )
 			){
-				if ( ! isset( self::$log[ $key[0] ][ $key[1] ][ $key[2] ] ) ) {
+				if ( ! isset( self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ][ self::key_replace($key[2]) ] ) ) {
 					
-					self::$log[ $key[0] ][ $key[1] ][ $key[2] ] = [];
+					self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ][ self::key_replace($key[2]) ] = [];
 				
 				}
-				return self::$log[ $key[0] ][ $key[1] ][ $key[2] ][] = $value;
+
+				// value exists ##
+				if ( 
+					in_array( $value, self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ][ self::key_replace($key[2]) ], true ) 
+				){ 
+					return false;
+				};
+
+				// add value and return ##
+				return self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ][ self::key_replace($key[2]) ][] = $value;
+
 			}
 
 			if (
 				isset( $key[1] )
 			){
 
-				if ( ! isset( self::$log[ $key[0] ][ $key[1] ] ) ) {
+				if ( ! isset( self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ] ) ) {
 
-					self::$log[ $key[0] ][ $key[1] ] = [];
+					self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ] = [];
 
 				}
-				return self::$log[ $key[0] ][ $key[1] ][] = $value;
+
+				// value exists ##
+				if ( 
+					in_array( $value, self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ], true ) 
+				){ 
+					return false;
+				};
+
+				// add value and return ##
+				return self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ][] = $value;
+
 			}
 
 			if (
 				isset( $key[0] )
 			){
-				if ( ! isset( self::$log[$key[0]] ) ) {
+				if ( ! isset( self::$log[self::key_replace($key[0])] ) ) {
 
-					self::$log[ $key[0] ] = [];
+					self::$log[ self::key_replace($key[0]) ] = [];
 
 				}
-				return self::$log[ $key[0] ][] = $value;
-			}
-			*/
 
+				// value exists ##
+				if ( 
+					in_array( $value, self::$log[ self::key_replace($key[0]) ], true ) 
+				){ 
+					return false;
+				};
+
+				// add value and return ##
+				return self::$log[ self::key_replace($key[0]) ][] = $value;
+
+			}
+			
 			/*
 			$md_array = [];
 			$md_array = self::create_multidimensional_array( self::$log, $key, $value ) ;

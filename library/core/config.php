@@ -11,11 +11,10 @@ use q\theme as theme;
 class config extends \Q {
 
 	private static
-		$core = false, // core config ##
-		$filtered = false, // filtered config ##
-		$lookup = [
-			'shared'
-		]
+		// loaded config ##
+		$config = [], 
+		// lookups ##
+		$lookups = []
 	;
 
 
@@ -25,17 +24,19 @@ class config extends \Q {
 	public static function get( $field = null ) {
 
 		// try to load config from Q core ##
-		$config = self::get_core();
+		$config = self::load( self::get_plugin_path('q.config.php'), 'core' );
 
 		// h::log( $config );
 		// h::log( 'd:>'.$config[$field] );
 
 		// filter all config early ##
 		// Q = 1, Q Plugin = 10, Q Parent = 100, Q Child = 1000
-		$config = 
-			true === self::$filtered ? 
-			self::$filtered : // use stored filtered config ##
-			self::$filtered = \apply_filters( 'q/config/get/all', $config ) ; // filter in config and store to property ##
+		// $config = 
+			// true === self::$filtered ? 
+			// self::$filtered : // use stored filtered config ##
+			// self::$filtered = \apply_filters( 'q/config/get/all', $config ) ; // filter in config and store to property ##
+
+		$config = \apply_filters( 'q/config/get/all', $config ) ; // filter in config and store to property ##
 
 		// perhaps the filters blitzed config... check for an empty array, if so reload ##
 		if (
@@ -45,7 +46,7 @@ class config extends \Q {
 		){
 
 			// try to load again config from Q core ##
-			$config = self::get_core();
+			$config = self::load( self::get_plugin_path('q.config.php'), 'core' );
 
 		}
 
@@ -109,6 +110,14 @@ class config extends \Q {
 		// start blank ##
 		$return = false;
 
+		// load default config - the go specific > generic - stopping when a new config is found
+
+		// filter in 2 additional lookups -
+		// config->CONFIG_LOAD->TEMPLATE->PROCESS - template specific ##
+		// config->CONFIG_LOAD->PROCESS - group specific config ##
+
+		// optional - we could load config from q.config and do additional lookup for q.markup->CONFIG.. to merge into options ##
+
 		// generic back up ##
 		if ( 
 			isset( $args['proces'] )
@@ -117,7 +126,7 @@ class config extends \Q {
 
 			$return = $config[ $args['proces'] ];
 
-			// h::log( 'd~>get_config:>return set to: '.$return );
+			h::log( 'd~>get_config:>return set to "process": '.$return );
 
 		}
 
@@ -132,7 +141,7 @@ class config extends \Q {
 	
 			$return = $config[ $args['config']['load'] ];
 	
-			// h::log( 'd~>get_config:>return set to: '.$args['config']['load'] );
+			h::log( 'd~>get_config:>return set to "config->load": '.$args['config']['load'] );
 
 			// look for predefined extensions of config->load ##
 			$lookups = self::get_lookups();
@@ -143,7 +152,7 @@ class config extends \Q {
 
 				foreach( $lookups as $lookup ) {
 
-					// h::log( 'd~>get_config:>looking for: '.$args['config']['load'].'_'.$lookup );
+					h::log( 'd~>get_config:>looking for: '.$args['config']['load'].'_'.$lookup );
 
 					if ( 
 						// isset( $args['config'] ) 
@@ -154,7 +163,7 @@ class config extends \Q {
 				
 						$return = $config[ $args['config']['load'].'_'.$lookup ];
 				
-						// h::log( 'd~>get_config:>return set to: '.$args['config']['load'].'_'.$lookup );
+						h::log( 'd~>get_config:>return set to "config->load_'.$lookup.'": '.$args['config']['load'].'_'.$lookup );
 
 					}
 
@@ -170,43 +179,73 @@ class config extends \Q {
 
 
 
-
-	private static function get_core()
+	/**
+	 * Include configuration file, with local cache via handle
+	 * 
+	 * @since 4.1.0
+	*/
+	public static function load( $file = null, $handle = null )
 	{
 
+		// sanity ##
+		if (
+			is_null( $file )
+			|| is_null( $handle )
+		)
+
+		// h::log( 'sfsdf' );
+		h::log( 'd~>load:>Looking for handle: "'.$handle.'" in file: "'.$file.'"' );
+
 		// use cached version ##
-		if( self::$core ){
+		if( isset( self::$config[$handle] ) ){
 
-			// h::log( 'd:>Returning cached version of core config' );
+			h::log( 'd~>load:>Returning cached version of config for handle: '.$handle );
 
-			return self::$core;
+			return self::$config[$handle];
+
+		}
+
+		// check if file exists ##
+		if (
+			! file_exists( $file )
+		){
+			
+			// h::log( 'e~>load:>Error, file does not exist: '.$file );
+
+			return false;
 
 		}
 
 		// load config from JSON ##
 		if (
-			$array = include( self::get_plugin_path('q.config.php') )
+			$array = include( $file )
 		){
 
-			// h::log( 'd:>'.self::get_plugin_path('q.config.php') );
+			// h::log( 'd~>load:>Loading handle: "'.$handle.'" from file: "'.$file.'"' );
 
 			// check if we have a 'config' key.. and take that ##
 			if ( is_array( $array ) ) {
 
-				// h::log( 'd:>Q config NOT, empty...loading' );
+				// h::log( 'd~>load:>config handle: "'.$handle.'" NOT, empty...loading' );
 
 				// set property ##
-				self::$core = $array;
+				self::$config[$handle] = $array;
 
-				// assign ##
+				// return ##
 				return $array;
+
+			} else {
+
+				// h::log( 'd~>load:>config not an array -- handle: "'.$handle.'"' );
 
 			}
 
 		}
 
 		// bad news ##
-		// h::log( 'e~>Config:>Q config core empty, this should not happen, really..' );
+		// h::log( 'e~>Config:>Error with data for handle: "'.$handle.'" from file: "'.$file.'"' );
+
+		// empty array ##
 		return [];
 
 	}
@@ -220,7 +259,7 @@ class config extends \Q {
     public static function get_lookups()
     {
 
-        return \apply_filters( 'q/core/config/lookup', self::$lookup );
+        return \apply_filters( 'q/core/config/lookups', self::$lookups );
 
 	}
 	
