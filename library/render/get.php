@@ -23,7 +23,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>e:Error in passed parameter $args');
+			h::log( self::$args['process'].'~>e:Error in passed parameter $args');
 
             return false;
 
@@ -57,7 +57,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>e:Error extracting field list from passed data');
+			h::log( self::$args['process'].'~>e:Error extracting field list from passed data');
 
             return false;
 
@@ -90,7 +90,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:Fields array is empty, so nothing to process...');
+			h::log( self::$args['process'].'~>n:Fields array is empty, so nothing to process...');
 
             return false;
 
@@ -135,7 +135,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:Post has no ACF field data or corrupt data returned');
+			h::log( self::$args['process'].'~>n:Post has no ACF field data or corrupt data returned');
 
             return false;
 
@@ -155,7 +155,7 @@ class get extends \q\render {
     public static function group_fields(){
 
         // assign variable ##
-        $group = self::$args['group'];
+        $group = self::$args['process'];
 
         // try to get fields ##
         $array = plugin\acf::get_field_group( $group );
@@ -168,7 +168,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>e:No valid ACF field group returned for Group: "'.$group.'"');
+			h::log( self::$args['process'].'~>e:No valid ACF field group returned for Group: "'.$group.'"');
 
             return false;
 
@@ -205,7 +205,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>e:Error in passed $args');
+			h::log( self::$args['process'].'~>e:Error in passed $args');
 
             return false;
 
@@ -239,7 +239,7 @@ class get extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>e:Error in passed $args or $fields');
+			h::log( self::$args['process'].'~>e:Error in passed $args or $fields');
 
             return false;
 
@@ -248,7 +248,7 @@ class get extends \q\render {
 		// h::log( self::$acf_fields );
 
         if ( 
-            isset( self::$args['group'] )
+            isset( self::$args['process'] )
         ) {
 
             // h::log( 'Removing fields from other groups... BEFORE: '.count( self::$fields ) );

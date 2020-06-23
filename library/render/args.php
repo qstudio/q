@@ -13,59 +13,38 @@ class args extends \q\render {
 	
     public static function validate( $args = null, $process = null ) {
 
-		// h::log( core\method::backtrace([ 'level' => 2, 'return' => 'function' ]) );
 		// h::log( $args );
 
 		// get stored config - pulls from Q, but available to filter via q/config/get/all ##
-		// @todo -- core\config::load( $args['config']['load'] ); -- checks for template specific config + view\is::get();
 		$config = core\config::get_lookup( $args );
-
-		/*
-			( // force config settings to return by passing "config" -> "property" ##
-				isset( $args['config'] ) 
-				&& isset( $args['config']['load'] ) 
-				&& core\config::get( $args['config']['load'] ) 
-			) ?
-			core\config::get( $args['config']['load'] ) :
-			// core\config::get( core\method::backtrace([ 'level' => 4, 'return' => 'function' ]) ) ; // get config based on calling function ##
-			$process ;
-		*/
 
 		// test ##
 		// h::log( $config );
-		// h::log( 'd:>method: '.core\method::backtrace([ 'level' => 4, 'return' => 'function' ]) );
 
 		// Parse incoming $args into an array and merge it with $config defaults ##
 		// allows specific calling methods to alter passed $args ##
-		// if ( $config ) $args = \wp_parse_args( $args, $config );
 		if ( $config ) $args = core\method::parse_args( $args, $config );
 
-		// h::log( $args );
+		// h::log( $config );
 
         // checks on required fields in $args array ##
         if (
 			// ! isset( $args )
 			is_null( $args )
             || ! is_array( $args )
-            // || ! isset( $args['fields'] )
-            // || ! is_array( $args['fields'] )
-            // || ! isset( $args['group'] ) // @todo --- this is specific to the_group calls ##
-            // || ! isset( $args['markup'] )
-            // || ! is_array( $args['markup'] )
-            // || ! isset( $args['markup']['template'] )
         ){
 
 			// log ##
 			h::log( self::$args['process'].'~>e:>Missing required args, so stopping here' );
+			
 			// h::log( 'Kicked here...' );
 
             return false;
 
 		}
 
-		// assign "group" - this is used by group to pull acf fields, or to know the calling method for the_ calls ##
-		// $args['group'] = isset( $args['process'] ) ? $args['process'] : core\method::backtrace([ 'level' => 2, 'return' => 'function' ]) ;
-		$args['group'] = $process;
+		// assign "process" - this is used by group to pull acf fields, or to know the calling method for the_ calls ##
+		$args['process'] = $process;
 
 		// h::log( $args['config']['post'] );
 
@@ -107,9 +86,6 @@ class args extends \q\render {
 
 		// h::log( $args['config']['post']->ID );
 
-		// assign "group" - this is used by group to pull acf fields, or to know the calling method for the_ calls ##
-		// $args['group'] = isset( $args['group'] ) ? $args['group'] : core\method::backtrace([ 'return' => 'function' ]) ;
-		
         // assign properties with initial filters ##
 		$args = self::assign( $args );
 		
@@ -123,7 +99,7 @@ class args extends \q\render {
         ){
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>config->run defined as false for: '.$args['group'].', so stopping here.. ' );
+			h::log( self::$args['process'].'~>n:>config->run defined as false for: '.$args['process'].', so stopping here.. ' );
 
             return false;
 
@@ -175,8 +151,9 @@ class args extends \q\render {
 		if ( $config ) $args = \wp_parse_args( $args, $config );
 
 		// let's set "group" to calling function, for debugging --- @todo, this really should be "process"... ##
-		if ( ! isset( $args['group'] ) ) {
-			$args['group'] = $method;
+		// h::log( 't:>change group to process....' );
+		if ( ! isset( $args['process'] ) ) {
+			$args['process'] = $method;
 		}
 
 		// h::log( $config );
@@ -308,7 +285,7 @@ class args extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>e:>Error in passed self::$args');
+			h::log( self::$args['process'].'~>e:>Error in passed self::$args');
 
             return false;
 
@@ -321,11 +298,11 @@ class args extends \q\render {
         // we also take one guess at the field name -- if it's not passed in config ##
         if ( 
             ! isset( self::$args['enable'] )
-            && ! isset( self::$fields[self::$args['group'].'_enable'] )
+            && ! isset( self::$fields[self::$args['process'].'_enable'] )
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>No enable defined in $args or enable field found for Group: "'.self::$args['group'].'"');
+			h::log( self::$args['process'].'~>n:>No enable defined in $args or enable field found for Group: "'.self::$args['process'].'"');
 
             return true;
 
@@ -338,11 +315,11 @@ class args extends \q\render {
                 && 1 == self::$fields[self::$args['enable']]
             )
             || 
-            	1 == self::$fields[self::$args['group'].'_enable']
+            	1 == self::$fields[self::$args['process'].'_enable']
         ) {
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>Field Group: "'.self::$args['group'].'" Enabled, continue');
+			h::log( self::$args['process'].'~>n:>Field Group: "'.self::$args['process'].'" Enabled, continue');
 
             // helper::log( self::$args['enable'] .' == 1' );
 
@@ -351,7 +328,7 @@ class args extends \q\render {
         }
 
 		// log ##
-		h::log( self::$args['group'].'~>n:>Field Group: "'.self::$args['group'].'" NOT Enabled, stopping.');
+		h::log( self::$args['process'].'~>n:>Field Group: "'.self::$args['process'].'" NOT Enabled, stopping.');
 
         // helper::log( self::$args['enable'] .' != 1' );
 
@@ -369,7 +346,7 @@ class args extends \q\render {
 	 */ 
 	public static function reset(){
 
-		// h::log( 'd:>reset args for: '.self::$args['group'] );
+		// h::log( 'd:>reset args for: '.self::$args['process'] );
 
 		self::$args = [];
 

@@ -16,10 +16,6 @@ class group extends \q\render {
 
 	public static function run( $args = [], $process = null ){
 
-		// assign "group" - this is used by group to pull acf fields, or to know the calling method for the_ calls ##
-		// $args['group'] = isset( $args['method'] ) ? $args['method'] : core\method::backtrace([ 'level' => 2, 'return' => 'function' ]) ;
-		// $args['group'] = $method;
-
 		// h::log( $args );
 
         // validate passed args ##

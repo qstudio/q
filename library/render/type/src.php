@@ -50,7 +50,7 @@ class src extends render\type {
 			// h::log( 'wp_get_attachment_image_src returned bad data' );
 
 			// log ##
-			h::log( self::$args['group'].'~>n:>wp_get_attachment_image_src returned bad data');
+			h::log( self::$args['process'].'~>n:>wp_get_attachment_image_src returned bad data');
 
 			return $string;
 
@@ -98,7 +98,7 @@ class src extends render\type {
 		// check ##
 		if ( is_null( $string ) ) {
 
-			h::log( self::$args['group'].'~>n:>String is empty.. so return null' );
+			h::log( self::$args['process'].'~>n:>String is empty.. so return null' );
 
 		}
 

@@ -34,7 +34,7 @@ class taxonomy extends render\type {
 			// h::log( 'No category or corrupt data returned' );
 
 			// log ##
-			h::log( self::$args['group'].'~>n:No category or corrupt data returned');
+			h::log( self::$args['process'].'~>n:No category or corrupt data returned');
 
 			return $string;
 

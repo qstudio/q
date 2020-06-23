@@ -119,7 +119,7 @@ class post extends \q\render {
 			// return false;
 
 			// log ##
-			h::log( self::$args['group'].'~>n:query::posts did not return any data');
+			h::log( self::$args['process'].'~>n:query::posts did not return any data');
 
 		}
 
@@ -133,7 +133,7 @@ class post extends \q\render {
 			// h::log( 'Error in data returned from query::posts' );
 
 			// log ##
-			h::log( self::$args['group'].'~>n:Error in data returned from query::posts');
+			h::log( self::$args['process'].'~>n:Error in data returned from query::posts');
 
 		}
 		
@@ -144,7 +144,7 @@ class post extends \q\render {
 		){
 
 			// h::log( 'No results returned from the_posts' );
-			h::log( self::$args['group'].'~>n:No results returned from query::posts');
+			h::log( self::$args['process'].'~>n:No results returned from query::posts');
 
 		// we have posts, so let's add some charm ##
 		} else {

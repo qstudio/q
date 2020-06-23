@@ -2,19 +2,18 @@
 
 namespace q\core;
 
-use q\core as core;
+use q\core;
 use q\core\helper as h;
+use q\view;
 
 // Q Theme Config ##
-use q\theme as theme;
+// use q\theme as theme;
 
 class config extends \Q {
 
 	private static
 		// loaded config ##
-		$config = [], 
-		// lookups ##
-		$lookups = []
+		$config = []
 	;
 
 
@@ -86,7 +85,7 @@ class config extends \Q {
 	/**
 	 * Try to get configuration, based on normal requirements ##
 	 * 
-	 * 
+	 * @since 4.1.0
 	*/
 	public static function get_lookup( $args = null ){
 
@@ -102,76 +101,62 @@ class config extends \Q {
 
 		}
 
-		h::log( 't:>add group__NAME config settings to share config over templates...' );
-
 		// get all config ##
 		$config = self::get();
 
 		// start blank ##
 		$return = false;
 
-		// load default config - the go specific > generic - stopping when a new config is found
+		// load default config - the go specific > generic - stopping when a new config is found ##
+		$lookups = [
+			// i.e: frontpage_group_frontpage_work
+			'template_type_process' => view\is::get().'_'.$args['config']['load'].'_'.$args['process'],
 
-		// filter in 2 additional lookups -
-		// config->CONFIG_LOAD->TEMPLATE->PROCESS - template specific ##
-		// config->CONFIG_LOAD->PROCESS - group specific config ##
+			// i.e: group_frontpage_work
+			'type_process' => $args['config']['load'].'_'.$args['process'],
 
-		// optional - we could load config from q.config and do additional lookup for q.markup->CONFIG.. to merge into options ##
+			// i.e: frontpage_work
+			'process' => $args['process'],
 
-		// generic back up ##
-		if ( 
-			isset( $args['proces'] )
-			&& isset( $config[ $args['proces'] ] ) 
-		) {
+			// i.e: group
+			'config_load' => $args['config']['load']
+		];
 
-			$return = $config[ $args['proces'] ];
+		// filter lookups, if users want to add more or re-order ##
+		$lookups = \apply_filters( 'q/core/config/lookups', $lookups );
 
-			h::log( 'd~>get_config:>return set to "process": '.$return );
+		// tracker ##
+		$found = false;
 
-		}
+		// loop options ##
+		foreach( $lookups as $k => $v ) {
 
-		// config load is defined in render/load - so most have it set ##
-		// this will either be set to a class, like "group" or a class_method - like "post_title"
-		if ( 
-			isset( $args['config'] ) 
-			&& isset( $args['config']['load'] ) 
-			// && core\config::get( $args['config']['load'] )			
-			&& isset( $config[ $args['config']['load'] ] ) 
-		){
-	
-			$return = $config[ $args['config']['load'] ];
-	
-			h::log( 'd~>get_config:>return set to "config->load": '.$args['config']['load'] );
-
-			// look for predefined extensions of config->load ##
-			$lookups = self::get_lookups();
-
+			// config load is defined in render/load - so most have it set ##
+			// this will either be set to a class, like "group" or a class_method - like "post_title"
 			if ( 
-				is_array( $lookups ) 
+				! isset( $config[ $v ] ) 
 			){
+		
+				// h::log( 'd:>config not available "'.$k.'": "'.$v.'"' );
 
-				foreach( $lookups as $lookup ) {
+				continue;
 
-					h::log( 'd~>get_config:>looking for: '.$args['config']['load'].'_'.$lookup );
+			} else {
 
-					if ( 
-						// isset( $args['config'] ) 
-						// && isset( $args['config']['load'] ) 
-						// && core\config::get( $args['config']['load'] )			
-						isset( $config[ $args['config']['load'].'_'.$lookup ] ) 
-					){
-				
-						$return = $config[ $args['config']['load'].'_'.$lookup ];
-				
-						h::log( 'd~>get_config:>return set to "config->load_'.$lookup.'": '.$args['config']['load'].'_'.$lookup );
+				// assign return ##
+				$return = $config[ $v ];
 
-					}
+				// ok ##
+				h::log( 'd:>config set to "'.$k.'": "'.$v.'"' );
 
-				}
+				// update tracker ##
+				$found = true;
 
 			}
 
-		} 
+			if ( $found ) { break; }
+
+		}
 
 		return $return;
 
@@ -194,12 +179,12 @@ class config extends \Q {
 		)
 
 		// h::log( 'sfsdf' );
-		h::log( 'd~>load:>Looking for handle: "'.$handle.'" in file: "'.$file.'"' );
+		// h::log( 'd:>Looking for handle: "'.$handle.'" in file: "'.$file.'"' );
 
 		// use cached version ##
 		if( isset( self::$config[$handle] ) ){
 
-			h::log( 'd~>load:>Returning cached version of config for handle: '.$handle );
+			// h::log( 'd:>Returning cached version of config for handle: '.$handle );
 
 			return self::$config[$handle];
 
@@ -210,7 +195,7 @@ class config extends \Q {
 			! file_exists( $file )
 		){
 			
-			// h::log( 'e~>load:>Error, file does not exist: '.$file );
+			// h::log( 'e:>Error, file does not exist: '.$file );
 
 			return false;
 
@@ -221,12 +206,12 @@ class config extends \Q {
 			$array = include( $file )
 		){
 
-			// h::log( 'd~>load:>Loading handle: "'.$handle.'" from file: "'.$file.'"' );
+			// h::log( 'd:>Loading handle: "'.$handle.'" from file: "'.$file.'"' );
 
 			// check if we have a 'config' key.. and take that ##
 			if ( is_array( $array ) ) {
 
-				// h::log( 'd~>load:>config handle: "'.$handle.'" NOT, empty...loading' );
+				// h::log( 'd:>config handle: "'.$handle.'" NOT, empty...loading' );
 
 				// set property ##
 				self::$config[$handle] = $array;
@@ -236,7 +221,7 @@ class config extends \Q {
 
 			} else {
 
-				// h::log( 'd~>load:>config not an array -- handle: "'.$handle.'"' );
+				// h::log( 'd:>config not an array -- handle: "'.$handle.'"' );
 
 			}
 

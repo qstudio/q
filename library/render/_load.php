@@ -274,17 +274,10 @@ class render extends \Q {
 
 			// h::log( 'd:>class: '.$class.'::'.$method.' available' );
 
-			// @todo - we need to make this more generic ##
-			// $args['group'] = $method;
-			// $args['field'] = $method;
-			// $args['method'] = $method; // @todo --- use to control group, field, block .... etc ##
-			
 			// define config for all in class -- i.e "group" ##
-			//@todo - could add group__NAME config, to share over templates ???
-			// h::log( 't:>add group__NAME config settings to share config over templates...' );
 			$args['config']['load'] = $class;
 
-			// define config for post, block, type, ui ##
+			// define config for post, block, type, ui ## - i.e. ui_open or post_title ##
 			if(
 				'post' == $class 
 				|| 'block' == $class
@@ -311,121 +304,6 @@ class render extends \Q {
 
 		}
 
-		// return;
-		/*
-		// test namespace ##
-		// h::log( __NAMESPACE__ );
-
-		// group_ methods ##
-		if ( 
-			'group__' === substr( $function, 0, 7 ) 
-			|| 'group' === substr( $function, 0, 5 ) 
-		) {
-
-			// take the second part of the function name as the group value ##
-			if ( false !== strpos( $function, '__' ) ) {
-				
-				$args['group'] = str_replace( 'group__', '', $function );
-
-				// note ##
-				// h::log('d:>Group assigned: '.$args['group']);
-
-			}
-
-			// call it ##
-			return render\group::run( $args );
-
-		}
-
-
-		// single field method ##
-		if ( 
-			'field__' === substr( $function, 0, 7 ) 
-			|| 'field' === substr( $function, 0, 5 ) 
-		) {
-
-			// take the second part of the function name as the group value ##
-			if ( false !== strpos( $function, '__' ) ) {
-				
-				$args['group'] = str_replace( 'field__', '', $function );
-				$args['field'] = str_replace( 'field__', '', $function );
-
-				// note ##
-				// h::log('d:>Field assigned: '.$args['field']);
-
-			}
-
-			// call it ##
-			return render\field::run( $args );
-
-		}
-
-		// block_ methods ##
-		// allows to pass markup and ui method names - 
-		// render\block__post_meta([ 'You are viewing post {title} in {category_name} from {post_data_human} ]);
-		if ( 
-			'block__' === substr( $function, 0, 7 ) 
-			|| 'block' === substr( $function, 0, 5 ) 
-		) {
-
-			// take the second part of the function name as the group value ##
-			if ( false !== strpos( $function, '__' ) ) {
-				
-				$args['group'] = str_replace( 'block__', '', $function );
-				$args['block'] = str_replace( 'block__', '', $function );
-
-				// note ##
-				h::log('d:>BLock assigned: '.$args['block']);
-
-			}
-
-			// call it ##
-			return render\block::run( $args );
-
-		}
-
-
-		// type_ methods ##
-		// allows to render\type__src( $args );
-		if ( 
-			'type__' === substr( $function, 0, 5 ) 
-			|| 'type' === substr( $function, 0, 3 ) 
-		) {
-
-			// take the second part of the function name as the group value ##
-			if ( false !== strpos( $function, '__' ) ) {
-				
-				$args['group'] = str_replace( 'type__', '', $function );
-				$args['type'] = str_replace( 'type__', '', $function );
-
-				// note ##
-				h::log('d:>Type assigned: '.$args['type']);
-
-			}
-
-			// call it ##
-			return render\type::run( $args );
-
-		}
-
-		// look for matching method to $function ##
-		if (
-			\method_exists( __NAMESPACE__.'\render\ui', $function ) // && exists ##
-			&& \is_callable([ __NAMESPACE__.'\render\ui', $function ]) // && is callable ##
-		) {
-
-			// h::log( 'Found function: "q\ui\render\method::'.$function.'()"' );
-
-			// assign config to load ##
-			$args['group'] = $function;
-			$args['config']['load'] = $function;
-
-			// call it ##
-			return render\ui::run( $args, $function );
-			// return render\method::{$function}( $args );
-
-		}
-		*/
 
 		// @todo -- check what is going on when this log shows.. ##
 		h::log( 'e:>No matching method found for: '.$class.'::'.$method );

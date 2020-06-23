@@ -22,7 +22,7 @@ class callback extends \q\render {
 			// self::$log['error'][] = 'No field value passed to method.';
 			
 			// log ##
-			h::log( self::$args['group'].'~>e:>No field value passed to method.');
+			h::log( self::$args['process'].'~>e:>No field value passed to method.');
 
             return $value;
 
@@ -34,7 +34,7 @@ class callback extends \q\render {
 			// self::$log['error'][] = 'No value passed to method.';
 			
 			// log ##
-			h::log( self::$args['group'].'~>e:>No value passed to method.');
+			h::log( self::$args['process'].'~>e:>No value passed to method.');
 
             return $value;
 
@@ -52,7 +52,7 @@ class callback extends \q\render {
 			// self::$log['error'][] = 'No callbacks allowed in plugin';
 			
 			// log ##
-			h::log( self::$args['group'].'~>e:>No callbacks allowed in plugin.');
+			h::log( self::$args['process'].'~>e:>No callbacks allowed in plugin.');
 
             return $value;
 
@@ -80,7 +80,7 @@ class callback extends \q\render {
 			// self::$log['notice'][] = 'No field value found, stopping callback';
 			
 			// log ##
-			h::log( self::$args['group'].'~>n:>No field value found, stopping callback: "'.$field.'"');
+			h::log( self::$args['process'].'~>n:>No field value found, stopping callback: "'.$field.'"');
 
             return $value;
 
@@ -115,7 +115,7 @@ class callback extends \q\render {
 			// self::$log['notice'][] = 'Cannot find callback: "'.$method.'"';
 			
 			// log ##
-			h::log( self::$args['group'].'~>n:>Cannot find callback: "'.$method.'"');
+			h::log( self::$args['process'].'~>n:>Cannot find callback: "'.$method.'"');
 
             return $value;
 
@@ -131,7 +131,7 @@ class callback extends \q\render {
 			// self::$log['notice'][] = 'Method is not callable: "'.$method.'"';
 			
 			// log ##
-			h::log( self::$args['group'].'~>n:>Method is not callable: "'.$method.'"');
+			h::log( self::$args['process'].'~>n:>Method is not callable: "'.$method.'"');
 
             return $value;
 
@@ -164,7 +164,7 @@ class callback extends \q\render {
 			// self::$log['notice'][] = 'Method returned bad data..';
 			
 			// log ##
-			h::log( self::$args['group'].'~>n:>Method return bad data...');
+			h::log( self::$args['process'].'~>n:>Method return bad data...');
 
             return $value;
 

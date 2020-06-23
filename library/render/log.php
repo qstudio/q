@@ -29,7 +29,7 @@ class log extends \q\render {
      */
     public static function set( Array $args = null ){
 
-        // h::log( 'e:>'.$args['group'] );
+        // h::log( 'e:>'.$args['process'] );
 
         if (
             ! isset( self::$args['config']['debug'] )
@@ -58,7 +58,7 @@ class log extends \q\render {
 		return true; 
 
 		// debug the group ##
-		// return core\log::write( $args['group'] );
+		// return core\log::write( $args['process'] );
 
     }
 
