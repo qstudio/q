@@ -9,11 +9,10 @@ use q\render;
 
 class markup extends \q\render {
 
-
 	public static function pre_format(){
 
-		// pre-format markup to extract comments ##
-		render\markup::comments();
+		// pre-format markup to extract sections ##
+		render\markup::section();
 
 		// search for config settings in markup, such as "src" handle ##
 		render\markup::config();
@@ -86,7 +85,7 @@ class markup extends \q\render {
 			$string = self::string([ 'key' => $key, 'value' => $value, 'string' => $string ]);
 
             // template replacement ##
-            // $string = str_replace( '%'.$key.'%', $value, $string );
+            // $string = str_replace( '{{ '.$key.' }}', $value, $string );
 
         }
 
@@ -100,7 +99,7 @@ class markup extends \q\render {
 			// log ##
 			h::log( self::$args['process'].'~>n:>"'.count( $placeholders ) .'" placeholders found in formatted string - these will be removed');
 
-            // helper::log( $placeholders );
+            // h::log( $placeholders );
 
             // remove any leftover placeholders in string ##
             foreach( $placeholders as $key => $value ) {
@@ -132,11 +131,11 @@ class markup extends \q\render {
 
 
 	/**
-	 * Scan for comments in markup and convert to placeholders and $fields
+	 * Scan for sections in markup and convert to placeholders and $fields
 	 * 
 	 * @since 4.1.0
 	*/
-	public static function comments(){
+	public static function section(){
 
 		// h::log( $args['key'] );
 
@@ -160,16 +159,19 @@ class markup extends \q\render {
 
 		// h::log('d:>'.$string);
 
-		// get all comments, add markup to $markup->$field ##
+		// get all sections, add markup to $markup->$field ##
+		// {{# frontpage_work_more }}
 		// $matches = [];
-		$regex_find = \apply_filters( 'q/render/markup/comments/regex/find', "/\<!--(.*?)--\>/s" );
+		// $regex_find = \apply_filters( 'q/render/markup/comment/regex/find', "/\<!--(.*?)--\>/s" );
+		$regex_find = \apply_filters( 'q/render/markup/section/regex/find', "/{{#(.*?)\/#}}/s" );
 		if ( 
 			preg_match_all( $regex_find, $string, $matches, PREG_OFFSET_CAPTURE ) 
 		){
 
 			// strip all comment blocks, we don't need them now ##
-			$regex_remove = \apply_filters( 'q/render/markup/comments/regex/remove', "/<!--.*?-->/ms" );
-			self::$markup = preg_replace( $regex_remove, "", self::$markup );
+			// $regex_remove = \apply_filters( 'q/render/markup/comment/regex/remove', "/<!--.*?-->/ms" );
+			$regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );
+			self::$markup = preg_replace( $regex_remove, "", self::$markup ); // @todo -- re-add remove ##
 		
 			// preg_match_all( '/%[^%]*%/', $string, $matches, PREG_SET_ORDER );
 			// h::debug( $matches );
@@ -203,13 +205,17 @@ class markup extends \q\render {
 
 				}
 
+				// h::log( 'd:>Searching for section field and markup...' );
+
 				$position = $matches[0][$match][1]; // take from first array ##
 				// h::log( 'd:>position: '.$position );
 				// h::log( 'd:>position from 1: '.$matches[0][$match][1] ); 
 
 				// foreach( $matches[1][0][0] as $k => $v ){
-				$delimiter = \apply_filters( 'q/render/markup/comments/delimiter', "::" );
-				list( $field, $markup ) = explode( $delimiter, $value[0] );
+				// $delimiter = \apply_filters( 'q/render/markup/comments/delimiter', "::" );
+				// list( $field, $markup ) = explode( $delimiter, $value[0] );
+				$field = render\method::string_between( $matches[0][$match][0], '{{#', '}}' );
+				$markup = render\method::string_between( $matches[0][$match][0], '{{# '.$field.' }}', '{{/#}}' );;
 
 				// sanity ##
 				if ( 
@@ -228,14 +234,14 @@ class markup extends \q\render {
 				$markup = trim($markup);
 
 				// test what we have ##
-				// h::log( "d:>field: ".$field );
-				// h::log( "d:>markup: ".$markup );
+				// h::log( 'd:>field: "'.$field.'"' );
+				// h::log( "d:>markup: $markup" );
 
 				// so, we can add a new field value to $args array based on the field name - with the markup as value
 				self::$args[$field] = $markup;
 
-				// and now we need to add a placeholder "%$field%" before this comment block at $position ##
-				self::set_placeholder( "%$field%", $markup, $position );
+				// and now we need to add a placeholder "{{ $field }}" before this comment block at $position ##
+				self::set_placeholder( "{{ $field }}", $markup, $position );
 
 			}
 
@@ -295,7 +301,7 @@ class markup extends \q\render {
 
 		// log ##
 		// h::log( self::$args['process'].'~>n:>"'.count( $placeholders ) .'" placeholders found in string');
-		h::log( self::$args['process'].'~>d:>"'.count( $placeholders ) .'" placeholders found in string');
+		// h::log( self::$args['process'].'~>d:>"'.count( $placeholders ) .'" placeholders found in string');
 
 		// h::log( self::$args['process'].'~>d:>'.$placeholders );
 
@@ -345,7 +351,7 @@ class markup extends \q\render {
 				$config_value = str_replace( ';', '', trim($config_value) );
 
 				// get field ##
-				$field = str_replace( '%', '', $value );
+				$field = str_replace( [ '{{ ', ' }}' ], '', $value );
 
 				// check if field is sub field i.e: "post__title" ##
 				if ( false !== strpos( $field, '__' ) ) {
@@ -359,7 +365,7 @@ class markup extends \q\render {
 				// matches[0] contains the whole string matched - for example "(handle:square;)" ##
 				// we can use this to work out the new_placeholder value
 				$placeholder = $value;
-				$new_placeholder = explode( '(', $placeholder )[0].'%';
+				$new_placeholder = explode( '(', $placeholder )[0].' }}';
 
 				// test what we have ##
 				// h::log( "d:>placeholder: ".$value );
@@ -420,8 +426,8 @@ class markup extends \q\render {
 			// h::log( 'found: '.$markup );
 
 			// wrap key value in found markup ##
-			// <h2 class="mt-5">%content%</h2> ##
-			$value = str_replace( '%content%', $value, $markup );
+			// <h2 class="mt-5">{{ content }}</h2> ##
+			$value = str_replace( '{{ content }}', $value, $markup );
 
 		}
 
@@ -433,7 +439,8 @@ class markup extends \q\render {
         ]); 
 
 		// template replacement ##
-		$string = str_replace( '%'.$key.'%', $value, $string );
+		// @todo - convert to preg_replace to allow for variable whitespaces characters ##
+		$string = str_replace( '{{ '.$key.' }}', $value, $string );
 		
 		// filter ##
 		$string = core\filter::apply([ 
@@ -489,18 +496,18 @@ class markup extends \q\render {
         /*
         <div class="col-12">
             <h3>
-                <a href="%permalink%">
-                    %post_title%
+                <a href="{{ permalink }}">
+                    {{ post_title }}
                 </a>
             </h3>
             <span class="badge badge-pill badge-primary">
-                %category_name%
+                {{ category_name }}
             </span>
         </div>
         */
 
         // get target placeholder ##
-        $placeholder = '%'.$field.'%';
+        $placeholder = '{{ '.$field.' }}';
         if ( 
             ! self::get_placeholder( $placeholder )
         ) {
@@ -530,29 +537,38 @@ class markup extends \q\render {
         // test ##
         // helper::log( $placeholders );
 
-        // iterate over %placeholders% adding prefix ##
+        // iterate over {{ placeholders }} adding prefix ##
         $new_placeholders = [];
         foreach( $placeholders as $key => $value ) {
 
             // helper::log( 'Working placeholder: '.$value );
+			// new placeholder ##
+			$new = '{{ '.trim($field).'__'.trim($count).'__'.trim( str_replace( [ '{{', '{{ ', '}}', ' }}' ], '', trim($value) ) ).' }}';
 
-            $new_placeholders[] = '%'.$field.'__'.$count.'__'.str_replace( '%', '', $value ).'%';
+			// single whitespace max ## @might be needed ##
+			// $new = preg_replace( '!\s+!', ' ', $new );	
+
+			// h::log( 'new_placeholder: '.$new );
+
+			$new_placeholders[] = $new;
+
+            // $new_placeholders[] = '{{ '.trim($field).'__'.trim($count).'__'.str_replace( [ '{{', '{{ ', '}}', ' }}' ], '', trim($value) ).' }}';
 
         } 
 
         // testnew placeholders ##
-        // helper::log( $new_placeholders );
+        // h::log( $new_placeholders );
 
         // generate new markup from template with new_placeholders ##
         $new_markup = str_replace( $placeholders, $new_placeholders, self::$args[$field] );
 
         // helper::log( $new_markup );
 
-        // use strpos to get location of %placeholder ##
+        // use strpos to get location of {{ placeholder }} ##
         $position = strpos( self::$markup, $placeholder );
         // helper::log( 'Position: '.$position );
 
-        // add new markup to $template as defined position - don't replace %placeholder% yet... ##
+        // add new markup to $template as defined position - don't replace {{ placeholder }} yet... ##
         $new_template = substr_replace( self::$markup, $new_markup, $position, 0 );
 
         // test ##
@@ -587,7 +603,8 @@ class markup extends \q\render {
 
         }
 
-		$regex_find = \apply_filters( 'q/render/markup/placeholders/get', '~\%(.*?)\%~' );
+		$regex_find = \apply_filters( 'q/render/markup/placeholders/get', '~\{{\s(.*?)\s\}}~' );
+		// $regex_find = \apply_filters( 'q/render/markup/placeholders/get', '~\%(.*?)\%~' );
 		// if ( ! preg_match_all('~\%(\w+)\%~', $string, $matches ) ) {
         if ( ! preg_match_all( $regex_find, $string, $matches ) ) {
 
@@ -599,7 +616,7 @@ class markup extends \q\render {
         }
 
         // test ##
-        // helper::log( $matches[0] );
+        // h::log( $matches[0] );
 
         // kick back placeholder array ##
         return $matches[0];
@@ -632,7 +649,7 @@ class markup extends \q\render {
 
 
 	/**
-     * Edit %placeholder% in self:$args['markup']
+     * Edit {{ placeholder }} in self:$args['markup']
      * 
      */
     public static function edit_placeholder( string $placeholder = null, $new_placeholder = null ) {
@@ -650,18 +667,19 @@ class markup extends \q\render {
 
 		}
 		
-        // check if placeholder is correctly formatted --> %STRING% ##
-        $needle = '%';
-        if (
-            $needle != $placeholder[0] // returns first character ## 
-			|| $needle != substr( $placeholder, -1 ) // returns last character ##
-			|| $needle != $new_placeholder[0] // returns first character ## 
-            || $needle != substr( $new_placeholder, -1 ) // returns last character ##
+        // check if placeholder is correctly formatted --> {{ STRING }} ##
+		$needle_start = '{{ ';
+		$needle_end = ' }}';
+		if (
+			! render\method::starts_with( $placeholder, $needle_start ) 
+			|| ! render\method::ends_with( $placeholder, $needle_end ) 
+			|| ! render\method::starts_with( $new_placeholder, $needle_start ) 
+			|| ! render\method::ends_with( $new_placeholder, $needle_end ) 
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>Placeholder is not correctly formatted - missing % at start or end.' );
-			// h::log( 'd:>Placeholder is not correctly formatted - missing % at start or end.' );
+			h::log( self::$args['process'].'~>e:>Placeholder is not correctly formatted - missing {{ at start or }} at end.' );
+			// h::log( 'd:>Placeholder is not correctly formatted - missing {{ at start or end }}.' );
 
             return false;
 
@@ -684,7 +702,7 @@ class markup extends \q\render {
 	
 
 	/**
-     * Set %placeholder% in self:$args['markup'] at defined position
+     * Set {{ placeholder }} in self:$args['markup'] at defined position
      * 
      */
     public static function set_placeholder( string $placeholder = null, $markup = null, $position = null ) {
@@ -708,16 +726,16 @@ class markup extends \q\render {
 
 		// h::log( $markup );
 
-        // check if placeholder is correctly formatted --> %STRING% ##
-        $needle = '%';
+        // check if placeholder is correctly formatted --> {{ STRING }} ##
+		$needle_start = '{{ ';
+		$needle_end = ' }}';
         if (
-            $needle != $placeholder[0] // returns first character ## 
-            || 
-            $needle != substr( $placeholder, -1 ) // returns last character ##
+            ! render\method::starts_with( $placeholder, $needle_start ) 
+			|| ! render\method::ends_with( $placeholder, $needle_end ) 
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>Placeholder: "'.$placeholder.'" is not correctly formatted - missing % at start or end.' );
+			h::log( self::$args['process'].'~>e:>Placeholder: "'.$placeholder.'" is not correctly formatted - missing {{ at start or }} at end.' );
 
             return false;
 
@@ -725,11 +743,11 @@ class markup extends \q\render {
 		
 		// h::log( 'd:>Adding placeholder: "'.$placeholder.'"' );
 
-		// use strpos to get location of %placeholder ##
+		// use strpos to get location of {{ placeholder }} ##
 		// $position = strpos( self::$markup, $placeholder );
 		// helper::log( 'Position: '.$position );
 
-		// add new placeholder to $template as defined position - don't replace %placeholder% yet... ##
+		// add new placeholder to $template as defined position - don't replace {{ placeholder }} yet... ##
 		$new_template = substr_replace( self::$markup, $placeholder, $position, 0 );
 
 		// test ##
@@ -751,7 +769,7 @@ class markup extends \q\render {
 
 
     /**
-     * Remove %placeholder% from self:$args['markup'] array
+     * Remove {{ placeholder }} from self:$args['markup'] array
      * 
      */
     public static function remove_placeholder( string $placeholder = null, $markup = null ) {
@@ -773,17 +791,18 @@ class markup extends \q\render {
 		// $markup = ! \is_null( $markup ) ? $markup : self::$markup ;
 
 		// h::log( $markup );
+		// h::log( 'remove: '.$placeholder );
 
-        // check if placeholder is correctly formatted --> %STRING% ##
-        $needle = '%';
+        // check if placeholder is correctly formatted --> {{ STRING }} ##
+		$needle_start = '{{ ';
+		$needle_end = ' }}';
         if (
-            $needle != $placeholder[0] // returns first character ## 
-            || 
-            $needle != substr( $placeholder, -1 ) // returns last character ##
+            ! render\method::starts_with( $placeholder, $needle_start ) 
+            || ! render\method::ends_with( $placeholder, $needle_end ) 
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>Placeholder: "'.$placeholder.'" is not correctly formatted - missing % at start or end.' );
+			h::log( self::$args['process'].'~>e:>Placeholder: "'.$placeholder.'" is not correctly formatted - missing "{{ " at start or " }}" at end.' );
 
             return false;
 
@@ -808,6 +827,7 @@ class markup extends \q\render {
         return $markup;
 
     }
+
 
 
 }

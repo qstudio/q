@@ -17,7 +17,7 @@ class args extends \q\render {
 
 		// get stored config via lookup, fallback 
 		// pulls from Q, but available to filter via q/config/get/all ##
-		$config = core\config::get_lookup( $args );
+		$config = core\config::lookup( $args );
 
 		// test ##
 		// h::log( $config );
@@ -147,7 +147,7 @@ class args extends \q\render {
 
 		// get stored config via lookup, fallback 
 		// pulls from Q, but available to filter via q/config/get/all ##
-		$config = core\config::get_lookup( $args );
+		$config = core\config::lookup( $args );
 
 		// test ##
 		// h::log( $config );

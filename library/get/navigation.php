@@ -33,7 +33,7 @@ class navigation extends \q\get {
 		
 		}
 
-		h::log( $args );
+		// h::log( $args );
 
 		if ( 
 			isset( $args['query'] )
@@ -60,7 +60,7 @@ class navigation extends \q\get {
 		}
 
 		// get config setting ##
-		$config = core\config::get('pagination');
+		$config = core\config::get( 'pagination' );
 		// h::log( $config );
 
         // work out total ##

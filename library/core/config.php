@@ -13,7 +13,8 @@ class config extends \Q {
 
 	private static
 		// loaded config ##
-		$config = []
+		$config = [],
+		$cache = []
 	;
 
 
@@ -22,32 +23,75 @@ class config extends \Q {
 	 */
 	public static function get( $field = null ) {
 
-		// try to load config from Q core ##
-		$config = self::load( self::get_plugin_path('q.config.php'), 'core' );
+		// start with Q core ##
+		// $config = self::load( self::get_plugin_path('q.config.php'), 'core' );
 
 		// h::log( $config );
 		// h::log( 'd:>'.$config[$field] );
 
 		// filter all config early ##
 		// Q = 1, Q Plugin = 10, Q Parent = 100, Q Child = 1000
-		// $config = 
-			// true === self::$filtered ? 
-			// self::$filtered : // use stored filtered config ##
-			// self::$filtered = \apply_filters( 'q/config/get/all', $config ) ; // filter in config and store to property ##
+		
+		// filter in config and store to property ##
+		// $config_merge = false;
+		\apply_filters( 'q/config/get/all', self::$config, $field );
+		// self::filter();
 
-		$config = \apply_filters( 'q/config/get/all', $config ) ; // filter in config and store to property ##
+		// self::filter( self::$config, $field );
 
-		// perhaps the filters blitzed config... check for an empty array, if so reload ##
-		if (
-		 	! $config
-		 	|| ! is_array( $config )
-		 	|| empty( $config )
-		){
+		// load default config - then go generic > specific ##
+		$lookups = self::get_lookups();
 
-			// try to load again config from Q core ##
-			$config = self::load( self::get_plugin_path('q.config.php'), 'core' );
+		// // i.e: group, post, partial
+		// $lookups['config_load'] = $args['controller'];
+
+		// // normally a field, i.e: frontpage_work
+		// $lookups['process'] = $args['process'];
+
+		// // i.e: group_frontpage_work
+		// $lookups['type_process'] = $args['controller'].'_'.$args['process'];
+
+		// // i.e: frontpage_group_frontpage_work
+		// $lookups['template_type_process'] = view\is::get().'_'.$args['controller'].'_'.$args['process'];
+
+		// filter lookups, to add more keys, or re-order ##
+		$lookups = \apply_filters( 'q/core/config/lookups/get', $lookups );
+
+		// tracker ##
+		// $found = false;
+
+		// loop options ##
+		foreach( $lookups as $k => $v ) {
+
+			self::filter( $v );
 
 		}
+
+		// if ( 
+		// 	isset( $config_merge )
+		// 	&& $config_merge
+		// 	&& $config_merge != false
+		// 	&& $config != $config_merge
+		// ){
+
+		// 	h::log( 'Merging in config from: '.$field );
+		// 	h::log( $config_merge );
+
+		// 	$config = core\method::parse_args( $config_merge, $config );
+
+		// }
+
+		// perhaps the filters blitzed config... check for an empty array, if so reload ##
+		// if (
+		//  	! $config
+		//  	|| ! is_array( $config )
+		//  	|| empty( $config )
+		// ){
+
+		// 	// try to load again config from Q core ##
+		// 	$config = self::load( self::get_plugin_path('q.config.php'), 'core' );
+
+		// }
 
 		// now, check if we are looking for a specific field ##
 		if (
@@ -57,7 +101,7 @@ class config extends \Q {
 			// h::log( 'd:>Getting all config data' );
 
 			// kick back ##
-			return $config;
+			return self::$config;
 
 		}
 
@@ -65,17 +109,25 @@ class config extends \Q {
 
 		// check if field is set ##
 		if (
-			! isset( $config[$field] )
+			! isset( self::$config[$field] )
 		){
 
-			h::log( 'd:>No matching config found for Field: "'.$field.'"' );
+			// h::log( 'd:>No matching config found for Field: "'.$field.'"' );
 
 			return false;
 
 		}
 
 		// kick back specific field ##
-		return $config[$field];
+		return self::$config[$field];
+
+	}
+
+
+
+	public static function filter( $field = null ) {
+
+		\apply_filters( 'q/config/get/all', self::$config, $field );
 
 	}
 
@@ -87,7 +139,7 @@ class config extends \Q {
 	 * 
 	 * @since 4.1.0
 	*/
-	public static function get_lookup( $args = null ){
+	public static function lookup( $args = null ){
 
 		// sanity ##
 		if (
@@ -101,42 +153,51 @@ class config extends \Q {
 
 		}
 
-		// get all config ##
-		$config = self::get();
+		// get all config -- might come form cache, or new lookups ##
+		self::get();
 
 		// start blank ##
 		$return = false;
 
-		// load default config - the go specific > generic - stopping when a new config is found ##
-		$lookups = [
+		// load default config - then go generic > specific ##
+		$lookups = self::get_lookups();
 
-			// i.e: frontpage_group_frontpage_work
-			'template_type_process' => view\is::get().'_'.$args['controller'].'_'.$args['process'],
+		// i.e: group, post, partial
+		$lookups['config_load'] = $args['controller'];
 
-			// i.e: group_frontpage_work
-			'type_process' => $args['controller'].'_'.$args['process'],
+		// normally a field, i.e: frontpage_work
+		$lookups['process'] = $args['process'];
 
-			// i.e: frontpage_work
-			'process' => $args['process'],
+		// i.e: group_frontpage_work
+		$lookups['type_process'] = $args['controller'].'_'.$args['process'];
 
-			// i.e: group
-			'config_load' => $args['controller']
-			
-		];
+		// i.e: frontpage_group_frontpage_work
+		$lookups['template_type_process'] = view\is::get().'_'.$args['controller'].'_'.$args['process'];
 
-		// filter lookups, if users want to add more or re-order ##
-		$lookups = \apply_filters( 'q/core/config/lookups', $lookups );
+		// filter lookups, to add more keys, or re-order ##
+		$lookups = \apply_filters( 'q/core/config/lookups/lookup', $lookups );
 
 		// tracker ##
-		$found = false;
+		// $found = false;
 
 		// loop options ##
 		foreach( $lookups as $k => $v ) {
 
+			// // get lookup config, if exists ##
+			// if ( 
+				self::filter( $v ); 
+			// ){
+
+				// h::log( $more_config );
+
+				// $config = $more_config;
+
+			// }
+
 			// config load is defined in render/load - so most have it set ##
 			// this will either be set to a class, like "group" or a class_method - like "post_title"
 			if ( 
-				! isset( $config[ $v ] ) 
+				! isset( self::$config[ $v ] ) 
 			){
 		
 				// h::log( 'd:>config not available "'.$k.'": "'.$v.'"' );
@@ -146,17 +207,17 @@ class config extends \Q {
 			} else {
 
 				// assign return ##
-				$return = $config[ $v ];
+				$return = self::$config[ $v ];
 
 				// ok ##
 				// h::log( 'd:>config set to "'.$k.'": "'.$v.'"' );
 
 				// update tracker ##
-				$found = true;
+				// $found = true;
 
 			}
 
-			if ( $found ) { break; }
+			// if ( $found ) { break; }
 
 		}
 
@@ -178,17 +239,25 @@ class config extends \Q {
 		if (
 			is_null( $file )
 			|| is_null( $handle )
-		)
+		){
 
-		// h::log( 'sfsdf' );
+			h::log( 'Error in passed params' );
+
+			return false;
+
+		}
+
 		// h::log( 'd:>Looking for handle: "'.$handle.'" in file: "'.$file.'"' );
 
 		// use cached version ##
-		if( isset( self::$config[$handle] ) ){
+		if( isset( self::$cache[$handle] ) ){
 
 			// h::log( 'd:>Returning cached version of config for handle: '.$handle );
+			// h::log( self::$cache[$handle] );
 
-			return self::$config[$handle];
+			// return self::$cache[$handle];
+			// return self::$config;
+			return false;
 
 		}
 
@@ -199,7 +268,7 @@ class config extends \Q {
 			
 			// h::log( 'e:>Error, file does not exist: '.$file );
 
-			return false;
+			return false; #self::$config;
 
 		}
 
@@ -214,16 +283,20 @@ class config extends \Q {
 			if ( is_array( $array ) ) {
 
 				// h::log( 'd:>config handle: "'.$handle.'" NOT, empty...loading' );
+				// h::log( $array );
 
-				// set property ##
-				self::$config[$handle] = $array;
+				// set cache check ##
+				self::$cache[$handle] = $array;
+
+				// merge results into array ##
+				self::$config = core\method::parse_args( $array, self::$config );
 
 				// return ##
 				return $array;
 
 			} else {
 
-				// h::log( 'd:>config not an array -- handle: "'.$handle.'"' );
+				h::log( 'd:>config not an array -- handle: "'.$handle.'"' );
 
 			}
 
@@ -233,20 +306,43 @@ class config extends \Q {
 		// h::log( 'e~>Config:>Error with data for handle: "'.$handle.'" from file: "'.$file.'"' );
 
 		// empty array ##
-		return [];
+		return false;
 
 	}
 
 
 
 	/**
-     * Run defined callbacks on fields ##
+     * lookup methods
      * 
      */
     public static function get_lookups()
     {
 
-        return \apply_filters( 'q/core/config/lookups', self::$lookups );
+		// load default config - then go generic > specific ##
+		$array = [
+
+			// theme/parent/q.config ##
+			'parent' => 'parent',
+
+			// theme/child/q.config ##
+			'child' => 'child',
+
+			// // i.e: group, post, partial
+			// 'config_load' => $args['controller'],
+
+			// // normally a field, i.e: frontpage_work
+			// 'process' => $args['process'],
+
+			// // i.e: group_frontpage_work
+			// 'type_process' => $args['controller'].'_'.$args['process'],
+
+			// // i.e: frontpage_group_frontpage_work
+			// 'template_type_process' => view\is::get().'_'.$args['controller'].'_'.$args['process'],
+
+		];
+
+        return $array;
 
 	}
 	

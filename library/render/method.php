@@ -172,6 +172,59 @@ class method extends \q\render {
     }
 
 
+	/**
+	 * Get string between two placeholders
+	 * 
+	 * @link 	https://stackoverflow.com/questions/5696412/how-to-get-a-substring-between-two-strings-in-php
+	 * @since 4.1.0
+	*/
+	public static function string_between( $string, $start, $end, $inclusive = false ){ 
+		
+		$string = " ".$string; 
+		$ini = strpos( $string, $start ); 
+		
+		if ($ini == 0) {
+			return ""; 
+		}
+		
+		if ( ! $inclusive ) {
+
+			$ini += strlen( $start ); 
+		
+		}
+		
+		$len = strpos( $string, $end, $ini ) - $ini; 
+		
+		if ( $inclusive ) {
+			
+			$len += strlen( $end ); 
+		
+		}
+
+		$string = substr( $string, $ini, $len ); 
+
+		// trim white spaces ##
+		$string = trim( $string );
+
+		// kick back ##
+		return $string;
+	
+	} 
+
+
+	public static function getBetween($content, $start, $end) {
+		$n = explode($start, $content);
+		$result = Array();
+		foreach ($n as $val) {
+			$pos = strpos($val, $end);
+			if ($pos !== false) {
+				$result[] = substr($val, 0, $pos);
+			}
+		}
+		return $result;
+	}
+
+
 
     /**
      * Format passed date value
@@ -404,7 +457,7 @@ class method extends \q\render {
 					// h::log( 'd:>key: '.$k.' / value: '.$v );
 
 					// only replace keys found in markup ##
-					if ( false === strpos( $return_inner, '%'.$k.'%' ) ) {
+					if ( false === strpos( $return_inner, '{{ '.$k.' }}' ) ) {
 
 						// h::log( 'd:>skipping '.$k );
 		
@@ -413,7 +466,7 @@ class method extends \q\render {
 					}
 
 					// template replacement ##
-					$return_inner = str_replace( '%'.$k.'%', $v, $return_inner );
+					$return_inner = str_replace( '{{ '.$k.' }}', $v, $return_inner );
 
 				}
 
@@ -430,7 +483,7 @@ class method extends \q\render {
 			// h::log( 'd:>key: '.$key.' / value: '.$value );
 
             // only replace keys found in markup ##
-            if ( false === strpos( $return, '%'.$key.'%' ) ) {
+            if ( false === strpos( $return, '{{ '.$key.' }}' ) ) {
 
                 h::log( 'd:>skipping '.$key );
 
@@ -439,7 +492,7 @@ class method extends \q\render {
 			}
 
 			// template replacement ##
-			$return = str_replace( '%'.$key.'%', $value, $return );
+			$return = str_replace( '{{ '.$key.' }}', $value, $return );
 
 		}
 
@@ -451,7 +504,7 @@ class method extends \q\render {
 			// h::log( 'd:>wrapping string before return.' );
 
 			// template replacement ##
-			$return = str_replace( '%content%', $return, $args['wrap'] );
+			$return = str_replace( '{{ content }}', $return, $args['wrap'] );
 
 		}
 
@@ -613,7 +666,7 @@ class method extends \q\render {
 
 		}
 
-		$length = strlen($needle);
+		$length = strlen( $needle );
 		
 		return ( substr( $haystack, 0, $length ) === $needle );
 	 

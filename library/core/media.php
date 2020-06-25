@@ -20,7 +20,7 @@ class media extends \Q {
         // \add_filter( 'intermediate_image_sizes_advanced', [ get_class(), 'intermediate_image_sizes_advanced' ] );
 
         // add_image_sizes for all themes ##
-        \add_action( 'init', [ get_class(), 'add_image_sizes' ], 1 );
+        \add_action( 'init', [ get_class(), 'add_image_sizes' ], 1000 );
 
 	}
 
@@ -76,6 +76,7 @@ class media extends \Q {
 
     }
 
+	
 
 	/**
 	 * Generates list of image sizes, with width, height and crop from Q config ## 
@@ -83,7 +84,10 @@ class media extends \Q {
 	public static function calculate_image_sizes()
 	{
 
-		if ( ! $config = core\config::get( 'src' ) ) {
+		// core\config::get();
+		// h::log( core\config::get( 'src' ) );
+		$config = core\config::get( 'src' );
+		if ( ! $config ) {
 
 			h::log( 'Error in stored src config' );
 

@@ -91,7 +91,6 @@ class render extends \Q {
             ],
 		],
 		
-
 		// allowed field types ##
         $type = [
 			'repeater'       	=> [],
@@ -128,7 +127,37 @@ class render extends \Q {
 			
 			// image src ##
 			'src', 
-        ],
+
+		],
+		
+		/* defined template delimiters */
+		// https://github.com/bobthecow/mustache.php/wiki/Mustache-Tags
+		$tags = [
+			'variable' 	=> [
+				'open'	=> [ '{{ ', ' }}' ], // @todo escaped. controller by filter ##
+				// 'close'	=> [ '{{/', '}}' ]
+			],
+			'section' 	=> [
+				'open'	=> [ '{{# ', ' }}' ],
+				'close'	=> [ '{{ ', ' /#}}' ]
+			],
+			'inversion'	=> [
+				'open'	=> [ '{{^ ',' }}' ], // else, no results ##
+				'close'	=> [ '{{/ ',' }}' ]
+			],
+			'function' 	=> [
+				'open'	=> [ '{{{ ', ' }}}' ], // also, a variable without escaping ##
+				// 'close'	=> null
+			],
+			'partial' 	=> [
+				'open'	=> [ '{{> ', ' }}' ],
+				// 'close'	=> null
+			],	
+			'comment' 	=> [
+				'open'	=> [ '{{! ', ' }}' ],
+				// 'close'	=> null
+			]
+		],
 
         $output = null, // return string ##
         $fields = null, // field names and values ##
