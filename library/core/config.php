@@ -54,10 +54,7 @@ class config extends \Q {
 		self::filter();
 
 		// define property ##
-		$property =
-			// isset( $v['process'] ) ? // lookup includes a process ##
-			$args['context'].'__'.$args['process'] ;
-			// $args['context'] ;
+		$property = $args['context'].'__'.$args['process'] ;
 
 		// h::log('d:>Looking for $config property: '.$property );
 		// h::log( self::$config );

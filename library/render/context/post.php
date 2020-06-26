@@ -48,6 +48,7 @@ class post extends \q\render {
 
 		// call render method ##
 		self::{ $method }( self::$args );
+		// h::log( 'method: '.$method );
 		// h::log( self::$fields );
 
 		// Now we can loop over each field ---
@@ -153,7 +154,7 @@ class post extends \q\render {
 			// define all required fields for markup ##
 			self::$fields = [
 				'total' 		=> $array['query']->found_posts, // total posts ##
-				'pagination'	=> '@TODO',##theme\module\navigation::pagination( $args, 'return' ), // get pagination ##
+				'pagination'	=> theme\module\navigation::pagination( $args, 'return' ), // get pagination ##
 				'posts'			=> $array['query']->posts // array of WP_Posts ##
 			];
 

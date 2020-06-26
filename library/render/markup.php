@@ -99,7 +99,7 @@ class markup extends \q\render {
 			// log ##
 			h::log( self::$args['process'].'~>n:>"'.count( $placeholders ) .'" placeholders found in formatted string - these will be removed');
 
-            // h::log( $placeholders );
+            h::log( $placeholders );
 
             // remove any leftover placeholders in string ##
             foreach( $placeholders as $key => $value ) {

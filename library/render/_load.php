@@ -313,20 +313,6 @@ class render extends \Q {
 			// define config for all in class -- i.e "group" ##
 			$args['context'] = $class;
 
-			// // define config for post, block, type, ui ## - i.e. ui_open or post_title ##
-			// if(
-			// 	'post' == $class 
-			// 	|| 'block' == $class
-			// 	|| 'type' == $class
-			// 	|| 'ui' == $class
-			// ){ 
-
-			// 	// h::log( 'd:>config for class: '.$class.' set to: '.$class.'_'.$method );
-
-			// 	$args['controller'] = $class.'_'.$method;
-
-			// }
-
 			// set global proces tracker ##
 			$args['process'] = $method;
 

@@ -17,7 +17,6 @@ class args extends \q\render {
 
 		// get stored config via lookup, fallback 
 		// pulls from Q, but available to filter via q/config/get/all ##
-		// $config = core\config::lookup( $args );
 		$config = core\config::get( $args );
 
 		// test ##
@@ -45,13 +44,24 @@ class args extends \q\render {
 
 		}
 
-		// assign "process" - this is used by group to pull acf fields, or to know the calling method for the_ calls ##
-		// $args['process'] = $process;
+		 // check if module asked to run $args['config']['run']
+		 if ( 
+            // isset( $args['config']['run'] )
+			// && 
+			isset( $args['config']['run'] )
+            && false === $args['config']['run']
+        ){
+
+			// log ##
+			h::log( self::$args['process'].'~>n:>config->run defined as false for: '.$args['process'].', so stopping here.. ' );
+
+            return false;
+
+        }
 
 		// h::log( $args['config']['post'] );
 
 		// If posts is passed as an int, then get a matching post Object, as we can use the data later ## 
-
 		// validate passed post ##
 		if ( 
 			isset( $args['config']['post'] ) 
@@ -93,19 +103,19 @@ class args extends \q\render {
 		
 		// h::log( $args );
 
-        // check if module asked to run $args['config']['run']
-        if ( 
-            // isset( $args['config']['run'] )
-            // && 
-            false === $args['config']['run']
-        ){
+        // // check if module asked to run $args['config']['run']
+        // if ( 
+        //     // isset( $args['config']['run'] )
+        //     // && 
+        //     false === $args['config']['run']
+        // ){
 
-			// log ##
-			h::log( self::$args['process'].'~>n:>config->run defined as false for: '.$args['process'].', so stopping here.. ' );
+		// 	// log ##
+		// 	h::log( self::$args['process'].'~>n:>config->run defined as false for: '.$args['process'].', so stopping here.. ' );
 
-            return false;
+        //     return false;
 
-        }
+        // }
 
         // ok - should be good ##
         return $args;

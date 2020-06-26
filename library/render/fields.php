@@ -304,8 +304,11 @@ class fields extends \q\render {
 		// sanity ##
 		if ( ! isset( self::$args['fields'] ) ) {
 
+			// get caller ##
+			$backtrace = core\method::backtrace([ 'level' => 4, 'return' => 'class_function' ]);
+
 			// log ##
-			h::log( self::$args['process'].'~>n:>"$args[fields]" is not defined' );
+			h::log( self::$args['process'].'~>n:>'.$backtrace.' -> "$args[fields]" is not defined' );
 
 			return false;
 
