@@ -20,7 +20,7 @@ class ui extends \q\render {
 	
 	}
 
-	public static function run( $args = null, $method = null ){
+	public static function run( $args = null ){
 
         // validate passed args ##
         if ( ! render\args::validate( $args ) ) {
@@ -34,6 +34,7 @@ class ui extends \q\render {
 		}
 
 		// run method to populate field data ##
+		$method = $args['process'];
 		if (
 			! \method_exists( get_class(), $method ) // && exists ##
 		) {

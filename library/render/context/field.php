@@ -15,7 +15,7 @@ class field extends \q\render {
 	
 	}
 
-	public static function run( $args = null, $method = null ){
+	public static function run( $args = null ){
 
 		// validate passed args ##
         if ( ! render\args::validate( $args ) ) {

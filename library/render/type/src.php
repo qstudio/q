@@ -69,8 +69,8 @@ class src extends render\type {
 			||
 			// OR, set globally ##
 			(
-				isset( core\config::get( 'src' )['srcset'] )
-				&& true == core\config::get( 'src' )['srcset']
+				isset( core\config::get([ 'context' => 'media', 'process' => 'src' ])['srcset'] )
+				&& true == core\config::get([ 'context' => 'media', 'process' => 'src' ])['srcset']
 			)
         ) {
 

@@ -222,26 +222,26 @@ class render extends \Q {
 			// render methods ##
 
 			// acf field handler ##
-			'field' => h::get( 'render/method/field.php', 'return', 'path' ), 
+			'field' => h::get( 'render/context/field.php', 'return', 'path' ), 
 
 			// acf group ##
-			'group' => h::get( 'render/method/group.php', 'return', 'path' ),
+			'group' => h::get( 'render/context/group.php', 'return', 'path' ),
 
 			// post objects content, title, excerpt etc ##
-			'post' => h::get( 'render/method/post.php', 'return', 'path' ),
+			'post' => h::get( 'render/context/post.php', 'return', 'path' ),
 
 			// perhaps type css ##
 			// perhaps type js ##
 			// perhaps type font ##
 
 			// navigation features ##
-			// 'nav' => h::get( 'render/method/navigation.php', 'return', 'path' ),
+			// 'nav' => h::get( 'render/context/navigation.php', 'return', 'path' ),
 
 			// ui render methods - open, close.. etc ##
-			'ui' => h::get( 'render/method/ui.php', 'return', 'path' ),
+			'ui' => h::get( 'render/context/ui.php', 'return', 'path' ),
 
 			// block renders, such as post_meta ##
-			// 'block' => h::get( 'render/method/block.php', 'return', 'path' ),
+			// 'block' => h::get( 'render/context/block.php', 'return', 'path' ),
 
 		];
 
@@ -300,7 +300,7 @@ class render extends \Q {
 
 		// h::log( 'd:>search if -- class: '.$class.'::'.$method.' available' );
 
-		// look for matching class to $class ##
+		// look for "namespace" class to $class ##
 		$namespace = __NAMESPACE__."\\render\\".$class;
 		// h::log( 'd:>'.__NAMESPACE__ .' --- '.$namespace );
 
@@ -311,28 +311,28 @@ class render extends \Q {
 			// h::log( 'd:>class: '.$class.' available' );
 
 			// define config for all in class -- i.e "group" ##
-			$args['controller'] = $class;
+			$args['context'] = $class;
 
-			// define config for post, block, type, ui ## - i.e. ui_open or post_title ##
-			if(
-				'post' == $class 
-				|| 'block' == $class
-				|| 'type' == $class
-				|| 'ui' == $class
-			){ 
+			// // define config for post, block, type, ui ## - i.e. ui_open or post_title ##
+			// if(
+			// 	'post' == $class 
+			// 	|| 'block' == $class
+			// 	|| 'type' == $class
+			// 	|| 'ui' == $class
+			// ){ 
 
-				// h::log( 'd:>config for class: '.$class.' set to: '.$class.'_'.$method );
+			// 	// h::log( 'd:>config for class: '.$class.' set to: '.$class.'_'.$method );
 
-				$args['controller'] = $class.'_'.$method;
+			// 	$args['controller'] = $class.'_'.$method;
 
-			}
+			// }
 
 			// set global proces tracker ##
 			$args['process'] = $method;
 
 			// call render method ##
 			// return render\ui::open( $args );
-			return $namespace::run( $args, $method );
+			return $namespace::run( $args );
 
 		}
 

@@ -86,7 +86,7 @@ class media extends \Q {
 
 		// core\config::get();
 		// h::log( core\config::get( 'src' ) );
-		$config = core\config::get( 'src' );
+		$config = core\config::get([ 'context' => 'media', 'process' => 'src' ]);
 		if ( ! $config ) {
 
 			h::log( 'Error in stored src config' );

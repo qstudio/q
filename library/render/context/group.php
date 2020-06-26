@@ -14,12 +14,12 @@ class group extends \q\render {
 	
 	}
 
-	public static function run( $args = [], $process = null ){
+	public static function run( $args = [] ){
 
 		// h::log( $args );
 
         // validate passed args ##
-        if ( ! render\args::validate( $args, $process ) ) {
+        if ( ! render\args::validate( $args ) ) {
 
             render\log::set( $args );
 

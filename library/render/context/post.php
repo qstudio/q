@@ -21,7 +21,7 @@ class post extends \q\render {
 	
 	}
 
-	public static function run( $args = null, $method = null ){
+	public static function run( $args = null ){
 
         // validate passed args ##
         if ( ! render\args::validate( $args ) ) {
@@ -37,7 +37,7 @@ class post extends \q\render {
 		// h::log( $args );
 
 		// run method to populate field data ##
-		// $method = $args['config']['method'];
+		$method = $args['process'];
 		if (
 			! \method_exists( get_class(), $method ) // && exists ##
 		) {
@@ -147,10 +147,13 @@ class post extends \q\render {
 		// we have posts, so let's add some charm ##
 		} else {
 
+			// merge array into args ##
+			$args = core\method::parse_args( $array, $args );
+
 			// define all required fields for markup ##
 			self::$fields = [
 				'total' 		=> $array['query']->found_posts, // total posts ##
-				'pagination'	=> theme\module\navigation::pagination( $array, 'return' ), // get pagination ##
+				'pagination'	=> '@TODO',##theme\module\navigation::pagination( $args, 'return' ), // get pagination ##
 				'posts'			=> $array['query']->posts // array of WP_Posts ##
 			];
 

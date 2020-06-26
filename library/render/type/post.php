@@ -53,8 +53,8 @@ class post extends render\type {
 					\get_the_date( 
 						isset( self::$args['date_format'] ) ? 
 						self::$args['date_format'] : // take from value passed by caller ##
-							core\config::get( 'date_format' ) ?
-							core\config::get( 'date_format' ) : // take from global config ##
+							core\config::get([ 'context' => 'global', 'process' => 'date_format' ]) ?
+							core\config::get([ 'context' => 'global', 'process' => 'date_format' ]) : // take from global config ##
 							'F j, Y', // standard ##
 						// $wp_post->post_date, 
 						$wp_post->ID

@@ -11,13 +11,14 @@ use q\render;
 class args extends \q\render {
 
 	
-    public static function validate( $args = null, $process = null ) {
+    public static function validate( $args = null ) {
 
 		// h::log( $args );
 
 		// get stored config via lookup, fallback 
 		// pulls from Q, but available to filter via q/config/get/all ##
-		$config = core\config::lookup( $args );
+		// $config = core\config::lookup( $args );
+		$config = core\config::get( $args );
 
 		// test ##
 		// h::log( $config );
@@ -45,7 +46,7 @@ class args extends \q\render {
 		}
 
 		// assign "process" - this is used by group to pull acf fields, or to know the calling method for the_ calls ##
-		$args['process'] = $process;
+		// $args['process'] = $process;
 
 		// h::log( $args['config']['post'] );
 
@@ -137,17 +138,21 @@ class args extends \q\render {
 		// get calling method for filters ##
 		$process = core\method::backtrace([ 'level' => 2, 'return' => 'function' ]);
 
+		// define context for all in class -- i.e "group" ##
+		if ( ! isset( $args['context'] ) ) {
+			$args['context'] = 'global';
+		}
+
 		// let's set "process" to calling function, for debugging ##
 		if ( ! isset( $args['process'] ) ) {
 			$args['process'] = $process;
 		}
 
-		// define config for all in class -- i.e "group" ##
-		$args['controller'] = 'null';
+		// h::log( $args );
 
 		// get stored config via lookup, fallback 
 		// pulls from Q, but available to filter via q/config/get/all ##
-		$config = core\config::lookup( $args );
+		$config = core\config::get( $args );
 
 		// test ##
 		// h::log( $config );

@@ -60,7 +60,7 @@ class navigation extends \q\get {
 		}
 
 		// get config setting ##
-		$config = core\config::get( 'pagination' );
+		$config = core\config::get([ 'context' => 'ui', 'process' => 'pagination' ]);
 		// h::log( $config );
 
         // work out total ##
@@ -296,7 +296,7 @@ class navigation extends \q\get {
         // Parse incoming $args into an array and merge it with $defaults - caste to object ##
         $args = ( object )wp_parse_args( 
             $args
-            , core\config::get( 'nav_menu' ) 
+            , core\config::get([ 'context' => 'ui', 'process' => 'nav_menu' ]) 
         );
         
         //$args = \wp_parse_args( $args, self::$the_nav_menu );
