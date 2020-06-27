@@ -22,7 +22,7 @@ class format extends \q\render {
         if ( is_null( $field ) ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>No field value passed to method.');
+			h::log( self::$args['task'].'~>e:>No field value passed to method.');
 			// h::log( 'd:>Field value: '.$value );
 
             return false;
@@ -33,7 +33,7 @@ class format extends \q\render {
         if ( is_null( $value ) ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>No value passed to method.');
+			h::log( self::$args['task'].'~>e:>No value passed to method.');
 			// h::log( 'd:>Field value: '.$value );
 
             return false;
@@ -50,7 +50,7 @@ class format extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>No formats allowed in plugin or array corrupt.');
+			h::log( self::$args['task'].'~>e:>No formats allowed in plugin or array corrupt.');
 
             return false;
 
@@ -83,7 +83,7 @@ class format extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>Error in parameters passed to check_format');
+			h::log( self::$args['task'].'~>e:>Error in parameters passed to check_format');
 
             return false;
 
@@ -110,7 +110,7 @@ class format extends \q\render {
             if ( ! function_exists( $format_value['type'] ) ) {
 
 				// log ##
-				h::log( self::$args['process'].'~>n:>Function not found: "'.$format_value['type'].'"');
+				h::log( self::$args['task'].'~>n:>Function not found: "'.$format_value['type'].'"');
 
                 continue;
 
@@ -140,12 +140,12 @@ class format extends \q\render {
         if ( false === $tracker ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>n:>No valid value type found for field: "'.$field.'" so assigned: "'.$return.'"');
+			h::log( self::$args['task'].'~>n:>No valid value type found for field: "'.$field.'" so assigned: "'.$return.'"');
 
         }
 
         // final filter on field format type ##
-        $return = \apply_filters( 'q/render/format/get/'.self::$args['process'].'/'.$field, $return );
+        $return = \apply_filters( 'q/render/format/get/'.self::$args['task'].'/'.$field, $return );
 
         // kick back ##
         return $return;
@@ -170,7 +170,7 @@ class format extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>Error in parameters passed to "apply", $value returned empty and field removed from $fields');
+			h::log( self::$args['task'].'~>e:>Error in parameters passed to "apply", $value returned empty and field removed from $fields');
 
             // this item needs to be removed from self::$fields
             render\fields::remove( $field );
@@ -189,7 +189,7 @@ class format extends \q\render {
         ){
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>handler wrong - class: "'.__CLASS__.'" / method: "'.$format.'"');
+			h::log( self::$args['task'].'~>e:>handler wrong - class: "'.__CLASS__.'" / method: "'.$format.'"');
 
             // this item needs to be removed from self::$fields
             render\fields::remove( $field );
@@ -241,7 +241,7 @@ class format extends \q\render {
 
         // h::log( $value );
 
-        return \apply_filters( 'q/render/format/text/'.self::$args['process'].'/'.$field, $value );
+        return \apply_filters( 'q/render/format/text/'.self::$args['task'].'/'.$field, $value );
 
     }
 
@@ -253,7 +253,7 @@ class format extends \q\render {
     public static function format_integer( $value = null, $field = null )
     {
 
-        return \apply_filters( 'q/render/format/integer/'.self::$args['process'].'/'.$field, $value );
+        return \apply_filters( 'q/render/format/integer/'.self::$args['task'].'/'.$field, $value );
 
     }
 
@@ -272,7 +272,7 @@ class format extends \q\render {
     {
 
         // allow filtering early ##
-        $value = \apply_filters( 'q/render/format/array/'.self::$args['process'].'/'.$field, $value );
+        $value = \apply_filters( 'q/render/format/array/'.self::$args['task'].'/'.$field, $value );
 
         // array of arrays containing named indexes ( not WP_Post Objects ) needs to be be marked up as a block, like an Object ##
 
@@ -378,7 +378,7 @@ class format extends \q\render {
     {
 
         // allow filtering early ##
-        $value = \apply_filters( 'q/render/format/object/'.self::$args['process'].'/'.$field, $value );
+        $value = \apply_filters( 'q/render/format/object/'.self::$args['task'].'/'.$field, $value );
 
         // WP Object format ##
         if ( $value instanceof \WP_Post ) {
@@ -391,7 +391,7 @@ class format extends \q\render {
         } else {
 
 			// log ##
-			h::log( self::$args['process'].'~>n:>Object is not of type WP_Post, so emptied, $value returned empty and field removed from $fields');
+			h::log( self::$args['task'].'~>n:>Object is not of type WP_Post, so emptied, $value returned empty and field removed from $fields');
 
             // this item needs to be removed from self::$fields
             render\fields::remove( $field, 'Removed by format_object because Object format is not allowed in $formats' );
@@ -423,11 +423,14 @@ class format extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>No value or field passed to format_wp_post_object');
+			h::log( self::$args['task'].'~>e:>No value or field passed to format_wp_post_object');
 
             return false;
 
 		}
+
+		// define context ##
+		$context = 'WP_Post';
 		
 		// h::log( 'Formatting WP Post Object: '.$wp_post->post_title );
 		// h::log( 'Field: '.$field ); // whole object ##
@@ -435,7 +438,7 @@ class format extends \q\render {
         // now, we need to create some new $fields based on each value in self::$type_fields ##
         foreach( self::$type_fields as $type_field ) {
 			
-			// h::log( 'Working: '.$type_field );
+			// h::log( 'Working: '.$type_field.' context: '.$context );
 
 			// start empty ##
 			$string = null;
@@ -446,32 +449,46 @@ class format extends \q\render {
 				// case "ID" : // post special ##
 				case substr( $type_field, 0, strlen( 'post_' ) ) === 'post_' :
 
-					$string = render\type::post( $wp_post, $type_field, $field );
+					$string = render\type::post( $wp_post, $type_field, $field, $context );
 
 				break ;
 
 				// author handlers ##	
 				case substr( $type_field, 0, strlen( 'author_' ) ) === 'author_' :
 
-					$string = render\type::author( $wp_post, $type_field, $field );
+					$string = render\type::author( $wp_post, $type_field, $field, $context );
 
 				break ;
 
-				// taxonomy / category handlers ##	
+				// taxonomy handlers ##	
 				case substr( $type_field, 0, strlen( 'category_' ) ) === 'category_' :
+				// case substr( $type_field, 0, strlen( 'term_' ) ) === 'term_' : // @todo ##
+				// case substr( $type_field, 0, strlen( 'term_' ) ) === 'term_' : // @todo ##
 
-					$string = render\type::taxonomy( $wp_post, $type_field, $field );
+					$string = render\type::taxonomy( $wp_post, $type_field, $field, $context );
 
 				break ;
 
-				// images ###
+				// post thumbnail ###
+				// @todo --- avoid media lookups, when markups does not require them ###
+				// this could be done by checking markup, pre-compile - for "src" attr ... ??
+				case 'media' : // @todo
+	
+					// // note, we pass the attachment ID to src handler ##
+					// $attachment_id = \get_post_thumbnail_id( $wp_post );
+					// $attachment = \get_post( $attachment_id );
+
+					$string = render\type::media( $wp_post, $type_field, $field, $context );
+
+				break ;
+
 				case 'src' :
+		
+					// // note, we pass the attachment ID to src handler ##
+					// $attachment_id = \get_post_thumbnail_id( $wp_post );
+					// $attachment = \get_post( $attachment_id );
 
-					// note, we pass the attachment ID to src handler ##
-					$attachment_id = \get_post_thumbnail_id( $wp_post );
-					$attachment = \get_post( $attachment_id );
-
-					$string = render\type::src( $attachment, $type_field, $field );
+					$string = render\type::media( $wp_post, $type_field, $field, $context );
 
 				break ;
 
@@ -482,7 +499,7 @@ class format extends \q\render {
 				h::log( 'Field: '.$field.' / '.$type_field.' returned an empty string' );
 
 				// log ##
-				h::log( self::$args['process'].'~>e:Field: "'.$field.' / '.$type_field.'" returned an empty string');
+				h::log( self::$args['task'].'~>e:Field: "'.$field.' / '.$type_field.'" returned an empty string');
 
 				// @@ todo.. do we need to remove field or markup ?? ##
 

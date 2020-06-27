@@ -7,7 +7,7 @@ use q\ui;
 use q\get;
 use q\render;
 
-class field extends \q\render {
+class navigation extends \q\render {
 
 	public static function __callStatic( $function, $args ) {
 
@@ -26,16 +26,37 @@ class field extends \q\render {
 
 		}
 
-		// build $args['field'] -- 
-		$args['field'] = $args['task'];
+		// build $args['fields'] -- @todo -- this can be moved to a pre-function call ##
+		// self::$args['fields'] = [];
 
 		// h::log( 'd:>markup: '.$args['markup'] );
 		// h::log( 'd:>field: '.$args['field'] );
 
 		// build fields array with default values ##
-		render\fields::define([
-			$args['task'] => get\meta::field( $args )
-		]);
+		// render\method::set_fields([
+		// 	$args['field'] => get\post::field( $args )
+		// ]);
+
+		// empty ##
+		// $array = [];
+
+		// field ##
+		// $array['field'] = $args['field'];
+
+        // grab classes ##
+		// $array['value'] = get\post::field( $args );
+
+		// @todo -- pass field by render/format ##
+		// h::log( 't:>pass field by render/format' );
+		// $array['value'] =  render\format::field( $field, $value );
+
+		// h::log( $array );
+
+        // return ##
+		// return ui\method::prepare( $args, $array );
+
+		// filter field data ##
+		// self::$fields = \apply_filters( 'q/render/field/'.$args['field'], self::$fields, self::$args );
 
 		// h::log( self::$fields );
 
@@ -56,5 +77,6 @@ class field extends \q\render {
         return render\output::return();
 
     }
+
 
 }

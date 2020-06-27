@@ -19,7 +19,7 @@ class output extends \q\render {
 		){
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>$output is empty, so nothing to render.. stopping here.');
+			h::log( self::$args['task'].'~>e:>$output is empty, so nothing to render.. stopping here.');
 
 			// kick out ##
 			return false;
@@ -33,7 +33,7 @@ class output extends \q\render {
                 'args'      => self::$args, 
 				'output'    => self::$output 
 			], 
-            'filter'        => 'q/render/output/'.self::$args['process'], // filter handle ##
+            'filter'        => 'q/render/output/'.self::$args['task'], // filter handle ##
             'return'        => self::$output
 		]); 
 		

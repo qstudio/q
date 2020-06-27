@@ -41,6 +41,9 @@ class get extends \Q {
 			// post object ##
 			'post' => h::get( 'get/post.php', 'return', 'path' ),
 
+			// post meta ##
+			'meta' => h::get( 'get/meta.php', 'return', 'path' ),
+
 			// taxonomy object ##
 			'taxonomy' => h::get( 'get/taxonomy.php', 'return', 'path' ),
 

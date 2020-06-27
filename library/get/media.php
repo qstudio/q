@@ -6,98 +6,218 @@ use q\core;
 use q\core\helper as h;
 use q\ui;
 use q\get;
+use q\render;
 
 class media extends \Q {
 
 	
-    public static function image_sizes_list()
-    {
-
-        global $_wp_additional_image_sizes; 
-        if( self::$debug ) h::log( $_wp_additional_image_sizes ); 
-
-	}
-	
-
 	/**
-	 * Get information about available image sizes
-	 * 
-	 * @link		https://developer.wordpress.org/reference/functions/get_intermediate_image_sizes/
-	 */
-	function image_sizes( $size = '' ) {
-
-		$wp_additional_image_sizes = \wp_get_additional_image_sizes();
-	
-		$sizes = array();
-		$get_intermediate_image_sizes = \get_intermediate_image_sizes();
-	
-		// Create the full array with sizes and crop info
-		foreach( $get_intermediate_image_sizes as $_size ) {
-			if ( in_array( $_size, array( 'thumbnail', 'medium', 'large' ) ) ) {
-				$sizes[ $_size ]['width'] = \get_site_option( $_size . '_size_w' );
-				$sizes[ $_size ]['height'] = \get_site_option( $_size . '_size_h' );
-				$sizes[ $_size ]['crop'] = (bool) \get_site_option( $_size . '_crop' );
-			} elseif ( isset( $wp_additional_image_sizes[ $_size ] ) ) {
-				$sizes[ $_size ] = array( 
-					'width' => $wp_additional_image_sizes[ $_size ]['width'],
-					'height' => $wp_additional_image_sizes[ $_size ]['height'],
-					'crop' =>  $wp_additional_image_sizes[ $_size ]['crop']
-				);
-			}
-		}
-	
-		// Get only 1 size if found
-		if ( $size ) {
-			if( isset( $sizes[ $size ] ) ) {
-				return $sizes[ $size ];
-			} else {
-				return false;
-			}
-		}
-		return $sizes;
-
-	}
-	
-
-    /**
      * Check for a return post thumbnail images and exif-data baed on passed settings ##
      *
      */
-    public static function the_post_thumbnail( $args = array() )
+    public static function thumbnail( $args = null )
     {
+
+		// sanity ##
+		if (
+			is_null( $args )
+			// || ! isset( $args['post'] )
+			// // || ! isset( $args['handle'] )
+			// || ! $args['post'] instanceof \WP_Post
+		){
+
+			h::log( 'e:>Error in passed args' );
+
+			return false;
+
+		}
+
+		// to make this more generic, we will get the current wp_post, if this is not passed ##
+		if (
+			! isset( $args['post'] )
+		){
+
+			$args['post'] = get\post::object();
+
+		}
 
         // test incoming args ##
         // self::log( $args );
 
-        // get the_post ##
-        if ( ! $the_post = self::the_post() ) { return false; }
+		// check for post thumbnail ##
+        if ( ! \has_post_thumbnail( $args['post']->ID ) ) { 
+			
+			h::log( 'd:>Post does not have a thumbnail' );
 
-        // Parse incoming $args into an array and merge it with $defaults - caste to object ##
-        $args = ( object ) \wp_parse_args( $args, \q_theme::$the_post_thumbnail );
-
-        #pr( $args );
-
-        // set-up a new object ##
-        $object = new \stdClass;
-
-        if ( ! \has_post_thumbnail( $the_post->ID ) ) { return false; }
-
-        // self::log( 'Handle: '.$args->handle[self::device()] );
+			return false; 
+		
+		}
 
 		// show small image, linking to larger image ##
-		$attachment_id = \get_post_thumbnail_id( $the_post->ID );
-        $object->src = \wp_get_attachment_image_src( $attachment_id, $args->handle[h::device()] );
-        $img_alt = \get_post_meta( \get_post_thumbnail_id( $the_post->ID ), '_wp_attachment_image_alt', true);
-		$object->alt = ( $img_alt ? $img_alt : \get_the_title() ) ;
+		if ( ! $args['attachment_id'] = \get_post_thumbnail_id( $args['post']->ID ) 
+		){
+
+			h::log('d:>get_post_thumbnail_id returned false' );
+
+			return false;
+
+		}
 		
-		// add srcset values ##
-		$object = self::the_srcset( $object );
+		// bounce on to get src attrs ##
+		$array = self::src( $args );
+
+        // if we do not have a src, perhaps we should stop?? ##
+		// if ( ! $array['src'] ) { return false; }
+		
+		// test ##
+		h::log( $array );
+
+        // kick back array ##
+        return $array;
+
+    }
+
+
+
+    /**
+     * Check for a return src and exif-data from attachment ID ##
+     *
+     */
+    public static function src( $args = null )
+    {
+
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! isset( $args['attachment_id'] )
+			// || ! isset( $args['handle'] )
+		){
+
+			h::log( 'e:>Error in passed args' );
+
+			return false;
+
+		}
+
+		// check and assign ##
+		// h::log( render::$args );
+		// h::log( $args );
+		// handle could be assigned in a few ways -- so, let's check them all in specific to generic order ##
+		// from passed args ##
+		if ( 
+			isset( $args['handle'] ) 
+		){
+
+			// nothing to do ##
+
+		// handle filtered into config by markup pre-processor ##
+		} else if ( 
+			isset( render::$args )
+			&& isset( $args['field'] )
+			&& isset( render::$args[ $args['field'] ]['config']['handle'] ) 
+		){
+
+			$args['handle'] = render::$args[ $args['field'] ]['config']['handle'];
+
+		// filterable default ##
+		} else {
+
+			$args['handle'] = \apply_filters( 'q/render/type/src/handle', 'medium' );
+
+		}
+
+        // $args['handle'] = 
+        //     isset( self::$args['field']['src']['handle'] ) ?
+        //     self::$args['field']['src']['handle'] : // get handle defined in calling args ##
+        //     \apply_filters( 'q/render/type/src/handle', 'medium' ); // filterable default ##
+
+        // h::log( 'Handle: '.$args['handle'] );
+
+        // test incoming args ##
+        // self::log( $args );
+
+        // set-up a new array ##
+        $array = [];
+
+        // self::log( 'Handle: '.$args['handle'] );
+		if ( ! $src = \wp_get_attachment_image_src( $args['attachment_id'], $args['handle'] ) ){
+
+			h::log( 'd:>wp_get_attachment_image_src did not return data' );
+
+			return false;
+
+		}
+		
+		// take array items ##
+		$array['src'] = $src[0];
+		$array['src_width'] = $src[1];
+		$array['src_height'] = $src[2];
+
+		$array['src_alt'] = 
+			\get_post_meta( $args['attachment_id'], '_wp_attachment_image_alt', true ) ?
+			\get_post_meta( $args['attachment_id'], '_wp_attachment_image_alt', true ) :
+			\get_the_title( $args['post'] );
+
+		// image found ? ##
+		if ( ! $array['src'] ) { return false; }
+		
+		// conditional -- add img caption ##
+		if ( 
+			// set locally..
+			(
+				isset( render::$args['config']['meta'] )
+				&& true == render::$args['config']['meta'] 
+			)
+			||
+			// OR, set globally ##
+			(
+				isset( core\config::get([ 'context' => 'media', 'task' => 'src' ])['meta'] )
+				&& true == core\config::get([ 'context' => 'media', 'task' => 'src' ])['meta']
+			)
+		) {
+
+			h::log( 'd:>Adding media meta' );
+
+			// add caption values ##
+			$array = array_merge( 
+				self::meta( $args ), 
+				$array
+			);
+		
+		}
+
+		// conditional -- add img meta values ( sizes ) and srcset ##
+        if ( 
+			// set locally..
+			(
+				isset( render::$args['config']['srcset'] )
+            	&& true == render::$args['config']['srcset'] 
+			)
+			||
+			// OR, set globally ##
+			(
+				isset( core\config::get([ 'context' => 'media', 'task' => 'src' ])['srcset'] )
+				&& true == core\config::get([ 'context' => 'media', 'task' => 'src' ])['srcset']
+			)
+        ) {
+
+			h::log( 'd:>Adding srcset' );
+
+			// add srcset values ##
+			$array = array_merge( 
+				self::srcset( $args ), 
+				$array
+			);
+
+		}
 
         // image found ? ##
-        if ( ! $object->src ) { return false; }
+		// if ( ! $array['src'] ) { return false; }
+		
+		h::log( $array );
 
-        // kick back object ##
-        return $object;
+        // kick back array ##
+        return $array;
 
     }
 
@@ -105,326 +225,97 @@ class media extends \Q {
 
 	/**
 	 * Get srcset and additional attachment meta info
+	 * 
+	 * @since 4.1.0
 	 */
-	public static function the_srcset( object $object = null ) {
+	public static function srcset( $args = null ): Array {
 
-		// @todo - get values and add ##
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! isset( $args['attachment_id'] )
+			|| filter_var( $args['attachment_id'], FILTER_VALIDATE_INT) === false
+			// ! is_int( $args['attachment_id'] ) // filter_var($int, FILTER_VALIDATE_INT) !== false
+			|| ! isset( $args['handle'] )
+		){
 
-		return $object;
+			h::log( 'e:>Error in passed params' );
 
-	}
+			return [];
 
+		}
 
+		$array = [];
 
-    /**
-     * Check if an attached file exists
-     *
-     * @since       1.6.3
-     * @return      boolean
-     */
-    public static function attachment_exists( $id = null )
-    {
+		// $id = \get_post_thumbnail_id( $wp_post );
+		$array['src_srcset'] = \wp_get_attachment_image_srcset( $args['attachment_id'], $args['handle'] );
+		$array['src_sizes'] = \wp_get_attachment_image_sizes( $args['attachment_id'], $args['handle'] );
+		
+		// markup tag attributes ##
+		// $srcset = '" srcset="'.\esc_attr($srcset).'"'; 
+		// $sizes = ' sizes="'.\esc_attr($sizes).'"'; 
+		// $alt = ' alt="'.\esc_attr($alt).'"'; 
 
-        // sanity ##
-        if ( is_null ( $id ) ) {
-
-            return false;
-
-        }
-
-        // get attachment path ##
-        if ( $file = \get_attached_file( $id ) ) {
-
-            if ( file_exists( $file ) ) {
-
-                return true;
-
-            }
-
-        }
-
-        // nothng cooking ##
-        return false;
+		return $array;
 
 	}
-	
 
-	
-    /**
-     * Build HTML WordPress Gallery
-     *
-     * @since       1.0.0
-     * @return      string   HTML
-     */
-    public static function get_gallery( $args = array() )
-    {
-
-        // test incoming args ##
-        #pr( $args );
-
-        // get the_post ##
-        if ( ! $the_post = self::the_post( $args ) ) { return false; }
-
-        // Parse incoming $args into an array and merge it with $defaults - caste to object ##
-        $args = ( object ) \wp_parse_args( $args, \q_theme::$the_gallery );
-
-        // add post ID, if not passed ##
-        $args->post = isset ( $args->post ) ? $args->post : $the_post->ID ;
-
-        // test compilled arguments ##
-        #pr( $args );
-
-        // empty gallery ##
-        $gallery = false;
-
-        // define gallery source and grab images ##
-        if ( isset( $args->post_meta ) ) {
-
-            // built using new ACF field type ##
-            if ( isset( $args->acf ) ) {
-
-                $gallery = \get_field( $args->post_meta, $args->post );
-                #pr( $gallery );
-
-            } else if ( $post_meta = \get_post_meta( $args->post, $args->post_meta, true ) ) {
-
-                #pr( $post_meta );
-
-                $gallery = q_get_gallery_images( $args->post, $args->img_handle, $args->limit, $post_meta );
-
-            }
-
-        } else {
-
-            $gallery = q_get_gallery_images( $args->post, $args->img_handle, $args->limit );
-
-        }
-
-        // test if we got any images ##
-        if ( ! $gallery  ) { return false; }
-
-        // test the gallery array ##
-        #pr( $gallery );
-
-        // loop over gallery ##
-        foreach ( $gallery as $image ) {
-
-            // toggle img / src depending on type ##
-            $img_src = isset( $args->acf ) ? $image["sizes"]["{$args->img_handle}"] : $image['src'] ;
-
-?>
-                <img src="<?php echo $img_src; ?>" />
-<?php
-
-        }
-
-    }
-
-
-
-    /**
-     * Check if a post has a gallery of images ( more than one ) or a post image
-     *
-     * @since       1.3.2
-     * @return      String      HTML for image or gallery
-     */
-    public static function get_gallery_or_image( $args = array() )
-    {
-
-        // get the_post ##
-        if ( ! $the_post = self::the_post( $args ) ) { return false; }
-
-        // Parse incoming $args into an array and merge it with $defaults - caste to object ##
-        $args = ( object ) \wp_parse_args( $args, \q_theme::$the_gallery_or_image );
-
-        // add post ID, if not passed ##
-        $args->post = isset ( $args->post ) ? $args->post : $the_post->ID ;
-
-        // empty gallery ##
-        $gallery = false;
-
-        // define gallery source and grab images ##
-        if ( isset( $args->post_meta ) ) {
-
-            // built using new ACF field type ##
-            if ( isset( $args->acf ) ) {
-
-                $gallery = \get_field( $args->post_meta, $args->post );
-                #pr( $gallery );
-
-            } else if ( $post_meta = \get_post_meta( $args->post, $args->post_meta, true ) ) {
-
-                #pr( $post_meta );
-
-                $gallery = self::get_gallery_images( $args->post, $args->img_handle, $args->limit, $post_meta );
-
-            }
-
-        } else {
-
-            $gallery = self::get_gallery_images( $args->post, $args->img_handle, $args->limit );
-
-        }
-
-        // build it out ##
-        if ( $gallery && is_array ( $gallery ) ) {
-
-            // close content area ##
-            if ( $args->layout == 'full_width' ) theme::the_content_close();
-
-            // test the gallery array ##
-            #pr( $gallery );
-
-            // loop over gallery ##
-            foreach ( $gallery as $image ) {
-
-                // toggle img / src depending on type ##
-                $img_src = isset( $args->acf ) ? 'url' : 'src' ;
-
-?>
-                    <img src="<?php echo $image[$img_src]; ?>" />
-<?php
-
-            }
-
-            // reopen content area ##
-            if ( $args->layout == 'full_width' ) theme::the_content_open();
-
-        // check if we have a featured image ##
-        } else if ( \has_post_thumbnail( $the_post->ID ) ) {
-
-            echo \get_the_post_thumbnail( $the_post->ID, $args->img_handle, array( 'class' => $args->img_handle ) );
-
-        }
-
-    }
-
-
-
-
-    /**
-     * get all images from a post gallery
-     *
-     * @param   Object      $post       Post object to examine
-     * @param   String      $size       Handle of image size to return
-     * @param   Integer     $limit      Number of images to return, defaults to 10
-     * @param   String      $field      Allows for a custom field to be used to grab the gallery shortcode
-     * @since 1.1.0
-     */
-    public static function get_gallery_images( $post = null, $size = null, $limit = null, $field = null ){
-
-        // passed post or global ##
-        if ( ! $post ) global $post;
-
-        // kickout if no post object ##
-        if ( ! is_object( $post ) ) { $post = \get_post( $post ); }
-
-        // kick out if we can't get a real post object ##
-        if ( ! $post || ! is_object( $post ) ) {
-            #echo 'kicked';
-            return false;
-        }
-
-        // limit set ##
-        $limit = ! is_null ( $limit ) ? $limit : \get_site_option( 'posts_per_page', 10 );
-
-        // set content or field to grab [gallery] shortcode from ##
-        $content = ! is_null ( $field ) ? $field : $post->post_content ;
-
-        // test passed content field ##
-        #pr( $content );
-
-        // http://wordpress.stackexchange.com/questions/80408/how-to-get-page-post-gallery-attachment-images-in-order-they-are-set-in-backend
-        $pattern = \get_shortcode_regex();
-
-        if( preg_match_all( '/'. $pattern .'/s', $content, $matches )
-            && array_key_exists( 2, $matches )
-            && in_array( 'gallery', $matches[2] ) ):
-
-            $keys = array_keys( $matches[2], 'gallery' );
-
-            foreach( $keys as $key ):
-                $atts = \shortcode_parse_atts( $matches[3][$key] );
-                    if( array_key_exists( 'ids', $atts ) ):
-
-                        $query_images = new \WP_Query(
-                            array(
-                                'posts_per_page'    => $limit,
-                                'post_type'         => 'attachment',
-                                'post_status'       => 'inherit',
-                                'post__in'          => explode( ',', $atts['ids'] ),
-                                'orderby'           => 'post__in'
-                            )
-                        );
-
-                        \wp_reset_query();
-
-                    endif;
-            endforeach;
-
-        endif;
-
-        // empty array, just in case ##
-        $images = array();
-
-        // build images array ##
-        foreach ( $query_images->posts as $image ) {
-
-            // image src ##
-            if ( $size ) {
-
-                $image_src_array = \wp_get_attachment_image_src( $image->ID, $size );
-                $image_src = $image_src_array[0];
-
-                // get updated meta ##
-                $image_meta = array(
-                    "width" => $image_src_array[1], // width ##
-                    "height" => $image_src_array[2], // height ##
-                );
-
-            } else {
-
-                $image_meta = \wp_get_attachment_metadata( $image->ID ); // get dimensions ##
-                $image_src = $image->guid;
-
-            }
-
-            $images[] = array (
-                "ID"            => $image->ID,
-                "src"           => $image_src,
-                "width"         => $image_meta["width"],
-                "height"        => $image_meta["height"],
-                'alt'           => \get_post_meta( $image->ID, '_wp_attachment_image_alt', true ),
-                'caption'       => $image->post_excerpt ? $image->post_excerpt : 'undefined',
-                'description'   => $image->post_content,
-                'href'          => \get_permalink( $image->ID ),
-                #'src'           => $image->guid,
-                'title'         => $image->post_title
-            );
-        }
-
-        return $images;
-
-    }
 
 
 	/**
-     * Get page Avatar style and placement
-     *
-     * @since       1.0.1
-     * @return      Mixed       string HTML || Boolean false
-     */
-    public static function the_avatar( $args = array() )
-    {
+	 * Get attachment meta data
+	 * 
+	 * @since 4.1.0
+	 */
+	public static function meta( $args = null ): Array {
 
-        // grab avatar object ##
-        if ( ! $object = self::get_avatar( $args ) ) { return false; }
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! isset( $args['attachment_id'] )
+			|| filter_var( $args['attachment_id'], FILTER_VALIDATE_INT) === false
+			// || ! is_int( $args['attachment_id'] )
+		){
 
-?>
-        <a class="circle <?php echo $object->class; ?>"><img src="<?php echo $object->src; ?>" /></a>
-<?php
+			h::log( 'e:>Error in passed params' );
 
-    }
+			return [];
+
+		}
+
+		$array = [];
+
+		$image = \get_post( $args['attachment_id'] );
+
+		if ( $image ) {
+		
+			$array['src_title'] = $image->post_title;
+			$array['src_caption'] = $image->post_excerpt;
+			$array['src_description'] = $image->post_content;
+
+		}
+
+		/*
+		$metadata = \wp_get_attachment_metadata( $args['attachment_id'] );
+		if ( $metadata ) {
+
+			h::log( 'd:>Adding metadata from: '.$args['attachment_id'] );
+			h::log( $metadata );
+			
+			$array['caption'] = $metadata['image_meta']['caption'];
+			$array['credit'] = $metadata['image_meta']['credit'];
+			$array['copyright'] = $metadata['image_meta']['copyright'];
+			$array['title'] = $metadata['image_meta']['title'];
+			// $array['copyright'] = $metadata['image_meta']['copyright'];
+
+		}
+		*/
+
+		return $array;
+
+	}
+
+
 
 
     /**
@@ -433,8 +324,10 @@ class media extends \Q {
      * @since       1.0.1
      * @return      Mixed       Object || Boolean false
      */
-    public static function get_avatar( $args = array() )
+    public static function avatar( $args = array() )
     {
+
+		h::log( 't:>@todo..' );
 
         // get the_post ##
         if ( ! $the_post = self::the_post( $args ) ) { return false; }
@@ -507,13 +400,15 @@ class media extends \Q {
 
 
 
+
+
     /**
     * Get Video URL from oEmbed field in ACF
     *
     * @since		1.4.5
     * @return		String		Video URL
     */
-    public static function get_video_thumbnail_uri( $video_uri = null )
+    public static function video_thumbnail_uri( $video_uri = null )
     {
 
         $thumbnail_uri = '';
@@ -549,6 +444,8 @@ class media extends \Q {
     }
 
 
+
+	
     /**
     * Parse the video uri/url to determine the video type/source and the video id
     *
@@ -638,7 +535,7 @@ class media extends \Q {
     * @since		1.4.5
     * @return		String		Video Thumbnail Src
     */
-    public static function get_vimeo_thumbnail_uri( $clip_id = null )
+    public static function vimeo_thumbnail_uri( $clip_id = null )
     {
 
         // sanity check ##
@@ -667,7 +564,7 @@ class media extends \Q {
     * @since		1.4.5
     * @return		String		Video Thumbnail Src
     */
-    public static function get_wistia_thumbnail_uri( $video_uri = null )
+    public static function wistia_thumbnail_uri( $video_uri = null )
     {
 
         // sanity check ##

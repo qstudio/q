@@ -36,7 +36,7 @@ class args extends \q\render {
         ){
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>Missing required args, so stopping here' );
+			h::log( self::$args['task'].'~>e:>Missing required args, so stopping here' );
 			
 			// h::log( 'Kicked here...' );
 
@@ -53,7 +53,7 @@ class args extends \q\render {
         ){
 
 			// log ##
-			h::log( self::$args['process'].'~>n:>config->run defined as false for: '.$args['process'].', so stopping here.. ' );
+			h::log( self::$args['task'].'~>n:>config->run defined as false for: '.$args['task'].', so stopping here.. ' );
 
             return false;
 
@@ -111,7 +111,7 @@ class args extends \q\render {
         // ){
 
 		// 	// log ##
-		// 	h::log( self::$args['process'].'~>n:>config->run defined as false for: '.$args['process'].', so stopping here.. ' );
+		// 	h::log( self::$args['task'].'~>n:>config->run defined as false for: '.$args['task'].', so stopping here.. ' );
 
         //     return false;
 
@@ -146,16 +146,16 @@ class args extends \q\render {
 		}
 
 		// get calling method for filters ##
-		$process = core\method::backtrace([ 'level' => 2, 'return' => 'function' ]);
+		$task = core\method::backtrace([ 'level' => 2, 'return' => 'function' ]);
 
 		// define context for all in class -- i.e "group" ##
 		if ( ! isset( $args['context'] ) ) {
 			$args['context'] = 'global';
 		}
 
-		// let's set "process" to calling function, for debugging ##
-		if ( ! isset( $args['process'] ) ) {
-			$args['process'] = $process;
+		// let's set "task" to calling function, for debugging ##
+		if ( ! isset( $args['task'] ) ) {
+			$args['task'] = $task;
 		}
 
 		// h::log( $args );
@@ -181,7 +181,7 @@ class args extends \q\render {
         ){
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>Missing required args, so stopping here' );
+			h::log( self::$args['task'].'~>e:>Missing required args, so stopping here' );
 			
 			// h::log( 'Kicked here...' );
 
@@ -334,7 +334,7 @@ class args extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>Error in passed self::$args');
+			h::log( self::$args['task'].'~>e:>Error in passed self::$args');
 
             return false;
 
@@ -347,11 +347,11 @@ class args extends \q\render {
         // we also take one guess at the field name -- if it's not passed in config ##
         if ( 
             ! isset( self::$args['enable'] )
-            && ! isset( self::$fields[self::$args['process'].'_enable'] )
+            && ! isset( self::$fields[self::$args['task'].'_enable'] )
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>n:>No enable defined in $args or enable field found for Group: "'.self::$args['process'].'"');
+			h::log( self::$args['task'].'~>n:>No enable defined in $args or enable field found for Group: "'.self::$args['task'].'"');
 
             return true;
 
@@ -364,11 +364,11 @@ class args extends \q\render {
                 && 1 == self::$fields[self::$args['enable']]
             )
             || 
-            	1 == self::$fields[self::$args['process'].'_enable']
+            	1 == self::$fields[self::$args['task'].'_enable']
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>n:>Field Group: "'.self::$args['process'].'" Enabled, continue');
+			h::log( self::$args['task'].'~>n:>Field Group: "'.self::$args['task'].'" Enabled, continue');
 
             // helper::log( self::$args['enable'] .' == 1' );
 
@@ -377,7 +377,7 @@ class args extends \q\render {
         }
 
 		// log ##
-		h::log( self::$args['process'].'~>n:>Field Group: "'.self::$args['process'].'" NOT Enabled, stopping.');
+		h::log( self::$args['task'].'~>n:>Field Group: "'.self::$args['task'].'" NOT Enabled, stopping.');
 
         // helper::log( self::$args['enable'] .' != 1' );
 
@@ -395,7 +395,7 @@ class args extends \q\render {
 	 */ 
 	public static function reset(){
 
-		// h::log( 'd:>reset args for: '.self::$args['process'] );
+		// h::log( 'd:>reset args for: '.self::$args['task'] );
 
 		self::$args = [];
 

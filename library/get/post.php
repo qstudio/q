@@ -135,6 +135,7 @@ class post extends \q\get {
      *
      * @since       4.0.0
      */
+	/*
     public static function field( $args = null )
     {
 
@@ -169,6 +170,7 @@ class post extends \q\get {
 		return $value;
 
 	}
+	*/
 
 
 	
@@ -279,6 +281,8 @@ class post extends \q\get {
 
 	}
 
+
+	
 
 	/**
      * link to parent, works for single WP Post or page objects

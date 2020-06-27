@@ -28,11 +28,11 @@ class type extends render {
 
 		return $array = [
 
-			// media object -- @todo ##
-			// 'media' => h::get( 'render/type/media.php', 'return', 'path' ),
+			// media object ##
+			'media' => h::get( 'render/type/media.php', 'return', 'path' ),
 
 			// image src ##
-			'src' => h::get( 'render/type/src.php', 'return', 'path' ),
+			// 'src' => h::get( 'render/type/src.php', 'return', 'path' ),
 
 			// post fields ##
 			'post' => h::get( 'render/type/post.php', 'return', 'path' ),
@@ -66,7 +66,7 @@ class type extends render {
 		){
 
 			// log ##
-			h::log( self::$args['process'].'~>e:Error in passed $args');
+			h::log( self::$args['task'].'~>e:Error in passed $args');
 
 			return false;
 
@@ -76,7 +76,7 @@ class type extends render {
 		if ( ! $args[0] instanceof \WP_Post ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:Error in pased $args - not a WP_Post object');
+			h::log( self::$args['task'].'~>e:Error in pased $args - not a WP_Post object');
 
 			return false;
 
@@ -86,7 +86,7 @@ class type extends render {
 		if ( ! isset( $args[1] ) ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:Error in pased $args - missing type_field');
+			h::log( self::$args['task'].'~>e:Error in pased $args - missing type_field');
 
 			return false;
 
@@ -96,7 +96,7 @@ class type extends render {
 		if ( ! isset( $args[2] ) ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:Error in pased $args - missing $field');
+			h::log( self::$args['task'].'~>e:Error in pased $args - missing $field');
 
 			return false;
 
@@ -108,7 +108,7 @@ class type extends render {
 			h::log( 'Value Type not allowed: '.$function );
 
 			// log ##
-			h::log( self::$args['process'].'~>e:Value Type not allowed: "'.$function.'"');
+			h::log( self::$args['task'].'~>e:Value Type not allowed: "'.$function.'"');
 
 			return $args[0]->$args[1];
 
@@ -128,7 +128,7 @@ class type extends render {
 			// h::log( 'Found function: "'.$namespace.'::'.$method_function.'()"' );
 
 			// call it and capture response ##
-			$string = $namespace::{$method_function}( $args[0], $args[1], $args[2] );
+			$string = $namespace::{$method_function}( $args[0], $args[1], $args[2], $args[3] );
 
 			// filter post fields -- global ##
 			$string = \apply_filters( 
@@ -137,7 +137,7 @@ class type extends render {
 
 			// filter group/field -- field specific ##
 			$string = \apply_filters( 
-				'q/render/type/'.self::$args['process'].'/'.$args[1], $string
+				'q/render/type/'.self::$args['task'].'/'.$args[1], $string
 			);
 
 			// test ##

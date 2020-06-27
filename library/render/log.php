@@ -29,25 +29,25 @@ class log extends \q\render {
      */
     public static function set( Array $args = null ){
 
-        // h::log( 'e:>'.$args['process'] );
+        // h::log( 'e:>'.$args['task'] );
 
         if (
             ! isset( self::$args['config']['debug'] )
             || false === self::$args['config']['debug']
         ) {
 
-            // h::log( 'd:>Debugging is turned OFF for : "'.$args['process'].'"' );
+            // h::log( 'd:>Debugging is turned OFF for : "'.$args['task'].'"' );
 
             return false;
 
         }   
 
-		// h::log( 'd:>Debugging is turned ON for : "'.$args['process'].'"' );
+		// h::log( 'd:>Debugging is turned ON for : "'.$args['task'].'"' );
 
 		// filter in group to debug ##
 		\add_filter( 'q/core/log/debug', function( $key ) use ( $args ){ 
 			// h::log( $key );
-			$return = is_array( $key ) ? array_merge( $key, [ $args['process'] ] ) : [ $key, $args['process'] ]; 
+			$return = is_array( $key ) ? array_merge( $key, [ $args['task'] ] ) : [ $key, $args['task'] ]; 
 			// h::log( $return );
 			return 
 				$return;
@@ -58,7 +58,7 @@ class log extends \q\render {
 		return true; 
 
 		// debug the group ##
-		// return core\log::write( $args['process'] );
+		// return core\log::write( $args['task'] );
 
     }
 

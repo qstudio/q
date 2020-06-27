@@ -50,7 +50,7 @@ class src extends render\type {
 			// h::log( 'wp_get_attachment_image_src returned bad data' );
 
 			// log ##
-			h::log( self::$args['process'].'~>n:>wp_get_attachment_image_src returned bad data');
+			h::log( self::$args['task'].'~>n:>wp_get_attachment_image_src returned bad data');
 
 			return $string;
 
@@ -69,8 +69,8 @@ class src extends render\type {
 			||
 			// OR, set globally ##
 			(
-				isset( core\config::get([ 'context' => 'media', 'process' => 'src' ])['srcset'] )
-				&& true == core\config::get([ 'context' => 'media', 'process' => 'src' ])['srcset']
+				isset( core\config::get([ 'context' => 'media', 'task' => 'src' ])['srcset'] )
+				&& true == core\config::get([ 'context' => 'media', 'task' => 'src' ])['srcset']
 			)
         ) {
 
@@ -98,7 +98,7 @@ class src extends render\type {
 		// check ##
 		if ( is_null( $string ) ) {
 
-			h::log( self::$args['process'].'~>n:>String is empty.. so return null' );
+			h::log( self::$args['task'].'~>n:>String is empty.. so return null' );
 
 		}
 

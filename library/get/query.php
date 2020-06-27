@@ -101,7 +101,7 @@ class query extends \q\get {
     {
 
         // Parse incoming $args into an array and merge it with $defaults - caste to object ##
-        $args = ( object ) \wp_parse_args( $args, core\config::get(['context' => 'query', 'process' => 'get_post_by_meta' ]) );
+        $args = ( object ) \wp_parse_args( $args, core\config::get(['context' => 'query', 'task' => 'get_post_by_meta' ]) );
 
         // grab page - polylang will take care of language selection ##
         $post_args = array(

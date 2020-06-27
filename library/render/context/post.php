@@ -37,12 +37,12 @@ class post extends \q\render {
 		// h::log( $args );
 
 		// run method to populate field data ##
-		$method = $args['process'];
+		$method = $args['task'];
 		if (
 			! \method_exists( get_class(), $method ) // && exists ##
 		) {
 
-			h::log( 'd:>Cannot locate method: '.$method );
+			h::log( 'e:>Cannot locate method: '.__CLASS__.'::'.$method );
 
 		}
 
@@ -118,7 +118,7 @@ class post extends \q\render {
 			// return false;
 
 			// log ##
-			h::log( self::$args['process'].'~>n:query::posts did not return any data');
+			h::log( self::$args['task'].'~>n:query::posts did not return any data');
 
 		}
 
@@ -132,7 +132,7 @@ class post extends \q\render {
 			// h::log( 'Error in data returned from query::posts' );
 
 			// log ##
-			h::log( self::$args['process'].'~>n:Error in data returned from query::posts');
+			h::log( self::$args['task'].'~>n:Error in data returned from query::posts');
 
 		}
 		
@@ -143,7 +143,7 @@ class post extends \q\render {
 		){
 
 			// h::log( 'No results returned from the_posts' );
-			h::log( self::$args['process'].'~>n:No results returned from query::posts');
+			h::log( self::$args['task'].'~>n:No results returned from query::posts');
 
 		// we have posts, so let's add some charm ##
 		} else {

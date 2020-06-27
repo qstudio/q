@@ -50,6 +50,91 @@ class media extends \Q {
 
 
 
+	
+    public static function image_sizes_list()
+    {
+
+        global $_wp_additional_image_sizes; 
+        if( self::$debug ) h::log( $_wp_additional_image_sizes ); 
+
+	}
+	
+
+	/**
+	 * Get information about available image sizes
+	 * 
+	 * @link		https://developer.wordpress.org/reference/functions/get_intermediate_image_sizes/
+	 */
+	function image_sizes( $size = '' ) {
+
+		$wp_additional_image_sizes = \wp_get_additional_image_sizes();
+	
+		$sizes = array();
+		$get_intermediate_image_sizes = \get_intermediate_image_sizes();
+	
+		// Create the full array with sizes and crop info
+		foreach( $get_intermediate_image_sizes as $_size ) {
+			if ( in_array( $_size, array( 'thumbnail', 'medium', 'large' ) ) ) {
+				$sizes[ $_size ]['width'] = \get_site_option( $_size . '_size_w' );
+				$sizes[ $_size ]['height'] = \get_site_option( $_size . '_size_h' );
+				$sizes[ $_size ]['crop'] = (bool) \get_site_option( $_size . '_crop' );
+			} elseif ( isset( $wp_additional_image_sizes[ $_size ] ) ) {
+				$sizes[ $_size ] = array( 
+					'width' => $wp_additional_image_sizes[ $_size ]['width'],
+					'height' => $wp_additional_image_sizes[ $_size ]['height'],
+					'crop' =>  $wp_additional_image_sizes[ $_size ]['crop']
+				);
+			}
+		}
+	
+		// Get only 1 size if found
+		if ( $size ) {
+			if( isset( $sizes[ $size ] ) ) {
+				return $sizes[ $size ];
+			} else {
+				return false;
+			}
+		}
+		return $sizes;
+
+	}
+
+
+
+	/**
+     * Check if an attached file exists
+     *
+     * @since       1.6.3
+     * @return      boolean
+     */
+    public static function attachment_exists( $id = null )
+    {
+
+        // sanity ##
+        if ( is_null ( $id ) ) {
+
+            return false;
+
+        }
+
+        // get attachment path ##
+        if ( $file = \get_attached_file( $id ) ) {
+
+            if ( file_exists( $file ) ) {
+
+                return true;
+
+            }
+
+        }
+
+        // nothng cooking ##
+        return false;
+
+	}
+
+
+
     /**
      * Add image sizes for all devices - so that all device images sizes are prepared when files are uploaded
      * Note: Tablet uses desktop sized images
@@ -59,6 +144,8 @@ class media extends \Q {
      */
     public static function add_image_sizes()
     {
+
+		h::log( 't:>this is config option, so needs to move to Q Parent and allow for settings to be passed...' );
 
 		if ( $handles = self::calculate_image_sizes() ) {
 
@@ -86,7 +173,7 @@ class media extends \Q {
 
 		// core\config::get();
 		// h::log( core\config::get( 'src' ) );
-		$config = core\config::get([ 'context' => 'media', 'process' => 'src' ]);
+		$config = core\config::get([ 'context' => 'media', 'task' => 'src' ]);
 		if ( ! $config ) {
 
 			h::log( 'Error in stored src config' );

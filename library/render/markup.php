@@ -35,7 +35,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>Error with passed $args');
+			h::log( self::$args['task'].'~>e:>Error with passed $args');
 
             return false;
 
@@ -71,7 +71,7 @@ class markup extends \q\render {
 				// h::log( 'The value of: '.$key.' is not a string or integer - so we cannot render it' );
 
 				// log ##
-				h::log( self::$args['process'].'~>n:>The value of: "'.$key.'" is not a string or integer - so it will be skipped and removed from markup...');
+				h::log( self::$args['task'].'~>n:>The value of: "'.$key.'" is not a string or integer - so it will be skipped and removed from markup...');
 
                 unset( self::$fields[$key] );
 
@@ -97,9 +97,9 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>n:>"'.count( $placeholders ) .'" placeholders found in formatted string - these will be removed');
+			h::log( self::$args['task'].'~>n:>"'.count( $placeholders ) .'" placeholders found in formatted string - these will be removed');
 
-            h::log( $placeholders );
+            // h::log( $placeholders );
 
             // remove any leftover placeholders in string ##
             foreach( $placeholders as $key => $value ) {
@@ -113,7 +113,7 @@ class markup extends \q\render {
         // filter ##
         $string = core\filter::apply([ 
             'parameters'    => [ 'string' => $string ], // pass ( $string ) as single array ##
-            'filter'        => 'q/render/markup/'.self::$args['process'], // filter handle ##
+            'filter'        => 'q/render/markup/'.self::$args['task'], // filter handle ##
             'return'        => $string
         ]); 
 
@@ -151,7 +151,7 @@ class markup extends \q\render {
 			// || ! isset( $args['string'] )
 		){
 
-			h::log( self::$args['process'].'~>e:>Error in $markup' );
+			h::log( self::$args['task'].'~>e:>Error in $markup' );
 
 			return false;
 
@@ -215,7 +215,7 @@ class markup extends \q\render {
 				// $delimiter = \apply_filters( 'q/render/markup/comments/delimiter', "::" );
 				// list( $field, $markup ) = explode( $delimiter, $value[0] );
 				$field = render\method::string_between( $matches[0][$match][0], '{{#', '}}' );
-				$markup = render\method::string_between( $matches[0][$match][0], '{{# '.$field.' }}', '{{/#}}' );;
+				$markup = render\method::string_between( $matches[0][$match][0], '{{# '.$field.' }}', '{{/#}}' );
 
 				// sanity ##
 				if ( 
@@ -260,7 +260,7 @@ class markup extends \q\render {
 
 
 	/**
-	 * Scan config in markup and convert to $fields
+	 * Scan for config in markup and convert to $fields
 	 * 
 	 * @since 4.1.0
 	*/
@@ -280,7 +280,7 @@ class markup extends \q\render {
 			// || ! isset( $args['string'] )
 		){
 
-			h::log( self::$args['process'].'~>e:>Error in $markup' );
+			h::log( self::$args['task'].'~>e:>Error in $markup' );
 
 			return false;
 
@@ -293,46 +293,67 @@ class markup extends \q\render {
             ! $placeholders = self::get_placeholders( $string ) 
         ) {
 
-			h::log( self::$args['process'].'~>d:>No placeholders found in $markup');
+			// h::log( self::$args['task'].'~>d:>No placeholders found in $markup');
+			// h::log( 'd:>No placeholders found in $markup: '.self::$args['task']);
 
 			return false;
 
 		}
 
 		// log ##
-		// h::log( self::$args['process'].'~>n:>"'.count( $placeholders ) .'" placeholders found in string');
-		// h::log( self::$args['process'].'~>d:>"'.count( $placeholders ) .'" placeholders found in string');
-
-		// h::log( self::$args['process'].'~>d:>'.$placeholders );
+		// h::log( self::$args['task'].'~>d:>"'.count( $placeholders ) .'" placeholders found in string');
 
 		// remove any leftover placeholders in string ##
 		foreach( $placeholders as $key => $value ) {
 
-			// h::log( self::$args['process'].'~>d:>'.$value );
+			// h::log( self::$args['task'].'~>d:>'.$value );
 
 			// now, we need to look for the config pattern, defined as field(setting:value;) and try to handle any data found ##
-			$regex_find = \apply_filters( 'q/render/markup/config/regex/find', '/\((.*?)\)/s' );
+			// $regex_find = \apply_filters( 'q/render/markup/config/regex/find', '/[[(.*?)]]/s' );
+			
+			// if ( 
+			// 	preg_match( $regex_find, $value, $matches ) 
+			// ){
+
 			if ( 
-				preg_match( $regex_find, $value, $matches ) 
+				$config = render\method::string_between( $value, '[[ ', ' ]]' )
 			){
 
-				// h::log( $matches );
+				// h::log( $config );
 
 				// sanity ##
 				if ( 
-					! $matches
-					|| ! isset( $matches[0] ) 
-					|| ! $matches[0]
+					! $config
+					// || ! isset( $matches[0] ) 
+					// || ! $matches[0]
 				){
 
-					h::log( self::$args['process'].'~>e:>Error in returned matches array' );
+					h::log( self::$args['task'].'~>e:>No config in placeholder: '.$value );
 
 					continue;
 
 				}
 
 				// h::log( $matches[0] );
-				list( $config_setting, $config_value ) = str_replace( [ '(', ')' ], '', explode( ':', $matches[0] ) );
+				// list( $config_setting, $config_value ) = str_replace( [ '[[', ']]' ], '', explode( ':', $value ) );
+				// {{ frontpage_work_top__src[[ handle: square; ]] }}
+				$config_array = explode( ':', $config );
+
+				// we need an array, so check ##
+				if ( 
+					! $config_array
+					|| ! is_array( $config_array )
+				){
+
+					h::log( self::$args['task'].'~>e:>Failed to extract good config from placeholder: '.$value );
+
+					continue;
+
+				}
+
+				// get data and clean up ##
+				$config_setting = trim( $config_array[0] );
+				$config_value = str_replace( ';', '', trim( $config_array[1] ) );
 
 				// sanity ##
 				if ( 
@@ -340,45 +361,71 @@ class markup extends \q\render {
 					|| ! isset( $config_value ) 
 				){
 
-					h::log( 'e:>Error in returned match config or value' );
+					h::log( self::$args['task'].'~>e:>Error in extracted config from placeholder: '.$value );
 
 					continue; 
 
 				}
 
-				// clean up ##
-				$config_setting = trim($config_setting);
-				$config_value = str_replace( ';', '', trim($config_value) );
-
 				// get field ##
-				$field = str_replace( [ '{{ ', ' }}' ], '', $value );
+				$field = trim( render\method::string_between( $value, '{{ ', '[[' ) );
 
 				// check if field is sub field i.e: "post__title" ##
 				if ( false !== strpos( $field, '__' ) ) {
 
 					$field_array = explode( '__', $field );
 
-					$field = $field_array[0]; // take first part ##
+					$field_name = $field_array[0]; // take first part ##
+					$field_type = $field_array[1]; // take second part ##
+
+				} else {
+
+					$field_name = $field; // take first part ##
+					$field_type = $field; // take second part ##
+
+				}
+
+				// we need field_name, so validate ##
+				if (
+					! $field_name
+					|| ! $field_type
+				){
+
+					h::log( self::$args['task'].'~>e:>Error xtracting $field_name or $field_type from placeholder: '.$value );
+
+					continue;
 
 				}
 
 				// matches[0] contains the whole string matched - for example "(handle:square;)" ##
 				// we can use this to work out the new_placeholder value
 				$placeholder = $value;
-				$new_placeholder = explode( '(', $placeholder )[0].' }}';
+				// $new_placeholder = explode( '(', $placeholder )[0].' }}';
+				$new_placeholder = '{{ '.$field.' }}';
 
 				// test what we have ##
 				// h::log( "d:>placeholder: ".$value );
 				// h::log( "d:>new_placeholder: ".$new_placeholder);
-				// h::log( "d:>field: ".$field );
+				// h::log( "d:>field_name: ".$field_name );
+				// h::log( "d:>field_type: ".$field_type );
 				// h::log( "d:>config_setting: ".$config_setting );
 				// h::log( "d:>config_value: ".$config_value );
 
 				// @todo - add config handler... based on field type ( field[1] from explode above )##
-				self::$args['img'][$config_setting][$field] = $config_value;
+				switch ( $field_type ) {
+
+					case "src" :
+						
+						// assign new $args[FIELDNAME]['src'] with value of config --
+						// @todo, this could be an array for device types, which get/media will need to deal with ##
+						self::$args[$field_name]['config'][$config_setting] = $config_value;
+
+					break ;
+
+				}
 
 				// now, edit the placeholder, to remove the config ##
-				render\markup::edit_placeholder( $value, $new_placeholder );
+				render\markup::edit_placeholder( $placeholder, $new_placeholder );
 
 			}
 		
@@ -400,7 +447,7 @@ class markup extends \q\render {
 			|| ! isset( $args['string'] )
 		){
 
-			h::log( self::$args['process'].'~>e:>Error in passed args to "string" method' );
+			h::log( self::$args['task'].'~>e:>Error in passed args to "string" method' );
 
 			return false;
 
@@ -419,7 +466,7 @@ class markup extends \q\render {
 			// filter ##
 			$string = core\filter::apply([ 
 				'parameters'    => [ 'string' => $string ], // pass ( $string ) as single array ##
-				'filter'        => 'q/render/markup/wrap/'.self::$args['process'].'/'.$key, // filter handle ##
+				'filter'        => 'q/render/markup/wrap/'.self::$args['task'].'/'.$key, // filter handle ##
 				'return'        => $string
 			]); 
 
@@ -434,7 +481,7 @@ class markup extends \q\render {
 		// filter ##
 		$string = core\filter::apply([ 
              'parameters'    => [ 'string' => $string ], // pass ( $string ) as single array ##
-             'filter'        => 'q/render/markup/string/before/'.self::$args['process'].'/'.$key, // filter handle ##
+             'filter'        => 'q/render/markup/string/before/'.self::$args['task'].'/'.$key, // filter handle ##
              'return'        => $string
         ]); 
 
@@ -445,7 +492,7 @@ class markup extends \q\render {
 		// filter ##
 		$string = core\filter::apply([ 
              'parameters'    => [ 'string' => $string ], // pass ( $string ) as single array ##
-             'filter'        => 'q/render/markup/string/after/'.self::$args['process'].'/'.$key, // filter handle ##
+             'filter'        => 'q/render/markup/string/after/'.self::$args['task'].'/'.$key, // filter handle ##
              'return'        => $string
         ]); 
 
@@ -469,7 +516,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>n:>No field value or count iterator passed to method');
+			h::log( self::$args['task'].'~>n:>No field value or count iterator passed to method');
 
             return false;
 
@@ -482,7 +529,7 @@ class markup extends \q\render {
         if ( ! isset( self::$args[$field] ) ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>n:>Field: "'.$field.'" does not have required markup defined in $args->$field' );
+			h::log( self::$args['task'].'~>n:>Field: "'.$field.'" does not have required markup defined in $args->$field' );
 
             // bale if not found ##
             return false;
@@ -492,20 +539,6 @@ class markup extends \q\render {
         // get markup ##
         // $markup = self::$args[$field];
 
-        // helper::log( $markup );
-        /*
-        <div class="col-12">
-            <h3>
-                <a href="{{ permalink }}">
-                    {{ post_title }}
-                </a>
-            </h3>
-            <span class="badge badge-pill badge-primary">
-                {{ category_name }}
-            </span>
-        </div>
-        */
-
         // get target placeholder ##
         $placeholder = '{{ '.$field.' }}';
         if ( 
@@ -513,7 +546,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>n:>Placeholder: "'.$placeholder.'" is not in the passed markup template' );
+			h::log( self::$args['task'].'~>n:>Placeholder: "'.$placeholder.'" is not in the passed markup template' );
 
             return false;
 
@@ -528,7 +561,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>n:>No placeholders found in passed string' );
+			h::log( self::$args['task'].'~>n:>No placeholders found in passed string' );
 
             return false;
 
@@ -597,7 +630,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>No string value passed to method' );
+			h::log( self::$args['task'].'~>e:>No string value passed to method' );
 
             return false;
 
@@ -609,7 +642,7 @@ class markup extends \q\render {
         if ( ! preg_match_all( $regex_find, $string, $matches ) ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>n:>No extra placeholders found in string to clean up - good!' );
+			h::log( self::$args['task'].'~>n:>No extra placeholders found in string to clean up - good!' );
 
             return false;
 
@@ -661,7 +694,7 @@ class markup extends \q\render {
 		) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>No placeholder or new_placeholder value passed to method' );
+			h::log( self::$args['task'].'~>e:>No placeholder or new_placeholder value passed to method' );
 
             return false;
 
@@ -678,7 +711,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>Placeholder is not correctly formatted - missing {{ at start or }} at end.' );
+			h::log( self::$args['task'].'~>e:>Placeholder is not correctly formatted - missing {{ at start or }} at end.' );
 			// h::log( 'd:>Placeholder is not correctly formatted - missing {{ at start or end }}.' );
 
             return false;
@@ -715,7 +748,7 @@ class markup extends \q\render {
 		) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:Error in data passed to method' );
+			h::log( self::$args['task'].'~>e:Error in data passed to method' );
 
             return false;
 
@@ -735,7 +768,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>Placeholder: "'.$placeholder.'" is not correctly formatted - missing {{ at start or }} at end.' );
+			h::log( self::$args['task'].'~>e:>Placeholder: "'.$placeholder.'" is not correctly formatted - missing {{ at start or }} at end.' );
 
             return false;
 
@@ -759,7 +792,7 @@ class markup extends \q\render {
 		// h::log( 'd:>'.$markup );
 
 		// log ##
-		// h::log( self::$args['process'].'~>placeholder_added:>"'.$placeholder.'" @position: "'.$position.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
+		// h::log( self::$args['task'].'~>placeholder_added:>"'.$placeholder.'" @position: "'.$position.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
         return $markup;
@@ -781,7 +814,7 @@ class markup extends \q\render {
 		) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>No placeholder or markkup value passed to method' );
+			h::log( self::$args['task'].'~>e:>No placeholder or markkup value passed to method' );
 
             return false;
 
@@ -802,7 +835,7 @@ class markup extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['process'].'~>e:>Placeholder: "'.$placeholder.'" is not correctly formatted - missing "{{ " at start or " }}" at end.' );
+			h::log( self::$args['task'].'~>e:>Placeholder: "'.$placeholder.'" is not correctly formatted - missing "{{ " at start or " }}" at end.' );
 
             return false;
 
@@ -821,7 +854,7 @@ class markup extends \q\render {
 		// h::log( 'd:>'.$markup );
 
 		// log ##
-		h::log( self::$args['process'].'~>placeholder_removed:>"'.$placeholder.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
+		h::log( self::$args['task'].'~>placeholder_removed:>"'.$placeholder.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
         return $markup;

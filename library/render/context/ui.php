@@ -34,7 +34,7 @@ class ui extends \q\render {
 		}
 
 		// run method to populate field data ##
-		$method = $args['process'];
+		$method = $args['task'];
 		if (
 			! \method_exists( get_class(), $method ) // && exists ##
 		) {

@@ -183,7 +183,7 @@ class log extends \Q {
 
 			// core\helper::debug( 'is_array OR is_object or is_int' );
 			// return self::$log['log'][] = var_export( $args, true ).self::$backtrace;
-			return self::push( 'debug', var_export( $args, true ).self::$backtrace, self::$backtrace_key );
+			return self::push( 'debug', print_r( $args, true ).self::$backtrace, self::$backtrace_key );
 			
 		}
 
@@ -198,7 +198,7 @@ class log extends \Q {
 			// core\helper::debug( 'is_array OR is_object or is_int' );
 			// return self::$log['log'][] = var_export( $args, true ).self::$backtrace;
 			self::push( 'debug', 'Array or Object below from -> '.self::$backtrace, self::$backtrace_key );
-			return self::push( 'debug', var_export( $args, true ), self::$backtrace_key );
+			return self::push( 'debug', print_r( $args, true ), self::$backtrace_key );
 			
 		}
 

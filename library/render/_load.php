@@ -41,7 +41,7 @@ filters:
 
 class render extends \Q {
 
-	protected static
+	public static
 
         // passed args ##
         $args = [
@@ -95,9 +95,9 @@ class render extends \Q {
         $type = [
 			'repeater'       	=> [],
 			'post'       		=> [],
-			'src'             	=> [],
 			'category'       	=> [],
 			'taxonomy'       	=> [],
+			'src'             	=> [], // @todo... this is too specific ##
 			'media'       		=> [],
 			'author'       		=> [],
         ],
@@ -126,7 +126,8 @@ class render extends \Q {
 			'author_name',
 			
 			// image src ##
-			'src', 
+			'src', // @todo.. needs to merge into media ##
+			// 'media', 
 
 		],
 		
@@ -230,18 +231,24 @@ class render extends \Q {
 			// post objects content, title, excerpt etc ##
 			'post' => h::get( 'render/context/post.php', 'return', 'path' ),
 
-			// perhaps type css ##
-			// perhaps type js ##
-			// perhaps type font ##
+			// navigation items ##
+			'nav' => h::get( 'render/context/navigation.php', 'return', 'path' ),
 
-			// navigation features ##
-			// 'nav' => h::get( 'render/context/navigation.php', 'return', 'path' ),
+			// media items ##
+			'media' => h::get( 'render/context/media.php', 'return', 'path' ),
+
+			// taxonomies ##
+			'nav' => h::get( 'render/context/taxonomy.php', 'return', 'path' ),
 
 			// ui render methods - open, close.. etc ##
 			'ui' => h::get( 'render/context/ui.php', 'return', 'path' ),
 
 			// block renders, such as post_meta ##
 			// 'block' => h::get( 'render/context/block.php', 'return', 'path' ),
+
+			// perhaps type css ##
+			// perhaps type js ##
+			// perhaps type font ##
 
 		];
 
@@ -262,14 +269,21 @@ class render extends \Q {
 	 */
 	public static function __callStatic( $function, $args ){	
 
-		// $sdfsdf = $that;
-
 		// take first array item, unwrap array - __callStatic wraps the array in an array ##
 		if ( is_array( $args ) && isset( $args[0] ) ) { 
 			
 			// h::log('Taking the first array item..');
 			$args = $args[0];
 		
+		}
+
+		// conver string passed args ##
+		if ( is_string( $args ) ) {
+
+			$args = [
+				'markup' => $args
+			];
+
 		}
 
 		// check class__method is formatted correctly ##
@@ -314,7 +328,7 @@ class render extends \Q {
 			$args['context'] = $class;
 
 			// set global proces tracker ##
-			$args['process'] = $method;
+			$args['task'] = $method;
 
 			// call render method ##
 			// return render\ui::open( $args );

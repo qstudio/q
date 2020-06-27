@@ -24,7 +24,7 @@ class config extends \Q {
 	 */
 	public static function get( $args = null ) {
 
-		// without $context or $process, we can't get anything specific, so just run main filter ##
+		// without $context or $task, we can't get anything specific, so just run main filter ##
 		// \apply_filters( 'q/config/get/all', self::$config, isset( $args['field'] ) ?: $args['field'] );
 
 		self::$args = $args; // capture args ##
@@ -34,7 +34,7 @@ class config extends \Q {
 			is_null( $args )
 			|| ! is_array( $args )
 			|| ! isset( $args['context'] ) 
-			|| ! isset( $args['process'] )
+			|| ! isset( $args['task'] )
 		){
 
 			// get caller ##
@@ -54,7 +54,7 @@ class config extends \Q {
 		self::filter();
 
 		// define property ##
-		$property = $args['context'].'__'.$args['process'] ;
+		$property = $args['context'].'__'.$args['task'] ;
 
 		// h::log('d:>Looking for $config property: '.$property );
 		// h::log( self::$config );
@@ -93,7 +93,7 @@ class config extends \Q {
 			is_null( self::$args )
 			|| ! is_array( self::$args )
 			|| ! isset( self::$args['context'] )
-			|| ! isset( self::$args['process'] )
+			|| ! isset( self::$args['task'] )
 		){
 
 			h::log('e:>Error in passed args');
@@ -159,7 +159,8 @@ class config extends \Q {
 
 		// load config from JSON ##
 		if (
-			$array = include( $file )
+			$array = require_once( $file )
+			// $array = include( $file )
 		){
 
 			// h::log( 'd:>Loading handle: "'.$handle.'" from file: "'.$file.'"' );
