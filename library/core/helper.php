@@ -404,13 +404,13 @@ class helper extends \Q {
 
         // we have a new simpler device handler extension - check if the class is available ##
         if ( 
-			class_exists( '\q\theme\extension\device\method' ) 
+			class_exists( '\q\extension\device\method' ) 
 			&& isset( core\option::get('extension')->device )
 			&& true === core\option::get('extension')->device 
         ) {
 			
 			// self::log( 'd:>Device Extension Found..' );
-            $handle = \q\theme\extension\device\method::handle();
+            $handle = \q\extension\device\method::handle();
 
         // backup to mobile ##
         } else {
@@ -458,7 +458,7 @@ class helper extends \Q {
         }
 
         if ( 
-			! class_exists( '\q\theme\extension\consent' )
+			! class_exists( '\q\extension\consent' )
 			|| ! isset( core\option::get('extension')->consent )
 			|| true !== core\option::get('extension')->consent 
         ) {
@@ -471,7 +471,7 @@ class helper extends \Q {
         }
 
         if (
-            ! \q\theme\extension\consent\cookie::is_active( $setting ) 
+            ! \q\extension\consent\cookie::is_active( $setting ) 
         ) {
 
             // self::log( 'd:>Setting not allowed: '.$setting );

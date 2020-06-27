@@ -1,0 +1,88 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Support\n"
+"POT-Creation-Date: 2014-03-31 14:15-0000\n"
+"PO-Revision-Date: 2014-03-31 14:16-0000\n"
+"Last-Translator: Ray <ray@qstudio.us>\n"
+"Language-Team: Q Studio <team@qstudio.us>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.3\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: .\n"
+
+#: ../q-search.php:54
+msgid "Q Search"
+msgstr ""
+
+#: ../q-search.php:55
+msgid "AJAX Search Widget"
+msgstr ""
+
+#: ../q-search.php:114
+msgid "New title"
+msgstr ""
+
+#: ../q-search.php:118
+msgid "Title:"
+msgstr ""
+
+#: ../q-search.php:208 ../q-search.php:857 ../q-search.php:1057
+#: ../library/Q_Search_Core.class.php:664
+#: ../library/Q_Search_Core.class.php:864
+msgid "Search"
+msgstr ""
+
+#: ../q-search.php:209
+msgid "Search Results For"
+msgstr ""
+
+#: ../q-search.php:609 ../library/Q_Search_Core.class.php:416
+msgid "Read More"
+msgstr ""
+
+#: ../q-search.php:622 ../library/Q_Search_Core.class.php:429
+msgid "No Results found :("
+msgstr ""
+
+#: ../q-search.php:665 ../library/Q_Search_Core.class.php:472
+msgid "Back"
+msgstr ""
+
+#: ../q-search.php:780 ../library/Q_Search_Core.class.php:587
+msgid "Next"
+msgstr ""
+
+#: ../q-search.php:880 ../library/Q_Search_Core.class.php:687
+msgid "Date Range"
+msgstr ""
+
+#: ../q-search.php:886 ../library/Q_Search_Core.class.php:693
+msgid "Today"
+msgstr ""
+
+#: ../q-search.php:891 ../library/Q_Search_Core.class.php:698
+msgid "One Week"
+msgstr ""
+
+#: ../q-search.php:896 ../library/Q_Search_Core.class.php:703
+msgid "One Month"
+msgstr ""
+
+#: ../q-search.php:901 ../library/Q_Search_Core.class.php:708
+msgid "One Year"
+msgstr ""
+
+#: ../q-search.php:910 ../library/Q_Search_Core.class.php:717
+msgid "Authors"
+msgstr ""
+
+#: ../q-search.php:1060 ../library/Q_Search_Core.class.php:867
+msgid "Clear"
+msgstr ""

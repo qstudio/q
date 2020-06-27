@@ -176,7 +176,7 @@ class media extends \Q {
 			)
 		) {
 
-			h::log( 'd:>Adding media meta' );
+			// h::log( 'd:>Adding media meta' );
 
 			// add caption values ##
 			$array = array_merge( 
@@ -201,7 +201,7 @@ class media extends \Q {
 			)
         ) {
 
-			h::log( 'd:>Adding srcset' );
+			// h::log( 'd:>Adding srcset' );
 
 			// add srcset values ##
 			$array = array_merge( 
@@ -214,7 +214,7 @@ class media extends \Q {
         // image found ? ##
 		// if ( ! $array['src'] ) { return false; }
 		
-		h::log( $array );
+		// h::log( $array );
 
         // kick back array ##
         return $array;
