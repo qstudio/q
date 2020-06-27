@@ -160,7 +160,7 @@ class option extends \Q {
 			}
 			
 			// find location ##
-			if ( false !== strpos( $file, 'child' ) ) { $location = 'Child'; }
+			if ( false === strpos( $file, 'q-parent' ) ) { $location = 'Child'; }
 
             // h::log( 'd:>Adding library: '.$handle.' with file: '.$file.' as type: '.$type_ext );
 
