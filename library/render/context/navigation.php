@@ -17,47 +17,55 @@ class navigation extends \q\render {
 
 	public static function run( $args = null ){
 
-		// validate passed args ##
-        if ( ! render\args::validate( $args ) ) {
+		// run method to populate field data ##
+		$method = $args['task'];
+		$extension = render\extension::get( $args['context'], $args['task'] );
 
-            render\log::set( $args );
+		if (
+			! \method_exists( get_class(), $method ) // && exists ##
+			&& ! $extension // look for extensions ##
+		) {
+
+			h::log( 'e:>Cannot locate method: '.__CLASS__.'::'.$method );
+
+			render\log::set( $args );
 
             return false;
 
 		}
 
-		// build $args['fields'] -- @todo -- this can be moved to a pre-function call ##
-		// self::$args['fields'] = [];
+        // validate passed args ##
+        if ( ! render\args::validate( $args ) ) {
 
-		// h::log( 'd:>markup: '.$args['markup'] );
-		// h::log( 'd:>field: '.$args['field'] );
+			render\log::set( $args );
+			
+			// h::log( 'd:>Bunked here..' );
 
-		// build fields array with default values ##
-		// render\method::set_fields([
-		// 	$args['field'] => get\post::field( $args )
-		// ]);
+            return false;
 
-		// empty ##
-		// $array = [];
+		}
 
-		// field ##
-		// $array['field'] = $args['field'];
+		// base class ##
+		if ( 
+			\method_exists( get_class(), $method ) 
+		){
 
-        // grab classes ##
-		// $array['value'] = get\post::field( $args );
+			// 	h::log( 'load base method: '.$extension['class'].'::'.$extension['method'] );
 
-		// @todo -- pass field by render/format ##
-		// h::log( 't:>pass field by render/format' );
-		// $array['value'] =  render\format::field( $field, $value );
+			// call render method ##
+			self::{ $method }( self::$args );
 
-		// h::log( $array );
+		// extended class ##
+		} elseif (
+			$extension
+		){
 
-        // return ##
-		// return ui\method::prepare( $args, $array );
+			// 	h::log( 'load extended method: '.$extension['class'].'::'.$extension['method'] );
 
-		// filter field data ##
-		// self::$fields = \apply_filters( 'q/render/field/'.$args['field'], self::$fields, self::$args );
+			// h::log( 'd:>render extension..' );
+			$extension['class']::{ $extension['method'] }( self::$args );
 
+		}
 		// h::log( self::$fields );
 
 		// check each field data and apply numerous filters ##
@@ -71,7 +79,7 @@ class navigation extends \q\render {
 		// h::log( 'd:>markup: '.$args['markup'] );
 
         // optional logging to show removals and stats ##
-        // render\log::set( $args );
+        render\log::set( $args );
 
         // return or echo ##
         return render\output::return();

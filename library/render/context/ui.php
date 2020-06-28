@@ -24,13 +24,18 @@ class ui extends \q\render {
 
 		// run method to populate field data ##
 		$method = $args['task'];
+		$extension = render\extension::get( $args['context'], $args['task'] );
+
 		if (
 			! \method_exists( get_class(), $method ) // && exists ##
+			&& ! $extension // look for extensions ##
 		) {
 
-			h::log( 'd:>Cannot locate method: '.$method );
+			render\log::set( $args );
 
-			return false;
+			h::log( 'e:>Cannot locate method: '.__CLASS__.'::'.$method );
+
+            return false;
 
 		}
 
@@ -39,14 +44,33 @@ class ui extends \q\render {
 
 			render\log::set( $args );
 			
-			h::log( 'd:>Bunked here..' );
+			// h::log( 'd:>Bunked here..' );
 
             return false;
 
 		}
 
-		// call render method ##
-		self::{ $method }( self::$args );
+		// base class ##
+		if ( 
+			\method_exists( get_class(), $method ) 
+		){
+
+			// 	h::log( 'load base method: '.$extension['class'].'::'.$extension['method'] );
+
+			// call render method ##
+			self::{ $method }( self::$args );
+
+		// extended class ##
+		} elseif (
+			$extension
+		){
+
+			// 	h::log( 'load extended method: '.$extension['class'].'::'.$extension['method'] );
+
+			// h::log( 'd:>render extension..' );
+			$extension['class']::{ $extension['method'] }( self::$args );
+
+		}
 		// h::log( self::$fields );
 
 		// Now we can loop over each field ---

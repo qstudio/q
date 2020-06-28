@@ -17,25 +17,80 @@ class field extends \q\render {
 
 	public static function run( $args = null ){
 
-		// validate passed args ##
-        if ( ! render\args::validate( $args ) ) {
+		// run method to populate field data ##
+		// $method = $args['task'];
+		
+		// build $args['field'] ##
+		$args['field'] = $args['task'];
 
-            render\log::set( $args );
+		// check for extensions ##
+		$extension = render\extension::get( $args['context'], $args['task'] );
+
+		if (
+			! \method_exists( get_class(), 'get' ) // base method is get\meta ##
+			&& ! $extension // look for extensions ##
+		) {
+
+			render\log::set( $args );
+
+			h::log( 'e:>Cannot locate method: '.__CLASS__.'::'.$args['task'] );
 
             return false;
 
 		}
 
-		// build $args['field'] -- 
-		$args['field'] = $args['task'];
+        // validate passed args ##
+        if ( ! render\args::validate( $args ) ) {
 
-		// h::log( 'd:>markup: '.$args['markup'] );
-		// h::log( 'd:>field: '.$args['field'] );
+			render\log::set( $args );
+			
+			// h::log( 'd:>Bunked here..' );
 
-		// build fields array with default values ##
-		render\fields::define([
-			$args['task'] => get\meta::field( $args )
-		]);
+            return false;
+
+		}
+
+		// base class ##
+		if ( 
+			\method_exists( get_class(), 'get' ) 
+		){
+
+			// 	h::log( 'load base method: '.$extension['class'].'::'.$extension['method'] );
+
+			// call render method ##
+			self::get( self::$args );
+
+		// extended class ##
+		} elseif (
+			$extension
+		){
+
+			// 	h::log( 'load extended method: '.$extension['class'].'::'.$extension['method'] );
+
+			// h::log( 'd:>render extension..' );
+			$extension['class']::{ $extension['method'] }( self::$args );
+
+		}
+
+
+        // if ( ! render\args::validate( $args ) ) {
+
+        //     render\log::set( $args );
+
+        //     return false;
+
+		// }
+
+		// // build $args['field'] -- 
+		// $args['field'] = $args['task'];
+
+		// // h::log( 'd:>markup: '.$args['markup'] );
+		// // h::log( 'd:>field: '.$args['field'] );
+
+		// // build fields array with default values ##
+		// render\fields::define([
+		// 	$args['task'] => get\meta::field( $args )
+		// ]);
 
 		// h::log( self::$fields );
 
@@ -55,6 +110,28 @@ class field extends \q\render {
         // return or echo ##
         return render\output::return();
 
-    }
+	}
+	
+
+	// ---------- methods ##
+
+
+	/**
+     * Get field data via meta handler
+     *
+     * @param       Array       $args
+     * @since       1.3.0
+	 * @uses		define
+     * @return      Array
+     */
+    public static function get( $args = null ) {
+
+		// get title - returns array with key 'title' ##
+		render\fields::define([
+			$args['task'] => get\meta::field( $args )
+		]);
+
+	}
+	
 
 }

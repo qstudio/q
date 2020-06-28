@@ -20,13 +20,18 @@ class taxonomy extends \q\render {
 
 		// run method to populate field data ##
 		$method = $args['task'];
+		$extension = render\extension::get( $args['context'], $args['task'] );
+
 		if (
 			! \method_exists( get_class(), $method ) // && exists ##
+			&& ! $extension // look for extensions ##
 		) {
 
-			h::log( 'd:>Cannot locate method: '.__CLASS__.'::'.$method );
+			render\log::set( $args );
 
-			return false;
+			h::log( 'e:>Cannot locate method: '.__CLASS__.'::'.$method );
+
+            return false;
 
 		}
 
@@ -41,11 +46,27 @@ class taxonomy extends \q\render {
 
 		}
 
-		// h::log( $args );
+		// base class ##
+		if ( 
+			\method_exists( get_class(), $method ) 
+		){
 
-		// call render method ##
-		self::{ $method }( self::$args );
-		// h::log( 'method: '.$method );
+			// 	h::log( 'load base method: '.$extension['class'].'::'.$extension['method'] );
+
+			// call render method ##
+			self::{ $method }( self::$args );
+
+		// extended class ##
+		} elseif (
+			$extension
+		){
+
+			// 	h::log( 'load extended method: '.$extension['class'].'::'.$extension['method'] );
+
+			// h::log( 'd:>render extension..' );
+			$extension['class']::{ $extension['method'] }( self::$args );
+
+		}
 		// h::log( self::$fields );
 
 		// Now we can loop over each field ---

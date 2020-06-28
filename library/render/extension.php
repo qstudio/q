@@ -83,7 +83,7 @@ class extension extends \q\render {
 		// h::log( self::$extensions );
 
 		// check ##
-		$found = false;
+		// $found = false;
 
 		foreach( self::$extensions as $k => $v ){
 

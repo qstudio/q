@@ -210,7 +210,7 @@ class render extends \Q {
 			'callback' => h::get( 'render/callback.php', 'return', 'path' ),
 
 			// get field data ##
-			'get' => h::get( 'render/get.php', 'return', 'path' ), 
+			// 'get' => h::get( 'render/get.php', 'return', 'path' ), 
 
 			// prepare and manipulate field data ##
 			'fields' => h::get( 'render/fields.php', 'return', 'path' ), 
