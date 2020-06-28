@@ -26,9 +26,24 @@ class extension extends \q\render {
 
 	public static function register( $args = null ){
 
+		// test ##
 		// h::log( $args );
 
-		// @todo -- lots of logic ###
+		// sanity ###
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+			|| ! isset( $args['context'] )
+			|| ! isset( $args['class'] )
+			|| ! isset( $args['methods'] )
+			|| ! is_array( $args['methods'] )
+		){
+
+			h::log( 'e:>Error in passed params' );
+
+			return false;
+
+		}
 
 		// store ##
 		self::set( $args );
@@ -39,31 +54,53 @@ class extension extends \q\render {
 	
     public static function set( $args = null ) {
 
-		// @todo -- sanity ##
+		// sanity ###
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+			|| ! isset( $args['context'] )
+			|| ! isset( $args['class'] )
+			|| ! isset( $args['methods'] )
+			|| ! is_array( $args['methods'] )
+		){
+
+			h::log( 'e:>Error in passed params' );
+
+			return false;
+
+		}
 
 		// we only want to get "public" methods -- in this case, listed without __FUNCTION at start ##
 		$methods = [];
 		foreach( $args['methods'] as $method ){
+
 			// h::log( 'd:>checking method: '.$method );
-			if ( false !== strpos( $method, '__' ) ){ continue; } // skip __METHOD ##
+			
+			// skip quasi-private __METHODS ##
+			if ( false !== strpos( $method, '__' ) ){ continue; } 
+			
+			// grab method ##
 			$methods[] = $method;
+
 		};
 
-		// $array = [
-		// 	'context' 	=> $args['context'],
-		// 	'class' 	=> $args['class'],
-		// 	'methods' 	=> $methods
-		// ];
+		// if methods is empty, don't store class ##
+		if ( 
+			! is_array( $methods )
+			|| empty( $methods )
+		){
 
-		// h::log( $array );
+			h::log( 'e:>Error in gathered methods' );
 
-		self::$extensions[$args['class']] = [
+			return false;
+
+		}
+
+		return self::$extensions[ $args['class'] ] = [
 			'context' 	=> $args['context'],
 			'class' 	=> $args['class'],
 			'methods' 	=> $methods
 		];
-
-		// h::log( 'set: '.$args['class'] );
 
 	}
 
@@ -74,16 +111,32 @@ class extension extends \q\render {
 	 */
 	public static function get( $context = null, $task = null ) {
 
-		// @todo -- sanity ##
+		// sanity ###
+		if (
+			is_null( $context )
+			|| is_null( $task )
+		){
+
+			h::log( 'e:>Error in passed params' );
+
+			return false;
+
+		}
 
 		// check ##
 		// h::log( 'd:>Looking for extension: '.$context );
-
-		// is_array ##
 		// h::log( self::$extensions );
 
-		// check ##
-		// $found = false;
+		// is_array ##
+		if (
+			! is_array( self::$extensions )
+		){
+
+			h::log( 'e:>Error in stored $extensions' );
+
+			return false;
+
+		}
 
 		foreach( self::$extensions as $k => $v ){
 
@@ -93,8 +146,7 @@ class extension extends \q\render {
 			if ( $v['context'] == $context ){
 
 				// now check if we have a matching method ##
-				// if ( in_array( $task, $v['methods'] ) ) {
-				if (false !== $key = array_search( $task, $v['methods'] ) ) {
+				if ( false !== $key = array_search( $task, $v['methods'] ) ) {
 
 					// h::log( 'found context: '.$v['class'] );
 

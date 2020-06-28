@@ -210,13 +210,29 @@ class fields extends \q\render {
 		// sanity ##
 		if(
 			is_null( $field )
-			|| ! isset( self::$args['fields'] )
+			// || ! isset( self::$args['fields'] )
+		){
+
+			// get caller ##
+			$backtrace = core\method::backtrace([ 'level' => 8, 'return' => 'class_function' ]);
+
+			h::log( 'd:>'.$backtrace.' -> No $field passed' );
+
+			return false;
+
+		}
+
+
+		// sanity ##
+		if(
+			// is_null( $field )
+			! isset( self::$args['fields'] )
 		){
 
 			// get caller ##
 			$backtrace = core\method::backtrace([ 'level' => 7, 'return' => 'class_function' ]);
 
-			h::log( 'd:>'.$backtrace.' -> No $field passed to method or args->fields empty' );
+			h::log( 'd:>'.$backtrace.' -> $args->fields empty' );
 
 			return false;
 
