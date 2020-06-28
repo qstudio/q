@@ -70,7 +70,7 @@ class media extends \Q {
 		// if ( ! $array['src'] ) { return false; }
 		
 		// test ##
-		h::log( $array );
+		// h::log( $array );
 
         // kick back array ##
         return $array;

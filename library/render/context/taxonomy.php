@@ -18,6 +18,18 @@ class taxonomy extends \q\render {
 
 	public static function run( $args = null ){
 
+		// run method to populate field data ##
+		$method = $args['task'];
+		if (
+			! \method_exists( get_class(), $method ) // && exists ##
+		) {
+
+			h::log( 'd:>Cannot locate method: '.__CLASS__.'::'.$method );
+
+			return false;
+
+		}
+
         // validate passed args ##
         if ( ! render\args::validate( $args ) ) {
 
@@ -30,16 +42,6 @@ class taxonomy extends \q\render {
 		}
 
 		// h::log( $args );
-
-		// run method to populate field data ##
-		$method = $args['task'];
-		if (
-			! \method_exists( get_class(), $method ) // && exists ##
-		) {
-
-			h::log( 'd:>Cannot locate method: '.__CLASS__.'::'.$method );
-
-		}
 
 		// call render method ##
 		self::{ $method }( self::$args );

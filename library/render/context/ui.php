@@ -22,17 +22,6 @@ class ui extends \q\render {
 
 	public static function run( $args = null ){
 
-        // validate passed args ##
-        if ( ! render\args::validate( $args ) ) {
-
-			render\log::set( $args );
-			
-			h::log( 'd:>Bunked here..' );
-
-            return false;
-
-		}
-
 		// run method to populate field data ##
 		$method = $args['task'];
 		if (
@@ -42,6 +31,17 @@ class ui extends \q\render {
 			h::log( 'd:>Cannot locate method: '.$method );
 
 			return false;
+
+		}
+
+        // validate passed args ##
+        if ( ! render\args::validate( $args ) ) {
+
+			render\log::set( $args );
+			
+			h::log( 'd:>Bunked here..' );
+
+            return false;
 
 		}
 

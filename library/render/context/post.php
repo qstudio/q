@@ -23,6 +23,21 @@ class post extends \q\render {
 
 	public static function run( $args = null ){
 
+		// run method to populate field data ##
+		$method = $args['task'];
+
+		if (
+			// ! \method_exists( get_class(), $method ) // && exists ##
+			! \method_exists( __CLASS__, $method ) // && exists ##
+			&& ! render\extension::get( $args['context'], $args['task'] ) // look for extensions ##
+		) {
+
+			h::log( 'e:>Cannot locate method: '.__CLASS__.'::'.$method );
+
+            return false;
+
+		}
+
         // validate passed args ##
         if ( ! render\args::validate( $args ) ) {
 
@@ -34,20 +49,25 @@ class post extends \q\render {
 
 		}
 
-		// h::log( $args );
+		// h::log( __NAMESPACE__ );
 
-		// run method to populate field data ##
-		$method = $args['task'];
-		if (
-			! \method_exists( get_class(), $method ) // && exists ##
-		) {
+		if ( 
+			\method_exists( __NAMESPACE__, $method ) 
+		){
 
-			h::log( 'e:>Cannot locate method: '.__CLASS__.'::'.$method );
+			// 	h::log( 'extended method found: '.$method );
+
+			// call render method ##
+			self::{ $method }( self::$args );
+
+		} elseif (
+			$extension = render\extension::get( $args['context'], $args['task'] )
+		){
+
+			// h::log( 'd:>render extension..' );
+			$extension['class']::{ $extension['method'] }( self::$args );
 
 		}
-
-		// call render method ##
-		self::{ $method }( self::$args );
 		// h::log( 'method: '.$method );
 		// h::log( self::$fields );
 

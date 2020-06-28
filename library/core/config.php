@@ -63,7 +63,7 @@ class config extends \Q {
 			! isset( self::$config[ $property ] ) 
 		){
 	
-			h::log( 'd:>config not available : "'.$property.'"' );
+			// h::log( 'd:>config not available : "'.$property.'"' );
 
 			// continue;
 

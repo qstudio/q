@@ -213,7 +213,10 @@ class fields extends \q\render {
 			|| ! isset( self::$args['fields'] )
 		){
 
-			h::log( 'd:>No $field passed to method or args->fields empty' );
+			// get caller ##
+			$backtrace = core\method::backtrace([ 'level' => 7, 'return' => 'class_function' ]);
+
+			h::log( 'd:>'.$backtrace.' -> No $field passed to method or args->fields empty' );
 
 			return false;
 

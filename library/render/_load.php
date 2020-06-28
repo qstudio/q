@@ -163,7 +163,10 @@ class render extends \Q {
         $output = null, // return string ##
         $fields = null, // field names and values ##
         $markup = null, // store local version of passed markup ##
-        $acf_fields = null // fields grabbed by acf function ##
+		$acf_fields = null, // fields grabbed by acf function ##
+		
+		// allow apps to extend render methods ##
+		$extensions = []
 
 	;
 	
@@ -174,7 +177,11 @@ class render extends \Q {
 	*/
 	public static function run(){
 
+		// load libraries ##
 		core\load::libraries( self::load() );
+
+		// allow for class extensions ##
+		// \do_action( 'q/render/register', [ get_class(), 'register' ] );
 
 	}
 
@@ -194,6 +201,9 @@ class render extends \Q {
 			
 			// validate and assign args ##
 			'args' => h::get( 'render/args.php', 'return', 'path' ),
+
+			// class extensions ##
+			'extend' => h::get( 'render/extension.php', 'return', 'path' ),
 
 			// check callbacks on defined fields ## 
 			// @todo - allow to be passed from calling method ['callback' => 'srcset' ] etc ##
@@ -256,6 +266,20 @@ class render extends \Q {
 	
 
 
+	// public static function register( $args = null ){
+
+	// 	h::log( $args );
+
+	// 	// @todo -- lots of logic ###
+
+	// 	// store ##
+	// 	render\extension::store( $args );
+	// 	// self::$extensions = $args[]
+
+	// }
+
+
+
 	/** 
 	 * bounce to function getter ##
 	 * function name can be any of the following patterns:
@@ -265,6 +289,10 @@ class render extends \Q {
 	 * field__  single post meta field ( can be any type, such as repeater )
 	 * partial__  snippets, code, blocks, collections like post_meta
 	 * post__  content, title, excerpt etc..
+	 * media__
+	 * navigation__ @todo
+	 * taxonomy__
+	 * ui__
 	 * type__  ?? needed ??
 	 */
 	public static function __callStatic( $function, $args ){	
@@ -320,6 +348,7 @@ class render extends \Q {
 
 		if (
 			class_exists( $namespace ) // && exists ##
+			// && method_exists( $namespace, $method ) // && exists ##
 		) {
 
 			// h::log( 'd:>class: '.$class.' available' );
@@ -337,7 +366,7 @@ class render extends \Q {
 		}
 
 		// @todo -- check what is going on when this log shows.. ##
-		h::log( 'e:>No matching method found for: '.$class.'::'.$method );
+		h::log( 'e:>No matching render context for: '.$class );
 
 		// kick back nada - as this renders on the UI ##
 		return false;
