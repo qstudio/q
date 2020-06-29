@@ -145,8 +145,6 @@ class media extends \Q {
     public static function add_image_sizes()
     {
 
-		h::log( 't:>this is config option, so needs to move to Q Parent and allow for settings to be passed...' );
-
 		if ( $handles = self::calculate_image_sizes() ) {
 
 			foreach( $handles as $handle ) {
@@ -176,7 +174,17 @@ class media extends \Q {
 		$config = core\config::get([ 'context' => 'media', 'task' => 'src' ]);
 		if ( ! $config ) {
 
-			h::log( 'Error in stored src config' );
+			h::log( 'e:>Error in stored src config' );
+
+			return false;
+
+		}
+
+		if ( 
+			false === $config['generate'] 
+		) {
+
+			h::log( 'd:>Image size generation disabled' );
 
 			return false;
 

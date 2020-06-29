@@ -44,7 +44,7 @@ class meta extends \q\get {
 
 			// h::log( 't:>we need to pass this thru filters - but return expects an array ##
 
-			h::log( $value );
+			// h::log( $value );
 
 			return $value;
 

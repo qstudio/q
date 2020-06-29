@@ -14,7 +14,7 @@ class placeholder extends \q\render {
      * Get all placeholders from passed string value 
      *  
      */
-    public static function get_all( string $string = null ) {
+    public static function get( string $string = null ) {
         
         // sanity ##
         if (
@@ -55,7 +55,7 @@ class placeholder extends \q\render {
      * @todo - work on passed params 
      *  
      */
-    public static function get( string $placeholder = null, $field = null ) {
+    public static function exists( string $placeholder = null, $field = null ) {
 		
 		// if $markup template passed, check there, else check self::$markup ##
 		$markup = is_null( $field ) ? self::$markup['template'] : self::$markup[$field] ;
