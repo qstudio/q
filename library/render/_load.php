@@ -236,6 +236,9 @@ class render extends \Q {
 			// prepare defined markup, search for and replace placeholders 
 			'markup' => h::get( 'render/markup.php', 'return', 'path' ),
 
+			// manage placeholders in markup object ## 
+			'placeholder' => h::get( 'render/placeholder.php', 'return', 'path' ),
+
 			// output string ##
 			'output' => h::get( 'render/output.php', 'return', 'path' ),
 
@@ -243,6 +246,10 @@ class render extends \Q {
 			'log' => h::get( 'render/log.php', 'return', 'path' ),
 
 			// context classes ##
+			'context' => h::get( 'render/context/_load.php', 'return', 'path' ),
+
+			// context classes ##
+			/*
 
 			// acf field handler ##
 			'field' => h::get( 'render/context/field.php', 'return', 'path' ), 
@@ -271,6 +278,7 @@ class render extends \Q {
 			// perhaps type css ##
 			// perhaps type js ##
 			// perhaps type font ##
+			*/
 
 		];
 

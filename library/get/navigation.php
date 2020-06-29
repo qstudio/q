@@ -60,7 +60,7 @@ class navigation extends \q\get {
 		}
 
 		// get config setting ##
-		$config = core\config::get([ 'context' => 'ui', 'task' => 'pagination' ]);
+		$config = core\config::get([ 'context' => 'navigation', 'task' => 'pagination' ]);
 		// h::log( $config );
 
         // work out total ##

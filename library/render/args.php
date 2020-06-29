@@ -38,7 +38,7 @@ class args extends \q\render {
 			// log ##
 			h::log( self::$args['task'].'~>e:>Missing required args, so stopping here' );
 			
-			h::log( 'd:>Kicked here...' );
+			// h::log( 'd:>Kicked here...' );
 
             return false;
 
@@ -54,7 +54,7 @@ class args extends \q\render {
 
 			// log ##
 			h::log( self::$args['task'].'~>n:>config->run defined as false for: '.$args['task'].', so stopping here.. ' );
-			h::log( 'd:>config run defined as false... so stop' );
+			// h::log( 'd:>config run defined as false... so stop' );
 
             return false;
 
