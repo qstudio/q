@@ -15,55 +15,55 @@ use q\theme;
 class post extends \q\render {
 
 	/** MAGIC */
-	public static function __callStatic( $function, $args ) {
+	// public static function __callStatic( $function, $args ) {
 
-        return self::run( $args ); 
+    //     return self::run( $args ); 
 	
-	}
+	// }
 
 	public static function run( $args = null ){
 
 		// run method to populate field data ##
-		$method = $args['task'];
-		$extension = render\extension::get( $args['context'], $args['task'] );
+		// $args['task'] = $args['task'];
+		// $extension = render\extension::get( $args['context'], $args['task'] );
 
-		if (
-			! \method_exists( get_class(), $method ) // && exists ##
-			&& ! $extension // look for extensions ##
-		) {
+		// if (
+		// 	! \method_exists( get_class(), $args['task'] ) // && exists ##
+		// 	&& ! render\extension::get( $args['context'], $args['task'] ) // look for extensions ##
+		// ) {
 
-			render\log::set( $args );
+		// 	render\log::set( $args );
 
-			h::log( 'e:>Cannot locate method: '.__CLASS__.'::'.$method );
+		// 	h::log( 'e:>Cannot locate method: '.__CLASS__.'::'.$args['task'] );
 
-            return false;
+        //     return false;
 
-		}
+		// }
 
-        // validate passed args ##
-        if ( ! render\args::validate( $args ) ) {
+        // // validate passed args ##
+        // if ( ! render\args::validate( $args ) ) {
 
-			render\log::set( $args );
+		// 	render\log::set( $args );
 			
-			// h::log( 'd:>Bunked here..' );
+		// 	// h::log( 'd:>Bunked here..' );
 
-            return false;
+        //     return false;
 
-		}
+		// }
 
 		// base class ##
 		if ( 
-			\method_exists( get_class(), $method ) 
+			\method_exists( get_class(), $args['task'] ) 
 		){
 
 			// 	h::log( 'load base method: '.$extension['class'].'::'.$extension['method'] );
 
 			// call render method ##
-			self::{ $method }( self::$args );
+			self::{ $args['task'] }( self::$args );
 
 		// extended class ##
 		} elseif (
-			$extension
+			$extension = render\extension::get( $args['context'], $args['task'] )
 		){
 
 			// 	h::log( 'load extended method: '.$extension['class'].'::'.$extension['method'] );
@@ -72,25 +72,25 @@ class post extends \q\render {
 			$extension['class']::{ $extension['method'] }( self::$args );
 
 		}
-		// h::log( 'method: '.$method );
+		// h::log( 'method: '.$args['task'] );
 		// h::log( self::$fields );
 
 		// Now we can loop over each field ---
 		// running callbacks ##
 		// formatting none string types to strings ##
 		// removing placeholders in markup, if no field data found etc ##
-		render\fields::prepare();
+		// render\fields::prepare();
 		
-		// h::log( self::$fields );
+		// // h::log( self::$fields );
 
-        // Prepare template markup ##
-        render\markup::prepare();
+        // // Prepare template markup ##
+        // render\markup::prepare();
 
-        // optional logging to show removals and stats ##
-        render\log::set( $args );
+        // // optional logging to show removals and stats ##
+        // render\log::set( $args );
 
-        // return or echo ##
-        return render\output::return();
+        // // return or echo ##
+        // return render\output::return();
 
 	}
 	

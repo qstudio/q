@@ -11,7 +11,7 @@ class callback extends \q\render {
 
     /**
      * Run defined callbacks on specific field ##
-     * Retur alters the static class property $args
+     * Return alters the static class property $args
      * 
      */
     public static function field( String $field = null, $value = null ){

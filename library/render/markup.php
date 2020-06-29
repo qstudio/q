@@ -9,16 +9,6 @@ use q\render;
 
 class markup extends \q\render {
 
-	public static function pre_format(){
-
-		// pre-format markup to extract sections ##
-		render\markup::section();
-
-		// search for config settings in markup, such as "src" handle ##
-		render\markup::config();
-
-	}
-
 
     /**
      * Apply Markup changes to passed template
@@ -31,7 +21,9 @@ class markup extends \q\render {
         if (
             ! isset( self::$fields )
             || ! is_array( self::$fields )
-            || ! isset( self::$markup )
+			|| ! isset( self::$markup )
+			|| ! is_array( self::$markup )
+			|| ! isset( self::$markup['template'] ) // default markup property ##
         ) {
 
 			// log ##
@@ -49,7 +41,7 @@ class markup extends \q\render {
 		// self::comments();
 
         // new string to hold output ## 
-		$string = self::$markup;
+		$string = self::$markup['template'];
 		
         // loop over each field, replacing placeholders with values ##
         foreach( self::$fields as $key => $value ) {
@@ -81,7 +73,7 @@ class markup extends \q\render {
 
 			// h::log( 'working key: '.$key.' with value: '.$value );
 			
-			// markup string, with filter and wrapprer lookup ##
+			// markup string, with filter and wrapper lookup ##
 			$string = self::string([ 'key' => $key, 'value' => $value, 'string' => $string ]);
 
             // template replacement ##
@@ -93,7 +85,7 @@ class markup extends \q\render {
 
         // check for any left over placeholders - remove them ##
         if ( 
-            $placeholders = self::get_placeholders( $string ) 
+            $placeholders = render\markup::get_placeholders( $string ) 
         ) {
 
 			// log ##
@@ -104,7 +96,7 @@ class markup extends \q\render {
             // remove any leftover placeholders in string ##
             foreach( $placeholders as $key => $value ) {
             
-                $string = self::remove_placeholder( $value, $string );
+                $string = render\markup::remove_placeholder( $value, $string );
             
             }
 
@@ -121,10 +113,72 @@ class markup extends \q\render {
         // h::log( 'd:>'.$string );
 
         // apply to class property ##
-        self::$output = $string;
+        return self::$output = $string;
 
         // return ##
         return true;
+
+	}
+
+
+
+	/**
+	 * filter passed args for markup
+	 * 
+	 * @since 4.1.0
+	*/
+	public static function args( $args = null ){
+
+		// sanity ##
+		
+        // test ##
+		// h::log( $args );
+		
+		// default -- almost useless - but works for single values.. ##
+		$markup = tag::wrap([ 'open' => 'vo', 'value' => 'value', 'close' => 'vc' ]);
+		// $markup = '<div>{{ value }}</div>';
+
+		// if "markup" set in args, take this ##
+		if ( isset( $args['markup'] ) ){
+
+			$markup = $args['markup'];
+
+		}
+
+		// args is a string - take the whole thing ##
+		if ( is_string( $args ) ){
+
+			$markup = $args;
+
+		}
+
+		// // if no markup sent, but args is an array.. ##
+		// if ( 
+		// 	! isset( $args['markup'] )
+		// 	&& is_array( $args ) 
+		// ) {
+
+		// 	// default -- almost useless - but works for single values.. ##
+		// 	$args['markup'] = '<div>{{ value }}</div>';
+
+		// 	foreach( $args as $k => $v ) {
+
+		// 		if ( is_string( $v ) ) {
+
+		// 			// take first string value in $args markup ##
+		// 			$args['markup'] = $v;
+
+		// 			break;
+
+		// 		}
+
+		// 	}
+
+		// }
+
+        // assign markup ##
+		self::$markup = []; // make an array ##
+		self::$markup['template'] = $markup;
 
 	}
 	
@@ -139,16 +193,16 @@ class markup extends \q\render {
 
 		// h::log( $args['key'] );
 
+		// sanity -- this requires ##
+
+
 		// get markup ##
-		$string = self::$markup;
+		$string = self::$markup['template'];
 
 		// sanity ##
 		if (  
 			! $string
 			|| is_null( $string )
-			// || ! isset( $args['key'] )
-			// || ! isset( $args['value'] )
-			// || ! isset( $args['string'] )
 		){
 
 			h::log( self::$args['task'].'~>e:>Error in $markup' );
@@ -171,7 +225,7 @@ class markup extends \q\render {
 			// strip all comment blocks, we don't need them now ##
 			// $regex_remove = \apply_filters( 'q/render/markup/comment/regex/remove', "/<!--.*?-->/ms" );
 			$regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );
-			self::$markup = preg_replace( $regex_remove, "", self::$markup ); // @todo -- re-add remove ##
+			self::$markup['template'] = preg_replace( $regex_remove, "", self::$markup['template'] ); 
 		
 			// preg_match_all( '/%[^%]*%/', $string, $matches, PREG_SET_ORDER );
 			// h::debug( $matches );
@@ -238,21 +292,15 @@ class markup extends \q\render {
 				// h::log( "d:>markup: $markup" );
 
 				// so, we can add a new field value to $args array based on the field name - with the markup as value
-				self::$args[$field] = $markup;
+				// self::$args[$field] = $markup;
+				self::$markup[$field] = $markup;
 
-				// and now we need to add a placeholder "{{ $field }}" before this comment block at $position ##
-				self::set_placeholder( "{{ $field }}", $markup, $position );
+				// and now we need to add a placeholder "{{ $field }}" before this comment block at $position to markup->template ##
+				render\markup::set_placeholder( "{{ $field }}", $position ); // , $markup
 
 			}
 
-			// ok - done ##
-			return true;
-
 		}
-
-		// kick it back ##
-		return false;
-
 
 	}
 
@@ -269,7 +317,7 @@ class markup extends \q\render {
 		// h::log( $args['key'] );
 
 		// get markup ##
-		$string = self::$markup;
+		$string = self::$markup['template'];
 
 		// sanity ##
 		if (  
@@ -290,7 +338,7 @@ class markup extends \q\render {
 
 		// get all placeholders from markup string ##
         if ( 
-            ! $placeholders = self::get_placeholders( $string ) 
+            ! $placeholders = render\markup::get_placeholders( $string ) 
         ) {
 
 			// h::log( self::$args['task'].'~>d:>No placeholders found in $markup');
@@ -301,7 +349,8 @@ class markup extends \q\render {
 		}
 
 		// log ##
-		// h::log( self::$args['task'].'~>d:>"'.count( $placeholders ) .'" placeholders found in string');
+		h::log( self::$args['task'].'~>d:>"'.count( $placeholders ) .'" placeholders found in string');
+		// h::log( 'd:>"'.count( $placeholders ) .'" placeholders found in string');
 
 		// remove any leftover placeholders in string ##
 		foreach( $placeholders as $key => $value ) {
@@ -316,19 +365,46 @@ class markup extends \q\render {
 			// ){
 
 			if ( 
-				$config = render\method::string_between( $value, '[[ ', ' ]]' )
+				$config_string = render\method::string_between( $value, '[[', ']]' )
 			){
 
-				// h::log( $config );
+				// store placeholder ##
+				$placeholder = $value;
+
+				// convert string to json format by adding "{}" ##
+				// $config_string = '{'.$config_string.'}';
+
+				// $config_string = [
+				// 	'handle' 	=> [
+				// 		'all' 	=> 'square-sm',
+				// 		'lg'	=> 'vertical-lg'
+				// 	],
+				// 	'second'	=> 'string'
+				// ];
+
+				// $config_string = json_encode( $config_string );
+
+				// h::log( $config_string );
+
+				// // grab config JSON ##
+				// $config_string = '{ "handle":{ "all":"square-sm", "lg":"vertical-lg" }, "string": "value" }';
+				$config_object = json_decode( $config_string );
+				// $config_object = isset( $config_json[0] ) ? $config_json[0] : false ;
+
+				// h::log( 'd:>config: '.$config_string );
+				// h::log( $config_json );
+				// h::log( $config_object );
 
 				// sanity ##
 				if ( 
-					! $config
+					! $config_string
+					|| ! is_object( $config_object )
 					// || ! isset( $matches[0] ) 
 					// || ! $matches[0]
 				){
 
-					h::log( self::$args['task'].'~>e:>No config in placeholder: '.$value );
+					h::log( self::$args['task'].'~>e:>No config in placeholder: '.$placeholder ); // @todo -- add "loose" lookups, for white space '@s
+					// h::log( 'd:>No config in placeholder: '.$placeholder ); // @todo -- add "loose" lookups, for white space '@s''
 
 					continue;
 
@@ -337,38 +413,47 @@ class markup extends \q\render {
 				// h::log( $matches[0] );
 				// list( $config_setting, $config_value ) = str_replace( [ '[[', ']]' ], '', explode( ':', $value ) );
 				// {{ frontpage_work_top__src[[ handle: square; ]] }}
-				$config_array = explode( ':', $config );
+				// $config_array = explode( ':', trim($config) );
 
 				// we need an array, so check ##
-				if ( 
-					! $config_array
-					|| ! is_array( $config_array )
-				){
+				// if ( 
+				// 	// ! $config_array
+				// 	// || ! is_array( $config_array )
+				// 	! $config
+				// ){
 
-					h::log( self::$args['task'].'~>e:>Failed to extract good config from placeholder: '.$value );
+				// 	h::log( self::$args['task'].'~>e:>Failed to extract good config from placeholder: '.$value );
 
-					continue;
+				// 	continue;
 
-				}
+				// }
 
 				// get data and clean up ##
-				$config_setting = trim( $config_array[0] );
-				$config_value = str_replace( ';', '', trim( $config_array[1] ) );
+				// $config_setting = trim( $config_array[0] );
+				// $config_value = str_replace( ';', '', trim( $config_array[1] ) );
 
-				// sanity ##
-				if ( 
-					! isset( $config_setting ) 
-					|| ! isset( $config_value ) 
-				){
+				// // sanity ##
+				// if ( 
+				// 	! isset( $config_setting ) 
+				// 	|| ! isset( $config_value ) 
+				// ){
 
-					h::log( self::$args['task'].'~>e:>Error in extracted config from placeholder: '.$value );
+				// 	h::log( self::$args['task'].'~>e:>Error in extracted config from placeholder: '.$value );
 
-					continue; 
+				// 	continue; 
 
-				}
+				// }
 
 				// get field ##
-				$field = trim( render\method::string_between( $value, '{{ ', '[[' ) );
+				// h::log( 'value: '.$value );
+				
+				// $field = trim( render\method::string_between( $value, '{{ ', '[[' ) );
+				$field = str_replace( $config_string, '', $value );
+
+				// clean up field data ##
+				$field = preg_replace( "/[^A-Za-z0-9_]/", '', $field );
+
+				// h::log( 'field: '.$field );
 
 				// check if field is sub field i.e: "post__title" ##
 				if ( false !== strpos( $field, '__' ) ) {
@@ -391,7 +476,7 @@ class markup extends \q\render {
 					|| ! $field_type
 				){
 
-					h::log( self::$args['task'].'~>e:>Error xtracting $field_name or $field_type from placeholder: '.$value );
+					h::log( self::$args['task'].'~>e:>Error extracting $field_name or $field_type from placeholder: '.$placeholder );
 
 					continue;
 
@@ -399,7 +484,7 @@ class markup extends \q\render {
 
 				// matches[0] contains the whole string matched - for example "(handle:square;)" ##
 				// we can use this to work out the new_placeholder value
-				$placeholder = $value;
+				// $placeholder = $value;
 				// $new_placeholder = explode( '(', $placeholder )[0].' }}';
 				$new_placeholder = '{{ '.$field.' }}';
 
@@ -408,21 +493,27 @@ class markup extends \q\render {
 				// h::log( "d:>new_placeholder: ".$new_placeholder);
 				// h::log( "d:>field_name: ".$field_name );
 				// h::log( "d:>field_type: ".$field_type );
-				// h::log( "d:>config_setting: ".$config_setting );
-				// h::log( "d:>config_value: ".$config_value );
 
-				// @todo - add config handler... based on field type ( field[1] from explode above )##
-				switch ( $field_type ) {
+				foreach( $config_object as $k => $v ) {
 
-					case "src" :
-						
-						// assign new $args[FIELDNAME]['src'] with value of config --
-						// @todo, this could be an array for device types, which get/media will need to deal with ##
-						self::$args[$field_name]['config'][$config_setting] = $config_value;
+					// h::log( "d:>config_setting: ".$k );
+					// h::log( "d:>config_value: ".$v );
 
-					break ;
+					// @todo - add config handlers... based on field type ##
+					switch ( $field_type ) {
+
+						case "src" :
+							
+							// assign new $args[FIELDNAME]['src'] with value of config --
+							self::$args[$field_name]['config'][$k] = is_object( $v ) ? (array) $v : $v; // note, $v may be an array of values
+
+						break ;
+
+					}
 
 				}
+
+				// h::log( self::$args[$field_name] );
 
 				// now, edit the placeholder, to remove the config ##
 				render\markup::edit_placeholder( $placeholder, $new_placeholder );
@@ -431,8 +522,8 @@ class markup extends \q\render {
 		
         }
 
-
 	}
+
 
 
 	public static function string( $args = null ){
@@ -458,10 +549,17 @@ class markup extends \q\render {
 		$value = $args['value'];
 		$key = $args['key'];
 
-		// look for wrapper in markup ##
-		if ( isset( self::$args[$key] ) ) {
+		// h::log( 'key: "'.$key.'" - value: "'.$value.'"' );
 
-			$markup = self::$args[ $key ];
+		// look for wrapper in markup ##
+		// if ( isset( self::$args[$key] ) ) {
+		// if ( isset( self::$markup[$key] ) ) { // ?? @todo -- how is this working ?? -- surely, this should look for 'wrap'
+		if ( isset( self::$markup['wrap'] ) ) { // ?? @todo -- how is this working ?? -- surely, this should look for 'wrap'
+
+			h::log( 't:>@todo.. string wrap logic...' );
+
+			// $markup = self::$args[ $key ];
+			$markup = self::$markup[ 'wrap' ];
 
 			// filter ##
 			$string = core\filter::apply([ 
@@ -473,8 +571,12 @@ class markup extends \q\render {
 			// h::log( 'found: '.$markup );
 
 			// wrap key value in found markup ##
-			// <h2 class="mt-5">{{ content }}</h2> ##
-			$value = str_replace( '{{ content }}', $value, $markup );
+			// example: markup->wrap = '<h2 class="mt-5">{{ content }}</h2>' ##
+			$value = str_replace( 
+				// '{{ content }}', 
+				tag::wrap([ 'open' => 'vo', 'value' => 'content', 'close' => 'vc' ]), 
+				$value, $markup 
+			);
 
 		}
 
@@ -486,9 +588,13 @@ class markup extends \q\render {
         ]); 
 
 		// template replacement ##
-		// @todo - convert to preg_replace to allow for variable whitespaces characters ##
-		$string = str_replace( '{{ '.$key.' }}', $value, $string );
-		
+		// $string = str_replace( '{{ '.$key.' }}', $value, $string );
+		// h::log( $string );
+
+		// regex way ##
+		$regex = \apply_filters( 'q/render/markup/string', "~\{{\s+$key\s+\}}~" ); // '~\{{\s(.*?)\s\}}~' 
+		$string = preg_replace( $regex, $value, $string ); 
+
 		// filter ##
 		$string = core\filter::apply([ 
              'parameters'    => [ 'string' => $string ], // pass ( $string ) as single array ##
@@ -507,7 +613,7 @@ class markup extends \q\render {
      * Update Markup base for passed field ##
      * 
      */
-    public static function set_markup( string $field = null, $count = null ){
+    public static function set( string $field = null, $count = null ){
 
         // sanity ##
         if ( 
@@ -526,10 +632,11 @@ class markup extends \q\render {
         // helper::log( 'Update template markup for field: '.$field.' @ count: '.$count );
 
         // look for required markup ##
-        if ( ! isset( self::$args[$field] ) ) {
+        // if ( ! isset( self::$args[$field] ) ) {
+		if ( ! isset( self::$markup[$field] ) ) {
 
 			// log ##
-			h::log( self::$args['task'].'~>n:>Field: "'.$field.'" does not have required markup defined in $args->$field' );
+			h::log( self::$args['task'].'~>n:>Field: "'.$field.'" does not have required markup defined in "$markup->'.$field.'"' );
 
             // bale if not found ##
             return false;
@@ -542,7 +649,7 @@ class markup extends \q\render {
         // get target placeholder ##
         $placeholder = '{{ '.$field.' }}';
         if ( 
-            ! self::get_placeholder( $placeholder )
+            ! render\markup::get_placeholder( $placeholder )
         ) {
 
 			// log ##
@@ -557,7 +664,7 @@ class markup extends \q\render {
 
         // get all placeholders from markup->$field ##
         if ( 
-            ! $placeholders = self::get_placeholders( self::$args[$field] ) 
+            ! $placeholders = render\markup::get_placeholders( self::$markup[$field] ) 
         ) {
 
 			// log ##
@@ -575,7 +682,7 @@ class markup extends \q\render {
         foreach( $placeholders as $key => $value ) {
 
             // helper::log( 'Working placeholder: '.$value );
-			// new placeholder ##
+			// new placeholder ## -- WOWO... looks flaky ##
 			$new = '{{ '.trim($field).'__'.trim($count).'__'.trim( str_replace( [ '{{', '{{ ', '}}', ' }}' ], '', trim($value) ) ).' }}';
 
 			// single whitespace max ## @might be needed ##
@@ -593,22 +700,22 @@ class markup extends \q\render {
         // h::log( $new_placeholders );
 
         // generate new markup from template with new_placeholders ##
-        $new_markup = str_replace( $placeholders, $new_placeholders, self::$args[$field] );
+        $new_markup = str_replace( $placeholders, $new_placeholders, self::$markup[$field] );
 
         // helper::log( $new_markup );
 
         // use strpos to get location of {{ placeholder }} ##
-        $position = strpos( self::$markup, $placeholder );
+        $position = strpos( self::$markup['template'], $placeholder );
         // helper::log( 'Position: '.$position );
 
         // add new markup to $template as defined position - don't replace {{ placeholder }} yet... ##
-        $new_template = substr_replace( self::$markup, $new_markup, $position, 0 );
+        $new_template = substr_replace( self::$markup['template'], $new_markup, $position, 0 );
 
         // test ##
         // helper::log( $new_template );
 
         // push back into main stored markup ##
-        self::$markup = $new_template;
+        self::$markup['template'] = $new_template;
 
         // kick back ##
         return true;
@@ -666,7 +773,7 @@ class markup extends \q\render {
     public static function get_placeholder( string $placeholder = null, $field = null ) {
 		
 		// if $markup template passed, check there, else check self::$markup ##
-		$markup = is_null( $field ) ? self::$markup : self::$args[$field] ;
+		$markup = is_null( $field ) ? self::$markup['template'] : self::$markup[$field] ;
 
         if ( ! substr_count( $markup, $placeholder ) ) {
 
@@ -719,13 +826,13 @@ class markup extends \q\render {
 		}
 		
 		// ok - we should be good to search and replace old for new ##
-		$string = str_replace( $placeholder, $new_placeholder, self::$markup );
+		$string = str_replace( $placeholder, $new_placeholder, self::$markup['template'] );
 
 		// test new string ##
 		// h::log( 'd:>'.$string );
 
 		// overwrite markup property ##
-		self::$markup = $string;
+		self::$markup['template'] = $string;
 
 		// kick back ##
 		return true;
@@ -735,15 +842,15 @@ class markup extends \q\render {
 	
 
 	/**
-     * Set {{ placeholder }} in self:$args['markup'] at defined position
+     * Set {{ placeholder }} in self:markup['template'] at defined position
      * 
      */
-    public static function set_placeholder( string $placeholder = null, $markup = null, $position = null ) {
+    public static function set_placeholder( string $placeholder = null, $position = null ) { // , $markup = null
 
         // sanity ##
         if (
 			is_null( $placeholder ) 
-			|| is_null( $markup )
+			// || is_null( $markup )
 			|| is_null( $position )
 		) {
 
@@ -781,13 +888,13 @@ class markup extends \q\render {
 		// helper::log( 'Position: '.$position );
 
 		// add new placeholder to $template as defined position - don't replace {{ placeholder }} yet... ##
-		$new_template = substr_replace( self::$markup, $placeholder, $position, 0 );
+		$new_template = substr_replace( self::$markup['template'], $placeholder, $position, 0 );
 
 		// test ##
 		// h::log( 'd:>'.$new_template );
 
 		// push back into main stored markup ##
-		self::$markup = $new_template;
+		self::$markup['template'] = $new_template;
 		
 		// h::log( 'd:>'.$markup );
 
@@ -795,7 +902,7 @@ class markup extends \q\render {
 		// h::log( self::$args['task'].'~>placeholder_added:>"'.$placeholder.'" @position: "'.$position.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
-        return $markup;
+        return true; #$markup['template'];
 
     }
 

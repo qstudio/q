@@ -276,13 +276,13 @@ class navigation extends \q\get {
     * @since       1.3.3
     * @return      string   HTML
     */
-    public static function nav_menu( $args = array(), $blog_id = 1 )
+    public static function menu( $args = array(), $blog_id = 1 )
     {
 
         #h::log( $args );
 
         // merge theme_location into passed args ##
-        $args['theme_location'] = isset( $args['theme_location'] ) ? $args['theme_location'] : $args['menu'] ;
+        // $args['theme_location'] = isset( $args['theme_location'] ) ? $args['theme_location'] : $args['menu'] ;
 
         // try and grab data, or kick back false ##
         // if ( ! $args = wordpress::get_nav_menu( $args ) ) { 
@@ -291,28 +291,32 @@ class navigation extends \q\get {
 
         //      return false; 
             
-        // }
+		// }
+		
+		// h::log( $args );
 
         // Parse incoming $args into an array and merge it with $defaults - caste to object ##
-        $args = ( object )wp_parse_args( 
-            $args
-            , core\config::get([ 'context' => 'ui', 'task' => 'nav_menu' ]) 
-        );
+        // $args = wp_parse_args( 
+        //     $args
+        //     , core\config::get([ 'context' => 'navigation', 'task' => 'menu' ])['args'] 
+        // );
         
         //$args = \wp_parse_args( $args, self::$the_nav_menu );
-		#h::log( $args );
+		// h::log( $args );
+
+		return ['one', 'two'];
         
-        if ( ! \has_nav_menu( $args->menu ) ) {
+        if ( ! \has_nav_menu( $args['args']['menu'] ) ) {
         
-            // h::log( 'd:>! has nav menu: '.$args->theme_location );
+            h::log( 'd:>! has nav menu: '.$args->theme_location );
 
             return false;
 
         }
 
         // pass to mulltisite handler ##
-        self::multisite_nav_menu(
-            $args,
+        return self::multisite_nav_menu(
+            $args['args'],
             $blog_id
         );
 
@@ -335,19 +339,17 @@ class navigation extends \q\get {
     */
     public static function multisite_nav_menu( $args = array(), $blog_id = 1 ) {
 
-        #global $blog_id;
+		#global $blog_id;
         $blog_id = \absint( $blog_id );
 
-        #h::log( 'nav_menu - $blog_id: '.$blog_id.' / $origin_id: '.$origin_id );
+        // h::log( 'nav_menu - $blog_id: '.$blog_id.' / $origin_id: '.$origin_id );
 
         if ( 
             ! \is_multisite() 
         ) {
 
             #h::log( $args );
-            \wp_nav_menu( $args );
-            
-            return;
+            return \wp_nav_menu( $args );
 
         }
 

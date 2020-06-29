@@ -305,7 +305,7 @@ class format extends \q\render {
 
                     // format ran ok ##
                     // h::log( 'format ran ok.. so now we can update markup for field: '.$field );
-                    render\markup::set_markup( $field, $count );
+                    render\markup::set( $field, $count );
 
                 }
 
@@ -317,13 +317,14 @@ class format extends \q\render {
         }
 
         // remove placeholder from markup template
-        self::$markup = render\markup::remove_placeholder( '{{ '.$field.' }}', self::$markup );
+		// self::$markup['template'] = render\markup::remove_placeholder( '{{ '.$field.' }}', self::$markup['template'] );
+		self::$markup['template'] = render\markup::remove_placeholder( '{{ '.$field.' }}', self::$markup['template'] );
 
         // delete sending field ##
         render\fields::remove( $field, 'Removed by format_array after working' );
 
         // checkout markup ##
-        // h::log( self::$markup );
+        // h::log( self::$markup['template'] );
 
         // returning false will delete the original passed field ##
         return true;
@@ -355,7 +356,7 @@ class format extends \q\render {
             }
 
             // format ran ok ##
-            render\markup::set_markup( $field, $count );
+            render\markup::set( $field, $count );
 
             // iterate count ##
             $count ++ ;

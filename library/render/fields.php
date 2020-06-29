@@ -116,7 +116,7 @@ class fields extends \q\render {
 			|| ! is_array( $array )
 		){
 
-			h::log( 'e:>Error in pased $args' );
+			h::log( 'e:>Error in passed $args' );
 
 			return false;
 
@@ -210,13 +210,12 @@ class fields extends \q\render {
 		// sanity ##
 		if(
 			is_null( $field )
-			// || ! isset( self::$args['fields'] )
 		){
 
 			// get caller ##
-			$backtrace = core\method::backtrace([ 'level' => 8, 'return' => 'class_function' ]);
+			$backtrace = core\method::backtrace([ 'level' => 2, 'return' => 'class_function' ]);
 
-			h::log( 'd:>'.$backtrace.' -> No $field passed' );
+			h::log( 'e:>'.$backtrace.' -> No $field passed' );
 
 			return false;
 
@@ -225,14 +224,13 @@ class fields extends \q\render {
 
 		// sanity ##
 		if(
-			// is_null( $field )
-			! isset( self::$args['fields'] )
+			! isset( self::$args['fields'] ) // fields array is only set in "group" context
 		){
 
 			// get caller ##
-			$backtrace = core\method::backtrace([ 'level' => 7, 'return' => 'class_function' ]);
+			// $backtrace = core\method::backtrace([ 'level' => 7, 'return' => 'class_function' ]);
 
-			h::log( 'd:>'.$backtrace.' -> $args->fields empty' );
+			// h::log( 'd:>'.$backtrace.' -> $args->fields empty' );
 
 			return false;
 
@@ -279,6 +277,9 @@ class fields extends \q\render {
 	}
 	
 
+	
+
+	/*
 	public static function is_array_of_arrays( $array = null ) {
 
 		// sanity ##
@@ -308,6 +309,7 @@ class fields extends \q\render {
 		return false;
 	  
 	}
+	*/
 
 
 
@@ -324,7 +326,7 @@ class fields extends \q\render {
 		if ( ! isset( self::$args['fields'] ) ) {
 
 			// get caller ##
-			$backtrace = core\method::backtrace([ 'level' => 4, 'return' => 'class_function' ]);
+			$backtrace = core\method::backtrace([ 'level' => 2, 'return' => 'class_function' ]);
 
 			// log ##
 			h::log( self::$args['task'].'~>n:>'.$backtrace.' -> "$args[fields]" is not defined' );

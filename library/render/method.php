@@ -206,6 +206,8 @@ class method extends \q\render {
 		// trim white spaces ##
 		$string = trim( $string );
 
+		// h::log( 'string: '.$string );
+
 		// kick back ##
 		return $string;
 	

@@ -40,7 +40,10 @@ class output extends \q\render {
         // helper::log( self::$output );
 
         // either return or echo ##
-        if ( 'echo' === self::$args['config']['return'] ) {
+        if ( 
+			isset( self::$args['config']['return'])
+			&& 'echo' === self::$args['config']['return'] 
+		) {
 
 			// h::log( self::$output );
 

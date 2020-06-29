@@ -25,7 +25,7 @@ Modules:
 # ui - layout elements
 # field ( deal with single use case post_fields )
 ~ partial - reusable blocks or code, like buttons or post_meta items
-~ type ( src, video, gallery?? etc )
+~ media ( src, video, gallery etc )
 
 filters:
 # validate args ( check requirements, filter.. )
@@ -131,42 +131,54 @@ class render extends \Q {
 
 		],
 		
-		/* defined template delimiters */
-		// https://github.com/bobthecow/mustache.php/wiki/Mustache-Tags
+		/* define template delimiters */
+		// based on Mustache, but not the same... https://github.com/bobthecow/mustache.php/wiki/Mustache-Tags
 		$tags = [
-			'variable' 	=> [
-				'open'	=> [ '{{ ', ' }}' ], // @todo escaped. controller by filter ##
-				// 'close'	=> [ '{{/', '}}' ]
+
+			// variables ##
+			'variable'		=> [
+				'open' 		=> '{{ ', // open ## 
+				'close' 	=> ' }}', // close ##
 			],
-			'section' 	=> [
-				'open'	=> [ '{{# ', ' }}' ],
-				'close'	=> [ '{{ ', ' /#}}' ]
+
+			// parameters / arguments ##
+			'parameter'		=> [
+				'open' 		=> '[{ ', // open ## 
+				'close' 	=> ' }]', // close ##
 			],
-			'inversion'	=> [
-				'open'	=> [ '{{^ ',' }}' ], // else, no results ##
-				'close'	=> [ '{{/ ',' }}' ]
+			
+			// section ##
+			'section'		=> [
+				'open' 		=> '{{# ', // open ##
+				'close' 	=> ' }}', // close ##
+				'end'		=> '{{/#}}' // end statement ##
 			],
-			'function' 	=> [
-				'open'	=> [ '{{{ ', ' }}}' ], // also, a variable without escaping ##
-				// 'close'	=> null
+
+			// inversion ##  // else, no results ##
+			'inversion'		=> [
+				'open'		=> '{{^ ',
+				'open'		=> ' }}', 
+				'end'		=> '{{/}}'
 			],
-			'partial' 	=> [
-				'open'	=> [ '{{> ', ' }}' ],
-				// 'close'	=> null
-			],	
-			'comment' 	=> [
-				'open'	=> [ '{{! ', ' }}' ],
-				// 'close'	=> null
-			]
+
+			// function -- also, an unescaped variable -- @todo --- ##
+			'f/o'	=> '{{{ ', 
+			'f/c'	=> ' }}}', // also, a variable without escaping ##
+
+			// partial ##
+			'p/o'	=> '{{> ', // partial open ##
+			'p/c'	=> ' }}', // partial close ##
+
+			// comment ##
+			'c/o'	=> '{{! ', // comment open ##
+			'c/c'	=> ' }}', // comment close ##
+
 		],
 
         $output = null, // return string ##
-        $fields = null, // field names and values ##
-        $markup = null, // store local version of passed markup ##
-		$acf_fields = null, // fields grabbed by acf function ##
-		
-		// allow apps to extend render methods ##
-		$extensions = []
+        $fields = null, // array of field names and values ##
+        $markup = null, // array to store passed markup and extra keys added by formatting ##
+		$extensions = [] // allow apps to extend render methods ##
 
 	;
 	
@@ -180,9 +192,6 @@ class render extends \Q {
 		// load libraries ##
 		core\load::libraries( self::load() );
 
-		// allow for class extensions ##
-		// \do_action( 'q/render/register', [ get_class(), 'register' ] );
-
 	}
 
 
@@ -195,6 +204,9 @@ class render extends \Q {
     {
 
 		return $array = [
+
+			// tag management ##
+			'tag' => h::get( 'render/tag.php', 'return', 'path' ),
 
 			// methods ##
 			'method' => h::get( 'render/method.php', 'return', 'path' ),
@@ -230,25 +242,25 @@ class render extends \Q {
 			// log activity ##
 			'log' => h::get( 'render/log.php', 'return', 'path' ),
 
-			// render methods ##
+			// context classes ##
 
 			// acf field handler ##
 			'field' => h::get( 'render/context/field.php', 'return', 'path' ), 
 
-			// acf group ##
+			// acf field groups ##
 			'group' => h::get( 'render/context/group.php', 'return', 'path' ),
 
 			// post objects content, title, excerpt etc ##
 			'post' => h::get( 'render/context/post.php', 'return', 'path' ),
 
 			// navigation items ##
-			'nav' => h::get( 'render/context/navigation.php', 'return', 'path' ),
+			'navigation' => h::get( 'render/context/navigation.php', 'return', 'path' ),
 
 			// media items ##
 			'media' => h::get( 'render/context/media.php', 'return', 'path' ),
 
 			// taxonomies ##
-			'nav' => h::get( 'render/context/taxonomy.php', 'return', 'path' ),
+			'taxonomy' => h::get( 'render/context/taxonomy.php', 'return', 'path' ),
 
 			// ui render methods - open, close.. etc ##
 			'ui' => h::get( 'render/context/ui.php', 'return', 'path' ),
@@ -266,19 +278,6 @@ class render extends \Q {
 	
 
 
-	// public static function register( $args = null ){
-
-	// 	h::log( $args );
-
-	// 	// @todo -- lots of logic ###
-
-	// 	// store ##
-	// 	render\extension::store( $args );
-	// 	// self::$extensions = $args[]
-
-	// }
-
-
 
 	/** 
 	 * bounce to function getter ##
@@ -290,10 +289,9 @@ class render extends \Q {
 	 * partial__  snippets, code, blocks, collections like post_meta
 	 * post__  content, title, excerpt etc..
 	 * media__
-	 * navigation__ @todo
+	 * navigation__ 
 	 * taxonomy__
 	 * ui__
-	 * type__  ?? needed ??
 	 */
 	public static function __callStatic( $function, $args ){	
 
@@ -305,7 +303,7 @@ class render extends \Q {
 		
 		}
 
-		// conver string passed args ##
+		// convert string passed args, presuming it to be markup...??... ##
 		if ( is_string( $args ) ) {
 
 			$args = [
@@ -344,29 +342,122 @@ class render extends \Q {
 
 		// look for "namespace" class to $class ##
 		$namespace = __NAMESPACE__."\\render\\".$class;
-		// h::log( 'd:>'.__NAMESPACE__ .' --- '.$namespace );
+		// h::log( 'd:>namespace --- '.$namespace );
 
 		if (
 			class_exists( $namespace ) // && exists ##
+			// && method_exists( $namespace, 'run' ) // && exists ##
 			// && method_exists( $namespace, $method ) // && exists ##
 		) {
 
-			// h::log( 'd:>class: '.$class.' available' );
+			// h::log( 'd:>class: '.$namespace.' available' );
 
-			// define config for all in class -- i.e "group" ##
+			// define context for all in class -- i.e "post" ##
 			$args['context'] = $class;
 
-			// set global proces tracker ##
+			// set task tracker -- i.e "title" ##
 			$args['task'] = $method;
 
-			// call render method ##
+			if (
+				! \method_exists( $namespace, 'get' ) // base method is get() ##
+				&& ! \method_exists( $namespace, $args['task'] ) ##
+				&& ! render\extension::get( $args['context'], $args['task'] ) // look for extensions ##
+			) {
+	
+				render\log::set( $args );
+	
+				h::log( 'e:>Cannot locate method: '.$namespace.'::'.$args['task'] );
+	
+				return false;
+	
+			}
+	
+			// validate passed args ##
+			if ( ! render\args::validate( $args ) ) {
+	
+				render\log::set( $args );
+				
+				h::log( 'e:>Args validation failed' );
+	
+				return false;
+	
+			}
+
+			// call class::method to gather data ##
 			// return render\ui::open( $args );
-			return $namespace::run( $args );
+			// $namespace::run( $args );
+
+			if (
+				$extension = render\extension::get( $args['context'], $args['task'] )
+			){
+
+				// 	h::log( 'load extended method: '.$extension['class'].'::'.$extension['method'] );
+
+				// gather field data from extension ##
+				$extension['class']::{ $extension['method'] }( self::$args );
+
+			} else if ( 
+				\method_exists( $namespace, $args['task'] ) 
+			){
+
+				// 	h::log( 'load base method: '.$extension['class'].'::'.$extension['method'] );
+
+				// gather field data from $method ##
+				$namespace::{ $args['task'] }( self::$args );
+
+			} else if ( 
+				\method_exists( $namespace, 'get' ) 
+			){
+
+				// 	h::log( 'load default get() method: '.$extension['class'].'::'.$extension['method'] );
+
+				// gather field data from get() ##
+				$namespace::get( self::$args );
+
+			} else {
+
+				// oddly, no matching class::method found, so stop ##
+
+				render\log::set( $args );
+				
+				h::log( 'e:>No matching class::method found' );
+	
+				return false;
+
+			}
+
+			// prepare field data ##
+			render\fields::prepare();
+
+			// check if feature is enabled ##
+			if ( ! render\args::is_enabled() ) {
+
+				render\log::set( $args );
+
+				h::log( 'd:>Not enabled...' );
+	
+				return false;
+	
+		   }    
+		
+			// h::log( self::$fields );
+
+			// Prepare template markup ##
+			render\markup::prepare();
+
+			// optional logging to show removals and stats ##
+			render\log::set( $args );
+
+			// return or echo ##
+			return render\output::return();
 
 		}
 
-		// @todo -- check what is going on when this log shows.. ##
-		h::log( 'e:>No matching render context for: '.$class );
+		// nothing matched, so report and return false ##
+		h::log( 'e:>No matching render context for: '.$namespace );
+
+		// optional clean up.. how do we know what to clean ?? ##
+		// @todo -- add shutdown cleanup, so remove all lost pieces ##
 
 		// kick back nada - as this renders on the UI ##
 		return false;

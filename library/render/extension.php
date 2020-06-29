@@ -19,7 +19,7 @@ class extension extends \q\render {
 	public static function run(){
 
 		// allow for class extensions ##
-		\do_action( 'q/render/register', [ get_class(), 'register' ] );
+		\do_action( 'q/render/extension/register', [ get_class(), 'register' ] );
 
 	}
 
@@ -150,6 +150,22 @@ class extension extends \q\render {
 
 					// h::log( 'found context: '.$v['class'] );
 
+					// check if extension is callable ##
+					if (
+						! class_exists( $v['class'] )
+						|| ! method_exists( $v['class'], $v['methods'][$key] )
+						|| ! is_callable([ $v['class'], $v['methods'][$key] ])
+					){
+
+						// h::log( $v['class'].'::'.$v['methods'][$key].' is NOT available' );
+
+						return false;
+
+					}
+
+					// h::log( $v['class'].'::'.$v['methods'][$key].' IS available' );
+
+					// kick back ##
 					return [ 'class' => $v['class'], 'method' => $v['methods'][$key] ];
 
 				}

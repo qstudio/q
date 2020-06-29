@@ -5,109 +5,44 @@ namespace q\render;
 use q\core;
 use q\core\helper as h;
 use q\ui;
+use q\get;
 use q\plugin;
 use q\render;
 
 class group extends \q\render {
 
-	public static function __callStatic( $function, $args ) {
 
-        return self::run( $args ); 
-	
-	}
+	/**
+     * Get field data via meta handler
+     *
+     * @param       Array       $args
+     * @since       1.3.0
+	 * @uses		define
+     * @return      Array
+     */
+    public static function get( $args = null ) {
 
-	public static function run( $args = [] ){
-
-		// check for extensions ##
-		$extension = render\extension::get( $args['context'], $args['task'] );
-
-		if (
-			! \method_exists( get_class(), 'get' ) // base method is get\meta ##
-			&& ! $extension // look for extensions ##
-		) {
-
-			render\log::set( $args );
-
-			h::log( 'e:>Cannot locate method: '.__CLASS__.'::'.$args['task'] );
-
-            return false;
-
-		}
-
-        // validate passed args ##
-        if ( ! render\args::validate( $args ) ) {
-
-			render\log::set( $args );
-			
-			// h::log( 'd:>Bunked here..' );
-
-            return false;
-
-		}
-
-		// base class ##
+		// get title - returns array with key 'title' ##
+		// $args['field'] = $args['task']; // make sure field value is set ##
+		
+		// method returns an array with 'data' and 'fields' ##
 		if ( 
-			\method_exists( get_class(), 'get' ) 
+			$array = get\group::fields( $args )
 		){
+			// h::log( $array );
+			
+			// "args->fields" are used for type and callback lookups ##
+			self::$args['fields'] = $array['fields']; 
 
-			// 	h::log( 'load base method: '.$extension['class'].'::'.$extension['method'] );
-
-			// call render method ##
-			self::get( self::$args );
-
-		// extended class ##
-		} elseif (
-			$extension
-		){
-
-			// 	h::log( 'load extended method: '.$extension['class'].'::'.$extension['method'] );
-
-			// h::log( 'd:>render extension..' );
-			$extension['class']::{ $extension['method'] }( self::$args );
+			// define "fields", passing returned data ##
+			render\fields::define(
+				$array['data']
+			);
 
 		}
 
-        // // validate passed args ##
-        // if ( ! render\args::validate( $args ) ) {
-
-        //     render\log::set( $args );
-
-        //     return false;
-
-		// }
-		
-        // // get field names from passed $args ##
-        // if ( ! render\get::fields() ) {
-
-        //     render\log::set( $args );
-
-        //     return false;
-
-		// }
-		
-		// h::log( self::$fields );
-
-		// Now we can loop over each field ---
-		// running callbacks ##
-		// formatting none string types to strings ##
-		// removing placeholders in markup, if no field data found etc ##
-		render\fields::prepare();
-		
-		// h::log( self::$fields );
-
-        // Prepare template markup ##
-        render\markup::prepare();
-
-        // optional logging to show removals and stats ##
-        render\log::set( $args );
-
-        // return or echo ##
-        return render\output::return();
-
 	}
 	
-
-	// ---------- methods ##
 
 
 	/**
@@ -118,7 +53,7 @@ class group extends \q\render {
 	 * @uses		define
      * @return      Array
      */
-    public static function get( $args = null ) {
+    public static function get2( $args = null ) {
 
         // sanity ##
         if ( 
@@ -199,7 +134,7 @@ class group extends \q\render {
 
 		}
 		
-		// h::log( self::$fields );
+		h::log( self::$fields );
 
         // positive ##
         return true;

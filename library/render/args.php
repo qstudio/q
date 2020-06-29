@@ -38,7 +38,7 @@ class args extends \q\render {
 			// log ##
 			h::log( self::$args['task'].'~>e:>Missing required args, so stopping here' );
 			
-			// h::log( 'Kicked here...' );
+			h::log( 'd:>Kicked here...' );
 
             return false;
 
@@ -54,6 +54,7 @@ class args extends \q\render {
 
 			// log ##
 			h::log( self::$args['task'].'~>n:>config->run defined as false for: '.$args['task'].', so stopping here.. ' );
+			h::log( 'd:>config run defined as false... so stop' );
 
             return false;
 
@@ -122,6 +123,63 @@ class args extends \q\render {
 
 	}
 	
+
+
+
+    /**
+     * Assign class properties with initial filters, merging in passed $args from calling method
+     */
+    public static function assign( Array $args = null ) {
+
+        // apply global filter to $args - specific calls should be controlled by parameters included directly ##
+        self::$args = core\filter::apply([
+			'filter'        => 'q/render/args',
+			'parameters'    => self::$args,
+			'return'        => self::$args
+		]);
+		
+		// apply template level filter to $args - specific calls should be controlled by parameters included directly ##
+        self::$args = core\filter::apply([
+			'filter'        => 'q/render/args/'.view\is::get(),
+			'parameters'    => self::$args,
+			'return'        => self::$args
+        ]);
+
+        // grab all passed args and merge with defaults ##
+        $args = core\method::parse_args( $args, self::$args_default );
+		
+		// assign class property ##
+		self::$args = $args;
+
+		// pre-format markup ##
+		self::pre_format( $args );
+		
+        // return args for validation ##
+        return $args;
+
+	}
+	
+
+
+	/**
+	 * Extract data from passed args 
+	 * 
+	 * @since 4.1.0
+	*/
+	public static function pre_format( $args = null ){
+
+		// pre-format args to extract markup ##
+		render\markup::args( $args );
+
+		// pre-format markup to extract sections and add additional placeholders ##
+		render\markup::section();
+
+		// search for config settings in markup, such as "src" handle ##
+		render\markup::config();
+
+	}
+
+
 
 
 
@@ -256,73 +314,6 @@ class args extends \q\render {
 
 
 
-
-    /**
-     * Assign class properties with initial filters, merging in passed $args from calling method
-     */
-    public static function assign( Array $args = null ) {
-
-        // apply global filter to $args - specific calls should be controlled by parameters included directly ##
-        self::$args = core\filter::apply([
-			'filter'        => 'q/render/args',
-			'parameters'    => self::$args,
-			'return'        => self::$args
-		]);
-		
-		// apply template level filter to $args - specific calls should be controlled by parameters included directly ##
-        self::$args = core\filter::apply([
-			'filter'        => 'q/render/args/'.view\is::get(),
-			'parameters'    => self::$args,
-			'return'        => self::$args
-        ]);
-
-        // grab all passed args and merge with defaults ##
-        $args = core\method::parse_args( $args, self::$args_default );
-		
-		// assign class property ##
-		self::$args = $args;
-
-        // test ##
-        // h::log( $args );
-
-		// if no markup sent.. ##
-		if ( 
-			! isset( $args['markup'] )
-			&& is_array( $args ) 
-		) {
-
-			// default -- almost useless - but works for single values.. ##
-			$args['markup'] = '%value%';
-
-			foreach( $args as $k => $v ) {
-
-				if ( is_string( $v ) ) {
-
-					// take first string value in $args markup ##
-					$args['markup'] = $v;
-
-					break;
-
-				}
-
-			}
-
-		}
-
-        // assign markup ##
-		self::$markup = $args['markup'];
-
-		// pre-format markup ##
-		render\markup::pre_format();
-		
-        // return args for validation ##
-        return $args;
-
-    }
-
-
-
-
 	
     public static function is_enabled()
     {
@@ -351,7 +342,7 @@ class args extends \q\render {
         ) {
 
 			// log ##
-			h::log( self::$args['task'].'~>n:>No enable defined in $args or enable field found for Group: "'.self::$args['task'].'"');
+			h::log( self::$args['task'].'~>n:>No enable defined in $args or enable field found for task: "'.self::$args['task'].'"');
 
             return true;
 
@@ -363,12 +354,13 @@ class args extends \q\render {
                 isset( self::$args['enable'] )
                 && 1 == self::$fields[self::$args['enable']]
             )
-            || 
-            	1 == self::$fields[self::$args['task'].'_enable']
+			|| 
+				isset( self::$fields[self::$args['task'].'_enable'] )
+            	&& 1 == self::$fields[self::$args['task'].'_enable']
         ) {
 
 			// log ##
-			h::log( self::$args['task'].'~>n:>Field Group: "'.self::$args['task'].'" Enabled, continue');
+			h::log( self::$args['task'].'~>n:>Field task: "'.self::$args['task'].'" Enabled, continue');
 
             // helper::log( self::$args['enable'] .' == 1' );
 
