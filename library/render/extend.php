@@ -9,9 +9,9 @@ use q\get;
 use q\render;
 
 // load it up ##
-\q\render\extension::run();
+\q\render\extend::run();
 
-class extension extends \q\render {
+class extend extends \q\render {
 
 	/**
 	 * Fire things up
@@ -19,7 +19,7 @@ class extension extends \q\render {
 	public static function run(){
 
 		// allow for class extensions ##
-		\do_action( 'q/render/extension/register', [ get_class(), 'register' ] );
+		\do_action( 'q/render/extend/register', [ get_class(), 'register' ] );
 
 	}
 
@@ -96,7 +96,7 @@ class extension extends \q\render {
 
 		}
 
-		return self::$extensions[ $args['class'] ] = [
+		return self::$extend[ $args['class'] ] = [
 			'context' 	=> $args['context'],
 			'class' 	=> $args['class'],
 			'methods' 	=> $methods
@@ -125,20 +125,20 @@ class extension extends \q\render {
 
 		// check ##
 		// h::log( 'd:>Looking for extension: '.$context );
-		// h::log( self::$extensions );
+		// h::log( self::$extend );
 
 		// is_array ##
 		if (
-			! is_array( self::$extensions )
+			! is_array( self::$extend )
 		){
 
-			h::log( 'e:>Error in stored $extensions' );
+			h::log( 'e:>Error in stored $extend' );
 
 			return false;
 
 		}
 
-		foreach( self::$extensions as $k => $v ){
+		foreach( self::$extend as $k => $v ){
 
 			// h::log( 'checking class: '.$k );
 

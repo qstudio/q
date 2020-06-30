@@ -534,6 +534,7 @@ class method extends extension\search {
 
                 } else {
 
+					// internal result display ##
                     render::result();
 
                 } // template ##

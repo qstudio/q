@@ -18,7 +18,7 @@ class config extends extension\search {
 
 		// filter Q Config -- ALL FIELDS [ $array "data" ]##
 		// Priority -- Q = 1, Q Plugin = 10, Q Parent = 100, Q Child = 1000
-		\add_filter( 'q/config/get/all', [ get_class(), 'get' ], 10, 1 );
+		// \add_filter( 'q/config/get/all', [ get_class(), 'get' ], 10, 1 );
 
     }
 

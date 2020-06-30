@@ -6,8 +6,7 @@ use q\core;
 use q\core\helper as h;
 use q\view;
 
-// Q Theme Config ##
-// use q\theme as theme;
+\q\core\config::run();
 
 class config extends \Q {
 
@@ -17,6 +16,80 @@ class config extends \Q {
 		$cache = [],
 		$args = [] // passed args ##
 	;
+
+
+	public static function run(){
+
+		// filter Q Config -- ALL FIELDS [ $array "data" ]##
+		// Priority -- Q = 1, Q Plugin = 10, Q Parent = 100, Q Child = 1000
+		\add_filter( 'q/config/get/all', [ get_class(), 'filter' ], 1, 1 );
+
+	}
+
+
+
+	/**
+	 * Get configuration files
+	 *
+	 * @used by filter q/config/get/all
+	 *
+	 * @return		Array $array -- must return, but can be empty ##
+	 */
+	public static function filter( $args = null ) {
+
+		// h::log( $args );
+
+		// sanity ##
+		if ( 
+			is_null( $args )
+			|| ! is_array( $args )
+			|| ! isset( $args['context'] ) 
+			|| ! isset( $args['task'] )
+		){
+
+			// config is loaded by context or process, so we need one of those to continue ##
+			h::log( 'e:>Error in passed args, $context and $task are required.' );
+
+			return false;
+
+		}
+
+		// config file extension ##
+		$ext = \apply_filters( 'q/config/load/ext', '.php' );
+
+		// config file path ( h::get will do fallback checks form child theme, parent theme, plugin + Q.. )
+		$path = \apply_filters( 'q/config/load/path', 'view/context/' );;
+
+		// array of config files to load -- key ( for cache ) + value ##
+		$array = [
+			view\is::get().'__'.$args['context'].'__'.$args['task'] => view\is::get().'__'.$args['context'].'__'.$args['task'],
+			$args['context'].'__'.$args['task'] => $args['context'].'__'.$args['task'],
+			$args['context'] => $args['context'],
+			'global' => 'global'
+		];
+
+		// filter options ##
+		$array = \apply_filters( 'q/config/load/array', $array );
+
+		// loop over options ##
+		foreach( $array as $k => $v ){
+
+			if ( 
+				$file = h::get( $path.$v.$ext, 'return', 'path' )
+			){
+
+				// h::log( 'd:>Loading config file: '.$file );
+
+				return core\config::load( $file, $k );
+
+			}
+
+		}
+
+		// kick back ##
+		return false;
+
+	}
 
 
 	/**
@@ -51,7 +124,7 @@ class config extends \Q {
 		$return = false;
 
 		// run filter passing lookup args to allow themes and plugins to control config ##
-		self::filter();
+		self::run_filter();
 
 		// define property ##
 		$property = $args['context'].'__'.$args['task'] ;
@@ -86,7 +159,7 @@ class config extends \Q {
 
 
 
-	public static function filter() {
+	public static function run_filter() {
 
 		// sanity ##
 		if (

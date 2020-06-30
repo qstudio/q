@@ -178,7 +178,7 @@ class render extends \Q {
         $output = null, // return string ##
         $fields = null, // array of field names and values ##
         $markup = null, // array to store passed markup and extra keys added by formatting ##
-		$extensions = [] // allow apps to extend render methods ##
+		$extend = [] // allow apps to extend render methods ##
 
 	;
 	
@@ -215,7 +215,7 @@ class render extends \Q {
 			'args' => h::get( 'render/args.php', 'return', 'path' ),
 
 			// class extensions ##
-			'extend' => h::get( 'render/extension.php', 'return', 'path' ),
+			'extend' => h::get( 'render/extend.php', 'return', 'path' ),
 
 			// check callbacks on defined fields ## 
 			// @todo - allow to be passed from calling method ['callback' => 'srcset' ] etc ##
@@ -370,7 +370,7 @@ class render extends \Q {
 			if (
 				! \method_exists( $namespace, 'get' ) // base method is get() ##
 				&& ! \method_exists( $namespace, $args['task'] ) ##
-				&& ! render\extension::get( $args['context'], $args['task'] ) // look for extensions ##
+				&& ! render\extend::get( $args['context'], $args['task'] ) // look for extends ##
 			) {
 	
 				render\log::set( $args );
@@ -397,19 +397,19 @@ class render extends \Q {
 			// $namespace::run( $args );
 
 			if (
-				$extension = render\extension::get( $args['context'], $args['task'] )
+				$extend = render\extend::get( $args['context'], $args['task'] )
 			){
 
-				// 	h::log( 'load extended method: '.$extension['class'].'::'.$extension['method'] );
+				// 	h::log( 'load extended method: '.$extend['class'].'::'.$extend['method'] );
 
-				// gather field data from extension ##
-				$extension['class']::{ $extension['method'] }( self::$args );
+				// gather field data from extend ##
+				$extend['class']::{ $extend['method'] }( self::$args );
 
 			} else if ( 
 				\method_exists( $namespace, $args['task'] ) 
 			){
 
-				// 	h::log( 'load base method: '.$extension['class'].'::'.$extension['method'] );
+				// 	h::log( 'load base method: '.$extend['class'].'::'.$extend['method'] );
 
 				// gather field data from $method ##
 				$namespace::{ $args['task'] }( self::$args );
@@ -418,7 +418,7 @@ class render extends \Q {
 				\method_exists( $namespace, 'get' ) 
 			){
 
-				// 	h::log( 'load default get() method: '.$extension['class'].'::'.$extension['method'] );
+				// 	h::log( 'load default get() method: '.$extend['class'].'::'.$extend['method'] );
 
 				// gather field data from get() ##
 				$namespace::get( self::$args );

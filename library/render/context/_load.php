@@ -46,6 +46,12 @@ class context extends render {
 			// taxonomies ##
 			'taxonomy' => h::get( 'render/context/taxonomy.php', 'return', 'path' ),
 
+			// extension ##
+			'extension' => h::get( 'render/context/extension.php', 'return', 'path' ),
+
+			// widgets ##
+			'widget' => h::get( 'render/context/widget.php', 'return', 'path' ),
+
 			// ui render methods - open, close.. etc ##
 			'ui' => h::get( 'render/context/ui.php', 'return', 'path' ),
 

@@ -5,10 +5,6 @@
 //  use q\core as core;
 use q\core\helper as h;
 
-/* 
- * Configuration File, loaded by q\core\config::get()
-*/
-
 // quick check :) ##
 defined( 'ABSPATH' ) OR exit;
 
@@ -21,7 +17,7 @@ return [
 
 		// config ##
 		'application' 		=> 'posts',
-		'device'			=> h::device(),
+		'device'			=> '{{{ h::device }}}', // function ##
 		'table'	 			=> 'posts',
 		
 		'control' 			=> 
@@ -32,16 +28,16 @@ return [
 		
 		// markup ##
 		'markup' 			=> '
-								<div class="col-12 col-md-6 col-lg-4 ajax-loaded %class%">
-									<a href="%post_permalink%" title="%post_title%">
-										<div class="lazy card-img-top" data-src="%src%" alt="Open %post_title%" src="%src%"></div>
+								<div class="col-12 col-md-6 col-lg-4 ajax-loaded {{class }}">
+									<a href="{{ post_permalink }}" title="{{ post_title }}">
+										<div class="lazy card-img-top" data-src="{{ src }}" alt="Open {{ post_title }}" src="{{ src }}"></div>
 									</a>
 									<div class="card-body">
-										<h5 class="card-title"><a href="%permalink%" title="Read More">%post_title%</a></h5>
-										<p class="card-text">%post_excerpt%</p>
+										<h5 class="card-title"><a href="{{ permalink }}" title="Read More">{{ post_title }}</a></h5>
+										<p class="card-text">{{ post_excerpt }}</p>
 										<p class="card-text">
-											<small class="text-muted">%post_date_human%</small>
-											<small class="text-muted">in <a href="%category_permalink%" title="%category_name%">%category_name%</a> </small>    
+											<small class="text-muted">{{ post_date_human }}</small>
+											<small class="text-muted">in <a href="{{ category_permalink }}" title="{{ category_name }}">{{ category_name }}</a></small>    
 										</p>
 									</div>
 								</div>',
