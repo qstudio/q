@@ -207,6 +207,8 @@ class fields extends \q\render {
      */
     public static function get_type( $field = null ){
 
+		// h::log( self::$args );
+
 		// sanity ##
 		if(
 			is_null( $field )
@@ -215,12 +217,53 @@ class fields extends \q\render {
 			// get caller ##
 			$backtrace = core\method::backtrace([ 'level' => 2, 'return' => 'class_function' ]);
 
-			h::log( 'e:>'.$backtrace.' -> No $field passed' );
+			h::log( self::$args['task'].'~>n:>'.$backtrace.' -> No $field passed' );
 
 			return false;
 
 		}
 
+		// h::log( 'd:>Checking Type of Field: "'.$field.'"' );
+		// h::log( self::$args );
+
+		// shortcut check for ui\method gather data ##
+		if ( 
+			isset( self::$args['config']['type'] ) 
+			&& array_key_exists( self::$args['config']['type'], render\type::get_allowed() )
+		){
+
+			// h::log( 'd:>Shortcut to type passed in args: '.self::$args['config']['type'] );
+
+			return self::$args['config']['type'];
+
+		}
+
+		// sanity ##
+		if(
+			! isset( self::$fields ) // fields array is only set in "group" context
+		){
+
+			// get caller ##
+			$backtrace = core\method::backtrace([ 'level' => 2, 'return' => 'class_function' ]);
+
+			h::log( self::$args['task'].'~>n:>'.$backtrace.' -> Field: "'.$field.'" $fields empty' );
+
+			return false;
+
+		}
+
+		// h::log( self::$fields[$field] );
+		// check if data is structured as an array of array ##
+		if ( 
+			isset( self::$fields[$field] )
+			&& render\method::is_array_of_arrays( self::$fields[$field] )
+		){
+
+			h::log( self::$args['task'].'~>n:>field: "'.$field.'" is an array of arrays, so set to repeater' );
+
+			return 'repeater';
+
+		}
 
 		// sanity ##
 		if(
@@ -228,31 +271,15 @@ class fields extends \q\render {
 		){
 
 			// get caller ##
-			// $backtrace = core\method::backtrace([ 'level' => 7, 'return' => 'class_function' ]);
+			$backtrace = core\method::backtrace([ 'level' => 2, 'return' => 'class_function' ]);
 
-			// h::log( 'd:>'.$backtrace.' -> $args->fields empty' );
+			h::log( self::$args['task'].'~>n:>'.$backtrace.' -> Field: "'.$field.'" $args->fields empty' );
 
 			return false;
 
 		}
 
-		// h::log( 'd:>Checking Type of Field: "'.$field.'"' );
-		
-		// shortcut check for ui\method gather data ##
-		if ( 
-			isset( $args['type'] ) 
-			&& array_key_exists( $args['type'], render\type::get_allowed() )
-		){
-
-			h::log( 'd:>Shortcut to type passed in args: '.$args['type'] );
-
-			return $args['type'];
-
-		}
-
         if ( 
-			// self::is_array_of_arrays( $field )
-			// || 
 			$key = core\method::array_search( 'key', 'field_'.$field, self::$args['fields'] )
         ){
 
@@ -276,40 +303,6 @@ class fields extends \q\render {
 
 	}
 	
-
-	
-
-	/*
-	public static function is_array_of_arrays( $array = null ) {
-
-		// sanity ##
-		if(
-			is_null( $array )
-			|| ! is_array( $array )
-		){
-
-			h::log( 'e:>Error in passed args or not array' );
-
-			return false;
-
-		}
-
-		foreach ( $array as $key => $value ) {
-
-			if ( is_array( $value ) ) {
-
-				h::log( 'd:>is_array' );
-
-				return $key;
-
-			}
-			  
-		}
-		
-		return false;
-	  
-	}
-	*/
 
 
 

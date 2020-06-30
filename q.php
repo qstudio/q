@@ -218,7 +218,7 @@ if ( ! class_exists( 'Q' ) ) {
 		private static function load_libraries()
         {
 
-            // core ##
+            // methods ##
 			require_once self::get_plugin_path( 'library/core/_load.php' );
 
 			// getter ##
@@ -233,8 +233,11 @@ if ( ! class_exists( 'Q' ) ) {
 			// view ##
 			require_once self::get_plugin_path( 'library/view/_load.php' );
 
-			// theme ##
+			// assets ##
 			require_once self::get_plugin_path( 'library/asset/_load.php' );
+
+			// ui modules ##
+			require_once self::get_plugin_path( 'library/module/_load.php' );
 
 			// extensions ##
 			require_once self::get_plugin_path( 'library/extension/_load.php' );

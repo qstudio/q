@@ -303,23 +303,6 @@ class render extends \Q {
 	 */
 	public static function __callStatic( $function, $args ){	
 
-		// take first array item, unwrap array - __callStatic wraps the array in an array ##
-		if ( is_array( $args ) && isset( $args[0] ) ) { 
-			
-			// h::log('Taking the first array item..');
-			$args = $args[0];
-		
-		}
-
-		// convert string passed args, presuming it to be markup...??... ##
-		if ( is_string( $args ) ) {
-
-			$args = [
-				'markup' => $args
-			];
-
-		}
-
 		// check class__method is formatted correctly ##
 		if ( 
 			false === strpos( $function, '__' )
@@ -348,17 +331,35 @@ class render extends \Q {
 
 		// h::log( 'd:>search if -- class: '.$class.'::'.$method.' available' );
 
-		// look for "namespace" class to $class ##
+		// look for "namespace/render/CLASS" ##
 		$namespace = __NAMESPACE__."\\render\\".$class;
 		// h::log( 'd:>namespace --- '.$namespace );
 
 		if (
 			class_exists( $namespace ) // && exists ##
-			// && method_exists( $namespace, 'run' ) // && exists ##
-			// && method_exists( $namespace, $method ) // && exists ##
 		) {
 
 			// h::log( 'd:>class: '.$namespace.' available' );
+
+			// take first array item, unwrap array - __callStatic wraps the array in an array ##
+			if ( is_array( $args ) && isset( $args[0] ) ) { 
+				
+				// h::log('Taking the first array item..');
+				$args = $args[0];
+			
+			}
+
+			// extrac markup from passed args ##
+			render\markup::pre_validate( $args );
+
+			// make args an array, if it's not ##
+			if ( ! is_array( $args ) ){
+			
+				// h::log( 'Caste $args to array' );
+
+				$args = [];
+			
+			}
 
 			// define context for all in class -- i.e "post" ##
 			$args['context'] = $class;

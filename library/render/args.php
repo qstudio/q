@@ -15,6 +15,9 @@ class args extends \q\render {
 
 		// h::log( $args );
 
+		// pre-format args to extract markup -- if only one string is passed, this will empty the args ##
+		// $args = render\markup::pre_config( $args );
+
 		// get stored config via lookup, fallback 
 		// pulls from Q, but available to filter via q/config/get/all ##
 		$config = core\config::get( $args );
@@ -152,7 +155,7 @@ class args extends \q\render {
 		self::$args = $args;
 
 		// pre-format markup ##
-		self::pre_format( $args );
+		self::post_config();
 		
         // return args for validation ##
         return $args;
@@ -166,10 +169,12 @@ class args extends \q\render {
 	 * 
 	 * @since 4.1.0
 	*/
-	public static function pre_format( $args = null ){
+	public static function post_config(){
 
-		// pre-format args to extract markup ##
-		render\markup::args( $args );
+		// h::log( self::$args['markup'] );
+
+		// post-format markup to extract markup keys collected by config ##
+		render\markup::merge();
 
 		// pre-format markup to extract sections and add additional placeholders ##
 		render\markup::section();

@@ -542,70 +542,134 @@ class method extends \q\render {
 
 
 
-	/**
-     * Markup object based on %placeholders% and template
-     *
-     * @since    2.0.0
-     * @return   Mixed
-     */
-    public static function markup_OG( $markup = null, $data = null )
-    {
+	// /**
+    //  * Markup object based on %placeholders% and template
+    //  *
+    //  * @since    2.0.0
+    //  * @return   Mixed
+    //  */
+    // public static function markup_OG( $markup = null, $data = null )
+    // {
 
-        // sanity ##
-        if (
-            is_null( $markup )
-            || is_null( $data )
-            ||
-            (
-                ! is_array( $data )
-                && ! is_object( $data )
-            )
-        ) {
+    //     // sanity ##
+    //     if (
+    //         is_null( $markup )
+    //         || is_null( $data )
+    //         ||
+    //         (
+    //             ! is_array( $data )
+    //             && ! is_object( $data )
+    //         )
+    //     ) {
 
-            helper::log( 'e:>missing parameters' );
+    //         helper::log( 'e:>missing parameters' );
 
-            return false;
+    //         return false;
 
-        }
+    //     }
 
-        #helper::log( $data );
-		#helper::log( $markup );
+    //     #helper::log( $data );
+	// 	#helper::log( $markup );
 
-		// @todo -- wrapping markup should be applied - $ags['wrap] ##
-		h::log( 't:>wrapping markup should be applied from $ags->wrap with placeholder %content%' );
+	// 	// @todo -- wrapping markup should be applied - $ags['wrap] ##
+	// 	h::log( 't:>wrapping markup should be applied from $ags->wrap with placeholder %content%' );
 
-		// @todo -- this should really deal with arrays of data ##
-		h::log( 't:>extend to accept and validate arrays of data...' );
+	// 	// @todo -- this should really deal with arrays of data ##
+	// 	h::log( 't:>extend to accept and validate arrays of data...' );
 
-		// get the markup ##
-		$string = $markup;
+	// 	// get the markup ##
+	// 	$string = $markup;
 
-        // format markup with translated data ##
-        foreach( $data as $key => $value ) {
+    //     // format markup with translated data ##
+    //     foreach( $data as $key => $value ) {
 
-			// check on the value ##
-			// h::log( 'key: '.$key.' / value: '.$value );
+	// 		// check on the value ##
+	// 		// h::log( 'key: '.$key.' / value: '.$value );
 
-            // only replace keys found in markup ##
-            if ( false === strpos( $string, '%'.$key.'%' ) ) {
+    //         // only replace keys found in markup ##
+    //         if ( false === strpos( $string, '%'.$key.'%' ) ) {
 
-                #helper::log( 'skipping '.$key );
+    //             #helper::log( 'skipping '.$key );
 
-                continue ;
+    //             continue ;
 
-			}
+	// 		}
 
-			// template replacement ##
-			$string = str_replace( '%'.$key.'%', $value, $string );
+	// 		// template replacement ##
+	// 		$string = str_replace( '%'.$key.'%', $value, $string );
+
+	// 	}
+
+    //     // h::log( $string );
+
+    //     // return markup ##
+    //     return $string;
+
+	// }
+	
+
+	/***/
+	public static function is_array_of_arrays( $array = null ) {
+
+		// sanity ##
+		if(
+			is_null( $array )
+			|| ! is_array( $array )
+		){
+
+			h::log( 'e:>Error in passed args or not array' );
+
+			return false;
 
 		}
 
-        // h::log( $string );
+		if (
+			isset( $array[0] )
+			&& is_array( $array[0] )
+		){
 
-        // return markup ##
-        return $string;
+			// h::log( 'd:>is_array' );
 
-    }
+			return true;
+
+		}
+
+		// foreach ( $array as $key => $value ) {
+
+		// 	if ( is_array( $value ) ) {
+
+		// 		h::log( 'd:>is_array' );
+
+		// 		return $key;
+
+		// 	}
+			  
+		// }
+		
+		return false;
+	  
+	}
+
+
+
+	public static function get_context(){
+
+		// sanity ##
+		if (
+			! isset( self::$args )
+			|| ! isset( self::$args['context'] )
+			|| ! isset( self::$args['task'] )
+		){
+
+			h::log( 'd:>No context / task available' );
+
+			return false;
+
+		}
+
+		return sprintf( 'Context: "%s" Task: "%s"', self::$args['context'], self::$args['task'] );
+
+	}
 
 
 

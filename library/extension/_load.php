@@ -34,9 +34,6 @@ class extension extends \Q {
 			// banner / ticker ##
 			// 'banner' => h::get( 'extension/banner.php', 'return', 'path' ), // @todo  ##
 
-			// asana ## @todo.. I like asana .. #
-			'asana' => h::get( 'extension/asana.php', 'return', 'path' ),
-
 			// consent ##
 			'consent' => h::get( 'extension/consent/_load.php', 'return', 'path' ),
 
@@ -49,23 +46,8 @@ class extension extends \Q {
 			// sticky ##
 			'sticky' => h::get( 'extension/sticky/_load.php', 'return', 'path' ),
 
-			// github ##
-			'github' => h::get( 'extension/github.php', 'return', 'path' ),
-
-			// google ##
-			'google' => h::get( 'extension/google.php', 'return', 'path' ),
-
-			// facebook ##
-			'facebook' => h::get( 'extension/facebook.php', 'return', 'path' ),
-
-			// linkedin ##
-			'linkedin' => h::get( 'extension/linkedin.php', 'return', 'path' ),
-
-			// twitter ##
-			'twitter' => h::get( 'extension/twitter.php', 'return', 'path' ),
-
-			// youtube ##
-			'youtube' => h::get( 'extension/youtube.php', 'return', 'path' ),
+			// services ##
+			'service' => h::get( 'extension/service/_load.php', 'return', 'path' ),
 
 		];
 

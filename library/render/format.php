@@ -17,6 +17,7 @@ class format extends \q\render {
     public static function field( String $field = null, $value = null ) {
 		
 		// h::log( 'd:>Field: '.$field );
+		// h::log( $value );
 		
 		// sanity ##
         if ( is_null( $field ) ) {
@@ -285,6 +286,8 @@ class format extends \q\render {
 
         } else {
 
+			// h::log( 'd:>Array is an Array..' );
+
             // check how many items are in array and format ##
             $count = 0;
 
@@ -304,7 +307,7 @@ class format extends \q\render {
                 if ( self::field( $key_field, $key ) ) {
 
                     // format ran ok ##
-                    // h::log( 'format ran ok.. so now we can update markup for field: '.$field );
+                    // h::log( 'd:>format ran ok.. so now we can update markup for field: '.$field );
                     render\markup::set( $field, $count );
 
                 }

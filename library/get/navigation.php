@@ -14,26 +14,40 @@ use q\theme;
 
 class navigation extends \q\get {
 
-	
-    /**
-     * Get Pagination links
-     *
-     * @since       1.0.2
-     * @return      String      HTML
-     */
-    public static function pagination( $args = array() )
-    {
 
-		// global arg validator ##
-		if ( ! $args = render\args::prepare( $args ) ){ 
-		
-			help::log( 'Bailing..' ); 
-		
-			return false; 
-		
-		}
+	/**
+    * Get Pagination links
+    *
+    * @since       1.0.2
+	* @return      String      HTML
+	* @link	https://gist.github.com/mtx-z/f95af6cc6fb562eb1a1540ca715ed928
+    */
+	public static function pagination( $args = null ) {
 
+		// grab array ##
 		// h::log( $args );
+		// $args['context'] = 'ui'; // hack for now ##
+		// $args['task'] = 'pagination'; // hack for now ##
+		// h::log( 't:>this needs to move to Q modules.. and all the rest.. we should note hope to call modules in parent from Q, only the other way' );
+        // if ( ! $array = get\navigation::pagination( $args ) ) { 
+
+		// 	// h::log( 'No pagination...' );
+            
+        //     return false; 
+        
+		// }
+
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+		){
+
+			h::log( 'e:>Error in pased args' );
+
+			return false;
+
+		}
 
 		if ( 
 			isset( $args['query'] )
@@ -53,17 +67,25 @@ class navigation extends \q\get {
 		// no query, no pagination ##
 		if ( ! $query ) {
 
-			h::log( 'Nada to query...' );
+			h::log( 'e:>Nothing to query here' );
+
+			return false;
+
+		}
+		
+		// get config ##
+		$config = core\config::get([ 'context' => 'navigation', 'task' => 'pagination' ]);
+
+		// validate config ##
+		if ( ! $config ) {
+
+			h::log( 'e:>Error loading config' );
 
 			return false;
 
 		}
 
-		// get config setting ##
-		$config = core\config::get([ 'context' => 'navigation', 'task' => 'pagination' ]);
-		// h::log( $config );
-
-        // work out total ##
+		// work out total ##
 		$total = $query->max_num_pages;
 		// h::log( 'Total: '.$total );
 
@@ -78,11 +100,11 @@ class navigation extends \q\get {
 			'total'        			=> $total,
 			'current'      			=> max( 1, \get_query_var( 'paged' ) ),
 			'type'         			=> 'array',
-            'show_all'              => false,
-            'end_size'		        => $config['end_size'], 
-            'mid_size'		        => $config['mid_size'],
-            'prev_text'             => $config['prev_text'],
-            'next_text'             => $config['next_text'],                   
+			'show_all'              => false,
+			'end_size'		        => $config['end_size'], 
+			'mid_size'		        => $config['mid_size'],
+			'prev_text'             => $config['prev_text'],
+			'next_text'             => $config['next_text'],                   
 		];
 
 		// optionally add search query var ##
@@ -108,7 +130,7 @@ class navigation extends \q\get {
 			|| 0 == count( $paginate_links )
 		) {
 
-			h::log( '$paginate_links empty.. bailing' );
+			h::log( 'd:>$paginate_links empty.. bailing' );
 
 			return false;
 
@@ -135,14 +157,183 @@ class navigation extends \q\get {
 			$link_last = '?paged='.$total.$fragement;
 			$array[] = '<li class="'.$config['li_class'].'"><a class="'.$config['class_link_last'].'" rel="'.$total.'" href="'.\esc_url( $link_last ).'">'.$config['last_text'].'</a></li>';
 		}
-
+ 
 		// test ##
-        // h::log( $array );
+		// h::log( $array );
 
-        // kick back array ##
-        return $array;
+		// filters anc checks ##
+		// $array = get\method::prepare_return( $args, $array );
+		
+		// format page items ##
+		$items = [];
+		// $markup = $config['markup']['template']; // '<li class="%active-class%">%item%</li>' ##
+		$i = 0;
 
+		foreach ( $array as $page ) {
+
+			// $row['class_link_item'] = $config['class_link_item'];
+			$items[$i]['li_class'] = $config['li_class'];
+			$items[$i]['item'] = str_replace( 'page-numbers', $config['class_link_item'], $page );
+			$items[$i]['active-class'] = (strpos($page, 'current') !== false ? ' active' : '');
+
+			// iterate ##
+			$i ++;
+
+		}
+
+		// filters and checks ##
+		// return get\method::prepare_return( $args, $items );
+
+		// markup array ##
+		$string = render\method::markup( $config['markup']['template'], $items, $config['markup'] );
+
+		// echo ##
+		// if ( 'return' == $return ){ 
+			
+			return $string ;
+
+		// } else {
+
+			// echo $string;
+
+		// }
+
+		// kick back ##
+		return true;
+		
 	}
+
+
+
+	
+    // /**
+    //  * Get Pagination links
+    //  *
+    //  * @since       1.0.2
+    //  * @return      String      HTML
+    //  */
+    // public static function pagination_OLD( $args = array() )
+    // {
+
+	// 	// global arg validator ##
+	// 	if ( ! $args = render\args::prepare( $args ) ){ 
+		
+	// 		help::log( 'Bailing..' ); 
+		
+	// 		return false; 
+		
+	// 	}
+
+	// 	// h::log( $args );
+
+	// 	if ( 
+	// 		isset( $args['query'] )
+	// 	) {
+
+	// 		$query = $args['query'];
+
+	// 	// grab some global variables ##
+	// 	} else {
+			
+	// 		// h::log( 'Grabbing global query..' );
+	// 		global $wp_query;
+	// 		$query = $wp_query;
+
+	// 	}
+
+	// 	// no query, no pagination ##
+	// 	if ( ! $query ) {
+
+	// 		h::log( 'Nada to query...' );
+
+	// 		return false;
+
+	// 	}
+
+	// 	// get config setting ##
+	// 	$config = core\config::get([ 'context' => 'navigation', 'task' => 'pagination' ]);
+	// 	// h::log( $config );
+
+    //     // work out total ##
+	// 	$total = $query->max_num_pages;
+	// 	// h::log( 'Total: '.$total );
+
+	// 	// append query to pagination links, if set ##
+	// 	$fragement = '';
+
+	// 	// args to query WP ##
+	// 	$paginate_args = [
+	// 		// 'base'         			=> str_replace( 999999999, '%#%', \esc_url( \get_pagenum_link( 999999999 ) ) ),
+	// 		'base'                  => @\add_query_arg('paged','%#%'),
+	// 		'format'       			=> '?paged=%#%',
+	// 		'total'        			=> $total,
+	// 		'current'      			=> max( 1, \get_query_var( 'paged' ) ),
+	// 		'type'         			=> 'array',
+    //         'show_all'              => false,
+    //         'end_size'		        => $config['end_size'], 
+    //         'mid_size'		        => $config['mid_size'],
+    //         'prev_text'             => $config['prev_text'],
+    //         'next_text'             => $config['next_text'],                   
+	// 	];
+
+	// 	// optionally add search query var ##
+	// 	if( ! empty( $query->query_vars['s'] ) ) {
+
+	// 		$paginate_args['add_args'] = array( 's' => \get_query_var( 's' ) );
+	// 		// $query_args['s'] = \get_query_var( 's' );
+	// 		$fragement .= '&s='.\get_query_var( 's' );
+			
+	// 	}
+
+	// 	// h::log( $query_args );
+
+	// 	// filter args ##
+	// 	$paginate_args = \apply_filters( 'q/get/navigation/pagination/args', $paginate_args );
+
+	// 	// get links from WP ##
+	// 	$paginate_links = \paginate_links( $paginate_args );
+
+	// 	// check if we got any links ##
+	// 	if ( 
+	// 		! $paginate_links
+	// 		|| 0 == count( $paginate_links )
+	// 	) {
+
+	// 		h::log( '$paginate_links empty.. bailing' );
+
+	// 		return false;
+
+	// 	}
+
+	// 	// test ##
+	// 	// h::log( $pages );
+	// 	// h::log( 'd:>paged: '.\get_query_var( 'paged' ) );
+
+	// 	// empty array ##
+	// 	$array = [];
+
+	// 	// prepare first item -- unless on first page ##
+	// 	if ( 0 != \get_query_var( 'paged' ) ) {
+	// 		$link_first = '?paged=1'.$fragement;
+	// 		$array[] = '<li class="'.$config['li_class'].'"><a class="'.$config['class_link_first'].'" rel="1" href="'.\esc_url( $link_first ).'">'.$config['first_text'].'</a></li>';
+	// 	}
+
+	// 	// merge pagination into links ##
+	// 	$array = array_merge( $array, $paginate_links ) ;
+
+	// 	// prepare last item ##
+	// 	if ( $total != \get_query_var( 'paged' ) ) {
+	// 		$link_last = '?paged='.$total.$fragement;
+	// 		$array[] = '<li class="'.$config['li_class'].'"><a class="'.$config['class_link_last'].'" rel="'.$total.'" href="'.\esc_url( $link_last ).'">'.$config['last_text'].'</a></li>';
+	// 	}
+
+	// 	// test ##
+    //     // h::log( $array );
+
+    //     // kick back array ##
+    //     return $array;
+
+	// }
 	
 
 
@@ -260,7 +451,7 @@ class navigation extends \q\get {
         #pr( $object->posts );
 
         // allow posts to be filtered ##
-        $posts = \apply_filters( 'q/get/wp/the_navigation', $posts );
+        // $posts = \apply_filters( 'q/get/wp/the_navigation', $posts );
 
         // return object ##
         return $posts;
@@ -275,71 +466,36 @@ class navigation extends \q\get {
     *
     * @since       1.3.3
     * @return      string   HTML
-    */
-    public static function menu( $args = array(), $blog_id = 1 )
+	*/
+    public static function menu( $args = null, $blog_id = 1 )
     {
 
-        #h::log( $args );
+		// sanity ##
+		if(
+			is_null( $args )
+			|| ! is_array( $args )
+			|| ! isset( $args['args']['menu'] )
+		){
 
-        // merge theme_location into passed args ##
-        // $args['theme_location'] = isset( $args['theme_location'] ) ? $args['theme_location'] : $args['menu'] ;
+			h::log( 'e:>Error in passed args' );
 
-        // try and grab data, or kick back false ##
-        // if ( ! $args = wordpress::get_nav_menu( $args ) ) { 
+			return false;
 
-        //      h::log( 'kicked here..' );
+		}
 
-        //      return false; 
-            
-		// }
+		// Parse incoming $args into an array and merge it with $defaults - caste to object ##
+		$args = core\method::parse_args( $args['args'], core\config::get([ 'context' => 'navigation', 'task' => 'menu' ])['args'] );
+		// h::log( $args );
 		
-		// h::log( $args );
-
-        // Parse incoming $args into an array and merge it with $defaults - caste to object ##
-        // $args = wp_parse_args( 
-        //     $args
-        //     , core\config::get([ 'context' => 'navigation', 'task' => 'menu' ])['args'] 
-        // );
+        if ( ! \has_nav_menu( $args['menu'] ) ) {
         
-        //$args = \wp_parse_args( $args, self::$the_nav_menu );
-		// h::log( $args );
-
-		return ['one', 'two'];
-        
-        if ( ! \has_nav_menu( $args['args']['menu'] ) ) {
-        
-            h::log( 'd:>! has nav menu: '.$args->theme_location );
+            h::log( 'd:>! has nav menu: '.$args['theme-location'] );
 
             return false;
 
         }
 
-        // pass to mulltisite handler ##
-        return self::multisite_nav_menu(
-            $args['args'],
-            $blog_id
-        );
-
-?>
-
-<?php
-
-    }
-
-
-
-    /**
-    * Multisite network nav menus
-    *
-    * @link        http://wordpress.stackexchange.com/questions/26367/use-wp-nav-menu-to-display-a-menu-from-another-site-in-a-network-install
-    * @global      Integer     $blog_id
-    * @param       Array       $args
-    * @param       Integer     $origin_id
-    * @return type
-    */
-    public static function multisite_nav_menu( $args = array(), $blog_id = 1 ) {
-
-		#global $blog_id;
+        #global $blog_id;
         $blog_id = \absint( $blog_id );
 
         // h::log( 'nav_menu - $blog_id: '.$blog_id.' / $origin_id: '.$origin_id );
@@ -359,9 +515,10 @@ class navigation extends \q\get {
 	    \wp_nav_menu( $args );
         \restore_current_blog();
 
-        return;
+		return;
 
     }
+
 
 
 
@@ -374,61 +531,93 @@ class navigation extends \q\get {
     * @param       Integer     $origin_id
     * @return      Array
     */
-    public static function multisite_nav_menu_items( $args = array(), $origin_id = 1 ) {
+    public static function menu_items( $args = null ) {
 
-        global $blog_id;
-        $origin_id = \absint( $origin_id );
+		// sanity ##
+		if(
+			is_null( $args )
+			|| ! is_array( $args )
+			|| ! isset( $args['args']['theme_location'] )
+		){
 
-        #pr( $args );
+			h::log( 'e:>Error in passed args' );
 
-        // not WP Multisite OR on correct site ##
-        if ( ! \is_multisite() || $origin_id == $blog_id ) {
+			return false;
 
-            $wp_get_nav_menu_items = \wp_get_nav_menu_items( $args );
+		}
 
-        } else {
+		/*
+		if ( 
+			! $locations = \get_nav_menu_locations()
+			|| ! isset( $locations[ $args['args']['theme_location'] ] )
+			|| ! $menu = \get_term( $locations[ $args['args']['theme_location'] ], 'nav_menu' )
+          	|| ! $array = wp_get_nav_menu_items( $menu->term_id )
+			// ! \has_nav_menu( $args['args']['theme_location'] ) 
+		) {
+        
+            h::log( 'd:>Unable to locate menu: '.$args['args']['theme_location'] );
 
-            // switch to the correct blog ##
-            \switch_to_blog( $origin_id );
+            return false;
 
-            // grab the nav menu items ##
-            \wp_get_nav_menu_items( $args );
+		}
+		*/
+		
+		if ( 
+			! $locations = \get_nav_menu_locations()
+		) {
+        
+            h::log( 'd:>1 Unable to locate menu: '.$args['args']['theme_location'] );
 
-            // restore the main blog ##
-            \restore_current_blog();
+            return false;
 
-        }
+		}
+		
+		if ( 
+			! isset( $locations[ $args['args']['theme_location'] ] )
+		) {
+        
+            h::log( 'd:>2 Unable to locate menu: '.$args['args']['theme_location'] );
+
+            return false;
+
+		}
+		
+		if ( 
+			! $menu = \get_term( $locations[ $args['args']['theme_location'] ], 'nav_menu' )
+		) {
+        
+            h::log( 'd:>3 Unable to locate menu: '.$args['args']['theme_location'] );
+
+            return false;
+
+		}
+		
+		if ( 
+          	! $array = wp_get_nav_menu_items( $menu->term_id )
+		) {
+        
+            h::log( 'd:>4 Unable to locate menu: '.$args['args']['theme_location'] );
+
+            return false;
+
+		}
+
+		h::log( $array );
 
         // nothing found ##
-        if ( ! $wp_get_nav_menu_items ) { return false; }
+        if ( 
+			! $array 
+			|| ! is_array( $array )
+		) { 
 
-        #pr( $wp_get_nav_menu_items );
-
-        // drop the top item - as we don't need this ##
-        unset( $wp_get_nav_menu_items[0] );
-
-        // remove custom links and not viewable items ##
-        foreach ( $wp_get_nav_menu_items as $key => $value ) {
-
-            #pr( $value->classes[0] );
-
-            // remove items ##
-            if (
-                    'custom' == $value->object // custom links ##
-                || 'landing-hide' == $value->classes[0] // landing page hiders ##
-            ) {
-
-                #pr( $value->object );
-
-                // out ##
-                unset( $wp_get_nav_menu_items[$key] );
-
-            }
-
-        }
+			h::log( 'd:>Menu returned no items: '.$args['args']['theme_location'] ); // theme_location
+			
+			return false; 
+		
+		}
 
         // return the nav menu items ##
-        return $wp_get_nav_menu_items;
+        // return $array;
 
     }
 

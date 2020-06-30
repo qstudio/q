@@ -75,6 +75,7 @@ class taxonomy extends \q\get {
 
 		// prepare return array ##
 		$array = [];
+		$count = 0;
 
 		foreach ( $terms as $term ) {
 
@@ -90,17 +91,21 @@ class taxonomy extends \q\get {
 			}
 
 			// array key ##
-			$key = $term->term_id;
+			// $key = $term->term_id;
 
 			// add values ##
-			$array[ $key ]['permalink'] = \get_term_link( $term );
-			$array[ $key ]['slug'] = $term->slug;
-			$array[ $key ]['active'] = $term->term_id === $active_term_id ? ' active' : '' ; // are we viewing this term ##
-			$array[ $key ]['title'] = $term->name;
+			$array[ $count ]['permalink'] = \get_term_link( $term );
+			$array[ $count ]['slug'] = $term->slug;
+			$array[ $count ]['active'] = $term->term_id === $active_term_id ? ' active' : '' ; // are we viewing this term ##
+			$array[ $count ]['title'] = $term->name;
 
-		}
+			// iterate ##
+			$count ++;
+
+		}	
 
 		// h::log( $array );
+		$array = [ 'terms' => $array ];
 
 		// return ##
 		return get\method::prepare_return( $args, $array );

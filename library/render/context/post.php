@@ -179,7 +179,7 @@ class post extends \q\render {
 			// define all required fields for markup ##
 			self::$fields = [
 				'total' 		=> $array['query']->found_posts, // total posts ##
-				'pagination'	=> theme\module\navigation::pagination( $args, 'return' ), // @todo --- this is wrong place to get pagination ##
+				'pagination'	=> get\navigation::pagination( $args ), // get pagination, returns string ##
 				'posts'			=> $array['query']->posts // array of WP_Posts ##
 			];
 
@@ -191,8 +191,6 @@ class post extends \q\render {
     }
 
 	
-
-
 
 
     /**

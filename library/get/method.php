@@ -57,7 +57,7 @@ class method extends \q\get {
 			|| ! is_array( $array )
 		) {
 
-			h::log( 'e~>'.$method.':>Error in passed $args or $array' );
+			h::log( 'e~>'.$method.':>Error in returned $array' );
 
 			return false;
 

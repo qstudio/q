@@ -9,92 +9,6 @@ use q\render;
 
 class taxonomy extends \q\render {
 
-	/** MAGIC */
-	public static function __callStatic( $function, $args ) {
-
-        return self::run( $args ); 
-	
-	}
-
-	public static function run( $args = null ){
-
-		// // run method to populate field data ##
-		// $method = $args['task'];
-		// $extension = render\extension::get( $args['context'], $args['task'] );
-
-		// if (
-		// 	! \method_exists( get_class(), $method ) // && exists ##
-		// 	&& ! $extension // look for extensions ##
-		// ) {
-
-		// 	render\log::set( $args );
-
-		// 	h::log( 'e:>Cannot locate method: '.__CLASS__.'::'.$method );
-
-        //     return false;
-
-		// }
-
-        // // validate passed args ##
-        // if ( ! render\args::validate( $args ) ) {
-
-		// 	render\log::set( $args );
-			
-		// 	// h::log( 'd:>Bunked here..' );
-
-        //     return false;
-
-		// }
-
-		// base class ##
-		if ( 
-			\method_exists( get_class(), $args['task'] ) 
-		){
-
-			// 	h::log( 'load base method: '.$extension['class'].'::'.$extension['method'] );
-
-			// call render method ##
-			self::{ $args['task'] }( self::$args );
-
-		// extended class ##
-		} elseif (
-			$extension = render\extension::get( $args['context'], $args['task'] )
-		){
-
-			// 	h::log( 'load extended method: '.$extension['class'].'::'.$extension['method'] );
-
-			// h::log( 'd:>render extension..' );
-			$extension['class']::{ $extension['method'] }( self::$args );
-
-		}
-		// h::log( self::$fields );
-
-		// Now we can loop over each field ---
-		// running callbacks ##
-		// formatting none string types to strings ##
-		// removing placeholders in markup, if no field data found etc ##
-		// render\fields::prepare();
-		
-		// // h::log( self::$fields );
-
-        // // Prepare template markup ##
-        // render\markup::prepare();
-
-        // // optional logging to show removals and stats ##
-        // render\log::set( $args );
-
-        // // return or echo ##
-        // return render\output::return();
-
-	}
-	
-
-
-	// ---------- methods ##
-
-
-
-
 	/**
      * Post Category
      *
@@ -104,10 +18,12 @@ class taxonomy extends \q\render {
      */
     public static function terms( $args = null ) {
 
-		h::log( $args );
+		// h::log( $args );
+		// h::log( self::$markup );
 
 		// get term - returns array with keys 'title', 'permalink', 'slug', 'active' ##
 		render\fields::define(
+			// return an array of term items, in the array "terms" ##
 			get\taxonomy::terms( $args )
 		);
 

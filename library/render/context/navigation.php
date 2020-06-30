@@ -9,6 +9,7 @@ use q\render;
 
 class navigation extends \q\render {
 
+	
 	/**
     * Render nav menu
     *
@@ -16,9 +17,52 @@ class navigation extends \q\render {
     */
     public static function menu( $args = null ){
 
+        // ##
+		return get\navigation::menu( $args );
+
+	}
+	
+
+	/**
+    * Render pagination
+    *
+    * @since       4.1.0
+    */
+    public static function pagination( $args = null ){
+
         //  ##
 		render\fields::define([
-			'content' => 'menu..' #get\navigation::menu( $args )
+			'pagination' => get\navigation::pagination( $args )
+		]);
+
+	}
+	
+
+	/**
+    * Render siblings
+    *
+    * @since       4.1.0
+    */
+    public static function siblings( $args = null ){
+
+        //  ##
+		render\fields::define([
+			'siblings' => get\navigation::siblings( $args )
+		]);
+
+	}
+	
+
+	/**
+    * Render back_home_next
+    *
+    * @since       4.1.0
+    */
+    public static function relative( $args = null ){
+
+        //  ##
+		render\fields::define([
+			'relative'	=> get\navigation::relative( $args )
 		]);
 
     }

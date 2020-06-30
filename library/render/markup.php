@@ -9,6 +9,8 @@ use q\render;
 
 class markup extends \q\render {
 
+	// track wrapping ##
+	protected static $wrapped = false;
 
     /**
      * Apply Markup changes to passed template
@@ -16,6 +18,9 @@ class markup extends \q\render {
      * 
      */
     public static function prepare(){
+
+		// reset ##
+		self::$wrapped = false;
 
         // sanity checks ##
         if (
@@ -76,10 +81,10 @@ class markup extends \q\render {
 			// markup string, with filter and wrapper lookup ##
 			$string = self::string([ 'key' => $key, 'value' => $value, 'string' => $string ]);
 
-            // template replacement ##
-            // $string = str_replace( '{{ '.$key.' }}', $value, $string );
-
-        }
+		}
+		
+		// optional wrapper, html passed in markup->wrap with {{ content }} placeholder ##
+		$string = self::wrap([ 'string' => $string ]);
 
         // helper::log( $string );
 
@@ -127,38 +132,115 @@ class markup extends \q\render {
 	 * 
 	 * @since 4.1.0
 	*/
-	public static function args( $args = null ){
+	public static function pre_validate( $args = null ){
 
 		// sanity ##
+		if (
+			is_null( $args )
+		){
+
+			h::log( 'd:>No $args sent from calling method' );
+
+			return false;
+
+		}
 		
-        // test ##
+        // test args sent from view caller ##
 		// h::log( $args );
 
-		// make an array ##
-		self::$markup = []; 
-		
-		// default -- almost useless - but works for single values.. ##
-		$markup = tag::wrap([ 'open' => 'vo', 'value' => 'value', 'close' => 'vc' ]);
+		// empty stored markup ##
+		self::$markup = [];
 
-		// filter ##
-		$markup = \apply_filters( 'q/render/markup/default', $markup );
-		// $markup = '<div>{{ value }}</div>';
+		// convert string passed args, presuming it to be markup...??... ##
+		if ( is_string( $args ) ) {
+
+			// create args array ##
+			// $args = [];
+
+			// h::log('d:>Using string markup' );
+
+			// add markup->template ##
+			return self::$markup = [
+				// 'markup' => [
+					'template' => $args
+				// ]
+			];
+
+		} 
+		
+		// if(
+		// 	is_array( $args )
+		// 	&& isset( $args['markup'] )
+		// ) {
+
+		// 	self::$markup = $args['markup'];
+
+		// }
 
 		// if "markup" set in args, take this ##
-		if ( isset( $args['markup'] ) ){
+		if ( 
+			is_array( $args )
+			&& isset( $args['markup'] ) 
+		){
 
+			// passed markup is an array - so take all values ##
 			if ( 
 				is_array( $args['markup'] ) 
-				// && isset( $args['markup']['template'] ) // not sure we need to check for this # ??
+				// && isset( $args['markup']['template'] ) // we can't validate "template" yet, as it might be pulled from config
 			) {
 
-				// h::log('d:>Using array markup..');
+				// h::log('d:>Using array markup' );
 
 				return self::$markup = $args['markup'];
 
 			} else {
 
-				// h::log('d:>Using single markup..');
+				// h::log('d:>Using single markup' );
+
+				return self::$markup['template'] = $args['markup'];
+
+			}
+
+		}
+
+		/*
+		// make an array ##
+		// if (
+		// 	! isset( self::$markup )
+		// 	|| empty( self::$markup )
+		// 	|| ! is_array( self::$markup )
+		// ){
+			
+			self::$markup = []; 
+	
+		// }
+
+		// default -- almost useless - but works for single values.. ##
+		// $markup = tag::wrap([ 'open' => 'vo', 'value' => 'value', 'close' => 'vc' ]);
+
+		// // filter ##
+		// $markup = \apply_filters( 'q/render/markup/default', $markup );
+		// $markup = '<div>{{ value }}</div>';
+
+		// for ##
+		// $for = core\method::backtrace([ 'level' => 3, 'return' => 'class_function' ]);
+
+		// if "markup" set in args, take this ##
+		if ( isset( $args['markup'] ) ){
+
+			// passed markup is an array - so take all values ##
+			if ( 
+				is_array( $args['markup'] ) 
+				// && isset( $args['markup']['template'] ) // we can't validate "template" yet, as it might be pulled from config
+			) {
+
+				h::log('d:>Using array markup' );
+
+				return self::$markup = $args['markup'];
+
+			} else {
+
+				h::log('d:>Using single markup' );
 
 				return self::$markup['template'] = $args['markup'];
 
@@ -169,9 +251,13 @@ class markup extends \q\render {
 		// args is a string - take the whole thing ##
 		if ( is_string( $args ) ){
 
-			// h::log('d:>Using string markup..');
+			h::log('d:>Using string markup' );
 
-			return self::$markup['template'] = $args;
+			// assign markup ##
+			self::$markup['template'] = $args;
+
+			// empty args ##
+			return true;
 
 		}
 
@@ -199,16 +285,135 @@ class markup extends \q\render {
 
 		// }
 
-		// h::log('d:>Using default markup..');
+		// h::log('d:>Using default markup for' );
 
 		// something went wrong ##
 		// return false;
 
         // assign markup ##
-		return self::$markup['template'] = $markup;
+		return false; #self::$markup['template'] = $markup;
+		*/
+
+		return false;
 
 	}
+
 	
+
+	/**
+	 * $markup is set, so now we need to merge in any new markup values returned from get::config()
+	 * 
+	 * @since 4.1.0
+	*/
+	public static function merge(){
+
+		// sanity ##
+		if (
+			is_null( self::$args )
+			// || is_array( self::$args )
+		){
+
+			h::log( 'd:>No $args available or corrupt' );
+
+			return false;
+
+		}
+		
+        // test ##
+		// h::log( $args );
+
+		// make an array ##
+		if (
+			! self::$markup
+			|| ! isset( self::$markup )
+			|| empty( self::$markup )
+			|| ! is_array( self::$markup )
+		){
+			
+			// h::log( 'd:>Create markup array...' );
+
+			self::$markup = []; 
+	
+		}
+
+		// default -- almost useless - but works for single values.. ##
+		// $markup = tag::wrap([ 'open' => 'vo', 'value' => 'value', 'close' => 'vc' ]);
+
+		// filter ##
+		// $markup = \apply_filters( 'q/render/markup/default', $markup );
+		// $markup = '<div>{{ value }}</div>';
+
+		// for ##
+		$for = ' for: '.render\method::get_context();
+
+		// we only accept correctly formatted markup from config ##
+		if (
+			isset( self::$args['markup'] ) 
+		) {
+
+			// config has a single markup value, take ##
+			if (
+				is_string( self::$args['markup'] )
+			){
+
+				// h::log( 'adding additional single markup from config'.$for );
+				// h::log( self::$args['markup'] );
+				// h::log( self::$markup );
+
+				// take as main template ##
+				$markup['template'] = self::$args['markup'];
+
+			}
+
+			// config passed an array fo values ##
+			if ( is_array( self::$args['markup'] ) ) {
+
+				// h::log( 'adding additional array of markup from config'.$for );
+				// h::log( self::$args['markup'] );
+				// h::log( self::$markup );
+
+				// take array or markup ##
+				$markup = self::$args['markup'];
+
+			}
+
+			// merge into defaults -- view passed markup takes preference ##
+			self::$markup = core\method::parse_args( self::$markup, $markup );
+
+			// test ##
+			// h::log( self::$markup );
+
+			// return true;
+
+		}
+
+		// @todo no additional markup passes from config.. so we should check if we actually have a markup->template
+		if (
+			! isset( self::$markup['template'] )
+		){
+
+			// default -- almost useless - but works for single values.. ##
+			$markup = tag::wrap([ 'open' => 'vo', 'value' => 'value', 'close' => 'vc' ]);
+
+			// filter ##
+			$markup = \apply_filters( 'q/render/markup/default', $markup );
+
+			// note ##
+			h::log('e:>NOTE: Using default markup'.$for );
+
+			// assign ##
+			self::$markup['template'] = $markup;
+
+		}
+
+		// remove markup from args ##
+		unset( self::$args['markup'] );
+
+		// kick back ##
+		return true;
+
+	}
+
 
 
 	/**
@@ -221,7 +426,17 @@ class markup extends \q\render {
 		// h::log( $args['key'] );
 
 		// sanity -- this requires ##
+		if ( 
+			! isset( self::$markup )
+			|| ! is_array( self::$markup )
+			|| ! isset( self::$markup['template'] )
+		){
 
+			h::log( 'e:>Error in stored $markup' );
+
+			return false;
+
+		}
 
 		// get markup ##
 		$string = self::$markup['template'];
@@ -340,6 +555,19 @@ class markup extends \q\render {
 	 * @since 4.1.0
 	*/
 	public static function config(){
+
+		// sanity -- this requires ##
+		if ( 
+			! isset( self::$markup )
+			|| ! is_array( self::$markup )
+			|| ! isset( self::$markup['template'] )
+		){
+
+			h::log( 'e:>Error in stored $markup' );
+
+			return false;
+
+		}
 
 		// h::log( $args['key'] );
 
@@ -581,31 +809,39 @@ class markup extends \q\render {
 		// look for wrapper in markup ##
 		// if ( isset( self::$args[$key] ) ) {
 		// if ( isset( self::$markup[$key] ) ) { // ?? @todo -- how is this working ?? -- surely, this should look for 'wrap'
-		if ( isset( self::$markup['wrap'] ) ) { // ?? @todo -- how is this working ?? -- surely, this should look for 'wrap'
+		// wrap once ..
+		// if ( 
+		// 	isset( self::$markup['wrap'] ) 
+		// 	&& ! self::$wrapped
+		// ) { 
 
-			h::log( 't:>@todo.. string wrap logic...' );
+		// 	// h::log( 't:>@todo.. string wrap logic...' );
 
-			// $markup = self::$args[ $key ];
-			$markup = self::$markup[ 'wrap' ];
+		// 	// $markup = self::$args[ $key ];
+		// 	$markup = self::$markup[ 'wrap' ];
 
-			// filter ##
-			$string = core\filter::apply([ 
-				'parameters'    => [ 'string' => $string ], // pass ( $string ) as single array ##
-				'filter'        => 'q/render/markup/wrap/'.self::$args['task'].'/'.$key, // filter handle ##
-				'return'        => $string
-			]); 
+		// 	// filter ##
+		// 	$string = core\filter::apply([ 
+		// 		'parameters'    => [ 'string' => $string ], // pass ( $string ) as single array ##
+		// 		'filter'        => 'q/render/markup/wrap/'.self::$args['task'].'/'.$key, // filter handle ##
+		// 		'return'        => $string
+		// 	]); 
 
-			// h::log( 'found: '.$markup );
+		// 	// h::log( 'found: '.$markup );
 
-			// wrap key value in found markup ##
-			// example: markup->wrap = '<h2 class="mt-5">{{ content }}</h2>' ##
-			$value = str_replace( 
-				// '{{ content }}', 
-				tag::wrap([ 'open' => 'vo', 'value' => 'content', 'close' => 'vc' ]), 
-				$value, $markup 
-			);
+		// 	// wrap key value in found markup ##
+		// 	// example: markup->wrap = '<h2 class="mt-5">{{ content }}</h2>' ##
+		// 	$value = str_replace( 
+		// 		// '{{ content }}', 
+		// 		tag::wrap([ 'open' => 'vo', 'value' => 'content', 'close' => 'vc' ]), 
+		// 		$value, 
+		// 		$markup 
+		// 	);
 
-		}
+		// 	// track ##
+		// 	self::$wrapped = true;
+
+		// }
 
 		// filter ##
 		$string = core\filter::apply([ 
@@ -628,6 +864,100 @@ class markup extends \q\render {
              'filter'        => 'q/render/markup/string/after/'.self::$args['task'].'/'.$key, // filter handle ##
              'return'        => $string
         ]); 
+
+		// return ##
+		return $string;
+
+	}
+
+
+
+	public static function wrap( $args = null ){
+
+		// h::log( $args['key'] );
+		// h::log( 'd:>hello...' );
+
+		// sanity ##
+		if (  
+			is_null( $args )
+			// || ! isset( $args['key'] )
+			// || ! isset( $args['value'] )
+			|| ! isset( $args['string'] )
+		){
+
+			h::log( self::$args['task'].'~>e:>Error in passed args to "wrap" method' );
+
+			return false;
+
+		}
+
+		// h::log( 'd:>hello 2...' );
+
+		// get string ##
+		$string = $args['string'];
+		// $value = $args['value'];
+		// $key = $args['key'];
+
+		// h::log( 'key: "'.$key.'" - value: "'.$value.'"' );
+
+		// look for wrapper in markup ##
+		// and wrap once ..
+		if ( 
+			isset( self::$markup['wrap'] ) 
+			// && ! self::$wrapped
+		) { 
+
+			h::log( 'd:>hello 3...' );
+
+			// $markup = self::$args[ $key ];
+			$markup = self::$markup[ 'wrap' ];
+
+			h::log( 'd:>wrap string in: '.$markup );
+
+			// filter ##
+			$markup = core\filter::apply([ 
+				'parameters'    => [ 'markup' => $markup ], // pass ( $string ) as single array ##
+				'filter'        => 'q/render/markup/wrap/'.self::$args['context'].'/'.self::$args['task'], // filter handle ##
+				'return'        => $markup
+			]); 
+
+			// h::log( 'found: '.$markup );
+
+			// wrap key value in found markup ##
+			// example: markup->wrap = '<h2 class="mt-5">{{ content }}</h2>' ##
+			$string = str_replace( 
+				// '{{ content }}', 
+				tag::wrap([ 'open' => 'vo', 'value' => 'content', 'close' => 'vc' ]), 
+				$string, 
+				$markup 
+			);
+
+			// track ##
+			// self::$wrapped = true;
+
+		}
+
+		// filter ##
+		$string = core\filter::apply([ 
+             'parameters'    => [ 'string' => $string ], // pass ( $string ) as single array ##
+             'filter'        => 'q/render/markup/string/wrap/'.self::$args['context'].'/'.self::$args['task'], // filter handle ##
+             'return'        => $string
+        ]); 
+
+		// template replacement ##
+		// $string = str_replace( '{{ '.$key.' }}', $value, $string );
+		// h::log( $string );
+
+		// // regex way ##
+		// $regex = \apply_filters( 'q/render/markup/string', "~\{{\s+$key\s+\}}~" ); // '~\{{\s(.*?)\s\}}~' 
+		// $string = preg_replace( $regex, $value, $string ); 
+
+		// // filter ##
+		// $string = core\filter::apply([ 
+        //      'parameters'    => [ 'string' => $string ], // pass ( $string ) as single array ##
+        //      'filter'        => 'q/render/markup/string/after/'.self::$args['task'].'/'.$key, // filter handle ##
+        //      'return'        => $string
+        // ]); 
 
 		// return ##
 		return $string;
@@ -660,6 +990,7 @@ class markup extends \q\render {
 
         // look for required markup ##
         // if ( ! isset( self::$args[$field] ) ) {
+		// h::log( self::$markup );
 		if ( ! isset( self::$markup[$field] ) ) {
 
 			// log ##
