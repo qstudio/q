@@ -1,19 +1,17 @@
 <?php
 
-namespace q\search\core;
+namespace q\extension\search;
 
 // Q ##
 use q\core;
 use q\get;
-
-// Q Search ##
-use q\search\core\helper as h;
-use q\search; // whole class namespace
+use q\core\helper as h;
+use q\extension;
 
 // load it up ##
-// \q\search\core\method::run();
+// \q\extension\search\method::run();
 
-class method extends \q_search {
+class method extends extension\search {
 
     public static function run( $args = null )
     {
@@ -103,7 +101,8 @@ class method extends \q_search {
             // h::log( self::$passed_args );
 
             // self::config();
-			self::$properties = core\config::get([ 'context' => 'q_search', 'task' => 'all' ]); // @todo --if process empty, default to load all by context ##
+			self::$properties = core\config::get([ 'context' => 'extension', 'task' => 'search' ]); 
+			// h::log( self::$properties );
 
 		}
 		
@@ -181,7 +180,7 @@ class method extends \q_search {
     public static function wp_enqueue_scripts()
     {
 
-        return search\ui\enqueue::wp_enqueue_scripts();
+        return self::wp_enqueue_scripts();
 
     }
 
@@ -191,7 +190,7 @@ class method extends \q_search {
     {
 
 		#h::log( 'rendering search..' );
-        return search\ui\render::render();
+        return self::render();
 
     }
 
@@ -209,7 +208,7 @@ class method extends \q_search {
 
         }
 
-        switch ( search\core\method::properties( 'table' ) ) {
+        switch ( self::properties( 'table' ) ) {
 
             // allow for searching users ##
             case "users" :
@@ -264,15 +263,15 @@ class method extends \q_search {
 
         }
 
-        switch ( search\core\method::properties( 'table' ) ) {
+        switch ( self::properties( 'table' ) ) {
 
             // allow for searching users ##
             case "users" :
 
                 // build args list ##
                 $args = array(
-                    'number'                => $posted['posts_per_page'] > 20 ? 20 : intval( $posted['posts_per_page'] ), #search\core\method::properties( 'posts_per_page' ),
-                    'post_type'             => 'users', #search\core\method::properties( 'post_type' ),
+                    'number'                => $posted['posts_per_page'] > 20 ? 20 : intval( $posted['posts_per_page'] ), #self::properties( 'posts_per_page' ),
+                    'post_type'             => 'users', #self::properties( 'post_type' ),
                     'role__not_in'          => 'Administrator',
                     'meta_key'              => self::properties( 'meta_key' ),
                     'orderby'               => self::properties( 'order_by' ),
@@ -332,19 +331,19 @@ class method extends \q_search {
         // h::log( $_POST );
 
         // grab posted data ##
-        $posted['table']              = isset( $_POST['table'] ) ? $_POST['table'] : search\core\method::properties( 'table' );
-        $posted['application']        = isset( $_POST['application'] ) ? $_POST['application'] : search\core\method::properties( 'application' );
-        $posted['device']             = isset( $_POST['device'] ) ? $_POST['device'] : search\core\method::properties( 'device' );
+        $posted['table']              = isset( $_POST['table'] ) ? $_POST['table'] : self::properties( 'table' );
+        $posted['application']        = isset( $_POST['application'] ) ? $_POST['application'] : self::properties( 'application' );
+        $posted['device']             = isset( $_POST['device'] ) ? $_POST['device'] : self::properties( 'device' );
 		$posted['post_type']          = isset( $_POST['post_type'] ) ? 
 										explode( ',', $_POST['post_type'] ) : 
-										explode( ',', search\core\method::properties( 'post_type' ) );
-        $posted['posts_per_page']     = isset( $_POST['posts_per_page'] ) ? (int)$_POST['posts_per_page'] : search\core\method::properties( 'posts_per_page' );
-        // $posted['class']              = isset( $_POST['class'] ) ? $_POST['class'] : search\core\method::properties( 'class' ) ;
-        $posted['order']              = isset( $_POST['order'] ) ? $_POST['order'] : search\core\method::properties( 'order' ) ;
-        $posted['order_by']           = isset( $_POST['order_by'] ) ? $_POST['order_by'] : search\core\method::properties( 'order_by' ) ;
-        $posted['category_name']      = isset( $_POST['category_name'] ) ? $_POST['category_name'] : search\core\method::properties( 'category_name' ) ;
-        $posted['author_name']        = isset( $_POST['author_name'] ) ? $_POST['author_name'] : search\core\method::properties( 'author_name' ) ;
-        $posted['tag']                = isset( $_POST['tag'] ) ? $_POST['tag'] : search\core\method::properties( 'tag' ) ;
+										explode( ',', self::properties( 'post_type' ) );
+        $posted['posts_per_page']     = isset( $_POST['posts_per_page'] ) ? (int)$_POST['posts_per_page'] : self::properties( 'posts_per_page' );
+        // $posted['class']              = isset( $_POST['class'] ) ? $_POST['class'] : self::properties( 'class' ) ;
+        $posted['order']              = isset( $_POST['order'] ) ? $_POST['order'] : self::properties( 'order' ) ;
+        $posted['order_by']           = isset( $_POST['order_by'] ) ? $_POST['order_by'] : self::properties( 'order_by' ) ;
+        $posted['category_name']      = isset( $_POST['category_name'] ) ? $_POST['category_name'] : self::properties( 'category_name' ) ;
+        $posted['author_name']        = isset( $_POST['author_name'] ) ? $_POST['author_name'] : self::properties( 'author_name' ) ;
+        $posted['tag']                = isset( $_POST['tag'] ) ? $_POST['tag'] : self::properties( 'tag' ) ;
 
         // h::log( isset( $_POST['filters'] ) ? $_POST['filters'] : '' );
 
@@ -360,7 +359,7 @@ class method extends \q_search {
 
         }
 
-        switch ( search\core\method::properties( 'table' ) ) {
+        switch ( self::properties( 'table' ) ) {
             
             // allow for searching users ##
             case "users" :
@@ -421,7 +420,7 @@ class method extends \q_search {
         // $c = 0;
 
         // switch over user cases ##
-        switch ( search\core\method::properties( 'table' ) ) {
+        switch ( self::properties( 'table' ) ) {
             
             // allow for searching users ##
             case "users" :
@@ -461,9 +460,9 @@ class method extends \q_search {
 
         }
 
-        #h::log( 'table: '.search\core\method::properties( 'table' ) );
+        #h::log( 'table: '.self::properties( 'table' ) );
 
-        switch ( search\core\method::properties( 'table' ) ) {
+        switch ( self::properties( 'table' ) ) {
             
             // allow for searching users ##
             case "users" :
@@ -508,7 +507,7 @@ class method extends \q_search {
         if ( ! empty( $users ) ) {
 
             // show results count ##
-            search\ui\render::count_results( $qs_query->get_total() );
+            render::count_results( $qs_query->get_total() );
             #h::log( 'Count: '.$qs_query->get_total() );
 
             // loop over results ##
@@ -535,7 +534,7 @@ class method extends \q_search {
 
                 } else {
 
-                    search\ui\render::result();
+                    render::result();
 
                 } // template ##
 
@@ -548,13 +547,13 @@ class method extends \q_search {
 
             #h::log( 'No results found, we need to show that..' );
 
-            search\ui\render::no_results();
+            render::no_results();
 
         }
 
         if( $args['pagination'] ) {
             
-            search\ui\render::pagination( $qs_query->get_total(), $args['number'], self::get_posted() );
+            render::pagination( $qs_query->get_total(), $args['number'], self::get_posted() );
 
         }
 
@@ -586,7 +585,7 @@ class method extends \q_search {
             // h::log( 'Posts found, continue..' );
 
             // show results count ##
-            search\ui\render::count_results( $qs_query->found_posts );
+            render::count_results( $qs_query->found_posts );
             // h::log( $qs_query );
             // h::log( 'Count: '.$qs_query->found_posts );
 
@@ -644,7 +643,7 @@ class method extends \q_search {
 
                     // h::log( 'default template..' );
 
-                    search\ui\render::result();
+                    render::result();
 
                 // } // template ##
 
@@ -654,7 +653,7 @@ class method extends \q_search {
 
             // h::log( 'No results found, we need to show that..' );
 
-            search\ui\render::no_results();
+            render::no_results();
 
         }
 
@@ -669,7 +668,7 @@ class method extends \q_search {
 			// h::log( 'd:>loading pagination..' );
 
             // build pagination ##
-            search\ui\render::pagination( $qs_query->found_posts, $args['posts_per_page'], self::get_posted() );
+            render::pagination( $qs_query->found_posts, $args['posts_per_page'], self::get_posted() );
 
         }
 
@@ -711,8 +710,8 @@ class method extends \q_search {
     public static function query( $load = null ) 
     {
 		
-		// h::log( search\core\method::properties( 'control', 'array' ) );
-		// $control = is_null( $control ) ? search\core\method::properties( 'control', 'array' ) : $control ;
+		// h::log( self::properties( 'control', 'array' ) );
+		// $control = is_null( $control ) ? self::properties( 'control', 'array' ) : $control ;
 
 		// if ( 
 		// 	'0' === $control = self::get_control( $load, 'load' )
@@ -721,14 +720,14 @@ class method extends \q_search {
 		// 	// h::log( $control );
 		// 	// h::log( 'Load Blank' );
 
-		// 	return search\ui\render::load_empty( search\core\method::properties( 'load_empty', 'array' ) );
+		// 	return render::load_empty( self::properties( 'load_empty', 'array' ) );
 
         //     // die();
 
 		// }
 
         // define options ##
-        $pagination = search\core\method::properties( "pagination" );
+        $pagination = self::properties( "pagination" );
 
         // post data passed, so update values ##
         if( $_POST ){
@@ -758,7 +757,7 @@ class method extends \q_search {
         ) {
 
             // seems not ##
-            // search\ui\render::no_results(  __( 'Please select a filter.', 'q-search' ) ); // show the sad face :(
+            // render::no_results(  __( 'Please select a filter.', 'q-search' ) ); // show the sad face :(
 
 			// h::log( '$Filters were empty..' );
 
@@ -769,7 +768,7 @@ class method extends \q_search {
 				// h::log( $control );
 				// h::log( 'Load Blank' );
 	
-				return search\ui\render::load_empty( search\core\method::properties( 'load_empty', 'array' ) );
+				return render::load_empty( self::properties( 'load_empty', 'array' ) );
 	
 				// die();
 	
@@ -794,13 +793,13 @@ class method extends \q_search {
 			h::log( 'No $_POST object available' );
 			
 			if ( 
-				'0' === $control = self::get_control( search\core\method::properties( 'control', 'array' ), 'empty' )
+				'0' === $control = self::get_control( self::properties( 'control', 'array' ), 'empty' )
 			) {
 	
 				// h::log( $control );
 				// h::log( 'Empty Blank' );
 	
-				return search\ui\render::load_empty( search\core\method::properties( 'load_empty', 'array' ) );
+				return render::load_empty( self::properties( 'load_empty', 'array' ) );
 
             	die();
 	
@@ -917,7 +916,7 @@ class method extends \q_search {
                 // text search filtering ##
                 } elseif ( $key == 'searcher' ) {
 
-                    if ( 'users' == search\core\method::properties( 'table' ) ) {
+                    if ( 'users' == self::properties( 'table' ) ) {
                         
                         #h::log( 'searcing by username: '.$value );
                         $args['search'] = '*'.$value.'*';
@@ -931,7 +930,7 @@ class method extends \q_search {
                 // user_meta ##
                 } elseif ( 
                     $key == 'user_meta' 
-                    && 'users' == search\core\method::properties( 'table' )
+                    && 'users' == self::properties( 'table' )
                     && $user_meta = \apply_filters( 'q/search/user_meta', false )
                 ) {
 

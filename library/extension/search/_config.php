@@ -1,9 +1,9 @@
 <?php
  
- namespace q\core;
+//  namespace q\core;
 
- use q\core as core;
- use q\core\helper as h;
+//  use q\core as core;
+use q\core\helper as h;
 
 /* 
  * Configuration File, loaded by q\core\config::get()
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) OR exit;
 // return an array ##
 return [
 
-	'q_search' => [
+	'extension__search' => [
 
 		// config ##
 		'application' 		=> 'posts',

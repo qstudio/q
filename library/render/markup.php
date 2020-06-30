@@ -399,7 +399,7 @@ class markup extends \q\render {
 			$markup = \apply_filters( 'q/render/markup/default', $markup );
 
 			// note ##
-			h::log('e:>NOTE: Using default markup'.$for );
+			// h::log('e:>NOTE: Using default markup'.$for );
 
 			// assign ##
 			self::$markup['template'] = $markup;

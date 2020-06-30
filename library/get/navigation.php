@@ -24,19 +24,6 @@ class navigation extends \q\get {
     */
 	public static function pagination( $args = null ) {
 
-		// grab array ##
-		// h::log( $args );
-		// $args['context'] = 'ui'; // hack for now ##
-		// $args['task'] = 'pagination'; // hack for now ##
-		// h::log( 't:>this needs to move to Q modules.. and all the rest.. we should note hope to call modules in parent from Q, only the other way' );
-        // if ( ! $array = get\navigation::pagination( $args ) ) { 
-
-		// 	// h::log( 'No pagination...' );
-            
-        //     return false; 
-        
-		// }
-
 		// sanity ##
 		if (
 			is_null( $args )
@@ -161,9 +148,6 @@ class navigation extends \q\get {
 		// test ##
 		// h::log( $array );
 
-		// filters anc checks ##
-		// $array = get\method::prepare_return( $args, $array );
-		
 		// format page items ##
 		$items = [];
 		// $markup = $config['markup']['template']; // '<li class="%active-class%">%item%</li>' ##
@@ -182,7 +166,7 @@ class navigation extends \q\get {
 		}
 
 		// filters and checks ##
-		// return get\method::prepare_return( $args, $items );
+		$items = get\method::prepare_return( $args, $items );
 
 		// markup array ##
 		$string = render\method::markup( $config['markup']['template'], $items, $config['markup'] );
@@ -532,6 +516,9 @@ class navigation extends \q\get {
     * @return      Array
     */
     public static function menu_items( $args = null ) {
+
+		// not ready yet ...
+		return false;
 
 		// sanity ##
 		if(

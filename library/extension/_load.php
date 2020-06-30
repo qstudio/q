@@ -34,6 +34,9 @@ class extension extends \Q {
 			// banner / ticker ##
 			// 'banner' => h::get( 'extension/banner.php', 'return', 'path' ), // @todo  ##
 
+			// search ##
+			'search' => h::get( 'extension/search/_load.php', 'return', 'path' ),
+
 			// consent ##
 			'consent' => h::get( 'extension/consent/_load.php', 'return', 'path' ),
 

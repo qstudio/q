@@ -1,18 +1,17 @@
 <?php
 
-namespace q\search\core;
+namespace q\extension\search;
 
 // Q ##
-use q\admin;
+// use q\admin;
 use q\core;
-
-// Q Theme ##
-use q\search\core\helper as h;
+use q\core\helper as h;
+use q\extension;
 
 // load it up ##
-\q\search\core\config::run();
+\q\extension\search\config::run();
 
-class config extends \q_search {
+class config extends extension\search {
 
     public static function run()
     {
@@ -55,7 +54,7 @@ class config extends \q_search {
 		// load config from JSON ##
 		if (
 			// $array = include( self::get_plugin_path('q.config.php') )
-			$array = core\config::load( self::get_plugin_path( 'q.config.php' ), 'q-search' )
+			$array = core\config::load( self::get_plugin_path( 'library/extension/search/_config.php' ), 'q-search' )
 		){
 
 			// check if we have a 'config' key.. and take that ##

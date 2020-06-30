@@ -1,13 +1,13 @@
 <?php
 
-namespace q\extension\nprogress;
+namespace q\extension\search;
 
 // Q ##
 use q\core;
 use q\core\helper as h;
 
 // load it up ##
-\q\extension\nprogress\option::run();
+\q\extension\search\option::run();
 
 class option extends \Q {
 
@@ -34,7 +34,7 @@ class option extends \Q {
         // h::log( $field['default_value'] );
 
 		// pop on a new choice ##
-		$field['choices']['nprogress'] = 'Progress Bar';
+		$field['choices']['search'] = 'AJAX Search';
 		// $field['choices']['banner'] = '@todo - News Banner';
 
 		// make it selected ##
