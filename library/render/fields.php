@@ -108,12 +108,12 @@ class fields extends \q\render {
 	 * 
 	 * @since 4.0.0
 	*/
-	public static function define( $array = null ){
+	public static function define( $args = null ){
 
 		// sanity ##
 		if (
-			is_null( $array )
-			|| ! is_array( $array )
+			is_null( $args )
+			// || ! is_array( $array )
 		){
 
 			h::log( 'e:>Error in passed $args' );
@@ -122,9 +122,16 @@ class fields extends \q\render {
 
 		}
 
-		// h::log( $array );
+		// assign string to key 'value' ##
+		if ( is_string( $args ) ){
 
-		foreach( $array as $key => $value ) {
+			return self::$fields['value'] = $args;
+
+		}
+
+		// h::log( $args );
+		// else, loop over array ##
+		foreach( $args as $key => $value ) {
 
 			self::$fields[$key] = $value;
 

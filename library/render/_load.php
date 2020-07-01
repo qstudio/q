@@ -24,7 +24,6 @@ Modules:
 # post - wordpress posts, title etc.. include getters and render methods
 # ui - layout elements
 # field ( deal with single use case post_fields )
-~ partial - reusable blocks or code, like buttons or post_meta items
 ~ media ( src, video, gallery etc )
 
 filters:

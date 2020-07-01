@@ -29,13 +29,16 @@ class context extends render {
 		return $array = [
 
 			// acf field handler ##
-			'field' => h::get( 'render/context/field.php', 'return', 'path' ), 
+			// 'field' => h::get( 'render/context/field.php', 'return', 'path' ), 
 
 			// acf field groups ##
 			'group' => h::get( 'render/context/group.php', 'return', 'path' ),
 
 			// post objects content, title, excerpt etc ##
 			'post' => h::get( 'render/context/post.php', 'return', 'path' ),
+
+			// author, custom fields etc. ##
+			'meta' => h::get( 'render/context/meta.php', 'return', 'path' ),
 
 			// navigation items ##
 			'navigation' => h::get( 'render/context/navigation.php', 'return', 'path' ),
@@ -56,7 +59,7 @@ class context extends render {
 			'ui' => h::get( 'render/context/ui.php', 'return', 'path' ),
 
 			// elements, html snippets, which can be processed to expand {{ markdown }} ##
-			'element' => h::get( 'render/context/element.php', 'return', 'path' ),
+			// 'element' => h::get( 'render/context/element.php', 'return', 'path' ),
 
 			// perhaps type css ##
 			// perhaps type js ##

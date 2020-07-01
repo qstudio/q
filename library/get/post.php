@@ -134,7 +134,7 @@ class post extends \q\get {
 
 		}
 
-		h::log( $array );
+		// h::log( $array );
 		
 		// return
 		return get\method::prepare_return( $args, $array );
@@ -347,70 +347,70 @@ class post extends \q\get {
 
 
 
-	public static function category( $args = null ){
+	// public static function category( $args = null ){
 
-		// sanity ##
-		if (
-			is_null( $args )
-			|| ! is_array( $args )
-		){
+	// 	// sanity ##
+	// 	if (
+	// 		is_null( $args )
+	// 		|| ! is_array( $args )
+	// 	){
 
-			h::log( 'e:>Error in passed args' );
+	// 		h::log( 'e:>Error in passed args' );
 
-			return false;
+	// 		return false;
 
-		}
+	// 	}
 
-		// $args->ID = $the_post->post_parent;
-		if ( 
-			! $terms = self::object_terms([ 
-				'config' 		=> [ 
-					'post'		=> $args['config']['post'] ?: null
-				],
-				'taxonomy'		=> 'category',
-				'args' 			=> [
-					'number'	=> 1
-				]
-			])
+	// 	// $args->ID = $the_post->post_parent;
+	// 	if ( 
+	// 		! $terms = self::object_terms([ 
+	// 			'config' 		=> [ 
+	// 				'post'		=> $args['config']['post'] ?: null
+	// 			],
+	// 			'taxonomy'		=> 'category',
+	// 			'args' 			=> [
+	// 				'number'	=> 1
+	// 			]
+	// 		])
 				
-		){
+	// 	){
 
-			h::log( 'e:>Returned terms empty' );
+	// 		h::log( 'e:>Returned terms empty' );
 
-			return false;
+	// 		return false;
 
-		}
+	// 	}
 
-		// h::log( $terms );
+	// 	// h::log( $terms );
 
-		// we expect an array with 1 key [0] of WP_Term object - validate ##
-		if (
-			 ! is_array( $terms )
-			 || ! isset( $terms[0] )
-			 || ! $terms[0] instanceof \WP_Term
-		){
+	// 	// we expect an array with 1 key [0] of WP_Term object - validate ##
+	// 	if (
+	// 		! is_array( $terms )
+	// 		|| ! isset( $terms[0] )
+	// 		|| ! $terms[0] instanceof \WP_Term
+	// 	){
 
-			 h::log( 'e:>Error in returned terms data' );
+	// 		 h::log( 'e:>Error in returned terms data' );
 
-			 return false;
+	// 		 return false;
 
-		}
+	// 	}
 
-		// create an empty array ##
-		$array = [];
+	// 	// create an empty array ##
+	// 	$array = [];
 
-		// add values ##
-		$array['permalink'] = \get_category_link( $terms[0] );
-		$array['slug'] = $terms[0]->slug;
-		$array['title'] = $terms[0]->name;
+	// 	// add values ##
+	// 	$array['permalink'] = \get_category_link( $terms[0] );
+	// 	$array['slug'] = $terms[0]->slug;
+	// 	$array['title'] = $terms[0]->name;
 
-		// test ##
-		// h::log( $array );
+	// 	// test ##
+	// 	// h::log( $array );
 
-		// return ##
-		return get\method::prepare_return( $args, $array );
+	// 	// return ##
+	// 	return get\method::prepare_return( $args, $array );
 
-	}
+	// }
 	
 
 
@@ -422,15 +422,6 @@ class post extends \q\get {
      */
     public static function excerpt( $args = null )
     {
-
-        // // global arg validator ##
-		// if ( ! $args = render\args::prepare( $args ) ){ 
-		
-		// 	// h::log( 'Bailing..' ); 
-		
-		// 	return false; 
-		
-		// }
 
 		// sanity ##
 		if (
@@ -581,59 +572,13 @@ class post extends \q\get {
 
 
 
-
-	/**
-     * Get Post meta field from acf, format if required and markup
-     *
-     * @since       4.1.0
-     */
-    public static function field( $args = null )
-    {
-
-		// sanity ##
-		if (
-			is_null( $args )
-			|| ! is_array( $args )
-			|| ! isset( $args['field'] )
-		){
-
-			h::log( 'e:>Error in passed args' );
-
-			return false;
-
-		}
-
-		// pst ID ##
-		$post_id = isset( $args['config']['post'] ) ? $args['config']['post']->ID : null ;
-
-		// get field ##
-		if ( $value = \get_field( $args['field'], $post_id ) ) {
-
-			// h::log( 't:>we need to pass this thru filters - but return expects an array ##
-
-			// h::log( $value );
-
-			return $value;
-
-		}
-
-		h::log( 'e:>get_field retuned no data - field: "'.$args['field'].'"');
-		
-		// return ##
-		return false;
-
-	}
-
-
-
-
 	
     /**
-    * The Post Meta
+    * The Post Data ( meta.. )
     *
     * @since       1.0.2
     */
-    public static function meta( $args = null )
+    public static function data( $args = null )
     {
 
 		// sanity ##
@@ -649,15 +594,10 @@ class post extends \q\get {
 		}
 
         // get the_post ##
-		// if ( ! $the_post = get\post::object( $args ) ) { return false; }
 		$post = $args['config']['post'];
 
         // test ID ##
-        #h::log( $the_post->ID );
-
-        // load config from Q.. meged via filter ##
-        // $args = ( object ) core\config::get( 'the_post_meta' );
-        #h::log( $args );
+        #h::log( $post->ID );
 
 		// starts with an empty array ##
 		$array = [];
@@ -666,163 +606,24 @@ class post extends \q\get {
 		$array['post_date_human'] = \human_time_diff( \get_the_date( 'U', $post->ID ), \current_time('timestamp') );
 
 		// post author ##
-		if ( 
-			$author = self::author( $args )
-		){
+		$array = render\method::extract( get\meta::author( $args ), 'author_', $array );
 
-			// h::log( $author );
+		// category will be an array, so create category_title, permalink and slug fields ##
+		$array = render\method::extract( get\taxonomy::category( $args ), 'category_', $array );
 
-			// author will be an array, so create author_title, permalink and slug fields ##
-			foreach( $author as $k => $v ){
+		// tag will be an array, so create tag_title, permalink and slug fields ##
+		$array = render\method::extract( get\taxonomy::tag( $args ), 'tag_', $array );
 
-				$array['author_'.$k] = $v;
+		// tags will be an array, we'll let the rendered deal with this via a section tag.. ##
+		$array['tags'] = get\taxonomy::tags( $args );
 
-			}
-
-		}
-
-		// post category ##
-		if ( 
-			$category = self::category( $args )
-		){
-
-			h::log( $category );
-
-			// author will be an array, so create author_title, permalink and slug fields ##
-			foreach( $category as $k => $v ){
-
-				$array['category_'.$k] = $v;
-
-			}
-
-		}
-	/*
-		
-		// post category ##
-		self::the_category( [
-			'markup' 	=> '<span class="category ml-1 mr-1">in <a href="%permalink%">%title%</a></span>', 
-			'post'		=> $the_post // needed for loops ##
-		]);
-
-		// if on single page and post has tags, show them ##
-		// h::log( \has_tag( '', $the_post->ID ) );
-		if ( 
-			\is_single() 
-			&& 
-			\has_tag( '', $the_post->ID ) 
-		) {
-
-			// get the tags ##
-			$the_tags = \get_the_tags();
-			$tags = ''; // empty ##
-			if ( $the_tags ) {
-				foreach( $the_tags as $tag ) {
-					$tags .= '<span class="tag"><a href="'.\get_tag_link( $tag->term_id ).'">#'.$tag->name.'</a></span> ';
-				}
-			}
-
-			\printf(
-				\__( '<span class="tags">, Tagged: %s</span>', self::text_domain )
-					,   $tags
-			);
-
-		}
-
-		// comments ##
-		if ( $args->allow_comments && 'open' == $the_post->comment_status ) {
-
-			// get number of comments ##
-			$comments_number = \get_comments_number( $the_post->ID );
-
-			if ( $comments_number == 0 ) {
-				$comments = __( 'Comment', self::text_domain );
-			} elseif ( $comments_number > 1 ) {
-				$comments = $comments_number.' '.__( ' Comments', self::text_domain );
-			} else {
-				$comments = '1'.__( 'Comment', self::text_domain );
-			}
-
-			if ( \is_single() ) {
-
-				printf(
-					__( ', <span class="comment"><a href="%s" class="anchor-trigger" data-scroll="#comments">%s</a></span>', self::text_domain )
-					,   '#comment' // variable link ##
-					,   $comments
-				);
-
-			} else {
-
-				printf(
-					__( ', <span class="comment"><a href="%s">%s</a></span>', self::text_domain )
-					,   \get_the_permalink( $the_post->ID ).'#comment' // variable link ##
-					,   $comments
-				);
-
-			}
-
-		}
-		*/
-			
-		// assign to key ##
-		$array['meta'] = $array;
+		// comment will be an array, so create comment_count, link ##
+		$array = render\method::extract( get\meta::comment( $args ), 'comment_', $array );
 
 		// return
 		return get\method::prepare_return( $args, $array );
 
     }
-
-
-	/**
-	 * Get post author
-	 * 
-	 * @since 4.1.0
-	*/
-	public static function author( $args = null ) {
-
-		// sanity ##
-		if (
-			is_null( $args )
-			|| ! is_array( $args )
-		){
-
-			h::log( 'e:>Error in passed args' );
-
-			return false;
-
-		}
-
-		// get post ##
-		$post = $args['config']['post'];
-		
-		// get author ##
-		$author = $post->post_author;
-		$authordata = \get_userdata( $author );
-
-		// validate ##
-		if (
-			! $authordata
-		) {
-
-			h::log( 'd:>Error in returned author data' );
-
-			return false;
-
-		}
-
-		// get author name ##
-		$author_name = $authordata && isset( $authordata->display_name ) ? $authordata->display_name : 'Author' ;
-
-		// assign values ##
-		$array['permalink'] = \esc_url( \get_author_posts_url( $author ) );
-		$array['slug'] = $authordata->user_login;
-		$array['title'] = $author_name;
-
-		// h::log( $array );
-
-		// return array ##
-		return $array;
-
-	}
 
 
 }

@@ -539,6 +539,47 @@ class method extends \q\render {
     }
 
 
+	/**
+	 * Extract keys and values from passed array
+	 * 
+	 * @since 4.1.0
+	*/
+	public static function extract( $array = null, $prefix = null, $return = null ){
+
+		// @todo -- sanity ##
+		if (
+			is_null( $array )
+			|| ! is_array( $array )
+			|| is_null( $prefix )
+		){
+
+			h::log( 'e:>Error in passed params' );
+
+			return false;
+
+		}
+
+		// return array ##
+		$return_array = [];
+
+		// category will be an array, so create category_title, permalink and slug fields ##
+		foreach( $array as $k => $v ){
+
+			$return_array[ $prefix.$k] = $v;
+
+		}
+
+		// how to return data ##
+		if ( is_array( $return ) ){
+
+			return array_merge( $return, $return_array );
+
+		}
+
+		// just retrn new values ##
+		return $return_array;
+
+	}
 
 
 
@@ -610,6 +651,8 @@ class method extends \q\render {
 
 	/***/
 	public static function is_array_of_arrays( $array = null ) {
+
+		// h::log( $array );
 
 		// sanity ##
 		if(

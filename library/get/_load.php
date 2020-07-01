@@ -38,11 +38,14 @@ class get extends \Q {
 			// WP_Post queries ##
 			'query' => h::get( 'get/query.php', 'return', 'path' ),
 
+			// has::xx queries ##
+			'has' => h::get( 'get/has.php', 'return', 'path' ),
+
 			// post object ##
 			'post' => h::get( 'get/post.php', 'return', 'path' ),
 
 			// post meta ##
-			// 'meta' => h::get( 'get/meta.php', 'return', 'path' ),
+			'meta' => h::get( 'get/meta.php', 'return', 'path' ),
 
 			// field group ##
 			'group' => h::get( 'get/group.php', 'return', 'path' ),

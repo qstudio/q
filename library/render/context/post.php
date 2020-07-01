@@ -34,17 +34,17 @@ class post extends \q\render {
 
 
 	/**
-     * Post Meta details.. this requires some logic..
+     * Post Meta details.. 
      *
      * @param       Array       $args
      * @since       1.4.1
      * @return      String
      */
-    public static function meta( $args = null ) {
+    public static function data( $args = null ) {
 
 		// get title - returns array with key 'title' ##
 		render\fields::define(
-			get\post::meta( $args )
+			get\post::data( $args )
 		);
 
     }
@@ -164,62 +164,6 @@ class post extends \q\render {
 
 	}
 
-
-
-	
-
-	public static function category( Array $args = null ) {
-
-		// get first post category ##
-		render\fields::define( 
-			get\post::category( $args ) 
-		);
-
-	}
-
-
-
-	public static function categories( Array $args = null ) {
-
-		// get all post categories ##
-		render\fields::define( 
-			get\post::categories( $args ) 
-		);
-
-	}
-
-
-	public static function tag( Array $args = null ) {
-
-		// get first post tag ##
-		render\fields::define( 
-			get\post::tag( $args ) 
-		);
-
-	}
-
-	public static function tags( Array $args = null ) {
-
-		// get all post tags ##
-		render\fields::define( 
-			get\post::tags( $args ) 
-		);
-
-	}
-
-
-
-	/**
-	 * Helper Method to get the author
-	 */
-	public static function author( $args = null ){
-
-		// get all post tags ##
-		render\fields::define( 
-			get\post::author( $args ) 
-		);
-
-	}
 
 
 

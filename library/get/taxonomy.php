@@ -115,4 +115,291 @@ class taxonomy extends \q\get {
 
 
 
+
+	
+
+	public static function category( $args = null ){
+
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+		){
+
+			h::log( 'e:>Error in passed args' );
+
+			return false;
+
+		}
+
+		// $args->ID = $the_post->post_parent;
+		if ( 
+			! $terms = get\post::object_terms([ 
+				'config' 		=> [ 
+					'post'		=> $args['config']['post'] ?: null
+				],
+				'taxonomy'		=> 'category',
+				'args' 			=> [
+					'number'	=> 1
+				]
+			])
+				
+		){
+
+			h::log( 'e:>Returned terms empty' );
+
+			return false;
+
+		}
+
+		// h::log( $terms );
+
+		// we expect an array with 1 key [0] of WP_Term object - validate ##
+		if (
+			! is_array( $terms )
+			|| ! isset( $terms[0] )
+			|| ! $terms[0] instanceof \WP_Term
+		){
+
+			 h::log( 'e:>Error in returned terms data' );
+
+			 return false;
+
+		}
+
+		// create an empty array ##
+		$array = [];
+
+		// add values ##
+		$array['permalink'] = \get_category_link( $terms[0] );
+		$array['slug'] = $terms[0]->slug;
+		$array['title'] = $terms[0]->name;
+
+		// test ##
+		// h::log( $array );
+
+		// return ##
+		return get\method::prepare_return( $args, $array );
+
+	}
+	
+
+
+	
+	public static function categories( $args = null ){
+
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+		){
+
+			h::log( 'e:>Error in passed args' );
+
+			return false;
+
+		}
+
+		// $args->ID = $the_post->post_parent;
+		if ( 
+			! $terms = get\post::object_terms([ 
+				'config' 		=> [ 
+					'post'		=> $args['config']['post'] ?: null
+				],
+				'taxonomy'		=> 'category',
+				'args' 			=> [
+					'number'	=> 0 // all ## https://developer.wordpress.org/reference/classes/wp_term_query/__construct/
+				]
+			])
+				
+		){
+
+			h::log( 'e:>Returned terms empty' );
+
+			return false;
+
+		}
+
+		// h::log( $terms );
+
+		// we expect an array with 1 key [0] of WP_Term object - validate ##
+		if (
+			! is_array( $terms )
+			|| ! isset( $terms[0] )
+			|| ! $terms[0] instanceof \WP_Term
+		){
+
+			 h::log( 'e:>Error in returned terms data' );
+
+			 return false;
+
+		}
+
+		// create an empty array ##
+		$array = [];
+		$i = 0;
+
+		foreach( $terms as $term ){
+
+			// add values ##
+			$array[$i]['permalink'] = \get_category_link( $term );
+			$array[$i]['slug'] = $term->slug;
+			$array[$i]['title'] = $term->name;
+
+			$i ++;
+
+		}
+
+		// test ##
+		h::log( $array );
+
+		// return ##
+		return get\method::prepare_return( $args, $array );
+
+	}
+	
+
+
+	
+
+	public static function tag( $args = null ){
+
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+		){
+
+			h::log( 'e:>Error in passed args' );
+
+			return false;
+
+		}
+
+		// $args->ID = $the_post->post_parent;
+		if ( 
+			! $terms = get\post::object_terms([ 
+				'config' 		=> [ 
+					'post'		=> $args['config']['post'] ?: null
+				],
+				'taxonomy'		=> 'post_tag',
+				'args' 			=> [
+					'number'	=> 1
+				]
+			])
+				
+		){
+
+			h::log( 'e:>Returned terms empty' );
+
+			return false;
+
+		}
+
+		// h::log( $terms );
+
+		// we expect an array with 1 key [0] of WP_Term object - validate ##
+		if (
+			! is_array( $terms )
+			|| ! isset( $terms[0] )
+			|| ! $terms[0] instanceof \WP_Term
+		){
+
+			 h::log( 'e:>Error in returned terms data' );
+
+			 return false;
+
+		}
+
+		// create an empty array ##
+		$array = [];
+
+		// add values ##
+		$array['permalink'] = \get_category_link( $terms[0] );
+		$array['slug'] = $terms[0]->slug;
+		$array['title'] = $terms[0]->name;
+
+		// test ##
+		// h::log( $array );
+
+		// return ##
+		return get\method::prepare_return( $args, $array );
+
+	}
+
+
+	
+	public static function tags( $args = null ){
+
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+		){
+
+			h::log( 'e:>Error in passed args' );
+
+			return false;
+
+		}
+
+		// $args->ID = $the_post->post_parent;
+		if ( 
+			! $terms = get\post::object_terms([ 
+				'config' 		=> [ 
+					'post'		=> $args['config']['post'] ?: null
+				],
+				'taxonomy'		=> 'post_tag',
+				'args' 			=> [
+					'number'	=> 0 // all ## https://developer.wordpress.org/reference/classes/wp_term_query/__construct/
+				]
+			])
+				
+		){
+
+			h::log( 'e:>Returned terms empty' );
+
+			return false;
+
+		}
+
+		// h::log( $terms );
+
+		// we expect an array with 1 key [0] of WP_Term object - validate ##
+		if (
+			! is_array( $terms )
+			|| ! isset( $terms[0] )
+			|| ! $terms[0] instanceof \WP_Term
+		){
+
+			 h::log( 'e:>Error in returned terms data' );
+
+			 return false;
+
+		}
+
+		// create an empty array ##
+		$array = [];
+		$i = 0;
+
+		foreach( $terms as $term ){
+
+			// add values ##
+			$array[$i]['tag_permalink'] = \get_category_link( $term );
+			$array[$i]['tag_slug'] = $term->slug;
+			$array[$i]['tag_title'] = $term->name;
+
+			$i ++;
+
+		}
+
+		// test ##
+		// h::log( $array );
+
+		// return ##
+		return get\method::prepare_return( $args, $array );
+
+	}
+
+
 }

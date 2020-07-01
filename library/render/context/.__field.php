@@ -23,7 +23,7 @@ class field extends \q\render {
 		// get title - returns array with key 'title' ##
 		$args['field'] = $args['task']; // get\meta::field required "args->field" ## 
 		render\fields::define([
-			$args['task'] => get\post::field( $args )
+			$args['task'] => get\meta::field( $args )
 		]);
 
 	}

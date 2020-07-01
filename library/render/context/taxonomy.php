@@ -29,18 +29,43 @@ class taxonomy extends \q\render {
 
 	}
 
-
-	// categories ##
-
-
-	// tag ##
-
-
-	// tags ##
-
-
-	// etc ##
 	
+	public static function category( Array $args = null ) {
+
+		// get first post category ##
+		render\fields::define( 
+			get\taxonomy::category( $args ) 
+		);
+
+	}
 
 
+	public static function categories( Array $args = null ) {
+
+		// get all post categories ##
+		render\fields::define( 
+			get\taxonomy::categories( $args ) 
+		);
+
+	}
+
+
+	public static function tag( Array $args = null ) {
+
+		// get first post tag ##
+		render\fields::define( 
+			get\taxonomy::tag( $args ) 
+		);
+
+	}
+
+	public static function tags( Array $args = null ) {
+
+		// get all post tags ##
+		render\fields::define( 
+			get\taxonomy::tags( $args ) 
+		);
+
+	}
+	
 }

@@ -336,13 +336,6 @@ class markup extends \q\render {
 	
 		}
 
-		// default -- almost useless - but works for single values.. ##
-		// $markup = tag::wrap([ 'open' => 'vo', 'value' => 'value', 'close' => 'vc' ]);
-
-		// filter ##
-		// $markup = \apply_filters( 'q/render/markup/default', $markup );
-		// $markup = '<div>{{ value }}</div>';
-
 		// for ##
 		$for = ' for: '.render\method::get_context();
 
@@ -460,6 +453,7 @@ class markup extends \q\render {
 		// $matches = [];
 		// $regex_find = \apply_filters( 'q/render/markup/comment/regex/find', "/\<!--(.*?)--\>/s" );
 		$regex_find = \apply_filters( 'q/render/markup/section/regex/find', "/{{#(.*?)\/#}}/s" );
+		h::log( 't:> allow for badly spaced tags around sections... whitespace flexible..' );
 		if ( 
 			preg_match_all( $regex_find, $string, $matches, PREG_OFFSET_CAPTURE ) 
 		){
@@ -470,7 +464,7 @@ class markup extends \q\render {
 			self::$markup['template'] = preg_replace( $regex_remove, "", self::$markup['template'] ); 
 		
 			// preg_match_all( '/%[^%]*%/', $string, $matches, PREG_SET_ORDER );
-			// h::debug( $matches );
+			// h::debug( $matches[1] );
 
 			// sanity ##
 			if ( 
