@@ -42,7 +42,7 @@ class get extends \Q {
 			'post' => h::get( 'get/post.php', 'return', 'path' ),
 
 			// post meta ##
-			'meta' => h::get( 'get/meta.php', 'return', 'path' ),
+			// 'meta' => h::get( 'get/meta.php', 'return', 'path' ),
 
 			// field group ##
 			'group' => h::get( 'get/group.php', 'return', 'path' ),

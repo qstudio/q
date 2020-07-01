@@ -56,9 +56,10 @@ class taxonomy extends \q\get {
 
 			// h::log( 'e:>Returned terms good' );
 
-			// we expect an array with 1 key [0] of WP_Term object - validate ##
+			// we expect an array of WP_Term objects - validate ##
 			if (
-				is_array( $object_terms )
+				! \is_wp_error( $object_terms )
+				&& is_array( $object_terms )
 				&& isset( $object_terms[0] )
 				&& $object_terms[0] instanceof \WP_Term
 			){

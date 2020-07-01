@@ -12,7 +12,7 @@ class extension extends \q\render {
 
 	
 	/**
-    * Render nav menu
+    * Render search extension
     *
     * @since       4.1.0
     */

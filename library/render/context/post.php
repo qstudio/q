@@ -14,92 +14,6 @@ use q\theme;
 
 class post extends \q\render {
 
-	// /** MAGIC */
-	// // public static function __callStatic( $function, $args ) {
-
-    // //     return self::run( $args ); 
-	
-	// // }
-
-	// public static function run( $args = null ){
-
-	// 	// run method to populate field data ##
-	// 	// $args['task'] = $args['task'];
-	// 	// $extension = render\extension::get( $args['context'], $args['task'] );
-
-	// 	// if (
-	// 	// 	! \method_exists( get_class(), $args['task'] ) // && exists ##
-	// 	// 	&& ! render\extension::get( $args['context'], $args['task'] ) // look for extensions ##
-	// 	// ) {
-
-	// 	// 	render\log::set( $args );
-
-	// 	// 	h::log( 'e:>Cannot locate method: '.__CLASS__.'::'.$args['task'] );
-
-    //     //     return false;
-
-	// 	// }
-
-    //     // // validate passed args ##
-    //     // if ( ! render\args::validate( $args ) ) {
-
-	// 	// 	render\log::set( $args );
-			
-	// 	// 	// h::log( 'd:>Bunked here..' );
-
-    //     //     return false;
-
-	// 	// }
-
-	// 	// base class ##
-	// 	if ( 
-	// 		\method_exists( get_class(), $args['task'] ) 
-	// 	){
-
-	// 		// 	h::log( 'load base method: '.$extension['class'].'::'.$extension['method'] );
-
-	// 		// call render method ##
-	// 		self::{ $args['task'] }( self::$args );
-
-	// 	// extended class ##
-	// 	} elseif (
-	// 		$extension = render\extension::get( $args['context'], $args['task'] )
-	// 	){
-
-	// 		// 	h::log( 'load extended method: '.$extension['class'].'::'.$extension['method'] );
-
-	// 		// h::log( 'd:>render extension..' );
-	// 		$extension['class']::{ $extension['method'] }( self::$args );
-
-	// 	}
-	// 	// h::log( 'method: '.$args['task'] );
-	// 	// h::log( self::$fields );
-
-	// 	// Now we can loop over each field ---
-	// 	// running callbacks ##
-	// 	// formatting none string types to strings ##
-	// 	// removing placeholders in markup, if no field data found etc ##
-	// 	// render\fields::prepare();
-		
-	// 	// // h::log( self::$fields );
-
-    //     // // Prepare template markup ##
-    //     // render\markup::prepare();
-
-    //     // // optional logging to show removals and stats ##
-    //     // render\log::set( $args );
-
-    //     // // return or echo ##
-    //     // return render\output::return();
-
-	// }
-	
-
-
-	// // ---------- methods ##
-
-
-
 
 	/**
      * Generic H1 title tag
@@ -117,6 +31,23 @@ class post extends \q\render {
 
     }
 
+
+
+	/**
+     * Post Meta details.. this requires some logic..
+     *
+     * @param       Array       $args
+     * @since       1.4.1
+     * @return      String
+     */
+    public static function meta( $args = null ) {
+
+		// get title - returns array with key 'title' ##
+		render\fields::define(
+			get\post::meta( $args )
+		);
+
+    }
 
 	
     /**
@@ -237,104 +168,42 @@ class post extends \q\render {
 
 	
 
-	public static function the_category( Array $args = null ) {
+	public static function category( Array $args = null ) {
 
-		// global arg validator ##
-		if ( ! $args = render\args::prepare( $args ) ){ return false; }
-
-		// get title - returns array with key 'title' ##
-		$array = get\wp::the_category( $args );
-
-        // return ##
-		return render\method::prepare( $args, $array );
+		// get first post category ##
+		render\fields::define( 
+			get\post::category( $args ) 
+		);
 
 	}
 
 
 
-	public static function the_author( Array $args = null ) {
+	public static function categories( Array $args = null ) {
 
-		if ( 
-			is_null( $args )
-		) {
+		// get all post categories ##
+		render\fields::define( 
+			get\post::categories( $args ) 
+		);
 
-			h::log( 'Error in passed $args' );
+	}
 
-			return false;
 
-		}
+	public static function tag( Array $args = null ) {
 
-		// get post ##
-		if ( 
-			isset( $args['config']['post'] ) 
-			&& $args['config']['post'] instanceof \WP_Post
-		) {
+		// get first post tag ##
+		render\fields::define( 
+			get\post::tag( $args ) 
+		);
 
-			$the_post = $args['config']['post'];
+	}
 
-		} else {
+	public static function tags( Array $args = null ) {
 
-			$the_post = self::the_post();
-
-		}
-
-		// last check ##
-		if ( ! $the_post ) {
-
-			h::log( 'auth: Error with post object, validate.' );
-
-			return false;
-
-		}
-
-		// get author ##
-		$author = $the_post->post_author;
-		$authordata = \get_userdata( $author );
-
-		// validate ##
-		if (
-			! $authordata
-		) {
-
-			h::log( 'Error in returned author data' );
-
-			return false;
-
-		}
-
-		// get author name ##
-		$author_name = $authordata && isset( $authordata->display_name ) ? $authordata->display_name : 'Author' ;
-
-		// assign values ##
-		$array['permalink'] = \esc_url( \get_author_posts_url( $author ) );
-		$array['slug'] = $authordata->user_login;
-		$array['title'] = $author_name;
-
-		// h::log( $array );
-
-		if ( isset( $args['return'] ) && 'return' == $args['return'] ) {
-			
-			return $array ;
-
-		}
-
-		if ( ! isset( $args['markup'] ) ) {
-
-			h::log( 'Missing "markup", returning false.' );
-
-			return false;
-
-		}
-
-		$string = render\method::markup( $args['markup'], $array );
-
-		// h::log( $string );
-
-		// echo ##
-		echo $string ;
-
-		// stop ##
-		return true;
+		// get all post tags ##
+		render\fields::define( 
+			get\post::tags( $args ) 
+		);
 
 	}
 
@@ -343,20 +212,19 @@ class post extends \q\render {
 	/**
 	 * Helper Method to get the author
 	 */
-	public static function get_the_author( Array $args = null ){
+	public static function author( $args = null ){
 
-		// we want to return ##
-		$args['return'] = 'return';
-
-		// bounce on, and return array ##
-		return \apply_filters( 'q/wordpress/get_the_author', self::the_author( $args ) );
+		// get all post tags ##
+		render\fields::define( 
+			get\post::author( $args ) 
+		);
 
 	}
 
 
 
-
-	public static function the_date( Array $args = null ) {
+	/** @todo */
+	public static function date( Array $args = null ) {
 
 		if ( 
 			is_null( $args )

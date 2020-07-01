@@ -184,6 +184,7 @@ class render extends \Q {
 	
 	public static $log = null; // tracking array for feedback ##
 
+
 	/**
 	 * Fire things up
 	*/
@@ -193,6 +194,7 @@ class render extends \Q {
 		core\load::libraries( self::load() );
 
 	}
+	
 
 
     /**
@@ -248,38 +250,6 @@ class render extends \Q {
 			// context classes ##
 			'context' => h::get( 'render/context/_load.php', 'return', 'path' ),
 
-			// context classes ##
-			/*
-
-			// acf field handler ##
-			'field' => h::get( 'render/context/field.php', 'return', 'path' ), 
-
-			// acf field groups ##
-			'group' => h::get( 'render/context/group.php', 'return', 'path' ),
-
-			// post objects content, title, excerpt etc ##
-			'post' => h::get( 'render/context/post.php', 'return', 'path' ),
-
-			// navigation items ##
-			'navigation' => h::get( 'render/context/navigation.php', 'return', 'path' ),
-
-			// media items ##
-			'media' => h::get( 'render/context/media.php', 'return', 'path' ),
-
-			// taxonomies ##
-			'taxonomy' => h::get( 'render/context/taxonomy.php', 'return', 'path' ),
-
-			// ui render methods - open, close.. etc ##
-			'ui' => h::get( 'render/context/ui.php', 'return', 'path' ),
-
-			// block renders, such as post_meta ##
-			// 'block' => h::get( 'render/context/block.php', 'return', 'path' ),
-
-			// perhaps type css ##
-			// perhaps type js ##
-			// perhaps type font ##
-			*/
-
 		];
 
 	}
@@ -292,7 +262,7 @@ class render extends \Q {
 	 * function name can be any of the following patterns:
 	 * 
 	 * group__  acf field group
-	 * block__  ??
+	 * block__  TODO
 	 * field__  single post meta field ( can be any type, such as repeater )
 	 * partial__  snippets, code, blocks, collections like post_meta
 	 * post__  content, title, excerpt etc..
@@ -300,6 +270,8 @@ class render extends \Q {
 	 * navigation__ 
 	 * taxonomy__
 	 * ui__
+	 * extension__
+	 * widget__
 	 */
 	public static function __callStatic( $function, $args ){	
 
@@ -377,6 +349,11 @@ class render extends \Q {
 	
 				h::log( 'e:>Cannot locate method: '.$namespace.'::'.$args['task'] );
 	
+				// we need to reset the class ##
+
+				// reset all args ##
+				render\args::reset();
+
 				return false;
 	
 			}
@@ -387,6 +364,9 @@ class render extends \Q {
 				render\log::set( $args );
 				
 				h::log( 'e:>Args validation failed' );
+
+				// reset all args ##
+				render\args::reset();
 	
 				return false;
 	
@@ -430,6 +410,9 @@ class render extends \Q {
 				render\log::set( $args );
 				
 				h::log( 'e:>No matching class::method found' );
+
+				// reset all args ##
+				render\args::reset();
 	
 				return false;
 
@@ -444,6 +427,9 @@ class render extends \Q {
 				render\log::set( $args );
 
 				h::log( 'd:>Not enabled...' );
+
+				// reset all args ##
+				render\args::reset();
 	
 				return false;
 	

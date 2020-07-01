@@ -86,11 +86,11 @@ class post extends render\type {
 					$string = 
 						render\method::search_the_content([
 							'string' 	=> \apply_filters( 'q/get/wp/post_content', $wp_post->post_content ),
-							'limit'		=> self::$args['length']
+							'limit'		=> isset( self::$args['length'] ) ? self::$args['length'] : 100
 						]) ? 
 						render\method::search_the_content([
 							'string' 	=> \strip_shortcodes(\apply_filters( 'q/get/wp/post_content', $wp_post->post_content )),
-							'limit'		=> self::$args['length']
+							'limit'		=> isset( self::$args['length'] ) ? self::$args['length'] : 100
 						]) : 
 						$wp_post->post_excerpt ;
 

@@ -17,7 +17,7 @@ return [
 
 		// config ##
 		'application' 		=> 'posts',
-		'device'			=> '{{{ h::device }}}', // function ##
+		'device'			=> h::device, #'{{{ h::device }}}', // @todo function ##
 		'table'	 			=> 'posts',
 		
 		'control' 			=> 

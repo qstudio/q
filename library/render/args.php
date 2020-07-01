@@ -19,7 +19,7 @@ class args extends \q\render {
 		// $args = render\markup::pre_config( $args );
 
 		// get stored config via lookup, fallback 
-		// pulls from Q, but available to filter via q/config/get/all ##
+		// pulls from Q, but available to filter via q/config/load ##
 		$config = core\config::get( $args );
 
 		// test ##
@@ -46,22 +46,6 @@ class args extends \q\render {
             return false;
 
 		}
-
-		 // check if module asked to run $args['config']['run']
-		 if ( 
-            // isset( $args['config']['run'] )
-			// && 
-			isset( $args['config']['run'] )
-            && false === $args['config']['run']
-        ){
-
-			// log ##
-			h::log( self::$args['task'].'~>n:>config->run defined as false for: '.$args['task'].', so stopping here.. ' );
-			// h::log( 'd:>config run defined as false... so stop' );
-
-            return false;
-
-        }
 
 		// h::log( $args['config']['post'] );
 
@@ -119,7 +103,25 @@ class args extends \q\render {
 
         //     return false;
 
-        // }
+		// }
+		
+		// check if module asked to run $args['config']['run']
+		if ( 
+            // isset( $args['config']['run'] )
+			// && 
+			isset( $args['config']['run'] )
+            && false === $args['config']['run']
+        ){
+
+			h::log( $args );
+
+			// log ##
+			h::log( $args['task'].'~>n:>config->run defined as false for: '.$args['task'].', so stopping here.. ' );
+			h::log( 'd:>config run defined as false... so stop' );
+
+            return false;
+
+        }
 
         // ok - should be good ##
         return $args;
@@ -135,22 +137,37 @@ class args extends \q\render {
     public static function assign( Array $args = null ) {
 
         // apply global filter to $args - specific calls should be controlled by parameters included directly ##
-        self::$args = core\filter::apply([
+        $args = core\filter::apply([
 			'filter'        => 'q/render/args',
-			'parameters'    => self::$args,
-			'return'        => self::$args
+			'parameters'    => $args,
+			'return'        => $args
 		]);
 		
 		// apply template level filter to $args - specific calls should be controlled by parameters included directly ##
-        self::$args = core\filter::apply([
+        $args = core\filter::apply([
 			'filter'        => 'q/render/args/'.view\is::get(),
-			'parameters'    => self::$args,
-			'return'        => self::$args
+			'parameters'    => $args,
+			'return'        => $args
         ]);
 
-        // grab all passed args and merge with defaults ##
-        $args = core\method::parse_args( $args, self::$args_default );
-		
+		// h::log( core\config::$config );
+			
+		// merge CONTEXT__global settings - this allows to pass config per context ##
+		if ( $global = core\config::get([ 'context' => 'global', 'task' => $args['context'] ]) ){
+
+			// h::log( 'd:>Merging GLOBAL context for task: '.$args['task'] );
+			// h::log( $global );
+
+			// merge in global__CONTEXT settings ##
+			$args = core\method::parse_args( $global, $args );
+
+			// h::log( self::$args_default );
+
+		}
+
+		// grab all passed args and merge with defaults ##
+		$args = core\method::parse_args( $args, self::$args_default );
+
 		// assign class property ##
 		self::$args = $args;
 
@@ -224,7 +241,7 @@ class args extends \q\render {
 		// h::log( $args );
 
 		// get stored config via lookup, fallback 
-		// pulls from Q, but available to filter via q/config/get/all ##
+		// pulls from Q, but available to filter via q/config/load ##
 		$config = core\config::get( $args );
 
 		// test ##
@@ -394,7 +411,9 @@ class args extends \q\render {
 
 		// h::log( 'd:>reset args for: '.self::$args['task'] );
 
-		self::$args = [];
+		self::$args = [
+			'fields'	=> []
+		];
 
 		return true;
 

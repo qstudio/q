@@ -22,7 +22,7 @@ class config extends \Q {
 
 		// filter Q Config -- ALL FIELDS [ $array "data" ]##
 		// Priority -- Q = 1, Q Plugin = 10, Q Parent = 100, Q Child = 1000
-		\add_filter( 'q/config/get/all', [ get_class(), 'filter' ], 1, 1 );
+		\add_filter( 'q/config/load', [ get_class(), 'filter' ], 1, 1 );
 
 	}
 
@@ -80,16 +80,18 @@ class config extends \Q {
 
 				// h::log( 'd:>Loading config file: '.$file );
 
-				return core\config::load( $file, $k );
+				core\config::load( $file, $k );
 
 			}
 
 		}
 
 		// kick back ##
-		return false;
+		return true;
 
 	}
+
+
 
 
 	/**
@@ -142,8 +144,11 @@ class config extends \Q {
 
 		} else {
 
-			// assign return ##
+			// get property value ##
 			$return = self::$config[ $property ];
+
+			// filter single property values -- too slow ??
+			// $return = \apply_filters( 'q/config/get/'.$args['context'].'/'.$args['task'], $return );
 
 			// single loading -- good idea? ##
 			// $found = true;
@@ -177,7 +182,7 @@ class config extends \Q {
 
 		// h::log( $args );
 
-		\apply_filters( 'q/config/get/all', self::$args );
+		\apply_filters( 'q/config/load', self::$args );
 
 	}
 
@@ -193,6 +198,9 @@ class config extends \Q {
 	public static function load( $file = null, $handle = null )
 	{
 
+		// return args for other filters ### ?? ###
+		$return = self::$args;
+
 		// sanity ##
 		if (
 			is_null( $file )
@@ -202,7 +210,7 @@ class config extends \Q {
 
 			h::log( 'Error in passed params' );
 
-			return self::$args;
+			return $return;
 
 		}
 
@@ -215,7 +223,7 @@ class config extends \Q {
 
 			// h::log( 'd:>Returning cached version of config for handle: '.$handle.' from: '.$backtrace );
 			// h::log( self::$cache[$handle] );
-			return self::$args;
+			return $return;
 
 		}
 
@@ -226,7 +234,7 @@ class config extends \Q {
 			
 			h::log( 'e:>Error, file does not exist: '.$file.' from: '.$backtrace );
 
-			return self::$args; #self::$config;
+			return $return; #self::$config;
 
 		}
 
@@ -246,6 +254,29 @@ class config extends \Q {
 				// h::log( 'd:>config handle: "'.$handle.'" loading: '.$file.' from: '.$backtrace );
 				// h::log( $array );
 
+				// filter single property values -- too slow ??
+				// perhaps this way is too open, and we should just run this at single property usage time... ##
+				if ( isset( $array[ self::$args['context'].'__'.self::$args['task'] ] ) ) {
+
+					$key = self::$args['context'].'__'.self::$args['task'];
+					$property = $array[ $key ];
+
+					$filter = 
+						\apply_filters( 
+							'q/config/load/'.self::$args['context'].'/'.self::$args['task'], 
+							$property
+					);
+
+					if ( $filter ) {
+
+						// how to validate ??
+						// is this an array.. ?? ##
+						$array[ $key ] = $filter;
+
+					}
+
+				}
+
 				// set cache check ##
 				self::$cache[$handle] = $array;
 
@@ -253,7 +284,7 @@ class config extends \Q {
 				self::$config = core\method::parse_args( $array, self::$config );
 
 				// return ##
-				return self::$args;
+				return $return;
 
 			} else {
 
@@ -263,8 +294,8 @@ class config extends \Q {
 
 		}
 
-		// empty array ##
-		return self::$args;
+		// return args for other filters ### ?? ###
+		return $return;
 
 	}
 

@@ -20,29 +20,29 @@ class enqueue extends extension\search {
 	public static function wp_enqueue_scripts() {
 
 		// get Q stored option ##
-		$option = config::get();
-		// h::log( $option );
-		// h::log( 'd:>adding q search assets..' );
-		// h::log( 'd:>'.h::get( "ui/asset/css/q.search.css", 'return' ) );
+		// $option = config::get();
+		// // h::log( $option );
+		// // h::log( 'd:>adding q search assets..' );
+		// // h::log( 'd:>'.h::get( "ui/asset/css/q.search.css", 'return' ) );
 
-		// Load CSS
-        if ( 
-            isset( $option->q_search->css ) 
-            && true == $option->q_search->css    
-        ) {
+		// // Load CSS
+        // if ( 
+        //     isset( $option->q_search->css ) 
+        //     && true == $option->q_search->css    
+        // ) {
 
 			// h::log( 'd:>adding q search CSS assets..' );
 
 			\wp_register_style( 'q-search-css', h::get( "extension/search/ui/asset/css/index.css", 'return' ), '', self::version, 'all' );
 			\wp_enqueue_style( 'q-search-css' );
 
-		}
+		// }
 
-		// Load JS
-        if ( 
-            isset( $option->q_search->js ) 
-            && true == $option->q_search->js    
-        ) {
+		// // Load JS
+        // if ( 
+        //     isset( $option->q_search->js ) 
+        //     && true == $option->q_search->js    
+        // ) {
 
 			// h::log( 'd:>adding q search JS assets..' );
 
@@ -59,7 +59,7 @@ class enqueue extends extension\search {
 				//,   'on_load_text' => __( 'Search & filter to see results', 'q-search' )
 			));
 
-		}
+		// }
 
 	  }
 

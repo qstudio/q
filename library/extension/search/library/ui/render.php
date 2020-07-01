@@ -121,11 +121,11 @@ class render extends \q_search {
 			<img class="fit card-img-top" alt="Open" src="<?php echo \get_the_post_thumbnail_url( \get_the_ID(), 'square' ); ?>" />
 		</a>
 		<div class="card-body">
-			<h5 class="card-title"><a href="%permalink%" title="Read More"><?php \the_title();?></a></h5>
+			<h5 class="card-title"><a href="{{ permalink }}" title="Read More"><?php \the_title();?></a></h5>
 			<p class="card-text"><?php \the_excerpt(); ?></p>
 			<p class="card-text">
 				<small class="text-muted"><?php \the_date(); ?></small>
-				<small class="text-muted">in <a href="%category_permalink%" title="%category_name%">%category_name%</a> </small>    
+				<small class="text-muted">in <a href="{{ category_permalink }}" title="{{ category_name }}">{{ category_name }}</a> </small>    
 			</p>
 		</div>
 	</div>

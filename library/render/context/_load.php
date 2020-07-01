@@ -55,8 +55,8 @@ class context extends render {
 			// ui render methods - open, close.. etc ##
 			'ui' => h::get( 'render/context/ui.php', 'return', 'path' ),
 
-			// block renders, such as post_meta ##
-			// 'block' => h::get( 'render/context/block.php', 'return', 'path' ),
+			// elements, html snippets, which can be processed to expand {{ markdown }} ##
+			'element' => h::get( 'render/context/element.php', 'return', 'path' ),
 
 			// perhaps type css ##
 			// perhaps type js ##

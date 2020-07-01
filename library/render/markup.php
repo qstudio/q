@@ -907,12 +907,12 @@ class markup extends \q\render {
 			// && ! self::$wrapped
 		) { 
 
-			h::log( 'd:>hello 3...' );
+			// h::log( 'd:>hello 3...' );
 
 			// $markup = self::$args[ $key ];
 			$markup = self::$markup[ 'wrap' ];
 
-			h::log( 'd:>wrap string in: '.$markup );
+			// h::log( 'd:>wrap string in: '.$markup );
 
 			// filter ##
 			$markup = core\filter::apply([ 

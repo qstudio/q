@@ -34,7 +34,8 @@ class option extends \Q {
         // h::log( $field['default_value'] );
 
 		// pop on a new choice ##
-		$field['choices']['search'] = 'AJAX Search';
+		$field['choices']['search'] = 'AJAX Search <a href="://qstudio.us/willow/extension/search" target="_blank">Read More</a>'; 
+		h::log( 't:>Create help file system... perhaps opens here in modal with fetch via API??' );
 		// $field['choices']['banner'] = '@todo - News Banner';
 
 		// make it selected ##

@@ -114,7 +114,7 @@ class method extends extension\search {
 			&& ! isset( self::$properties[$key] ) 
 		){
 
-			h::log( 'd:>key: '.$key.' missing' );
+			// h::log( 'd:>key: '.$key.' missing' );
 
 			return false;
 
