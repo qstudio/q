@@ -193,8 +193,17 @@ class args extends \q\render {
 		// post-format markup to extract markup keys collected by config ##
 		render\markup::merge();
 
-		// pre-format markup to extract sections and add additional placeholders ##
+		// pre-format markup to extract functions ##
+		render\markup::function();
+
+		// pre-format markup to extract sections ##
 		render\markup::section();
+
+		// pre-format markup to extract partials ##
+		render\markup::partial();
+
+		// pre-format markup to extract comments and place in html ##
+		render\markup::comment();
 
 		// search for config settings in markup, such as "src" handle ##
 		render\markup::config();

@@ -24,6 +24,7 @@ class ui extends \q\render {
 	 * @uses		render\fields::define
      * @return      Array
      */
+	/*
     public static function get( $args = null ) {
 
 		// look for property "args->task" in config ##
@@ -43,7 +44,8 @@ class ui extends \q\render {
 		}
 
 	}
-
+	*/
+	
 
 	/**
      * get_header

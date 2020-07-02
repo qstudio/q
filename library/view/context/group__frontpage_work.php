@@ -1,9 +1,11 @@
 <?php
  
+use q\render;
+
 // return an array ##
 return [
 'group__frontpage_work' => [
-	// 'config'	=> [ 'run' => false ],
+	'config'	=> [ 'debug' => true ],
 	// 'config' => [ 'meta'	=> true ], // add meta data ##
 	// 'config' => [ 'srcset'	=> true ], // add srcset data ##
 	// [[{"handle":"square-sm"}]]
@@ -41,24 +43,12 @@ return [
 			</li>
 			{{/#}}
 		</ul>
+		{{! this is a comment }}
+		{{> partial__search_trigger }}
+		<h2>{{{ get_the_title[[3380]] }}}</h2>
 		
-		<div class="row">
-			<div class="col-12 list-group list-group-flush border-top">
-				<div class="list-group-item">
-					Find More
-					<a 
-						class="badge badge-primary text-white p-2 q-scroll-top" 
-						data-toggle="collapse" 
-						data-target="#search_content"
-						aria-controls="search_content" 
-						aria-expanded="false" 
-						aria-label="Search navigation"
-						href="#">
-						Search
-					</a>
-				</div>
-			</div>
-		</div>
 	'
 ]
 ];
+
+// '.render::ui__search_trigger().'

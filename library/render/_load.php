@@ -159,9 +159,10 @@ class render extends \Q {
 			],
 
 			// inversion ##  // else, no results ##
+			// @todo.... this might only work when pared with a section.. so, if the section returned false, render the inversion ## 
 			'inversion'		=> [
 				'open'		=> '{{^ ',
-				'open'		=> ' }}', 
+				'close'		=> ' }}', 
 				'end'		=> '{{/}}'
 			],
 
