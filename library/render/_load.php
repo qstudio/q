@@ -222,6 +222,9 @@ class render extends \Q {
 			// validate and assign args ##
 			'args' => h::get( 'render/args.php', 'return', 'path' ),
 
+			// configuration ##
+			'config' => h::get( 'render/config.php', 'return', 'path' ),
+
 			// class extensions ##
 			'extend' => h::get( 'render/extend.php', 'return', 'path' ),
 
@@ -377,6 +380,9 @@ class render extends \Q {
 				return false;
 	
 			}
+
+			// prepare markup, fields and handlers based on passed configuration ##
+			render\config::prepare( $args );
 
 			// call class::method to gather data ##
 			// return render\ui::open( $args );

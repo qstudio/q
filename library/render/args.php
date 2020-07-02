@@ -172,7 +172,7 @@ class args extends \q\render {
 		self::$args = $args;
 
 		// pre-format markup ##
-		self::post_config();
+		// self::post_config();
 		
         // return args for validation ##
         return $args;
@@ -190,23 +190,23 @@ class args extends \q\render {
 
 		// h::log( self::$args['markup'] );
 
-		// post-format markup to extract markup keys collected by config ##
-		render\markup::merge();
+		// // post-format markup to extract markup keys collected by config ##
+		// render\markup::merge();
 
 		// pre-format markup to extract functions ##
-		render\markup::function();
+		// render\markup::function();
 
 		// pre-format markup to extract sections ##
-		render\markup::section();
+		// render\markup::section();
 
 		// pre-format markup to extract partials ##
-		render\markup::partial();
+		// render\markup::partial();
 
 		// pre-format markup to extract comments and place in html ##
-		render\markup::comment();
+		// render\markup::comment();
 
 		// search for config settings in markup, such as "src" handle ##
-		render\markup::config();
+		// render\markup::config();
 
 	}
 
