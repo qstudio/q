@@ -27,7 +27,7 @@ class meta extends \q\get {
 		if (
 			is_null( $args )
 			|| ! is_array( $args )
-			|| ! isset( $args['field'] )
+			// || ! isset( $args['field'] )
 		){
 
 			h::log( 'e:>Error in passed args' );
@@ -40,9 +40,7 @@ class meta extends \q\get {
 		$post_id = isset( $args['config']['post'] ) ? $args['config']['post']->ID : null ;
 
 		// get field ##
-		if ( $value = \get_field( $args['field'], $post_id ) ) {
-
-			// h::log( 't:>we need to pass this thru filters - but return expects an array ##
+		if ( $value = \get_field( $args['task'], $post_id ) ) {
 
 			// h::log( $value );
 
@@ -50,7 +48,7 @@ class meta extends \q\get {
 
 		}
 
-		h::log( 'e:>get_field retuned no data - field: "'.$args['field'].'"');
+		h::log( 'e:>get_field retuned no data - field: "'.$args['task'].'"');
 		
 		// return ##
 		return false;
@@ -171,7 +169,7 @@ class meta extends \q\get {
 
 			}
 
-			h::log( $array );
+			// h::log( $array );
 
 			// return ##
 			return get\method::prepare_return( $args, $array );

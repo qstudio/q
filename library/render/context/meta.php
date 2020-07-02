@@ -10,7 +10,7 @@ use q\render;
 class meta extends \q\render {
 
 	/**
-     * Get  eta field data via meta handler
+     * Get Meta field data via meta handler
      *
      * @param       Array       $args
      * @since       1.3.0
@@ -19,8 +19,10 @@ class meta extends \q\render {
      */
     public static function get( $args = null ) {
 
-		// get title - returns array with key 'title' ##
-		$args['field'] = $args['task']; // get\meta::field required "args->field" ## 
+		// get\meta::field required "args->field" ## 
+		// $args['field'] = $args['task']; 
+
+		// returns string or array OR false.. ##
 		render\fields::define([
 			$args['task'] => get\meta::field( $args )
 		]);

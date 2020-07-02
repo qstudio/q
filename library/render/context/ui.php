@@ -16,6 +16,36 @@ class ui extends \q\render {
 
 
 	/**
+     * Generic Getter - looks for properties in config matching context->task
+	 * can be loaded as a string in context/ui file
+     *
+     * @param       Array       $args
+     * @since       1.4.1
+	 * @uses		render\fields::define
+     * @return      Array
+     */
+    public static function get( $args = null ) {
+
+		// look for property "args->task" in config ##
+		if ( 
+			$config = core\config::get([ 'context' => $args['context'], 'task' => $args['task'] ])
+		){
+			// h::log( $config );
+			
+			// "args->fields" are used for type and callback lookups ##
+			// self::$args['fields'] = $array['fields']; 
+
+			// define "fields", passing returned data ##
+			render\fields::define(
+				$config
+			);
+
+		}
+
+	}
+
+
+	/**
      * get_header
      *
      * @since       1.0.2
@@ -90,6 +120,41 @@ class ui extends \q\render {
 		]);
 
 	}
+
+
+	
+	/**
+     * comment_template
+     *
+	 * @todo 		allow for passing markup
+     * @since       1.0.2
+     * @return      string   HTML
+     */
+    public static function comment( $args = null )
+    {
+
+		return theme\view\ui\comment::render( $args );
+
+	}
+
+
+
+	/**
+	 * @todo --- if really required ??
+	 * 
+	*/
+	/*
+    public static function password_form()
+    {
+
+?>
+        <div class="password" style="text-align: center; margin: 20px;">
+            <?php echo \get_the_password_form(); ?>
+        </div>
+<?php
+
+	}
+	*/
 
 
 }

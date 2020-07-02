@@ -14,22 +14,43 @@ class placeholder extends \q\render {
      * Get all placeholders from passed string value 
      *  
      */
-    public static function get( string $string = null ) {
+    public static function get( string $string = null, $type = 'variable' ) {
         
         // sanity ##
         if (
-            is_null( $string ) 
+			is_null( $string ) 
+			|| is_null( $type )
         ) {
 
 			// log ##
-			h::log( self::$args['task'].'~>e:>No string value passed to method' );
+			h::log( self::$args['task'].'~>e:>No string or type value passed to method' );
 
             return false;
 
-        }
+		}
+		
+		switch ( $type ) {
 
-		$regex_find = \apply_filters( 'q/render/markup/placeholders/get', '~\{{\s(.*?)\s\}}~' );
-		// $regex_find = \apply_filters( 'q/render/markup/placeholders/get', '~\%(.*?)\%~' );
+			default :
+			case "variable" :
+
+				// note, we trim() white space off tags, as this is handled by the regex ##
+				$open = trim( tag::g( 'var_o' ) );
+				$close = trim( tag::g( 'var_c' ) );
+
+				// h::log( 'open: '.$open );
+
+				$regex_find = \apply_filters( 
+					'q/render/markup/placeholder/get/variable', 
+					// '~\{{\s(.*?)\s\}}~' 
+					"~\\$open\s+(.*?)\s+\\$close~" // note:: added "+" for multiple whitespaces.. not sure it's good yet...
+				);
+
+			break ;
+
+		}
+
+		// $regex_find = \apply_filters( 'q/render/markup/placeholders/get', '~\{{\s(.*?)\s\}}~' );
 		// if ( ! preg_match_all('~\%(\w+)\%~', $string, $matches ) ) {
         if ( ! preg_match_all( $regex_find, $string, $matches ) ) {
 
@@ -77,12 +98,13 @@ class placeholder extends \q\render {
      * Edit {{ placeholder }} in self:$args['markup']
      * 
      */
-    public static function edit( string $placeholder = null, $new_placeholder = null ) {
+    public static function edit( string $placeholder = null, $new_placeholder = null, $type = 'variable' ) {
 
         // sanity ##
         if (
 			is_null( $placeholder ) 
 			|| is_null( $new_placeholder )
+			|| is_null( $type )
 		) {
 
 			// log ##
@@ -91,10 +113,25 @@ class placeholder extends \q\render {
             return false;
 
 		}
+
+		// check if placeholder is correctly formatted --> {{ STRING }} ##
+		// $needle_start = '{{ ';
+		// $needle_end = ' }}';
+
+		// what type of placeholder are we adding ##
+		switch ( $type ) {
+
+			default :
+			case "variable" :
+
+				// check if placeholder is correctly formatted --> {{ STRING }} ##
+				$needle_start = tag::g( 'var_o' ); #'{{ ';
+				$needle_end = tag::g( 'var_c' ); #' }}';
+
+			break ;
+
+		}
 		
-        // check if placeholder is correctly formatted --> {{ STRING }} ##
-		$needle_start = '{{ ';
-		$needle_end = ' }}';
 		if (
 			! render\method::starts_with( $placeholder, $needle_start ) 
 			|| ! render\method::ends_with( $placeholder, $needle_end ) 
@@ -130,11 +167,12 @@ class placeholder extends \q\render {
      * Set {{ placeholder }} in self:markup['template'] at defined position
      * 
      */
-    public static function set( string $placeholder = null, $position = null ) { // , $markup = null
+    public static function set( string $placeholder = null, $position = null, $type = 'variable' ) { // , $markup = null
 
         // sanity ##
         if (
-			is_null( $placeholder ) 
+			is_null( $type ) 
+			|| is_null( $placeholder ) 
 			// || is_null( $markup )
 			|| is_null( $position )
 		) {
@@ -146,14 +184,20 @@ class placeholder extends \q\render {
 
 		}
 		
-		// where are we replacing ##
-		// $markup = ! \is_null( $markup ) ? $markup : self::$markup ;
+		// what type of placeholder are we adding ##
+		switch ( $type ) {
 
-		// h::log( $markup );
+			default :
+			case "variable" :
 
-        // check if placeholder is correctly formatted --> {{ STRING }} ##
-		$needle_start = '{{ ';
-		$needle_end = ' }}';
+				// check if placeholder is correctly formatted --> {{ STRING }} ##
+				$needle_start = tag::g( 'var_o' ); #'{{ ';
+				$needle_end = tag::g( 'var_c' ); #' }}';
+
+			break ;
+
+		}
+
         if (
             ! render\method::starts_with( $placeholder, $needle_start ) 
 			|| ! render\method::ends_with( $placeholder, $needle_end ) 
@@ -197,7 +241,7 @@ class placeholder extends \q\render {
      * Remove {{ placeholder }} from self:$args['markup'] array
      * 
      */
-    public static function remove( string $placeholder = null, $markup = null ) {
+    public static function remove( string $placeholder = null, $markup = null, $type = 'variable' ) {
 
         // sanity ##
         if (
@@ -212,15 +256,24 @@ class placeholder extends \q\render {
 
 		}
 		
-		// where are we replacing ##
-		// $markup = ! \is_null( $markup ) ? $markup : self::$markup ;
-
-		// h::log( $markup );
 		// h::log( 'remove: '.$placeholder );
 
         // check if placeholder is correctly formatted --> {{ STRING }} ##
-		$needle_start = '{{ ';
-		$needle_end = ' }}';
+
+		// what type of placeholder are we adding ##
+		switch ( $type ) {
+
+			default :
+			case "variable" :
+
+				// check if placeholder is correctly formatted --> {{ STRING }} ##
+				$needle_start = tag::g( 'var_o' ); #'{{ ';
+				$needle_end = tag::g( 'var_c' ); #' }}';
+
+			break ;
+
+		}
+
         if (
             ! render\method::starts_with( $placeholder, $needle_start ) 
             || ! render\method::ends_with( $placeholder, $needle_end ) 

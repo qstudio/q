@@ -22,12 +22,39 @@ class config extends \Q {
 
 		// filter Q Config -- ALL FIELDS [ $array "data" ]##
 		// Priority -- Q = 1, Q Plugin = 10, Q Parent = 100, Q Child = 1000
-		\add_filter( 'q/config/load', [ get_class(), 'filter' ], 1, 1 );
+		\add_filter( 'q/config/load', 
+			function( $args ){
+				$source = null; // context source ##
+				return self::filter( $args, $source );
+			}
+		, 1, 1 );
+
+		\add_filter( 'q/config/load', 
+			function( $args ){
+				$source = 'plugin'; // context source ##
+				return self::filter( $args, $source );
+			}
+		, 10, 1 );
+		
+		\add_filter( 'q/config/load', 
+			function( $args ){
+				$source = 'parent'; // context source ##
+				return self::filter( $args, $source );
+			}
+		, 100, 1 );
+
+		\add_filter( 'q/config/load', 
+			function( $args ){
+				$source = 'parent'; // context source ##
+				return self::filter( $args, $source );
+			}
+		, 1000, 1 );
 
 	}
 
 
 
+	
 	/**
 	 * Get configuration files
 	 *
@@ -35,7 +62,7 @@ class config extends \Q {
 	 *
 	 * @return		Array $array -- must return, but can be empty ##
 	 */
-	public static function filter( $args = null ) {
+	public static function filter( $args = null, $source = null ) {
 
 		// h::log( $args );
 
@@ -45,12 +72,14 @@ class config extends \Q {
 			|| ! is_array( $args )
 			|| ! isset( $args['context'] ) 
 			|| ! isset( $args['task'] )
+			// || is_null( $source )
 		){
 
 			// config is loaded by context or process, so we need one of those to continue ##
 			h::log( 'e:>Error in passed args, $context and $task are required.' );
 
-			return false;
+			// kick back args for future filters ##
+			return $args;
 
 		}
 
@@ -58,7 +87,7 @@ class config extends \Q {
 		$ext = \apply_filters( 'q/config/load/ext', '.php' );
 
 		// config file path ( h::get will do fallback checks form child theme, parent theme, plugin + Q.. )
-		$path = \apply_filters( 'q/config/load/path', 'view/context/' );;
+		$path = \apply_filters( 'q/config/load/path', 'view/context/' );
 
 		// array of config files to load -- key ( for cache ) + value ##
 		$array = [
@@ -71,23 +100,63 @@ class config extends \Q {
 		// filter options ##
 		$array = \apply_filters( 'q/config/load/array', $array );
 
+		// h::log( 'd:>looking for source: '.$source );
+
 		// loop over options ##
 		foreach( $array as $k => $v ){
 
+			switch( $source ){
+
+				// child context lookup ##
+				case "child" :
+
+					// check for look method ##
+					if ( ! method_exists( 'q_theme', 'get_child_theme_path' ) ){ break; }
+
+					$file = \q_theme::get_child_theme_path( '/library/'.$path.$source.'/'.$v.$ext );
+					// h::log( 'd:>looking up file: '.$file );
+
+				break  ;
+
+				// parent lookup ## 
+				case "parent" :
+
+					// check for look method ##
+					if ( ! method_exists( 'q_theme', 'get_parent_theme_path' ) ){ break; }
+
+					$file = \q_theme::get_parent_theme_path( '/library/'.$path.$source.'/'.$v.$ext );
+					// h::log( 'd:>looking up file: '.$file );
+
+				break  ;
+
+				// global lookup, so context/XX.php
+				default :
+
+					$file = h::get( $path.$v.$ext, 'return', 'path' );
+
+				break ;
+
+			}
+
 			if ( 
-				$file = h::get( $path.$v.$ext, 'return', 'path' )
+				$file
+				&& file_exists( $file ) // OR is_file ??
 			){
 
-				// h::log( 'd:>Loading config file: '.$file );
+				// build cache key ##
+				$cache_key = ! is_null( $source ) ? $k.'_'.$source : $k ;
 
-				core\config::load( $file, $k );
+				// h::log( 'd:>Loading config file: '.$file.' cache key: '.$cache_key );
+
+				// send file to config loader ##
+				core\config::load( $file, $cache_key );
 
 			}
 
 		}
 
-		// kick back ##
-		return true;
+		// kick back args for future filters ##
+		return $args;
 
 	}
 
@@ -288,7 +357,7 @@ class config extends \Q {
 
 			} else {
 
-				h::log( 'd:>config not an array -- handle: "'.$handle.' from: '.$backtrace );
+				// h::log( 'd:>config not an array -- handle: "'.$handle.' from: '.$backtrace );
 
 			}
 

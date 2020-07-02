@@ -122,7 +122,7 @@ class render extends extension\search {
 			<p class="card-text"><?php \the_excerpt(); ?></p>
 			<p class="card-text">
 				<small class="text-muted"><?php \the_date(); ?></small>
-				<small class="text-muted">in <a href="%category_permalink%" title="%category_name%">%category_name%</a> </small>    
+				<small class="text-muted">in <a href="{{ category_permalink }}" title="{{ category_name }}">{{ category_name }}</a> </small>    
 			</p>
 		</div>
 	</div>

@@ -347,73 +347,6 @@ class post extends \q\get {
 
 
 
-	// public static function category( $args = null ){
-
-	// 	// sanity ##
-	// 	if (
-	// 		is_null( $args )
-	// 		|| ! is_array( $args )
-	// 	){
-
-	// 		h::log( 'e:>Error in passed args' );
-
-	// 		return false;
-
-	// 	}
-
-	// 	// $args->ID = $the_post->post_parent;
-	// 	if ( 
-	// 		! $terms = self::object_terms([ 
-	// 			'config' 		=> [ 
-	// 				'post'		=> $args['config']['post'] ?: null
-	// 			],
-	// 			'taxonomy'		=> 'category',
-	// 			'args' 			=> [
-	// 				'number'	=> 1
-	// 			]
-	// 		])
-				
-	// 	){
-
-	// 		h::log( 'e:>Returned terms empty' );
-
-	// 		return false;
-
-	// 	}
-
-	// 	// h::log( $terms );
-
-	// 	// we expect an array with 1 key [0] of WP_Term object - validate ##
-	// 	if (
-	// 		! is_array( $terms )
-	// 		|| ! isset( $terms[0] )
-	// 		|| ! $terms[0] instanceof \WP_Term
-	// 	){
-
-	// 		 h::log( 'e:>Error in returned terms data' );
-
-	// 		 return false;
-
-	// 	}
-
-	// 	// create an empty array ##
-	// 	$array = [];
-
-	// 	// add values ##
-	// 	$array['permalink'] = \get_category_link( $terms[0] );
-	// 	$array['slug'] = $terms[0]->slug;
-	// 	$array['title'] = $terms[0]->name;
-
-	// 	// test ##
-	// 	// h::log( $array );
-
-	// 	// return ##
-	// 	return get\method::prepare_return( $args, $array );
-
-	// }
-	
-
-
 	
     /**
      * Get Post excerpt and return it in an HTML element with classes
@@ -572,6 +505,49 @@ class post extends \q\get {
 
 
 
+	/**
+    * Return the_date with specified format
+    *
+    * @since       1.0.1
+    * @return      string       HTML
+    */
+    public static function date( $args = null )
+    {
+
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+		){
+
+			h::log( 'Error in passed args' );
+
+			return false;
+
+		}
+
+        // set-up new array ##
+		$array = [];
+
+		// get the post_content with filters applied ##
+		$array['post_date'] = 
+			\get_the_date( 
+				isset( $args['config']['date_format'] ) ? 
+				$args['date_format']['config'] : // take from value passed by caller ##
+					core\config::get([ 'context' => 'global', 'task' => 'date_format' ]) ?: // take from global config ##
+					\apply_filters( 'q/format/date', 'F j, Y' ), // standard ##
+				$args['config']['post']->ID
+			);
+
+		// h::log( $array );
+
+		// return ##
+		return get\method::prepare_return( $args, $array );
+
+	}
+
+
+
 	
     /**
     * The Post Data ( meta.. )
@@ -602,8 +578,11 @@ class post extends \q\get {
 		// starts with an empty array ##
 		$array = [];
 
-		// post time ##
+		// post time in @since format ##
 		$array['post_date_human'] = \human_time_diff( \get_the_date( 'U', $post->ID ), \current_time('timestamp') );
+
+		// post time ##
+		$array['post_date'] = get\post::date( $args );
 
 		// post author ##
 		$array = render\method::extract( get\meta::author( $args ), 'author_', $array );

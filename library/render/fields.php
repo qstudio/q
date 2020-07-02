@@ -318,7 +318,18 @@ class fields extends \q\render {
      * 
      * @return  boolean
      */
-    public static function get_callback( $field ){
+    public static function get_callback( $field = null ){
+
+		// sanity ##
+		if (
+			is_null( $field )
+		){
+
+			h::log( 'e:>Error, no $field passed' );
+
+			return false;
+
+		}
 
 		// helper::log( 'Checking Type of Field: "'.$field.'"' );
 		
@@ -335,6 +346,7 @@ class fields extends \q\render {
 
 		}
 
+		// h::log( self::$args['fields'] );
         if ( 
             ! $key = core\method::array_search( 'key', 'field_'.$field, self::$args['fields'] )
         ){

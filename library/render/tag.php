@@ -16,6 +16,12 @@ class tag extends \q\render {
 		// $tag_map = []
 	;
 
+	public static function __callStatic( $function, $args ){	
+
+		self::g( $args );
+
+	}
+
 	private static function map( $tag = null ){
 
 		// sanity ##
@@ -45,8 +51,22 @@ class tag extends \q\render {
 
 		// build map ##
 		$tag_map = [
-			'vo' => self::$filtered_tags['variable']['open'],
-			'vc' => self::$filtered_tags['variable']['close'],
+			'var_o' => self::$filtered_tags['variable']['open'],
+			'var_c' => self::$filtered_tags['variable']['close'],
+			'sec_o' => self::$filtered_tags['section']['open'],
+			'sec_c' => self::$filtered_tags['section']['close'],
+			'sec_e' => self::$filtered_tags['section']['end'],
+			'fun_o' => self::$filtered_tags['function']['open'],
+			'fun_c' => self::$filtered_tags['function']['close'],
+			'arg_o' => self::$filtered_tags['argument']['open'],
+			'arg_c' => self::$filtered_tags['argument']['close'],
+			'par_o' => self::$filtered_tags['partial']['open'],
+			'par_c' => self::$filtered_tags['partial']['close'],
+			'com_o' => self::$filtered_tags['comment']['open'],
+			'com_c' => self::$filtered_tags['comment']['close'],
+			'inv_o' => self::$filtered_tags['inversion']['open'],
+			'inv_c' => self::$filtered_tags['inversion']['close'],
+			'inv_e' => self::$filtered_tags['inversion']['end'],
 		];
 
 		// full back, in case not requested via shortcode ##
@@ -60,6 +80,8 @@ class tag extends \q\render {
 		return $tag_map[$tag] ?: false ;
 
 	}
+
+
 
 	protected static function tags(){
 
@@ -138,6 +160,7 @@ class tag extends \q\render {
 
 	}
 
+	
 	/**
      * shortcut to get
 	 * 
@@ -145,7 +168,8 @@ class tag extends \q\render {
      */
     public static function g( $args = null ) {
 
-		return self::get( $args );
+		// we can pass shortcut ( mapped ) values -- i.e "var_o" ##
+		return self::map( $args ) ?: false ;
  
 	}
 
@@ -160,6 +184,8 @@ class tag extends \q\render {
 		// sanity ##
 		if (
 			is_null( $args )
+			|| ! isset( $args['tag'] )
+			|| ! isset( $args['method'] )
 		){
 
 			h::log('e:> No args passed to method');
@@ -179,11 +205,23 @@ class tag extends \q\render {
 
 		}
 
+		if (
+			! isset( self::$filtered_tags[ $args['tag'] ][ $args['method'] ] )
+		){
+
+			h::log('e:>Cannot find tag: '.$args['tag'].'->'.$args['method'] );
+
+			return false;
+
+		}
+
+		// h::log( self::tags() );
+
 		// // get tags, with filter ##
 		// $tags = self::tags();
 
 		// looking for long form ##
-		return self::tags()[ $args ] ?: false ;
+		return self::$filtered_tags[ $args['tag'] ][ $args['method'] ] ;
 
 	}
 

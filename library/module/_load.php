@@ -25,8 +25,8 @@ class module extends \Q {
     {
 
 		return $array = [
-			'comment' => h::get( 'module/comment.php', 'return', 'path' ),
-			'navigation' => h::get( 'module/navigation.php', 'return', 'path' ), // @todo -- will go ##
+			// 'comment' => h::get( 'module/comment.php', 'return', 'path' ),
+			'navigation' => h::get( 'module/navigation.php', 'return', 'path' ), 
 			'cookie' => h::get( 'module/cookie.php', 'return', 'path' ),
 			// 'filter' => h::get( 'ui/module/filter.php', 'return', 'path' ),
 			// 'modal' => h::get( 'ui/module/modal.php', 'return', 'path' ),

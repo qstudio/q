@@ -13,7 +13,8 @@ return [
 
 		<div class="card mb-3">
 			<a href="{{ frontpage_work_top__post_permalink }}">
-				<img class="fit card-img-top lazy" style="max-height: 200px" src="" data-src="{{ frontpage_work_top__src[[{"handle":"square-sm"}]] }}" />
+				<img class="fit card-img-top lazy" style="max-height: 200px" src="" 
+					data-src="{{ frontpage_work_top__src[[{"handle":"square-sm"}]] }}" />
 			</a>
 			<div class="card-body">
 				<h5 class="card-title">
@@ -41,17 +42,22 @@ return [
 			{{/#}}
 		</ul>
 		
-		<div class="card-body">
-			Find More
-			<a 
-				class="btn btn-primary text-right q-scroll-top" 
-				data-toggle="collapse" 
-				data-target="#search_content"
-				aria-controls="search_content" 
-				aria-expanded="false" 
-				aria-label="Search navigation">
-				Search
-			</a>
+		<div class="row">
+			<div class="col-12 list-group list-group-flush border-top">
+				<div class="list-group-item">
+					Find More
+					<a 
+						class="badge badge-primary text-white p-2 q-scroll-top" 
+						data-toggle="collapse" 
+						data-target="#search_content"
+						aria-controls="search_content" 
+						aria-expanded="false" 
+						aria-label="Search navigation"
+						href="#">
+						Search
+					</a>
+				</div>
+			</div>
 		</div>
 	'
 ]

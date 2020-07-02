@@ -24,7 +24,7 @@ class comment extends \Q {
     {
 
         // filter comment template ##
-		add_filter( "comments_template", array( get_class(), "the_comment_template" ), 10 );
+		add_filter( "comments_template", array( get_class(), "template" ), 10 );
 		
 		// remove "url" field from comments ##
         \add_filter( 'comment_form_default_fields', array( get_class(), 'comment_form_default_fields' ) );
@@ -38,7 +38,7 @@ class comment extends \Q {
     * @since       1.0.1
     * @return      string       HTML
     */
-    public static function the_comment_template( $args = array() )
+    public static function template( $args = array() )
     {
 
         // get the_post ##

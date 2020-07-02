@@ -90,7 +90,7 @@ class markup extends \q\render {
 
         // check for any left over placeholders - remove them ##
         if ( 
-            $placeholders = render\placeholder::get( $string ) 
+            $placeholders = placeholder::get( $string ) 
         ) {
 
 			// log ##
@@ -101,7 +101,7 @@ class markup extends \q\render {
             // remove any leftover placeholders in string ##
             foreach( $placeholders as $key => $value ) {
             
-                $string = render\placeholder::remove( $value, $string );
+                $string = placeholder::remove( $value, $string );
             
             }
 
@@ -216,7 +216,7 @@ class markup extends \q\render {
 		// }
 
 		// default -- almost useless - but works for single values.. ##
-		// $markup = tag::wrap([ 'open' => 'vo', 'value' => 'value', 'close' => 'vc' ]);
+		// $markup = tag::wrap([ 'open' => 'var_o', 'value' => 'value', 'close' => 'var_c' ]);
 
 		// // filter ##
 		// $markup = \apply_filters( 'q/render/markup/default', $markup );
@@ -337,7 +337,7 @@ class markup extends \q\render {
 		}
 
 		// for ##
-		$for = ' for: '.render\method::get_context();
+		$for = ' for: '.method::get_context();
 
 		// we only accept correctly formatted markup from config ##
 		if (
@@ -386,7 +386,7 @@ class markup extends \q\render {
 		){
 
 			// default -- almost useless - but works for single values.. ##
-			$markup = tag::wrap([ 'open' => 'vo', 'value' => 'value', 'close' => 'vc' ]);
+			$markup = tag::wrap([ 'open' => 'var_o', 'value' => 'value', 'close' => 'var_c' ]);
 
 			// filter ##
 			$markup = \apply_filters( 'q/render/markup/default', $markup );
@@ -449,18 +449,33 @@ class markup extends \q\render {
 		// h::log('d:>'.$string);
 
 		// get all sections, add markup to $markup->$field ##
-		// {{# frontpage_work_more }}
-		// $matches = [];
-		// $regex_find = \apply_filters( 'q/render/markup/comment/regex/find', "/\<!--(.*?)--\>/s" );
-		$regex_find = \apply_filters( 'q/render/markup/section/regex/find', "/{{#(.*?)\/#}}/s" );
-		h::log( 't:> allow for badly spaced tags around sections... whitespace flexible..' );
+		// note, we trim() white space off tags, as this is handled by the regex ##
+		$open = trim( tag::g( 'sec_o' ) );
+		$close = trim( tag::g( 'sec_c' ) );
+		$end = trim( tag::g( 'sec_e' ) );
+		$end_preg = str_replace( '/', '\/', ( trim( tag::g( 'sec_e' ) ) ) );
+		// $end = '{{\/#}}';
+
+		// h::log( 'open: '.$open. ' - close: '.$close. ' - end: '.$end );
+
+		$regex_find = \apply_filters( 
+			'q/render/markup/section/regex/find', 
+			"/$open\s+(.*?)\s+$end_preg/s"  // note:: added "+" for multiple whitespaces.. not sure it's good yet...
+			// "/{{#(.*?)\/#}}/s" 
+		);
+
+		// h::log( 't:> allow for badly spaced tags around sections... whitespace flexible..' );
 		if ( 
 			preg_match_all( $regex_find, $string, $matches, PREG_OFFSET_CAPTURE ) 
 		){
 
-			// strip all comment blocks, we don't need them now ##
-			// $regex_remove = \apply_filters( 'q/render/markup/comment/regex/remove', "/<!--.*?-->/ms" );
-			$regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );
+			// strip all section blocks, we don't need them now ##
+			// $regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );
+			$regex_remove = \apply_filters( 
+				'q/render/markup/section/regex/remove', 
+				"/$open.*?$end_preg/ms" 
+				// "/{{#.*?\/#}}/ms"
+			);
 			self::$markup['template'] = preg_replace( $regex_remove, "", self::$markup['template'] ); 
 		
 			// preg_match_all( '/%[^%]*%/', $string, $matches, PREG_SET_ORDER );
@@ -504,8 +519,11 @@ class markup extends \q\render {
 				// foreach( $matches[1][0][0] as $k => $v ){
 				// $delimiter = \apply_filters( 'q/render/markup/comments/delimiter', "::" );
 				// list( $field, $markup ) = explode( $delimiter, $value[0] );
-				$field = render\method::string_between( $matches[0][$match][0], '{{#', '}}' );
-				$markup = render\method::string_between( $matches[0][$match][0], '{{# '.$field.' }}', '{{/#}}' );
+				// $field = method::string_between( $matches[0][$match][0], '{{#', '}}' );
+				// $markup = method::string_between( $matches[0][$match][0], '{{# '.$field.' }}', '{{/#}}' );
+
+				$field = method::string_between( $matches[0][$match][0], $open, $close );
+				$markup = method::string_between( $matches[0][$match][0], $close, $end );
 
 				// sanity ##
 				if ( 
@@ -532,7 +550,9 @@ class markup extends \q\render {
 				self::$markup[$field] = $markup;
 
 				// and now we need to add a placeholder "{{ $field }}" before this comment block at $position to markup->template ##
-				render\placeholder::set( "{{ $field }}", $position ); // , $markup
+				// placeholder::set( "{{ $field }}", $position ); // , $markup
+				$placeholder = tag::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
+				placeholder::set( $placeholder, $position, 'variable' ); // '{{ '.$field.' }}'
 
 			}
 
@@ -585,9 +605,9 @@ class markup extends \q\render {
 
 		// h::log('d:>'.$string);
 
-		// get all placeholders from markup string ##
+		// get all variable placeholders from markup string ##
         if ( 
-            ! $placeholders = render\placeholder::get( $string ) 
+            ! $placeholders = placeholder::get( $string, 'variable' ) 
         ) {
 
 			// h::log( self::$args['task'].'~>d:>No placeholders found in $markup');
@@ -614,7 +634,8 @@ class markup extends \q\render {
 			// ){
 
 			if ( 
-				$config_string = render\method::string_between( $value, '[[', ']]' )
+				// $config_string = method::string_between( $value, '[[', ']]' )
+				$config_string = method::string_between( $value, trim( tag::g( 'arg_o' )), trim( tag::g( 'arg_c' )) )
 			){
 
 				// store placeholder ##
@@ -696,7 +717,7 @@ class markup extends \q\render {
 				// get field ##
 				// h::log( 'value: '.$value );
 				
-				// $field = trim( render\method::string_between( $value, '{{ ', '[[' ) );
+				// $field = trim( method::string_between( $value, '{{ ', '[[' ) );
 				$field = str_replace( $config_string, '', $value );
 
 				// clean up field data ##
@@ -735,7 +756,8 @@ class markup extends \q\render {
 				// we can use this to work out the new_placeholder value
 				// $placeholder = $value;
 				// $new_placeholder = explode( '(', $placeholder )[0].' }}';
-				$new_placeholder = '{{ '.$field.' }}';
+				// $new_placeholder = '{{ '.$field.' }}';
+				$new_placeholder = tag::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
 
 				// test what we have ##
 				// h::log( "d:>placeholder: ".$value );
@@ -748,7 +770,8 @@ class markup extends \q\render {
 					// h::log( "d:>config_setting: ".$k );
 					// h::log( "d:>config_value: ".$v );
 
-					// @todo - add config handlers... based on field type ##
+					h::log( 't:> - add config handlers... based on field type ##');
+					// config::handle() ##
 					switch ( $field_type ) {
 
 						case "src" :
@@ -765,7 +788,7 @@ class markup extends \q\render {
 				// h::log( self::$args[$field_name] );
 
 				// now, edit the placeholder, to remove the config ##
-				render\placeholder::edit( $placeholder, $new_placeholder );
+				placeholder::edit( $placeholder, $new_placeholder );
 
 			}
 		
@@ -827,7 +850,7 @@ class markup extends \q\render {
 		// 	// example: markup->wrap = '<h2 class="mt-5">{{ content }}</h2>' ##
 		// 	$value = str_replace( 
 		// 		// '{{ content }}', 
-		// 		tag::wrap([ 'open' => 'vo', 'value' => 'content', 'close' => 'vc' ]), 
+		// 		tag::wrap([ 'open' => 'var_o', 'value' => 'content', 'close' => 'var_c' ]), 
 		// 		$value, 
 		// 		$markup 
 		// 	);
@@ -849,7 +872,14 @@ class markup extends \q\render {
 		// h::log( $string );
 
 		// regex way ##
-		$regex = \apply_filters( 'q/render/markup/string', "~\{{\s+$key\s+\}}~" ); // '~\{{\s(.*?)\s\}}~' 
+		$open = trim( tag::g( 'var_o' ) );
+		$close = trim( tag::g( 'var_c' ) );
+
+		// h::log( 'open: '.$open );
+		// "~\\$open\s+(.*?)\s+\\$close~" // note:: added "+" for multiple whitespaces.. not sure it's good yet...
+
+		// $regex = \apply_filters( 'q/render/markup/string', "~\{{\s+$key\s+\}}~" ); // '~\{{\s(.*?)\s\}}~' 
+		$regex = \apply_filters( 'q/render/markup/string', "~\\$open\s+$key\s+\\$close~" ); // '~\{{\s(.*?)\s\}}~' 
 		$string = preg_replace( $regex, $value, $string ); 
 
 		// filter ##
@@ -921,7 +951,7 @@ class markup extends \q\render {
 			// example: markup->wrap = '<h2 class="mt-5">{{ content }}</h2>' ##
 			$string = str_replace( 
 				// '{{ content }}', 
-				tag::wrap([ 'open' => 'vo', 'value' => 'content', 'close' => 'vc' ]), 
+				tag::wrap([ 'open' => 'var_o', 'value' => 'content', 'close' => 'var_c' ]), 
 				$string, 
 				$markup 
 			);
@@ -999,9 +1029,10 @@ class markup extends \q\render {
         // $markup = self::$args[$field];
 
         // get target placeholder ##
-        $placeholder = '{{ '.$field.' }}';
+		// $placeholder = '{{ '.$field.' }}';
+		$placeholder = tag::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
         if ( 
-            ! render\placeholder::exists( $placeholder )
+            ! placeholder::exists( $placeholder )
         ) {
 
 			// log ##
@@ -1016,7 +1047,7 @@ class markup extends \q\render {
 
         // get all placeholders from markup->$field ##
         if ( 
-            ! $placeholders = render\placeholder::get( self::$markup[$field] ) 
+            ! $placeholders = placeholder::get( self::$markup[$field] ) 
         ) {
 
 			// log ##
@@ -1033,10 +1064,19 @@ class markup extends \q\render {
         $new_placeholders = [];
         foreach( $placeholders as $key => $value ) {
 
-            // helper::log( 'Working placeholder: '.$value );
-			// new placeholder ## -- WOWO... looks flaky ##
+			// h::log( 'Working placeholder: '.$value );
+			// h::log( 'variable_open: '.tag::g( 'var_o' ) );
+
+			// var open and close, with and without whitespace ##
+			$array_replace = [
+				tag::g( 'var_o' ),
+				trim( tag::g( 'var_o' ) ),
+				tag::g( 'var_c' ),
+				trim( tag::g( 'var_c' ) )
+			];
+			// new placeholder ##
 			// h::log( 't:>todo.. make this new field name more reliable' );
-			$new = '{{ '.trim($field).'__'.trim($count).'__'.trim( str_replace( [ '{{', '{{ ', '}}', ' }}' ], '', trim($value) ) ).' }}';
+			$new = tag::g( 'var_o' ).trim($field).'__'.trim($count).'__'.trim( str_replace( $array_replace, '', trim($value) ) ).tag::g( 'var_c' );
 
 			// single whitespace max ## @might be needed ##
 			// $new = preg_replace( '!\s+!', ' ', $new );	

@@ -155,7 +155,7 @@ class post extends \q\render {
 	/**
 	 * Helper Method to get the_content
 	 */
-	public static function content( Array $args = null ){
+	public static function content( $args = null ){
 
 		// get content - returns array with key 'content' ##
 		render\fields::define( 
@@ -165,146 +165,17 @@ class post extends \q\render {
 	}
 
 
-
-
-	/** @todo */
-	public static function date( Array $args = null ) {
-
-		if ( 
-			is_null( $args )
-		) {
-
-			h::log( 'Error in passed $args' );
-
-			return false;
-
-		}
-
-		// get post ##
-		if ( 
-			isset( $args['config']['post'] ) 
-			&& $args['config']['post'] instanceof \WP_Post
-		) {
-
-			$the_post = $args['config']['post'];
-
-		} else {
-
-			$the_post = self::the_post();
-
-		}
-
-		// last check ##
-		if ( ! $the_post ) {
-
-			h::log( 'date: Error with post object, validate.' );
-
-			return false;
-
-		}
-
-		// get author ##
-		$author = $the_post->post_author;
-		$authordata = \get_userdata( $author );
-
-		// validate ##
-		if (
-			! $authordata
-		) {
-
-			h::log( 'Error in returned author data' );
-
-			return false;
-
-		}
-
-		// get author name ##
-		$author_name = $authordata && isset( $authordata->display_name ) ? $authordata->display_name : 'Author' ;
-
-		// assign values ##
-		$array['permalink'] = \esc_url( \get_author_posts_url( $author ) );
-		$array['slug'] = $authordata->user_login;
-		$array['title'] = $author_name;
-
-		// h::log( $array );
-
-		if ( isset( $args['return'] ) && 'return' == $args['return'] ) {
-			
-			return $array ;
-
-		}
-
-		if ( ! isset( $args['markup'] ) ) {
-
-			h::log( 'Missing "markup", returning false.' );
-
-			return false;
-
-		}
-
-		$string = theme\markup::apply( $args['markup'], $array );
-
-		// h::log( $string );
-
-		// echo ##
-		echo $string ;
-
-		// stop ##
-		return true;
-
-	}
-
-
-
 	/**
-	 * Helper Method to get the author
+	 * Helper Method to get_the_date
 	 */
-	public static function get_the_date( Array $args = null ){
+	public static function date( $args = null ){
 
-		// we want to return ##
-		$args['return'] = 'return';
-
-		// bounce on, and return array ##
-		return \apply_filters( 'q/wordpress/get_the_date', self::the_date( $args ) );
+		// get content - returns array with key 'content' ##
+		render\fields::define( 
+			get\post::date( $args ) 
+		);
 
 	}
 
-
-
-	
-
-    /**
-    * Check for a return post thumbnail images and exif-data baed on passed settings ##
-    *
-    */
-    public static function the_post_thumbnail( $args = array() )
-    {
-
-        // pass to functions
-        if ( ! $object = wp\media::get_post_thumbnail( $args ) ) { return false; }
-
-        // Parse incoming $args into an array and merge it with $defaults - caste to object ##
-        $args = ( object )\wp_parse_args( $args, config::$the_post_thumbnail );
-
-?>
-        <img src="<?php echo $object->src[0]; ?>" alt="<?php echo $object->alt; ?>" class="<?php echo $args->class; ?>" />
-<?php
-
-    }
-
-
-
-    public static function the_password_form()
-    {
-
-?>
-        <div class="password" style="text-align: center; margin: 20px;">
-            <?php echo \get_the_password_form(); ?>
-        </div>
-<?php
-
-        return true;
-
-    }
 
 }

@@ -343,7 +343,21 @@ class method extends \Q {
 
 
 
-    public static function array_search( $field, $value, $array ) {
+    public static function array_search( $field = null, $value = null, $array = null ) {
+
+		// sanity ##
+		if (
+			is_null( $field )
+			|| is_null( $value )
+			|| is_null( $array )
+			|| ! is_array( $array )
+		){
+
+			h::log( 'e:>Error in passed params' );
+
+			return false;
+
+		}
 
         foreach ( $array as $key => $val ) {
         

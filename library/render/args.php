@@ -411,8 +411,12 @@ class args extends \q\render {
 
 		// h::log( 'd:>reset args for: '.self::$args['task'] );
 
+		self::$markup = [];
+		self::$fields = [];
+		self::$output = null;
+
 		self::$args = [
-			'fields'	=> []
+			'fields'	=> [] // empty array, might help ?? ##
 		];
 
 		return true;

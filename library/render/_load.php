@@ -46,6 +46,11 @@ class render extends \Q {
         $args = [
 			'fields'	=> []
 		],
+
+		$output = null, // return string ##
+        $fields = null, // array of field names and values ##
+        $markup = null, // array to store passed markup and extra keys added by formatting ##
+		$extend = [], // allow apps to extend render methods ##
 		
 		// default args to merge with passed array ##
         $args_default = [
@@ -141,9 +146,9 @@ class render extends \Q {
 			],
 
 			// parameters / arguments ##
-			'parameter'		=> [
-				'open' 		=> '[{ ', // open ## 
-				'close' 	=> ' }]', // close ##
+			'argument'		=> [
+				'open' 		=> '[[ ', // open ## 
+				'close' 	=> ' ]]', // close ##
 			],
 			
 			// section ##
@@ -161,23 +166,24 @@ class render extends \Q {
 			],
 
 			// function -- also, an unescaped variable -- @todo --- ##
-			'f/o'	=> '{{{ ', 
-			'f/c'	=> ' }}}', // also, a variable without escaping ##
+			'function'		=> [
+				'open' 		=> '{{{ ', // open ## 
+				'close' 	=> ' }}}', // close ##
+			],
 
 			// partial ##
-			'p/o'	=> '{{> ', // partial open ##
-			'p/c'	=> ' }}', // partial close ##
+			'partial'		=> [
+				'open' 		=> '{{> ', // open ## 
+				'close' 	=> ' }}', // close ##
+			],
 
 			// comment ##
-			'c/o'	=> '{{! ', // comment open ##
-			'c/c'	=> ' }}', // comment close ##
+			'comment'		=> [
+				'open' 		=> '{{! ', // open ## 
+				'close' 	=> ' }}', // close ##
+			],
 
-		],
-
-        $output = null, // return string ##
-        $fields = null, // array of field names and values ##
-        $markup = null, // array to store passed markup and extra keys added by formatting ##
-		$extend = [] // allow apps to extend render methods ##
+		]
 
 	;
 	

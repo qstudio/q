@@ -321,7 +321,8 @@ class format extends \q\render {
 
         // remove placeholder from markup template
 		// self::$markup['template'] = render\markup::remove_placeholder( '{{ '.$field.' }}', self::$markup['template'] );
-		self::$markup['template'] = render\placeholder::remove( '{{ '.$field.' }}', self::$markup['template'] );
+		$placeholder = tag::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
+		self::$markup['template'] = render\placeholder::remove( $placeholder, self::$markup['template'], 'variable' );
 
         // delete sending field ##
         render\fields::remove( $field, 'Removed by format_array after working' );

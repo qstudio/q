@@ -27,7 +27,7 @@ return [
 	// post_meta
 	// Tag: <a href="{{ tag_permalink }}" title="See posts in {{ tag_title }}">{{ tag_title }}</a>
 	'post__data' 				=> [
-		'type' 					=> 'single',
+		// 'type' 					=> 'single',
 		'markup'				=> [
 			'template'			=> '
 								Posted {{ post_date_human }} ago 
@@ -40,6 +40,22 @@ return [
 								',
 			'wrap'				=> '<div class="post-meta col-12 mb-3">{{ content }}</div>'
 		]
+	],
+
+	// post_comments
+	'post__comment' 				=> [
+		// 'markup'				=> [
+		// 	'template'			=> '
+		// 						Posted {{ post_date_human }} ago 
+		// 						by <a href="{{ author_permalink }}" title="See posts by {{ author_title }}">{{ author_title }}</a>
+		// 						in <a href="{{ category_permalink }}" title="See posts in {{ category_title }}">{{ category_title }}</a>
+		// 						Tagged: {{# tags }}
+		// 							<a href="{{ tag_permalink }}" title="See posts in {{ tag_title }}">{{ tag_title }}</a>&nbsp;
+		// 						{{/#}}
+		// 						Comments: <a href="{{ comment_permalink }}" title="Comments">{{ comment_title }} </a>
+		// 						',
+		// 	'wrap'				=> '<div class="post-meta col-12 mb-3">{{ content }}</div>'
+		// ]
 	],
 
 	// get_posts() ##
