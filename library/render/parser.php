@@ -7,7 +7,7 @@ use q\core\helper as h;
 use q\ui;
 use q\render;
 
-class config extends \q\render {
+class parser extends \q\render {
 
 	// track wrapping ##
 	// protected static $wrapped = false;
@@ -22,22 +22,22 @@ class config extends \q\render {
 		// h::log( self::$args['markup'] );
 
 		// post-format markup to extract markup keys collected by config ##
-		markup::merge();
+		// markup::merge();
 
 		// pre-format markup to extract functions ##
-		config::function();
+		parser::function();
 
 		// pre-format markup to extract sections ##
-		config::section();
+		parser::section();
 
 		// pre-format markup to extract partials ##
-		config::partial();
+		parser::partial();
 
 		// pre-format markup to extract comments and place in html ##
-		config::comment();
+		parser::comment();
 
 		// search for config settings in markup, such as "src" handle ##
-		config::argument();
+		parser::argument();
 
 
 	}
@@ -151,12 +151,6 @@ class config extends \q\render {
 				// h::log( 'd:>position: '.$position );
 				// h::log( 'd:>position from 1: '.$matches[0][$match][1] ); 
 
-				// foreach( $matches[1][0][0] as $k => $v ){
-				// $delimiter = \apply_filters( 'q/render/markup/comments/delimiter', "::" );
-				// list( $field, $markup ) = explode( $delimiter, $value[0] );
-				// $field = method::string_between( $matches[0][$match][0], '{{#', '}}' );
-				// $markup = method::string_between( $matches[0][$match][0], '{{# '.$field.' }}', '{{/#}}' );
-
 				$function = method::string_between( $matches[0][$match][0], $open, $close );
 				// $markup = method::string_between( $matches[0][$match][0], $close, $end );
 
@@ -178,26 +172,27 @@ class config extends \q\render {
 
 				// default args ##
 				$function_args = [];
+				$function_array = false;
+				// $config_object = '';
+				$config_string = false;
 				if ( 
 					// $config_string = method::string_between( $value, '[[', ']]' )
 					$config_string = method::string_between( $function, trim( tag::g( 'arg_o' )), trim( tag::g( 'arg_c' )) )
 				){
 	
-					// store placeholder ##
-					// $placeholder = $value;
-	
 					// $config_string = json_encode( $config_string );
-					// h::log( $config_string );
+					h::log( $config_string );
 
 					if ( 
 						is_object( json_decode( $config_string ))
 					){
 
-						// @todo
+						// extractdecode to JSON object ##
+						$config_object = json_decode( $config_string );
 
 					} else {
 
-
+						$config_object = false;
 
 					}
 	
@@ -231,13 +226,62 @@ class config extends \q\render {
 					$function = str_replace( trim( tag::g( 'arg_o' )).$config_string.trim( tag::g( 'arg_c' )), '', $function );
 	
 					// h::log( 'function: '.$function );
+
+					// function might be passed in class::method format, let's check ##
+					if (
+						strstr( $function, '::' )
+					){
+
+						// h::log( 'function is class::method' );
+
+						list( $class, $method ) = explode( '::', $function );
+
+						h::log( 'class: '.$class.' - method: '.$method );
+
+						if ( 
+							! $class 
+							|| ! $method 
+						){
+
+							h::log( 'e:>Error in passed function name, stopping here' );
+
+							continue;
+
+						}
+
+						if ( 
+							! class_exists( $class )
+							|| ! is_callable( $class, $method )
+							// we cannot validate the method, as it's MAGIC ## ??
+						){
+
+							h::log( 'Cannot find - class: '.$class.' - method: '.$method );
+
+							continue;
+
+						}	
+
+						// if we are calling q\render.. we need to wrap up the current process or append args.. how ??
+
+						// h::log( 'd:>Function array created' );
+
+						// make function an array ##
+						$function_array = [ $class, $method ];
+
+					} elseif ( ! function_exists( $function ) ) {
+
+						h::log( 'Cannot find function: '.$function );
+
+						continue;
+
+					}
 						
-					if ( is_object( json_decode( $config_string )) ) {
+					if ( $config_object && is_object( $config_object ) ) {
 							
-						foreach( $config_array as $k => $v ) {
+						foreach( $config_object as $k => $v ) {
 		
 							h::log( "d:>config_setting: ".$k );
-							h::log( "d:>config_value: ".$v );
+							h::log( $v ); // may be an array ##
 							
 							$function_args[$k] = $v;
 		
@@ -258,13 +302,13 @@ class config extends \q\render {
 				// test what we have ##
 				// h::log( 'd:>function: "'.$function.'"' );
 				
-				if ( function_exists( $function ) ) {
+				// if ( function_exists( $function ) ) {
 
 					render\fields::define([
-						$hash => call_user_func_array( $function, $function_args )
+						$hash => call_user_func_array( $function_array ?: $function, $function_args )
 					]);
 
-				}
+				// }
 
 				// and now we need to add a placeholder "{{ $field }}" before this comment block at $position to markup->template ##
 				$placeholder = tag::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
@@ -544,7 +588,7 @@ class config extends \q\render {
 				// sanity ##
 				if ( 
 					! isset( $partial ) 
-					|| ! strstr( $partial, '__' )
+					// || ! strstr( $partial, '__' )
 					// || ! isset( $markup ) 
 				){
 
@@ -556,7 +600,9 @@ class config extends \q\render {
 
 				// clean up ##
 				$partial = trim($partial);
-				list( $context, $task ) = explode( '__', $partial );
+				$context = 'partial';
+				$task = $partial;
+				// list( $context, $task ) = explode( '__', $partial );
 
 				// test what we have ##
 				// h::log( 'd:>context: "'.$context.'"' );

@@ -43,12 +43,12 @@ return [
 			</li>
 			{{/#}}
 		</ul>
-		{{! this is a comment }}
-		{{> partial__search_trigger }}
-		<h2>{{{ get_the_title[[3380]] }}}</h2>
-		
 	'
 ]
 ];
 
-// '.render::ui__search_trigger().'
+/*
+{{! this is a comment }}
+{{> search_trigger }}
+<h2>{{{ get_the_title[[{"post":"3380"}]] }}}</h2>
+*/

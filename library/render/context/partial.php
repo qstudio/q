@@ -26,10 +26,10 @@ class partial extends \q\render {
      */
     public static function get( $args = null ) {
 
-		// look for property "args->task" in config ##
-		if ( 
-			$config = core\config::get([ 'context' => $args['context'], 'task' => $args['task'] ])
-		){
+		// // look for property "args->task" in config ##
+		// if ( 
+		// 	$config = core\config::get([ 'context' => $args['context'], 'task' => $args['task'] ])
+		// ){
 			// h::log( $config );
 			
 			// "args->fields" are used for type and callback lookups ##
@@ -37,10 +37,10 @@ class partial extends \q\render {
 
 			// define "fields", passing returned data ##
 			render\fields::define(
-				$config
+				core\config::get([ 'context' => $args['context'], 'task' => $args['task'] ])
 			);
 
-		}
+		// }
 
 	}
 
