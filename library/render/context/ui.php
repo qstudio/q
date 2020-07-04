@@ -24,8 +24,9 @@ class ui extends \q\render {
 	 * @uses		render\fields::define
      * @return      Array
      */
-	/*
     public static function get( $args = null ) {
+
+		// h::log( $args );
 
 		// look for property "args->task" in config ##
 		if ( 
@@ -44,7 +45,6 @@ class ui extends \q\render {
 		}
 
 	}
-	*/
 	
 
 	/**
@@ -63,6 +63,9 @@ class ui extends \q\render {
 		\do_action( 'get_header', $name );
 
 		return theme\view\ui\header::render( $args );
+		// return render\fields::define([
+		// 	'header' => '' // hack.. nothing to pass here ##
+		// ]);
 
 	}
 
@@ -84,6 +87,9 @@ class ui extends \q\render {
 		\do_action( 'get_footer', $name );
 
 		return theme\view\ui\footer::render( $args );
+		// return render\fields::define([
+		// 	'footer' => '' // hack.. nothing to pass here ##
+		// ]);
 
 	}
 

@@ -5,9 +5,11 @@ use q\render;
 // return an array ##
 return [
 'group__frontpage_work' => [
-	'config'	=> [ 'debug' => true ],
+	// 'config'	=> [ 'debug' => true ],
+	'config' => [ 'debug' => false, 'meta' => true, 'srcset' => true ],
 	// 'config' => [ 'meta'	=> true ], // add meta data ##
 	// 'config' => [ 'srcset'	=> true ], // add srcset data ##
+	// [[{"handle":"square-sm"}]]
 	// [[{"handle":"square-sm"}]]
 	// [[{ "handles":{ "all":"square-sm", "lg":"vertical-lg" }, "handle": "square-sm" }]]
 	'markup' => '
@@ -16,7 +18,7 @@ return [
 		<div class="card mb-3">
 			<a href="{{ frontpage_work_top__post_permalink }}">
 				<img class="fit card-img-top lazy" style="max-height: 200px" src="" 
-					data-src="{{ frontpage_work_top__src[[{"handle":"square-sm"}]] }}" />
+					data-src="{{ frontpage_work_top__src }}" />
 			</a>
 			<div class="card-body">
 				<h5 class="card-title">
@@ -43,6 +45,8 @@ return [
 			</li>
 			{{/#}}
 		</ul>
+
+		{{> search_trigger }}
 	'
 ]
 ];

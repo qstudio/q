@@ -10,7 +10,67 @@ use q\render;
 
 class args extends \q\render {
 
-	
+	private static $collect = [];
+
+	/**
+	 * Empty all render args
+	 * 
+	 * @since 4.0.0
+	 */ 
+	public static function reset(){
+
+		// h::log( 'd:>reset args for: '.self::$args['task'] );
+
+		// passed args ##
+        self::$args 	= [
+			'fields'	=> []
+		];
+
+		self::$output = null; // return string ##
+        self::$fields = null; // array of field names and values ##
+		self::$markup = null; // array to store passed markup and extra keys added by formatting ##
+		self::$log 	= null; // tracking array for feedback ##
+
+	}
+
+
+	/**
+	 * Collect all render args
+	 * 
+	 * @since 4.0.0
+	 */ 
+	public static function collect(){
+
+		// h::log( 'd:>collect all args'); ##
+
+		self::$collect['args'] = self::$args;
+		self::$collect['output'] = self::$output;
+		self::$collect['fields'] = self::$fields;
+		self::$collect['markup'] = self::$markup;
+		self::$collect['log'] = self::$log;
+
+	}
+
+
+	/**
+	 * Set all render args
+	 * 
+	 * @since 4.0.0
+	 */ 
+	public static function set(){
+
+		// h::log( 'd:>set all args'); ##
+
+		self::$args = self::$collect['args'];
+		self::$output = self::$collect['output'];
+		self::$fields = self::$collect['fields'] ;
+		self::$markup = self::$collect['markup'];
+		self::$log = self::$collect['log'];
+
+	}
+
+
+
     public static function validate( $args = null ) {
 
 		// h::log( $args );
@@ -29,7 +89,7 @@ class args extends \q\render {
 		// allows specific calling methods to alter passed $args ##
 		if ( $config ) $args = core\method::parse_args( $args, $config );
 
-		// h::log( $config );
+		// h::log( $args );
 
         // checks on required fields in $args array ##
         if (
@@ -167,6 +227,8 @@ class args extends \q\render {
 
 		// grab all passed args and merge with defaults ##
 		$args = core\method::parse_args( $args, self::$args_default );
+
+		// h::log( $args );
 
 		// assign class property ##
 		self::$args = $args;
@@ -393,29 +455,6 @@ class args extends \q\render {
         return false;
 
     }
-
-
-
-	/**
-	 * Empty all render args
-	 * 
-	 * @since 4.0.0
-	 */ 
-	public static function reset(){
-
-		// h::log( 'd:>reset args for: '.self::$args['task'] );
-
-		self::$markup = [];
-		self::$fields = [];
-		self::$output = null;
-
-		self::$args = [
-			'fields'	=> [] // empty array, might help ?? ##
-		];
-
-		return true;
-
-	}
 
      
 }

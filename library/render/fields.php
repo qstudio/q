@@ -133,8 +133,8 @@ class fields extends \q\render {
 		// else, loop over array ##
 		foreach( $args as $key => $value ) {
 
-			h::log( 'd:>add field key: '.$key );
-			h::log( $value );
+			// h::log( 'd:>add field key: '.$key );
+			// h::log( $value );
 
 			// add to prop ##
 			self::$fields[$key] = $value;

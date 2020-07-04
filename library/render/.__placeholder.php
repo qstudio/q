@@ -210,7 +210,7 @@ class placeholder extends \q\render {
 
 		}
 		
-		// h::log( 'd:>Adding placeholder: "'.$placeholder.'"' );
+		h::log( 'd:>Adding placeholder: "'.$placeholder.'"' );
 
 		// use strpos to get location of {{ placeholder }} ##
 		// $position = strpos( self::$markup, $placeholder );
@@ -287,6 +287,7 @@ class placeholder extends \q\render {
 		}
 		
 		// h::log( 'Removing placeholder: "'.$placeholder.'"' );
+		return $markup;
 
         // remove placeholder from markup ##
 		$markup = 

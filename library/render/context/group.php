@@ -13,7 +13,7 @@ class group extends \q\render {
 
 
 	/**
-     * Get field data via meta handler
+     * Get group data via meta handler
      *
      * @param       Array       $args
      * @since       1.3.0
@@ -21,6 +21,9 @@ class group extends \q\render {
      * @return      Array
      */
     public static function get( $args = null ) {
+
+		// h::log( $args );
+		// h::log( self::$markup );
 
 		// get title - returns array with key 'title' ##
 		// $args['field'] = $args['task']; // make sure field value is set ##

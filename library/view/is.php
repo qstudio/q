@@ -39,6 +39,33 @@ class is {
 
 	}
 
+
+
+	/**
+     * Get Q template format - normally .php or .willow
+     * 
+	 * @since 4.1.0
+     */
+    public static function format() 
+    {
+
+        if( ! isset( $GLOBALS['q_template'] ) ) {
+
+			// changes to return WP template -- check for introduced issues ##
+			$template = \get_page_template_slug();
+
+        } else {
+
+            // h::log( 'Page template: '.$GLOBALS['q_template'] );
+
+            $template = $GLOBALS['q_template'];        
+
+		}
+		
+		return core\method::file_extension( $template );
+
+	}
+
 	
 
 	/**

@@ -14,7 +14,7 @@ class markup extends \q\render {
 
     /**
      * Apply Markup changes to passed template
-     * find all placeholders in self::$markup and replace with matching values in self::$fields
+     * find all variables in self::$markup and connected values in self::$fields
      * 
      */
     public static function prepare(){
@@ -48,7 +48,7 @@ class markup extends \q\render {
         // new string to hold output ## 
 		$string = self::$markup['template'];
 		
-        // loop over each field, replacing placeholders with values ##
+        // loop over each field, replacing variables with values ##
         foreach( self::$fields as $key => $value ) {
 
 			// cast booleans to integer ##
@@ -83,25 +83,27 @@ class markup extends \q\render {
 
 		}
 		
-		// optional wrapper, html passed in markup->wrap with {{ content }} placeholder ##
+		// optional wrapper, html passed in markup->wrap with {{ content }} variable ##
 		$string = self::wrap([ 'string' => $string ]);
 
         // helper::log( $string );
 
-        // check for any left over placeholders - remove them ##
+        // check for any left over variables - remove them ##
         if ( 
-            $placeholders = placeholder::get( $string ) 
+			// $placeholders = placeholder::get( $string ) 
+			$variables = render\variable::get( $string ) 
         ) {
 
 			// log ##
-			h::log( self::$args['task'].'~>n:>"'.count( $placeholders ) .'" placeholders found in formatted string - these will be removed');
+			h::log( self::$args['task'].'~>n:>"'.count( $variables ) .'" variables found in formatted string - these will be removed');
 
-            // h::log( $placeholders );
+            // h::log( $variables );
 
-            // remove any leftover placeholders in string ##
-            foreach( $placeholders as $key => $value ) {
+            // remove any leftover variables in string ##
+            foreach( $variables as $key => $value ) {
             
-                $string = placeholder::remove( $value, $string );
+				// $string = placeholder::remove( $value, $string );
+				$string = render\variable::remove( $value, $string );
             
             }
 
@@ -151,13 +153,41 @@ class markup extends \q\render {
 		// empty stored markup ##
 		self::$markup = [];
 
+		$for = '';#' - '.$args['context'].'_'.$args['task'];
+
+		// if "markup" set in args, take this ##
+		if ( 
+			is_array( $args )
+			&& isset( $args['markup'] ) 
+		){
+
+			// passed markup is an array - so take all values ##
+			if ( 
+				is_array( $args['markup'] ) 
+				// && isset( $args['markup']['template'] ) // we can't validate "template" yet, as it might be pulled from config
+			) {
+
+				// h::log('d:>Using array markup'.$for );
+
+				return self::$markup = $args['markup'];
+
+			} else {
+
+				//  h::log('d:>Using single markup'.$for );
+
+				return self::$markup['template'] = $args['markup'];
+
+			}
+
+		}
+
 		// convert string passed args, presuming it to be markup...??... ##
 		if ( is_string( $args ) ) {
 
 			// create args array ##
 			// $args = [];
 
-			// h::log('d:>Using string markup' );
+			// h::log('d:>Using string markup'.$for );
 
 			// add markup->template ##
 			return self::$markup = [
@@ -177,31 +207,7 @@ class markup extends \q\render {
 
 		// }
 
-		// if "markup" set in args, take this ##
-		if ( 
-			is_array( $args )
-			&& isset( $args['markup'] ) 
-		){
-
-			// passed markup is an array - so take all values ##
-			if ( 
-				is_array( $args['markup'] ) 
-				// && isset( $args['markup']['template'] ) // we can't validate "template" yet, as it might be pulled from config
-			) {
-
-				// h::log('d:>Using array markup' );
-
-				return self::$markup = $args['markup'];
-
-			} else {
-
-				// h::log('d:>Using single markup' );
-
-				return self::$markup['template'] = $args['markup'];
-
-			}
-
-		}
+		// h::log( self::$markup );
 
 		// kick back ##
 		return false;
@@ -230,7 +236,7 @@ class markup extends \q\render {
 		}
 		
         // test ##
-		// h::log( $args );
+		// h::log( self::$args );
 
 		// make an array ##
 		if (
@@ -546,43 +552,45 @@ class markup extends \q\render {
         // get markup ##
         // $markup = self::$args[$field];
 
-        // get target placeholder ##
+        // get target variable ##
 		// $placeholder = '{{ '.$field.' }}';
-		$placeholder = tag::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
+		$variable = tag::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
         if ( 
-            ! placeholder::exists( $placeholder )
+			// ! placeholder::exists( $placeholder )
+			! render\variable::exists( $variable )
         ) {
 
 			// log ##
-			h::log( self::$args['task'].'~>n:>Placeholder: "'.$placeholder.'" is not in the passed markup template' );
+			h::log( self::$args['task'].'~>n:>Variable: "'.$variable.'" is not in the passed markup template' );
 
             return false;
 
         }
 
-        // so, we have the repeater markup to copy, placeholder in template to locate new markup ... 
-        // && we need to find all placeholders in markup and append field__X__PLACEHOLDER
+        // so, we have the repeater markup to copy, variable in template to locate new markup ... 
+        // && we need to find all variables in markup and append field__X__VARIABLE
 
-        // get all placeholders from markup->$field ##
+        // get all variables from markup->$field ##
         if ( 
-            ! $placeholders = placeholder::get( self::$markup[$field] ) 
+			// ! $placeholders = placeholder::get( self::$markup[$field] ) 
+			! $variables = render\variable::get( self::$markup[$field] ) 
         ) {
 
 			// log ##
-			h::log( self::$args['task'].'~>n:>No placeholders found in passed string' );
+			h::log( self::$args['task'].'~>n:>No variables found in passed string' );
 
             return false;
 
         }
 
         // test ##
-        // helper::log( $placeholders );
+        // helper::log( $variables );
 
-        // iterate over {{ placeholders }} adding prefix ##
-        $new_placeholders = [];
-        foreach( $placeholders as $key => $value ) {
+        // iterate over {{ variables }} adding prefix ##
+        $new_variables = [];
+        foreach( $variables as $key => $value ) {
 
-			// h::log( 'Working placeholder: '.$value );
+			// h::log( 'Working variable: '.$value );
 			// h::log( 'variable_open: '.tag::g( 'var_o' ) );
 
 			// var open and close, with and without whitespace ##
@@ -592,34 +600,34 @@ class markup extends \q\render {
 				tag::g( 'var_c' ),
 				trim( tag::g( 'var_c' ) )
 			];
-			// new placeholder ##
+			// new variable ##
 			// h::log( 't:>todo.. make this new field name more reliable' );
 			$new = tag::g( 'var_o' ).trim($field).'__'.trim($count).'__'.trim( str_replace( $array_replace, '', trim($value) ) ).tag::g( 'var_c' );
 
 			// single whitespace max ## @might be needed ##
 			// $new = preg_replace( '!\s+!', ' ', $new );	
 
-			// h::log( 'new_placeholder: '.$new );
+			// h::log( 'new_variable: '.$new );
 
-			$new_placeholders[] = $new;
+			$new_variables[] = $new;
 
             // $new_placeholders[] = '{{ '.trim($field).'__'.trim($count).'__'.str_replace( [ '{{', '{{ ', '}}', ' }}' ], '', trim($value) ).' }}';
 
         } 
 
-        // testnew placeholders ##
-        // h::log( $new_placeholders );
+        // test new variables ##
+        // h::log( $new_variables );
 
-        // generate new markup from template with new_placeholders ##
-        $new_markup = str_replace( $placeholders, $new_placeholders, self::$markup[$field] );
+        // generate new markup from template with new_variables ##
+        $new_markup = str_replace( $variables, $new_variables, self::$markup[$field] );
 
         // helper::log( $new_markup );
 
-        // use strpos to get location of {{ placeholder }} ##
-        $position = strpos( self::$markup['template'], $placeholder );
+        // use strpos to get location of {{ variable }} ##
+        $position = strpos( self::$markup['template'], $variable );
         // helper::log( 'Position: '.$position );
 
-        // add new markup to $template as defined position - don't replace {{ placeholder }} yet... ##
+        // add new markup to $template as defined position - don't replace {{ variable }} yet... ##
         $new_template = substr_replace( self::$markup['template'], $new_markup, $position, 0 );
 
         // test ##

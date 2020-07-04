@@ -4,6 +4,7 @@ namespace q\core;
 
 use q\core;
 use q\core\helper as h;
+use q\render;
 // use q\theme;
 
 class method extends \Q {
@@ -338,7 +339,32 @@ class method extends \Q {
 
         return $result;
 
-    }
+	}
+	
+
+
+	
+	public static function get_acronym( $string = null, $length = 10 ) {
+
+		// sanity ##
+		if ( is_null( $string ) ) { return false; }
+
+		return 
+			render\method::chop( 
+				str_replace(
+					[ '-', '_' ], "", // replace ##
+					strtolower( 
+						array_reduce( 
+							str_word_count( $string, 1), function($res , $w){ 
+								return $res . $w[0]; 
+							} 
+						)
+					)
+				),
+				$length, '' // chop ##
+			);
+
+	}
     
 
 
@@ -422,7 +448,21 @@ class method extends \Q {
 
 
 
+	public static function file_extension( $string = null ) {
 
+		// sanity ##
+		if( is_null( $string ) ){
+
+			h::log( 'e:>No string passed to method' );
+
+			return false;
+
+		}
+
+		$n = strrpos( $string, "." );
+		return ( $n === false ) ? "" : substr( $string, $n+1 );
+		
+	}
 
 
     

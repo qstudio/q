@@ -120,6 +120,7 @@ class group extends \q\get {
 		}
 		
 		// h::log( self::$data );
+		// h::log( self::$fields );
 
         // positive ##
         return [

@@ -327,7 +327,7 @@ class log extends \Q {
 
 			// new key is based on the class_method called when the log was set ##
 			// this key might already exist, if so, add as a new array key + value ##
-			$new_key = isset( $new_key ) ? $new_key : self::get_acronym( $value ) ;
+			$new_key = isset( $new_key ) ? $new_key : core\method::get_acronym( $value ) ;
 
 			// make new key safe ??
 			// $new_key = str_replace( [ '\\','::' ], '_', $new_key );
@@ -514,27 +514,27 @@ class log extends \Q {
 
 	
 
-	public static function get_acronym( $string = null, $length = 10 ) {
+	// public static function get_acronym( $string = null, $length = 10 ) {
 
-		// sanity ##
-		if ( is_null( $string ) ) { return false; }
+	// 	// sanity ##
+	// 	if ( is_null( $string ) ) { return false; }
 
-		return 
-			render\method::chop( 
-				str_replace(
-					[ '-', '_' ], "", // replace ##
-					strtolower( 
-						array_reduce( 
-							str_word_count( $string, 1), function($res , $w){ 
-								return $res . $w[0]; 
-							} 
-						)
-					)
-				),
-				$length, '' // chop ##
-			);
+	// 	return 
+	// 		render\method::chop( 
+	// 			str_replace(
+	// 				[ '-', '_' ], "", // replace ##
+	// 				strtolower( 
+	// 					array_reduce( 
+	// 						str_word_count( $string, 1), function($res , $w){ 
+	// 							return $res . $w[0]; 
+	// 						} 
+	// 					)
+	// 				)
+	// 			),
+	// 			$length, '' // chop ##
+	// 		);
 
-	}
+	// }
 
 
 

@@ -38,18 +38,26 @@ filters:
 // load it up ##
 \q\render::run();
 
-class render extends \Q {
+class render {
 
 	public static
 
         // passed args ##
-        $args = [
+        $args 	= [
 			'fields'	=> []
 		],
 
-		$output = null, // return string ##
-        $fields = null, // array of field names and values ##
-        $markup = null, // array to store passed markup and extra keys added by formatting ##
+		$output 	= null, // return string ##
+        $fields 	= null, // array of field names and values ##
+		$markup 	= null, // array to store passed markup and extra keys added by formatting ##
+		$log 		= null, // tracking array for feedback ##
+		$buffer 	= null, // for buffering... ##
+		$buffering 	= false // for buffer switch... ##
+
+	;
+
+	protected static
+
 		$extend = [], // allow apps to extend render methods ##
 		
 		// default args to merge with passed array ##
@@ -188,7 +196,10 @@ class render extends \Q {
 
 	;
 	
-	public static $log = null; // tracking array for feedback ##
+
+	private function __construct( $args ){
+
+    }
 
 
 	/**
@@ -198,6 +209,65 @@ class render extends \Q {
 
 		// load libraries ##
 		core\load::libraries( self::load() );
+
+		// not on admin ##
+		if ( \is_admin() ) return false;
+
+		// \add_action( 'get_header',  [ get_class(), 'ob_start' ], 0 ); // try -- template_redirect.. was init
+		\add_action( 'get_header',  function(){ 
+			
+			if ( 'willow' == \q\view\is::format() ){
+
+				h::log( 'd:>starting OB, as on a willow template: "'.\q\view\is::format().'"' );
+
+				// set buffer ##
+				self::$buffering = true;
+
+				return ob_start();
+
+			}
+
+			h::log( 'd:>not a willow template, so no ob: "'.\q\view\is::format().'"' );
+
+			return false; 
+		}
+		, 0 ); 
+
+		\add_action( 'shutdown', function() {
+
+			if ( 'willow' != \q\view\is::format() ){
+
+				h::log( 'e:>No buffer.. so no go' );
+				
+				return false; 
+			
+			}
+
+			h::log( 'e:>Doing shutdown buffer' );
+
+			$final = '';
+		
+			// We'll need to get the number of ob levels we're in, so that we can iterate over each, collecting
+			// that buffer's output into the final output.
+			$levels = ob_get_level();
+		
+			for ($i = 0; $i < $levels; $i++) {
+				$final .= ob_get_clean();
+			}
+
+			// @TODO... this needs to be more graceful, and render needs to have "blocks", which can be passed / set
+			// echo theme\view\ui\header::render();
+			\q\render::ui__header();
+		
+			// Apply any filters to the final output
+			// echo \apply_filters( 'ob_output', $final );
+			echo \q\render\buffer::prepare( $final );
+
+			// @TODO... this needs to be more graceful, and render needs to have "blocks", which can be passed / set
+			// echo theme\view\ui\footer::render();
+			\q\render::ui__footer();
+
+		}, 0);
 
 	}
 	
@@ -223,7 +293,11 @@ class render extends \Q {
 			'args' => h::get( 'render/args.php', 'return', 'path' ),
 
 			// parser ##
-			'parser' => h::get( 'render/parser.php', 'return', 'path' ),
+			// 'parser' => h::get( 'render/parser.php', 'return', 'path' ),
+			'parser' => h::get( 'render/parse/_load.php', 'return', 'path' ),
+
+			// buffer processor ##
+			'buffer' => h::get( 'render/buffer.php', 'return', 'path' ),
 
 			// class extensions ##
 			'extend' => h::get( 'render/extend.php', 'return', 'path' ),
@@ -244,11 +318,11 @@ class render extends \Q {
 			// defined field types to generate field data ##
 			'type' => h::get( 'render/type/_load.php', 'return', 'path' ),
 
-			// prepare defined markup, search for and replace placeholders 
+			// prepare defined markup, search for and replace variables 
 			'markup' => h::get( 'render/markup.php', 'return', 'path' ),
 
 			// manage placeholders in markup object ## 
-			'placeholder' => h::get( 'render/placeholder.php', 'return', 'path' ),
+			// 'placeholder' => h::get( 'render/placeholder.php', 'return', 'path' ),
 
 			// output string ##
 			'output' => h::get( 'render/output.php', 'return', 'path' ),
@@ -283,6 +357,8 @@ class render extends \Q {
 	 * widget__
 	 */
 	public static function __callStatic( $function, $args ){	
+
+		// h::log( '$function: '.$function );
 
 		// check class__method is formatted correctly ##
 		if ( 
@@ -320,7 +396,12 @@ class render extends \Q {
 			class_exists( $namespace ) // && exists ##
 		) {
 
+			// reset args ##
+			render\args::reset();
+
 			// h::log( 'd:>class: '.$namespace.' available' );
+
+			// h::log( $args );
 
 			// take first array item, unwrap array - __callStatic wraps the array in an array ##
 			if ( is_array( $args ) && isset( $args[0] ) ) { 
@@ -347,6 +428,8 @@ class render extends \Q {
 
 			// set task tracker -- i.e "title" ##
 			$args['task'] = $method;
+
+			// h::log( $args );
 
 			if (
 				! \method_exists( $namespace, 'get' ) // base method is get() ##
@@ -382,7 +465,7 @@ class render extends \Q {
 			}
 
 			// prepare markup, fields and handlers based on passed configuration ##
-			render\parser::prepare( $args );
+			render\parse::prepare( $args );
 
 			// call class::method to gather data ##
 			// return render\ui::open( $args );
@@ -452,11 +535,14 @@ class render extends \Q {
 			// Prepare template markup ##
 			render\markup::prepare();
 
+			// clean up left over tags ##
+			render\parse::cleanup();
+
 			// optional logging to show removals and stats ##
 			render\log::set( $args );
 
 			// return or echo ##
-			return render\output::return();
+			return render\output::prepare();
 
 		}
 
