@@ -84,7 +84,10 @@ class config extends \Q {
 		}
 
 		// config file extension ##
-		$ext = \apply_filters( 'q/config/load/ext', '.php' );
+		$extensions = \apply_filters( 'q/config/load/ext', [ 
+			'.php', 
+			// '.willow' 
+		] );
 
 		// config file path ( h::get will do fallback checks form child theme, parent theme, plugin + Q.. )
 		$path = \apply_filters( 'q/config/load/path', 'view/context/' );
@@ -112,8 +115,11 @@ class config extends \Q {
 
 					// check for look method ##
 					if ( ! method_exists( 'q_theme', 'get_child_theme_path' ) ){ break; }
-
-					$file = \q_theme::get_child_theme_path( '/library/'.$path.$source.'/'.$v.$ext );
+					foreach( $extensions as $ext ) {
+						
+						$file = \q_theme::get_child_theme_path( '/library/'.$path.$source.'/'.$v.$ext );
+					
+					}
 					// h::log( 'd:>looking up file: '.$file );
 
 				break  ;
@@ -123,8 +129,11 @@ class config extends \Q {
 
 					// check for look method ##
 					if ( ! method_exists( 'q_theme', 'get_parent_theme_path' ) ){ break; }
+					foreach( $extensions as $ext ) {
 
-					$file = \q_theme::get_parent_theme_path( '/library/'.$path.$source.'/'.$v.$ext );
+						$file = \q_theme::get_parent_theme_path( '/library/'.$path.$source.'/'.$v.$ext );
+
+					}
 					// h::log( 'd:>looking up file: '.$file );
 
 				break  ;
@@ -132,7 +141,11 @@ class config extends \Q {
 				// global lookup, so context/XX.php
 				default :
 
-					$file = h::get( $path.$v.$ext, 'return', 'path' );
+					foreach( $extensions as $ext ) {
+						
+						$file = h::get( $path.$v.$ext, 'return', 'path' );
+
+					}
 
 				break ;
 
@@ -141,10 +154,14 @@ class config extends \Q {
 			if ( 
 				$file
 				&& file_exists( $file ) // OR is_file ??
+				&& is_file( $file )
 			){
 
 				// build cache key ##
-				$cache_key = ! is_null( $source ) ? $k.'_'.$source : $k ;
+				$cache_key = 
+					! is_null( $source ) ? 
+					$k.'_'.$source.'_'.core\method::file_extension( $file ) : 
+					$k.'_'.core\method::file_extension( $file ) ;
 
 				// h::log( 'd:>Loading config file: '.$file.' cache key: '.$cache_key );
 
@@ -299,6 +316,7 @@ class config extends \Q {
 		// check if file exists ##
 		if (
 			! file_exists( $file )
+			|| ! is_file( $file )
 		){
 			
 			h::log( 'e:>Error, file does not exist: '.$file.' from: '.$backtrace );
@@ -307,13 +325,56 @@ class config extends \Q {
 
 		}
 
+		// h::log( 'dealing with file: '.$file. ' - ext: '.core\method::file_extension( $file ) );
+
+		// get file extension ##
+		switch( core\method::file_extension( $file ) ){
+
+			case "willow" :
+
+				// key ##
+				$file_key = basename( $file, ".willow" );
+
+				$contents = file_get_contents( $file );
+
+				h::log( '$key: '.$file_key );
+				h::log( $contents );
+
+				$array[ $file_key ]['markup'] = $contents;
+
+				// return $return;
+
+			break ;
+
+			default ;
+			case "php" :
+
+				$array = require_once( $file );
+				// h::log( $array );
+
+			break;
+
+		}
+
 		// load config from JSON ##
 		if (
-			$array = require_once( $file )
+			$array
 			// $array = include( $file )
 		){
 
 			// h::log( 'd:>Loading handle: "'.$handle.'" from file: "'.$file.'"' );
+
+			// not an array, so take value and add to new array as $markup key ##
+			if (  
+				! is_array( $array )
+			){
+
+				$value = $array;
+				// h::log( $value );
+				$array = [];
+				$array['markup'] = $value;
+
+			}
 
 			// @todo - some cleaning and sanity ## strip functions etc ##
 
@@ -357,7 +418,7 @@ class config extends \Q {
 
 			} else {
 
-				// h::log( 'd:>config not an array -- handle: "'.$handle.' from: '.$backtrace );
+				h::log( 'd:>config not an array -- handle: "'.$handle.' from: '.$backtrace );
 
 			}
 

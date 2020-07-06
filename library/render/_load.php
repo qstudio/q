@@ -197,10 +197,6 @@ class render {
 	;
 	
 
-	private function __construct( $args ){
-
-    }
-
 
 	/**
 	 * Fire things up
@@ -209,65 +205,6 @@ class render {
 
 		// load libraries ##
 		core\load::libraries( self::load() );
-
-		// not on admin ##
-		if ( \is_admin() ) return false;
-
-		// \add_action( 'get_header',  [ get_class(), 'ob_start' ], 0 ); // try -- template_redirect.. was init
-		\add_action( 'get_header',  function(){ 
-			
-			if ( 'willow' == \q\view\is::format() ){
-
-				h::log( 'd:>starting OB, as on a willow template: "'.\q\view\is::format().'"' );
-
-				// set buffer ##
-				self::$buffering = true;
-
-				return ob_start();
-
-			}
-
-			h::log( 'd:>not a willow template, so no ob: "'.\q\view\is::format().'"' );
-
-			return false; 
-		}
-		, 0 ); 
-
-		\add_action( 'shutdown', function() {
-
-			if ( 'willow' != \q\view\is::format() ){
-
-				h::log( 'e:>No buffer.. so no go' );
-				
-				return false; 
-			
-			}
-
-			h::log( 'e:>Doing shutdown buffer' );
-
-			$final = '';
-		
-			// We'll need to get the number of ob levels we're in, so that we can iterate over each, collecting
-			// that buffer's output into the final output.
-			$levels = ob_get_level();
-		
-			for ($i = 0; $i < $levels; $i++) {
-				$final .= ob_get_clean();
-			}
-
-			// @TODO... this needs to be more graceful, and render needs to have "blocks", which can be passed / set
-			// echo theme\view\ui\header::render();
-			\q\render::ui__header();
-		
-			// Apply any filters to the final output
-			// echo \apply_filters( 'ob_output', $final );
-			echo \q\render\buffer::prepare( $final );
-
-			// @TODO... this needs to be more graceful, and render needs to have "blocks", which can be passed / set
-			// echo theme\view\ui\footer::render();
-			\q\render::ui__footer();
-
-		}, 0);
 
 	}
 	
@@ -283,6 +220,9 @@ class render {
 
 		return $array = [
 
+			// admin ##
+			'admin' => h::get( 'render/config/_load.php', 'return', 'path' ),
+
 			// tag management ##
 			'tag' => h::get( 'render/tag.php', 'return', 'path' ),
 
@@ -293,7 +233,6 @@ class render {
 			'args' => h::get( 'render/args.php', 'return', 'path' ),
 
 			// parser ##
-			// 'parser' => h::get( 'render/parser.php', 'return', 'path' ),
 			'parser' => h::get( 'render/parse/_load.php', 'return', 'path' ),
 
 			// buffer processor ##

@@ -13,6 +13,7 @@ class parse extends render {
 
 	protected static $regex = [
 		'clean'	=>"/[^A-Za-z0-9_]/" // clean up string to alphanumeric + _
+		// @todo.. move other regexes here ##
 	];
 
 	

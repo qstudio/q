@@ -4,17 +4,84 @@ namespace q\render;
 
 use q\core;
 use q\core\helper as h;
-// use q\ui;
 use q\render;
 
-// \q\render\buffer::__run();
+\q\render\buffer::run();
 
 class buffer extends \q\render {
 
 	/**
-	 * Move some / all of buffer logic in here ##
+	 * Check for view template and start OB, if correct
 	*/
+	public static function run(){
 
+		// not on admin ##
+		if ( \is_admin() ) return false;
+
+		// \add_action( 'get_header',  [ get_class(), 'ob_start' ], 0 ); // try -- template_redirect.. was init
+		\add_action( 'get_header',  function(){ 
+			
+			if ( 'willow' == \q\view\is::format() ){
+
+				// h::log( 'd:>starting OB, as on a willow template: "'.\q\view\is::format().'"' );
+
+				// set buffer ##
+				self::$buffering = true;
+
+				return ob_start();
+
+			}
+
+			// h::log( 'd:>not a willow template, so no ob: "'.\q\view\is::format().'"' );
+
+			return false; 
+		}
+		, 0 ); 
+
+		\add_action( 'shutdown', function() {
+
+			if ( 'willow' != \q\view\is::format() ){
+
+				// h::log( 'e:>No buffer.. so no go' );
+				
+				return false; 
+			
+			}
+
+			// h::log( 'e:>Doing shutdown buffer' );
+
+			$final = '';
+		
+			// We'll need to get the number of ob levels we're in, so that we can iterate over each, collecting
+			// that buffer's output into the final output.
+			$levels = ob_get_level();
+		
+			for ($i = 0; $i < $levels; $i++) {
+				$final .= ob_get_clean();
+			}
+
+			// @TODO... this needs to be more graceful, and render needs to have "blocks", which can be passed / set
+			// echo theme\view\ui\header::render();
+			\q\render::ui__header();
+		
+			// Apply any filters to the final output
+			// echo \apply_filters( 'ob_output', $final );
+			echo \q\render\buffer::prepare( $final );
+
+			// @TODO... this needs to be more graceful, and render needs to have "blocks", which can be passed / set
+			// echo theme\view\ui\footer::render();
+			\q\render::ui__footer();
+
+		}, 0);
+
+	}
+
+
+	/**
+	 * Prepare output for Buffer
+	 * 
+	 * @since 4.1.0
+	*/
     public static function prepare( $string = null ) {
 
 		// h::log( $args );

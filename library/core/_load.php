@@ -37,6 +37,7 @@ class core extends \Q {
 		require_once self::get_plugin_path( 'library/core/device.php' );
 		require_once self::get_plugin_path( 'library/core/media.php' );
 		require_once self::get_plugin_path( 'library/core/option.php' );
+		require_once self::get_plugin_path( 'library/core/wpdb.php' );
 		require_once self::get_plugin_path( 'library/core/filter.php' );
 
     }
