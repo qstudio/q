@@ -1,32 +1,42 @@
 <?php
 
 // return an array ##
-return [
+return [ 'post' => [
+
+	'config'			=> [
+		
+		// run context->task ##
+		'run' 			=> true,
+		
+		// context->task debugging ##
+		'debug'			=> false,
+
+	],
 
 	// post_title ##
-	'post__title'  				=> [
+	'title'  				=> [
 		'markup' 				=> '<h1 class="pb-2 col-12 the-title">{{ title }}</h1>',
 	],
 
 	// post_parent ##
-	'post__parent'  				=> [
+	'parent'  				=> [
 		'markup' 				=> '<h4 class="pb-1 col-12 the-parent"><a href="{{ permalink }}" title="Open {{ title }}">{{ title }}</a></h4>',
 	],
 
 	// post_excerpt ##
-	'post__excerpt'				=> [
+	'excerpt'				=> [
 		'markup'  				=> '<div class="pb-1 col-12 mb-3 the-excerpt">{{ content }}</div>',
 		'limit' 				=> 300, // default excerpt length ##
 	],
 
 	// post_content ##
-	'post__content'  			=> [
+	'content'  			=> [
 		'markup'                => '<div class="pb-1 col-12 the-content">{{ content }}</div>',
 	],
 
 	// post_meta
 	// Tag: <a href="{{ tag_permalink }}" title="See posts in {{ tag_title }}">{{ tag_title }}</a>
-	'post__data' 				=> [
+	'data' 				=> [
 		// 'type' 					=> 'single',
 		'markup'				=> [
 			'template'			=> '
@@ -43,7 +53,7 @@ return [
 	],
 
 	// post_comments
-	'post__comment' 				=> [
+	'comment' 				=> [
 		// 'markup'				=> [
 		// 	'template'			=> '
 		// 						Posted {{ post_date_human }} ago 
@@ -59,7 +69,7 @@ return [
 	],
 
 	// get_posts() ##
-	'post__query'  => [
+	'query'  => [
 
 		// config ##
 		'config'				=> [ 
@@ -115,4 +125,4 @@ return [
 		// 'allow_comments'        => false, // show comment count - might slow up query ##
 	],
 
-];
+]];

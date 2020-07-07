@@ -465,5 +465,83 @@ class method extends \Q {
 	}
 
 
+
+	public static function file_put_array( $path, $array )
+	{
+
+		if ( is_array( $array ) ){
+
+			$contents = self::var_export_short( $array, true );
+			// $contents = var_export( $array, true );
+
+			// stripslashes ## .. hmmm ##
+			$contents = str_replace( '\\', '', $contents );
+
+			h::log( 'd:>Array data good, saving to file' );
+
+			// save in php as an array, ready to return ##
+			file_put_contents( $path, "<?php\n return {$contents};\n") ;
+			
+			// done ##
+			return true;
+
+		}
+
+		h::log( 'e:>Error with data format, config file NOT saved' );
+		
+		// failed ##
+		return false;
+
+	}
+
+
+	public static function var_export_short( $data, $return = true ){
+
+		$dump = var_export($data, true);
+
+		$dump = preg_replace('#(?:\A|\n)([ ]*)array \(#i', '[', $dump); // Starts
+		$dump = preg_replace('#\n([ ]*)\),#', "\n$1],", $dump); // Ends
+		$dump = preg_replace('#=> \[\n\s+\],\n#', "=> [],\n", $dump); // Empties
+
+		if (gettype($data) == 'object') { // Deal with object states
+			$dump = str_replace('__set_state(array(', '__set_state([', $dump);
+			$dump = preg_replace('#\)\)$#', "])", $dump);
+		} else { 
+			$dump = preg_replace('#\)$#', "]", $dump);
+		}
+
+		if ($return===true) {
+			return $dump;
+		} else {
+			echo $dump;
+		}
+
+	}
+
+
+	/*
+	public static function var_export( $var, $indent ="" ) {
+		switch (gettype($var)) {
+			case 'integer':         
+			case 'double':             
+				return $var;
+			case "string":
+				return '"' . addcslashes($var, "\\\$\"\r\n\t\v\f") . '"';
+			case "array":
+				$indexed = array_keys($var) === range(0, count($var) - 1);
+				$r = [];
+				foreach ($var as $key => $value) {
+					$r[] = "$indent    "
+						 . ($indexed ? "" : self::var_export54($key) . " => " )
+						 . self::var_export54( $value, "$indent    " );
+				}
+				return "[\n" . implode(",\n", $r) . "\n" . $indent . "]";
+			case "boolean":
+				return $var ? "TRUE" : "FALSE";
+			default:
+				return var_export($var, TRUE);
+		}
+	}
+	*/
     
 }

@@ -171,8 +171,8 @@ class media extends \Q {
 			||
 			// OR, set globally ##
 			(
-				isset( core\config::get([ 'context' => 'media', 'task' => 'src' ])['meta'] )
-				&& true == core\config::get([ 'context' => 'media', 'task' => 'src' ])['meta']
+				isset( core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta'] )
+				&& true == core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta']
 			)
 		) {
 
@@ -196,8 +196,8 @@ class media extends \Q {
 			||
 			// OR, set globally ##
 			(
-				isset( core\config::get([ 'context' => 'media', 'task' => 'src' ])['srcset'] )
-				&& true == core\config::get([ 'context' => 'media', 'task' => 'src' ])['srcset']
+				isset( core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset'] )
+				&& true == core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset']
 			)
         ) {
 

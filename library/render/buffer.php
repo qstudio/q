@@ -115,7 +115,7 @@ class buffer extends \q\render {
 			'task'			=> 'prepare',
 		];
 
-		// force methods to return... but to where??? ##
+		// force methods to return for collection by output buffer ##
 		self::$args_default['config']['return'] = 'return';
 
 		// reset args ##

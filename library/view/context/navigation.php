@@ -1,10 +1,20 @@
 <?php
 
 // return an array ##
-return [
+return [ 'navigation' => [
+
+	'config'			=> [
+		
+		// run context->task ##
+		'run' 			=> true,
+		
+		// context->task debugging ##
+		'debug'			=> false,
+
+	],
 
 	// siblings ---------
-	'navigation__siblings'  	=> [
+	'siblings'  	=> [
 		'args' 					=> [
 			'post_type'         => 'page',
 			'add_parent'        => false,
@@ -18,7 +28,7 @@ return [
 
 
 	// next_back ---------
-	'navigation__relative'  	=> [
+	'relative'  	=> [
 		'args' 					=> [
 			'post_type'         => 'page',
 			'add_parent'        => false,
@@ -31,7 +41,7 @@ return [
 	],
 
 	// navigation ---------
-	'navigation__menu'  		=> [
+	'menu'  		=> [
 		'config'				=> [
 			// 'type'				=> ''
 		],		
@@ -41,7 +51,7 @@ return [
 	],
 
 	// use your pagination ---------
-	'navigation__pagination'  	=> [
+	'pagination'  	=> [
 		'markup'             	=> [
 			'template'			=> '<li class="{{ li_class }}{{ active-class }}">{{ item }}</li>',
 			'wrap'             	=> '<div class="row row justify-content-center mt-5 mb-5"><ul class="pagination">{{ content }}</ul></div>'
@@ -58,5 +68,4 @@ return [
 		'class_link_last' 		=> 'd-none d-md-inline page-link page-last d-none d-md-block'
 	],
 
-];
-
+]];

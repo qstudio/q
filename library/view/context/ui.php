@@ -1,20 +1,30 @@
 <?php
 
 // return an array ##
-return [
+return [ 'ui' => [
+
+	'config'			=> [
+		
+		// run context->task ##
+		'run' 			=> true,
+		
+		// context->task debugging ##
+		'debug'			=> false,
+
+	],
 
 	// ui header ##
-	'ui__header'  			=> [
+	'header'  			=> [
 		'markup' => ''
 	],
 
 	// ui footer ##
-	'ui__footer'  			=> [
+	'footer'  			=> [
 		'markup' => ''
 	],
 
 	// ui open ##
-	'ui__open'  			=> [
+	'open'  			=> [
 		'markup' => '
 		<main class="container {{ classes }}">
 			<div class="row">
@@ -22,10 +32,10 @@ return [
 	],
 
 	// ui close() ##
-	'ui__close'  			=> [
+	'close'  			=> [
 		'markup' => '
 			</div>
 		</main>'
 	],
 
-];
+]];

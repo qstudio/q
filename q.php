@@ -42,7 +42,7 @@ if ( ! class_exists( 'Q' ) ) {
         // Plugin Settings
         const version = '4.1.0';
         const text_domain = 'q-textdomain'; // for translation ##
-        static $debug = false; // global debugging ##
+        static $debug = false; // global debugging, normally false, as individual plugins can control local level debugging ##
 		static $device = false; // current device ##
 		static $log = []; // global log ##
 

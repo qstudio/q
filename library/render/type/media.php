@@ -101,8 +101,8 @@ class media extends render\type {
 					||
 					// OR, set globally ##
 					(
-						isset( core\config::get([ 'context' => 'media', 'task' => 'src' ])['srcset'] )
-						&& true == core\config::get([ 'context' => 'media', 'task' => 'src' ])['srcset']
+						isset( core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset'] )
+						&& true == core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset']
 					)
 				) {
 

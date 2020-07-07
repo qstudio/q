@@ -54,7 +54,7 @@ class log extends \Q {
 				&& DOING_AJAX
 			) {
 
-				// core\helper::debug( 'DOING AJAX...' );
+				// core\helper::hard_log( 'DOING AJAX...' );
 				self::empty();
 
 			}
@@ -94,7 +94,7 @@ class log extends \Q {
 		// self::$backtrace = ' -> '.$backtrace_1.' - '.$backtrace_2;
 		self::$backtrace = ' -> '.$backtrace_2;
 		self::$backtrace_key = $backtrace_1;
-		// core\helper::debug( $backtrace );
+		// core\helper::hard_log( $backtrace );
 		// $log = $log.' - '.$backtrace;
 
 	}
@@ -108,9 +108,9 @@ class log extends \Q {
     public static function set( $args = null ){
 
 		// test ##
-		// core\helper::debug( $args );
+		// core\helper::hard_log( $args );
 
-		// core\helper::debug( 'd:>Problem with passed args' );
+		// core\helper::hard_log( 'd:>Problem with passed args' );
 
 		// add info about calling function ##
 		self::get_backtrace( $args );
@@ -122,7 +122,7 @@ class log extends \Q {
 			// || ! isset( $args['log'] )
 		){
 
-			// core\helper::debug( 'd:>Problem with passed args' );
+			// core\helper::hard_log( 'd:>Problem with passed args' );
 
 			return false;
 
@@ -134,7 +134,7 @@ class log extends \Q {
 			! $log = self::translate( $args )
 		){
 
-			// core\helper::debug( 'Error in passed log data..' );
+			// core\helper::hard_log( 'Error in passed log data..' );
 
 			return false;
 
@@ -181,7 +181,7 @@ class log extends \Q {
 			|| is_numeric( $args )
 		){
 
-			// core\helper::debug( 'is_array OR is_object or is_int' );
+			// core\helper::hard_log( 'is_array OR is_object or is_int' );
 			// return self::$log['log'][] = var_export( $args, true ).self::$backtrace;
 			return self::push( 'debug', print_r( $args, true ).self::$backtrace, self::$backtrace_key );
 			
@@ -195,7 +195,7 @@ class log extends \Q {
 			// || is_numeric( $args )
 		){
 
-			// core\helper::debug( 'is_array OR is_object or is_int' );
+			// core\helper::hard_log( 'is_array OR is_object or is_int' );
 			// return self::$log['log'][] = var_export( $args, true ).self::$backtrace;
 			self::push( 'debug', 'Array or Object below from -> '.self::$backtrace, self::$backtrace_key );
 			return self::push( 'debug', print_r( $args, true ), self::$backtrace_key );
@@ -207,7 +207,7 @@ class log extends \Q {
 			is_bool( $args )
 		){
 
-			// core\helper::debug( 'is_bool' );
+			// core\helper::hard_log( 'is_bool' );
 			// return self::$log['log'][] = ( true === $args ? 'boolean:true' : 'boolean:false' ).self::$backtrace ;
 			return self::push( 'debug', ( true === $args ? 'boolean:true' : 'boolean:false' ).self::$backtrace, self::$backtrace_key );
 
@@ -221,14 +221,14 @@ class log extends \Q {
 			is_string( $args ) 
 		) {
 
-			// core\helper::debug( 'is_string' );
+			// core\helper::hard_log( 'is_string' );
 
 			// string might be a normal string, or contain markdown to represent an array of data ##
 
 			// no fixed pattern ##
 			if ( ! core\method::strposa( $args, self::$delimiters ) ) {
 
-				// core\helper::debug( 'string has no known delimit, so treat as log:>value' );
+				// core\helper::hard_log( 'string has no known delimit, so treat as log:>value' );
 				// return $args['log'][] = $args.self::$backtrace; 
 				return self::push( 'debug', $args.self::$backtrace, self::$backtrace_key );
 
@@ -240,16 +240,16 @@ class log extends \Q {
 				&& false !== strpos( $args, self::$delimiters['value'] ) 
 			) {
 			
-				// core\helper::debug( 'only key:value delimiters found..' );
+				// core\helper::hard_log( 'only key:value delimiters found..' );
 
 				// get some ##
 				$key_value = explode( self::$delimiters['value'], $args );
-				// core\helper::debug( $key_value );
+				// core\helper::hard_log( $key_value );
 
 				$key = $key_value[0];
 				$value = $key_value[1];
 
-				// core\helper::debug( "d:>key: $key + value: $value" );
+				// core\helper::hard_log( "d:>key: $key + value: $value" );
 
 				// return with special key replacement check ##
 				return self::push( self::key_replace( $key ), $value.self::$backtrace, self::$backtrace_key );
@@ -262,19 +262,19 @@ class log extends \Q {
 				&& false !== strpos( $args, self::$delimiters['value'] ) 
 			) {
 			
-				// core\helper::debug( 'both array and value delimiters found..' );
+				// core\helper::hard_log( 'both array and value delimiters found..' );
 
 				// get some ##
 				$array_key_value = explode( self::$delimiters['value'], $args );
-				// core\helper::debug( $array_key_value );
+				// core\helper::hard_log( $array_key_value );
 
 				$value_keys = $array_key_value[0];
 				$value = $array_key_value[1];
 
 				$keys = explode( self::$delimiters['array'], $value_keys );
 				
-				// core\helper::debug( $keys );
-				// core\helper::debug( "l:>$value" );
+				// core\helper::hard_log( $keys );
+				// core\helper::hard_log( "l:>$value" );
 
 				return self::push( $keys, $value.self::$backtrace, self::$backtrace_key );
 
@@ -395,7 +395,7 @@ class log extends \Q {
 			// $key_array = [];
 
 			// we only go up to 3 levels.. oddly, so give a warning ##
-			// if ( count( $key ) > 3 ) { core\helper::debug( 'The max key depth is 3..' ); }
+			// if ( count( $key ) > 3 ) { core\helper::hard_log( 'The max key depth is 3..' ); }
 
 			// special keys ##
 			// foreach( $key as $k => $v ) {
@@ -612,12 +612,12 @@ class log extends \Q {
 			isset( self::$special_keys[$key] )
 		){
 
-			// core\helper::debug( "key is special: $key" );
+			// core\helper::hard_log( "key is special: $key" );
 			return self::$special_keys[$key];
 
 		}
 
-		// core\helper::debug( "key is NOT special: $key" );
+		// core\helper::hard_log( "key is NOT special: $key" );
 		return $key;
 
 	}
@@ -632,7 +632,7 @@ class log extends \Q {
 
 		// test ##
 		// self::set( 'write: '.$key );
-		// core\helper::debug( self::$log );
+		// core\helper::hard_log( self::$log );
 
 		// if key set, check if exists, else bale ##
 		if ( 
@@ -752,7 +752,7 @@ class log extends \Q {
     private static function clear( $args = null ){
 
 		// test ##
-        // core\helper::debug( $args );
+        // core\helper::hard_log( $args );
 
 		// sanity ##
 		// ...
@@ -763,20 +763,20 @@ class log extends \Q {
 			&& ! isset( self::$log[ $args['key'] ] ) 
 		) {
 
-			core\helper::debug( 'Log key empty: "'.$args['key'].'"' );
+			core\helper::hard_log( 'Log key empty: "'.$args['key'].'"' );
 
 			return false;
 
 		}
 
-		// core\helper::debug( self::$log );
+		// core\helper::hard_log( self::$log );
 
         // option to debug only specific fields ##
         if ( isset( $args['key'] ) ) {
 
 			unset( self::$log[ $args['key'] ] );
 
-			core\helper::debug( 'n>Emptied log key: "'.$args['key'].'"' );
+			core\helper::hard_log( 'n>Emptied log key: "'.$args['key'].'"' );
 
 			return true;
 
@@ -784,7 +784,7 @@ class log extends \Q {
 
 		unset( self::$log );
 
-		core\helper::debug( 'n>Emptied all log keys' );
+		core\helper::hard_log( 'n>Emptied all log keys' );
 		
 		return true;
 
@@ -798,6 +798,18 @@ class log extends \Q {
      */
     private static function empty( $args = null ){
 
+		// do not save file from admin, as it will be incomplete ##
+		if( 
+			\is_admin() 
+			|| \wp_doing_ajax()
+		){ 
+		
+			core\helper::hard_log( 'd:>Attempt to empty log from admin or AJAX blocked' );
+
+			return false; 
+		
+		}
+
 		// empty once -- commented out.. ##
 		if( self::$empty ) { return false; }
 
@@ -809,7 +821,7 @@ class log extends \Q {
 			fclose($f);
 
 			// log to log ##
-			// core\helper::debug( 'Log Emptied: '.date('l jS \of F Y h:i:s A') );
+			// core\helper::hard_log( 'Log Emptied: '.date('l jS \of F Y h:i:s A') );
 
 			// track ##
 			self::$empty == true;
@@ -913,6 +925,20 @@ class log extends \Q {
      */
     public static function shutdown(){
 
+		// do not save file from admin, as it will be incomplete ##
+		/*
+		if( 
+			\is_admin() 
+			|| \wp_doing_ajax()
+		){ 
+		
+			h::log( 'd:>Attempt to log from admin or AJAX blocked' );
+
+			return false; 
+		
+		}
+		*/
+
 		// empty log ##
 		// self::empty();
 
@@ -923,8 +949,8 @@ class log extends \Q {
 		$key = \apply_filters( 'q/core/log/default', self::$shutdown_key );
 		$key_debug = \apply_filters( 'q/core/log/debug', self::$shutdown_key_debug );
 
-		// core\helper::debug( $key );
-		// core\helper::debug( $key_debug );
+		// core\helper::hard_log( $key );
+		// core\helper::hard_log( $key_debug );
 
 		// write specific key, as filter might return false / null ##
 		if( 
@@ -934,7 +960,7 @@ class log extends \Q {
 			// || ! isset( self::$log[ $key ] )
 		){
 
-			core\helper::debug( 'd:>shutdown -- no key, so write all..' );
+			core\helper::hard_log( 'd:>shutdown -- no key, so write all..' );
 
 			// log all ##
 			return self::write();
@@ -959,8 +985,9 @@ class log extends \Q {
 
 		// debugging so log more keys... ##
 		if ( 
-			\Q::$debug // debugging ##
-			&& $key_debug
+			// \Q::$debug // debugging ##
+			// && 
+			$key_debug
 		) {
 
 			foreach( ( array )$key_debug as $k => $v ) {

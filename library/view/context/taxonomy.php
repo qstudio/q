@@ -1,10 +1,10 @@
 <?php
 
 // return an array ##
-return [
+return [ 'taxonomy' => [
 
 	// get/taxonomy/terms
-	'taxonomy__terms'		=> [
+	'terms'		=> [
 
 		// config ##
 		'config'				=> [ 
@@ -34,4 +34,4 @@ return [
 		]
 	],
 
-];
+]];

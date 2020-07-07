@@ -124,8 +124,8 @@ class extend extends \q\render {
 		}
 
 		// check ##
-		h::log( 'd:>Looking for extension: '.$context );
-		h::log( self::$extend );
+		// h::log( 'd:>Looking for extension: '.$context );
+		// h::log( self::$extend );
 
 		// is_array ##
 		if (

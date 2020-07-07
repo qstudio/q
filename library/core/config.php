@@ -12,11 +12,13 @@ class config extends \Q {
 
 	private static
 		// loaded config ##
+		$has_config = false,
+		$delete_config = true,
+		$cache_files = [], // track array of files loaded, with ful path, so we can remove duplicates ##
 		$config = [],
 		$cache = [],
 		$args = [] // passed args ##
 	;
-
 
 	public static function run(){
 
@@ -50,8 +52,163 @@ class config extends \Q {
 			}
 		, 1000, 1 );
 
+		// load saved config ##
+		\add_action( 'wp', [ get_class(), 'load_file' ], 10 );
+
+		// save stored config to file ##
+		\add_action( 'shutdown', [ get_class(), 'save_file' ], 100000 );
+
 	}
 
+
+
+
+	public static function save_file(){
+
+		// do not save file from admin, as it will be incomplete ##
+		if( 
+			\is_admin() 
+			|| \wp_doing_ajax()
+		){ 
+		
+			h::log( 'd:>Attempt to save config from admin or AJAX blocked' );
+
+			return false; 
+		
+		}
+
+		if ( ! method_exists( 'q_theme', 'get_child_theme_path' ) ){ 
+
+			h::log( 'e:>Q Theme class not available, perhaps this function was hooked too early?' );
+
+			return false;
+
+		}
+
+		// if theme debugging, then load from single config files ##
+		if ( \q_theme::$debug ) {
+
+			// h::log('d:>Deubbing, so we do not need to resave __q.php.' );
+			// h::log( 't:>How to dump file / cache and reload from config files, other than to delete __q.php??' );
+
+			return false; 
+
+		}
+
+		if ( self::$has_config ){ 
+		
+			// h::log('d:>We do not need to resave the file, as it already exists' );
+			// h::log( 't:>How to dump file / cache and reload from config files, other than to delete __q.php??' );
+
+			return false; 
+		
+		}
+
+		// write to file ##
+		// self::file_put_array( \Q::get_plugin_path( 'library/render/config/__q.php' ), $array );
+		if ( method_exists( 'q_theme', 'get_child_theme_path' ) ){ 
+
+			// h::log( 'd:>Child theme method found, so trying to save data to __q.php' );
+
+			core\method::file_put_array( \q_theme::get_child_theme_path( '/__q.php' ), self::$config );
+
+			return true;
+
+		} else {
+
+			h::log( 'e:>Child theme method NOT found, could not write __q.php' );
+
+			return false;
+
+		}
+
+	}
+
+
+
+	public static function load_file(){
+
+		if ( ! method_exists( 'q_theme', 'get_child_theme_path' ) ){ 
+
+			h::log( 'e:>Q Theme class not available, perhaps this function was hooked too early?' );
+
+			return false;
+
+		}
+
+		// if ( method_exists( 'q_theme', 'get_child_theme_path' ) ){ 
+
+		// if theme debugging, then load from single config files ##
+		if ( self::$debug ) {
+
+			h::log( 'd:>Theme is debugging, so load from individual config files...' );
+
+			// load ##
+			if ( self::$delete_config ) {
+
+				$file = \q_theme::get_child_theme_path('/__q.php');
+
+				if ( $file && file_exists( $file ) ) {
+
+					unlink( $file );
+
+					h::log( 'd:>...also deleting __q.php, so cache is clear' );
+
+				}
+
+				// update tracker ##
+				self::$delete_config = false;
+
+			}
+
+			return false;
+
+		}
+
+		// h::log( 'd:>Child theme method found, so trying to load data from __q.php' );
+
+		if( $file = \q_theme::get_child_theme_path('/__q.php') ) {
+
+			if ( is_file( $file ) ) {
+
+				$array = require_once( $file );	
+
+				if (
+					$array
+					&& is_array( $array )
+				){
+
+					// store array in object cache ##
+					self::$config = $array;
+
+					// update flag ##
+					self::$has_config = true;
+
+					// log ##
+					h::log( 'd:>Theme NOT debugging ( production mode ) -- so loaded config data from __q.php' );
+
+					// good ##
+					return true;
+
+				}
+
+			}
+			
+		}
+
+		h::log( 'e:>failed to load config data from __q.php, perhaps we need to re-generate from here..' );
+
+		return false;
+
+		// } else {
+
+		// 	h::log( 'e:>Child theme method NOT found, could not load __q.php' );
+
+		// 	return false;
+
+		// }
+
+	}
 
 
 	
@@ -65,6 +222,15 @@ class config extends \Q {
 	public static function filter( $args = null, $source = null ) {
 
 		// h::log( $args );
+
+		if ( self::$has_config ){ 
+			
+			// h::log( 'd:>Config loading from cache file..' ); 
+			// h::log( self::$config );
+			
+			return $args; 
+		
+		}
 
 		// sanity ##
 		if ( 
@@ -113,28 +279,28 @@ class config extends \Q {
 				// child context lookup ##
 				case "child" :
 
-					// check for look method ##
+					// check for theme method ##
 					if ( ! method_exists( 'q_theme', 'get_child_theme_path' ) ){ break; }
 					foreach( $extensions as $ext ) {
 						
 						$file = \q_theme::get_child_theme_path( '/library/'.$path.$source.'/'.$v.$ext );
 					
 					}
-					// h::log( 'd:>looking up file: '.$file );
+					// h::log( 'd:>child->looking up file: '.$file );
 
 				break  ;
 
 				// parent lookup ## 
 				case "parent" :
 
-					// check for look method ##
+					// check for theme method ##
 					if ( ! method_exists( 'q_theme', 'get_parent_theme_path' ) ){ break; }
 					foreach( $extensions as $ext ) {
 
 						$file = \q_theme::get_parent_theme_path( '/library/'.$path.$source.'/'.$v.$ext );
 
 					}
-					// h::log( 'd:>looking up file: '.$file );
+					// h::log( 'd:>parent->looking up file: '.$file );
 
 				break  ;
 
@@ -144,6 +310,7 @@ class config extends \Q {
 					foreach( $extensions as $ext ) {
 						
 						$file = h::get( $path.$v.$ext, 'return', 'path' );
+						// h::log( 'd:>global->looking up file: '.$file );
 
 					}
 
@@ -157,6 +324,15 @@ class config extends \Q {
 				&& is_file( $file )
 			){
 
+				// skip file, if loaded already ##
+				if ( in_array( $file, self::$cache_files ) ) {
+
+					// h::log( 'd:>File: '.$file.' already loaded' );
+
+					continue;
+
+				}
+
 				// build cache key ##
 				$cache_key = 
 					! is_null( $source ) ? 
@@ -167,6 +343,9 @@ class config extends \Q {
 
 				// send file to config loader ##
 				core\config::load( $file, $cache_key );
+
+				// save file to cache ##
+				self::$cache_files[] = $file;
 
 			}
 
@@ -214,24 +393,25 @@ class config extends \Q {
 		// run filter passing lookup args to allow themes and plugins to control config ##
 		self::run_filter();
 
-		// define property ##
-		$property = $args['context'].'__'.$args['task'] ;
+		// define property for logging ##
+		$property = $args['context'].' -> '.$args['task'] ;
 
 		// h::log('d:>Looking for $config property: '.$property );
 		// h::log( self::$config );
 
 		if ( 
-			! isset( self::$config[ $property ] ) 
+			! isset( self::$config[ $args['context'] ] ) 
+			|| ! isset( self::$config[ $args['context'] ][ $args['task'] ] ) 
 		){
 	
-			// h::log( 'd:>config not available : "'.$property.'"' );
+			h::log( 'd:>config not available : "'.$property.'"' );
 
 			// continue;
 
 		} else {
 
 			// get property value ##
-			$return = self::$config[ $property ];
+			$return = self::$config[ $args['context'] ][ $args['task'] ];
 
 			// filter single property values -- too slow ??
 			// $return = \apply_filters( 'q/config/get/'.$args['context'].'/'.$args['task'], $return );

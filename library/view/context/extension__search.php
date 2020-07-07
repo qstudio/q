@@ -11,13 +11,23 @@ defined( 'ABSPATH' ) OR exit;
 // re-usable config ------ ##
 
 // return an array ##
-return [
+return [ 'extension' => [
 
-	'extension__search' => [
+	'search' => [
+
+		'config'			=> [
+		
+			// run context->task ##
+			'run' 			=> true,
+			
+			// context->task debugging ##
+			'debug'			=> false,
+	
+		],
 
 		// config ##
 		'application' 		=> 'posts',
-		'device'			=> '{{{ h::device }}}', // function ##
+		'device'			=> h::device(), // function ##
 		'table'	 			=> 'posts',
 		
 		'control' 			=> 
@@ -110,4 +120,4 @@ return [
 
 	]	
 
-];
+]];

@@ -8,7 +8,7 @@ use q\core\helper as h;
 use q\plugin;
 use q\get;
 use q\view;
-use q\render;
+use q\asset;
 
 class method extends \q\render {
 
@@ -721,7 +721,10 @@ class method extends \q\render {
     {
 
         // if debugging, do not minify ##
-        if ( self::$debug ) {
+        if ( 
+			class_exists( 'q_theme' )
+			&& \q_theme::$debug 
+		) {
 
             return $string;
 
@@ -731,14 +734,14 @@ class method extends \q\render {
 
             case "css" :
 
-                $string = render\minifier::css( $string );
+                $string = asset\minifier::css( $string );
 
                 break ;
 
             case "js" :
             default :
 
-                $string = render\minifier::javascript( $string );
+                $string = asset\minifier::javascript( $string );
 
                 break ;
 

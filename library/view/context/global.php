@@ -1,32 +1,49 @@
 <?php
 
 // return an array ##
-return [
+return [ 'global' 		=> [
 
-	// comments are ok ##
-	'global__allow_comments' 	=> true,
+	'config'			=> [
+		
+		// run context->task ##
+		'run' 			=> true,
+		
+		// context->task debugging ##
+		'debug'			=> false,
 
-	// date format ##
-	'global__date_format'      	=> 'F j, Y',
+		// comments are ok ##
+		'allow_comments' 	=> true,
 
-	// acf field groups ##
-	'global__group'  			=> [
-		'config' 				=> [ 'run' => true ],
-		// 'filter' => [ 'src' => true ] // add srcsets ##
+		// date format ##
+		'date_format'      	=> 'F j, Y',
+
+		// by default, rendering should return values ##
+		'return'        => 'echo'
+
 	],
 
-	// single field ##
-	'global__field'  			=> [
-		'config' 				=> [ 'run' => true ],
-		// 'markup' 				=> '<span class="the-field the-field-%field%">%value%</span>',
-	],
+	
 
-	// UI controls 
-	'global__ui'  			=> [
-		'config' 				=> [ 'run' => true ],
-		// 'markup' 				=> '<span class="the-field the-field-%field%">%value%</span>',
-	],
+	// // acf field groups ##
+	// 'group'  			=> [
+	// 	'config' 				=> [ 'run' => true ],
+	// 	// 'filter' => [ 'src' => true ] // add srcsets ##
+	// ],
 
+	// // single field ##
+	// 'field'  			=> [
+	// 	'config' 				=> [ 'run' => true ],
+	// 	// 'markup' 				=> '<span class="the-field the-field-%field%">%value%</span>',
+	// ],
+
+	// // UI controls 
+	// 'ui'  			=> [
+	// 	'config' 				=> [ 'run' => true ],
+	// 	// 'markup' 				=> '<span class="the-field the-field-%field%">%value%</span>',
+	// ],
+
+
+	/*
 	// search results ##
 	'search__query'  => [
 
@@ -93,4 +110,6 @@ return [
 		'allow_comments'        => false, // show comment count - might slow up query ##
 	],
 
-];
+	*/
+
+]];

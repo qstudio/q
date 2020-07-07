@@ -286,7 +286,7 @@ class helper extends \Q {
      * @since       4.1.0
      * @return      void
      */
-    public static function debug( $args = null )
+    public static function hard_log( $args = null )
     {
 		
 		// error_log( $args );

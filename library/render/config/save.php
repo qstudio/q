@@ -498,7 +498,7 @@ class save extends render\config {
 
 			h::log( 'd:>Child theme method found, so trying to save data to _config.php' );
 
-			self::file_put_array( \q_theme::get_child_theme_path( '/_config.php' ), $array );
+			core\method::file_put_array( \q_theme::get_child_theme_path( '/_config.php' ), $array );
 
 			return true;
 
@@ -513,6 +513,7 @@ class save extends render\config {
 	}
 
 
+	/*
 	public static function file_put_array( $path, $array )
 	{
 
@@ -588,7 +589,7 @@ class save extends render\config {
 				return var_export($var, TRUE);
 		}
 	}
-
+	*/
 
 
 }

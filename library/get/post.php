@@ -377,7 +377,7 @@ class post extends \q\get {
 
             // h::log('Loading home excerpt');
 
-            $array['content'] = self::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ?: 200 ) );
+            $array['content'] = self::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( isset( $args['limit'] ) ? $args['limit'] : 200 ) );
 
         } else if (
             \is_author()
@@ -387,8 +387,8 @@ class post extends \q\get {
 
             $array['content'] =
                 \get_the_author_meta( 'description' ) ?
-                render\method::chop( nl2br( \get_the_author_meta( 'description' ), intval( $args['limit'] ?: 200 ) ) ) :
-                self::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ?: 200 ) );
+                render\method::chop( nl2br( \get_the_author_meta( 'description' ), intval( isset( $args['limit'] ) ? $args['limit'] : 200 ) ) ) :
+                self::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( isset( $args['limit'] ) ? $args['limit'] : 200 ) );
 
         } else if (
             \is_tax()
@@ -401,14 +401,14 @@ class post extends \q\get {
 
             $array['content'] =
                 \category_description() ?
-                render\method::chop( nl2br( \category_description(), intval( $args['limit'] ?: 200 ) ) ) :
-                self::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( $args['limit'] ?: 200 ) );
+                render\method::chop( nl2br( \category_description(), intval( isset( $args['limit'] ) ? $args['limit'] : 200 ) ) ) :
+                self::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( isset( $args['limit'] ) ? $args['limit'] : 200 ) );
 
         } else {
 
             // h::log('Loading other excerpt');
 
-            $array['content'] = self::excerpt_from_id( get\post::object(), intval( $args['limit'] ?: 200 ) );
+            $array['content'] = self::excerpt_from_id( get\post::object(), intval( isset( $args['limit'] ) ? $args['limit'] : 200 ) );
 
 		}
 		

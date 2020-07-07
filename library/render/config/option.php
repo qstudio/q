@@ -35,7 +35,7 @@ class option extends render\config {
         self::acf_add_options_page();
         
 		// add ACF fields
-        \add_action( 'acf/init', function() { plugin\acf::add_field_groups( self::add_field_groups() ); }, 1 );
+        // \add_action( 'acf/init', function() { plugin\acf::add_field_groups( self::add_field_groups() ); }, 1 );
 
 		// collapse repeaters ##
 		// \add_action( 'acf/input/admin_head', [ get_class(), 'acf_repeater_collapse' ] );

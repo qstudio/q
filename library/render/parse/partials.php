@@ -18,6 +18,24 @@ class partials extends \q\render {
 
 		// h::log( $args['key'] );
 
+		// global ##
+		$config = core\config::get([ 'context' => 'partial', 'task' => 'config' ]);
+		// h::log( $config );
+
+		if ( 
+			isset( $config['run'] )
+			&& false === $config['run']
+		){
+
+			h::log( 'Partial config->run defined as false, so stopping here...' );
+
+			// clean up tags, if not buffering ##
+			if ( is_null( self::$buffer ) ) self::cleanup();
+
+			return false;
+
+		}
+
 		// sanity -- this requires ##
 		if ( 
 			! isset( self::$markup )
@@ -91,7 +109,7 @@ class partials extends \q\render {
 				|| ! $matches[1]
 			){
 
-				h::log( 'e:>Error in returned matches array' );
+				h::log( self::$args['task'].'~>e:>Error in returned matches array' );
 
 				return false;
 
@@ -107,7 +125,7 @@ class partials extends \q\render {
 					|| ! isset( $matches[0][$match][1] )
 				) {
 
-					h::log( 'e:>Error in returned matches - no position' );
+					h::log( self::$args['task'].'~>e:>Error in returned matches - no position' );
 
 					continue;
 
@@ -130,7 +148,7 @@ class partials extends \q\render {
 					// || ! isset( $markup ) 
 				){
 
-					h::log( 'e:>Error in returned match function' );
+					h::log( self::$args['task'].'~>e:>Error in returned match function' );
 
 					continue; 
 
@@ -144,12 +162,61 @@ class partials extends \q\render {
 
 				// test what we have ##
 				// h::log( 'd:>partial: "'.$partial.'"' );
+				// h::log( self::$args );
+
+				// perhaps better to hand this to a function, which can grab args ??
+				$partial_data = core\config::get([ 'context' => $context, 'task' => $task ]);
+
+				// no data, no go ##
+				if(
+					! $partial_data
+					// || ! is_array( $partial_data )
+				){
+
+					h::log( self::$args['task'].'~>e:>Error in partial_data: "'.$partial.'"' );
+
+					continue;
+
+				}
+
+				// data passed as a string, so format
+				if(
+					is_string( $partial_data )
+					// || ! is_array( $partial_data )
+				){
+
+					h::log( self::$args['task'].'~>d:>Partial: "'.$partial.'" only sent markup, so converting to array format' );
+
+					$partial_data = [
+						'markup'	=> [
+							'template' => $partial_data
+						]
+					];
+
+					// continue;
+
+				}
+
+				// merge local partial data, with partial->config ##
+				$partial_data = core\method::parse_args( $partial_data, $config );
+
 				// h::log( 'd:>context: "'.$context.'"' );
 				// h::log( 'd:>task: "'.$task.'"' );
+				// h::log( $partial_data );
+
+				// we should check local config for this partial, to see if they should run ##
+				if( 
+					isset( $partial_data['config']['run'] ) 
+					&& false == $partial_data['config']['run']
+				){
+
+					h::log( self::$args['task'].'~>n:>Partial "'.$partial.'" config->run defined as false, so stopping here...' );
+
+					continue;
+
+				}
 
 				// hash ##
-				// $hash = bin2hex( random_bytes(16) );
-				// $hash = 'partial__'.\mt_rand();
 				$hash = 'partial__'.$task;
 
 				// @todo -- currently only partials are handled... ##
@@ -160,20 +227,20 @@ class partials extends \q\render {
 						// so, we can add a new field value to $args array based on the field name - with the markup as value
 						render\fields::define([
 							// $function => render::{$function}()
-							$hash => core\config::get([ 'context' => $context, 'task' => $task ])
+							$hash => $partial_data['markup']['template']
 						]);
 
 					break ;
 
 					default :
 
-						h::log( 'e:>Currently, only partial partials are supported... :)' );
+						h::log( self::$args['task'].'~>n:>Currently, only partial partials are supported... :)' );
 
 					break ;
 
 				}
 
-				// finally -- add a variable "{{ $field }}" before this comment block at $position to markup->template ##
+				// finally -- add a variable "{{ $field }}" before this partial block in markup->template ##
 				$variable = tag::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
 				variable::set( $variable, $position, 'variable' ); // '{{ '.$field.' }}'
 

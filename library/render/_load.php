@@ -221,7 +221,7 @@ class render {
 		return $array = [
 
 			// admin ##
-			'admin' => h::get( 'render/config/_load.php', 'return', 'path' ),
+			// 'admin' => h::get( 'render/config/_load.php', 'return', 'path' ),
 
 			// tag management ##
 			'tag' => h::get( 'render/tag.php', 'return', 'path' ),

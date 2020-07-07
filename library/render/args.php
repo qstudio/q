@@ -212,20 +212,21 @@ class args extends \q\render {
 
 		// h::log( core\config::$config );
 			
-		// merge CONTEXT__global settings - this allows to pass config per context ##
-		if ( $global = core\config::get([ 'context' => 'global', 'task' => $args['context'] ]) ){
+		// merge CONTEXT->global settings - this allows to pass config per context ##
+		if ( $config = core\config::get([ 'context' => $args['context'], 'task' => 'config' ]) ){
 
-			// h::log( 'd:>Merging GLOBAL context for task: '.$args['task'] );
-			// h::log( $global );
+			// h::log( 'd:>Merging settings from: '.$args['context'].'->config' );
+			$context_config = [ 'config' => $config ];
+			// h::log( $context_config );
 
 			// merge in global__CONTEXT settings ##
-			$args = core\method::parse_args( $global, $args );
+			$args = core\method::parse_args( $context_config, $args );
 
-			// h::log( self::$args_default );
+			// h::log( $args );
 
 		}
 
-		// grab all passed args and merge with defaults ##
+		// grab all passed args and merge with defaults -- this ensures we have config->run, config->debug etc.. ##
 		$args = core\method::parse_args( $args, self::$args_default );
 
 		// h::log( $args );

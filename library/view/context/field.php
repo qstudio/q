@@ -1,7 +1,7 @@
 <?php
 
 // return an array ##
-return [ 'partial' => [
+return [ 'field' => [
 
 	'config'			=> [
 		
