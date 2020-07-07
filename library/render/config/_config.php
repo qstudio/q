@@ -1,115 +1,99 @@
 <?php
  return [
-  'post' => [
+  'media' => [
     '_global' => [
       'config' => [
         'run' => '1',
         'debug' => '0',
-        'allow_comments' => '1',
-        'date_format' => 'F j, Y',
+      ],
+      'src' => [
+        'srcset' => '1',
+        'meta' => '1',
+        'picture' => '0',
+        'holder' => 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgZGF0YS1uYW1lPSJMYXllciAxIiBpZD0iTGF5ZXJfMSIgdmlld0JveD0iMCAwIDUxMiA1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOm5vbmU7c3Ryb2tlOiMwODNiNDM7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS13aWR0aDoyMHB4O30uY2xzLTJ7ZmlsbDojMDgzYjQzO308L3N0eWxlPjwvZGVmcz48dGl0bGUvPjxjaXJjbGUgY2xhc3M9ImNscy0xIiBjeD0iMjU2IiBjeT0iMjY3LjQyIiByPSIzMy45OSIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtMSIgcG9pbnRzPSIzMDIuMiAyMDIuNTIgMjg4LjkgMTc5LjY4IDIyMy4xIDE3OS42OCAyMDkuOCAyMDIuNTIgMTQ0IDIwMi41MiAxNDQgMzMyLjMyIDM2OCAzMzIuMzIgMzY4IDIwMi41MiAzMDIuMiAyMDIuNTIiLz48Y2lyY2xlIGNsYXNzPSJjbHMtMiIgY3g9IjMzNy44IiBjeT0iMjMyLjQ5IiByPSIxMS40OSIvPjwvc3ZnPg==',
+        'generate' => '1',
+        'ratio' => '1.618',
+        'open' => '9999',
+        'open_height' => '600',
+        'scale' => '1',
+        'pixel' => '2',
+        'default' => 'horizontal-lg',
+      ],
+      'src_sizes' => [
+        'xs' => '300',
+        'sm' => '576',
+        'md' => '720',
+        'lg' => '960',
+        'xl' => '1200',
       ],
     ],
-    'content' => [
+    'avatar' => [
       'markup' => [
-        'template' => '<div class=\\"pb-1 col-12 the-content\\">{{ content }}</div>',
+        'template' => '<div class=\\"col-12\\"><img class=\\"avatar\\" src=\\"{{ src }}\\"/></div>',
       ],
     ],
-    'data' => [
-      'markup' => [
-        'template' => 'Posted {{ post_date_human }} ago by <a href=\\"{{ author_permalink }}\\" title=\\"See posts by {{ author_title }}\\">{{ author_title }}</a>in <a href=\\"{{ category_permalink }}\\" title=\\"See posts in {{ category_title }}\\">{{ category_title }}</a>Tagged: {{# tags }}	<a href=\\"{{ tag_permalink }}\\" title=\\"See posts in {{ tag_title }}\\">{{ tag_title }}</a> {{/#}}Comments: <a href=\\"{{ comment_permalink }}\\" title=\\"Comments\\">{{ comment_title }} </a>',
-        'wrap' => '<div class=\\"post-meta col-12 mb-3\\">{{ content }}</div>',
+    'handles' => [
+      'square' => [
+        'sizes' => 'all',
+        'width' => 'equal',
+        'height' => 'equal',
+        'pixel' => '1',
+        'crop' => '1',
+        'open' => '0',
+      ],
+      'horizontal' => [
+        'sizes' => 'all',
+        'width' => 'equal',
+        'height' => 'divide',
+        'crop' => '1',
+        'open' => 'width',
+        'pixel' => '1',
+      ],
+      'vertical' => [
+        'sizes' => 'all',
+        'width' => 'equal',
+        'height' => 'multiply',
+        'crop' => '1',
+        'open' => 'height',
+        'pixel' => '1',
       ],
     ],
-    'excerpt' => [
+    'thumbnail' => [
       'markup' => [
-        'template' => '<div class=\\"pb-1 col-12 mb-3 the-excerpt\\">{{ content }}</div>',
-      ],
-      'args' => [
-        'limit' => '300',
-      ],
-    ],
-    'parent' => [
-      'markup' => [
-        'template' => '<h4 class=\\"pb-1 col-12 the-parent\\"><a href=\\"{{ permalink }}\\" title=\\"Open {{ title }}\\">{{ title }}</a></h4>',
-      ],
-    ],
-    'query' => [
-      'config' => [
-        'debug' => '1',
-      ],
-      'markup' => [
-        'template' => '<div class=\\"pb-1 col-12 the-posts\\">
-	<div class=\\"row\\"><h5 class=\\"col-12 mt-2\\">{{ total }} Results Found.</h5></div>
-	<div class=\\"row mt-3\\">{{ posts }}</div>
-	<div class=\\"row\\"><div class=\\"col-12\\">{{ pagination }}</div></div>
-</div>',
-        'posts' => '<div class=\\"card p-0 col-12 col-md-6 col-lg-4 mb-3\\">
-	<a href=\\"{{ post_permalink }}\\" title=\\"{{ post_title }}\\" class=\\"mb-3\\">
-		<img class=\\"lazy fit card-img-top\\" style=\\"height: 200px;\\" data-src=\\"{{ src }}\\" src=\\"\\" />
-	</a>
-	<div class=\\"card-body\\">
-		<h5 class=\\"card-title\\">
-			<a href=\\"{{ post_permalink }}\\">
-				{{ post_title }}
-			</a>
-		</h5>
-		<p class=\\"card-text\\">{{ post_excerpt }}</p>
-		<p class=\\"card-text\\">
-			<small class=\\"text-muted\\">Posted {{ post_date_human }} ago</small>
-			<small class=\\"text-muted\\">in <a href=\\"{{ category_permalink }}\\" title=\\"{{ category_name }}\\">{{ category_name }}</a> </small>    
-		</p>
-	</div>
-</div>',
-        'no_results' => '<div class=\\"col-12\\"><p>We cannot not find any matching posts, please check again later.</p></div>',
-      ],
-      'wp_query_args' => [
-        'post_type' => 'post',
-        'posts_per_page' => '3',
-        'limit' => '3',
-      ],
-      'args' => [
-        'length' => '200',
-        'handle' => 'medium',
-      ],
-    ],
-    'title' => [
-      'markup' => [
-        'template' => '<h1 class=\\"pb-2 col-12 the-title\\">{{ title }}</h1>',
+        'template' => '<img class=\\"col-12 fill lazy mt-2 mb-2\\" src=\\"\\" data-src=\\"{{ src }}\\" srcset=\\"{{ src_srcset }}\\" sizes=\\"{{ src_sizes }}\\" alt=\\"{{ src_alt }}\\" data-src-caption=\\"{{ src_caption }}\\" data-src-title=\\"{{ src_title }}\\" data-src-content=\\"{{ src_description }}\\">',
       ],
     ],
   ],
-  'ui' => [
+  'navigation' => [
     '_global' => [
       'config' => [
         'run' => '1',
-        'debug' => '1',
+        'debug' => '0',
       ],
     ],
-    'close' => [
-      'markup' => [
-        'template' => '	</div>
-</main>',
+    'menu' => [
+      'args' => [
+        'echo' => '1',
       ],
     ],
-    'footer' => [
+    'pagination' => [
       'markup' => [
-        'template' => '<footer>FOOTER</footer>',
+        'template' => '<li class=\\"{{ li_class }}{{ active-class }}\\">{{ item }}</li>',
+        'wrap' => '<div class=\\"row row justify-content-center mt-5 mb-5\\"><ul class=\\"pagination\\">{{ content }}</ul></div>',
       ],
-    ],
-    'header' => [
-      'markup' => [
-        'template' => '<header>HEADER</header>',
+      'args' => [
+        'end_size' => '0',
+        'mid_size' => '2',
       ],
-    ],
-    'open' => [
-      'config' => [
-        'run' => '1',
-        'debug' => '1',
-      ],
-      'markup' => [
-        'template' => '<main class=\\"container {{ classes }}\\">
-	<div class=\\"row\\">',
-        'wrap' => '<div>{{ content }}</div>',
+      'ui' => [
+        'prev_text' => '‹ Previous',
+        'next_text' => 'Next ›',
+        'first_text' => '« First',
+        'last_text' => 'Last &raquo',
+        'li_class' => 'page-item',
+        'class_link_item' => 'page-link',
+        'class_link_first' => 'd-none d-md-inline page-link page-first d-none d-md-block',
+        'class_link_last' => 'd-none d-md-inline page-link page-last d-none d-md-block',
       ],
     ],
   ],

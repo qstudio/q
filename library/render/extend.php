@@ -106,7 +106,7 @@ class extend extends \q\render {
 
 
 	/**
-	 * Prepare passed args ##
+	 * Get stored extension by context+task
 	 *
 	 */
 	public static function get( $context = null, $task = null ) {
@@ -124,8 +124,8 @@ class extend extends \q\render {
 		}
 
 		// check ##
-		// h::log( 'd:>Looking for extension: '.$context );
-		// h::log( self::$extend );
+		h::log( 'd:>Looking for extension: '.$context );
+		h::log( self::$extend );
 
 		// is_array ##
 		if (
@@ -176,6 +176,32 @@ class extend extends \q\render {
 
 		// nada
 		return false;
+
+	}
+
+
+
+
+	/**
+	 * Get all stored extensions
+	 *
+	 */
+	public static function get_all() {
+
+		// h::log( self::$extend );
+
+		// is_array ##
+		if (
+			! is_array( self::$extend )
+		){
+
+			h::log( 'e:>Error in stored $extend' );
+
+			return false;
+
+		}
+
+		return self::$extend;
 
 	}
 

@@ -1,10 +1,17 @@
 <?php
 
 // return an array ##
-return [
+return [ 'media' 				=> [
 
-	// image sizes ## @todo - add sizes and function to add via add_image_sizes in config ##
-	'media__src'						=> [ 
+'_global'						=> [
+
+	'config' 					=> [
+		'run' 					=> true,
+		'debug'					=> false,
+	],
+
+	// image sizes ##
+	'src'						=> [ 
 
 		// add srcset to src references ##
 		'srcset' 				=> false, 
@@ -27,55 +34,62 @@ return [
 		'scale'						=> 1, // scale sizes ##
 		'pixel'						=> 2, // double vision ##
 		'default'					=> 'horizontal-lg', // default handle ##
-
-		// shape handles ##
-		'handles'					=> [
-			'square' 				=> [
-				'sizes'				=> 'all', // create in all sizes 
-				'width'				=> 'equal', // height = width ##
-				'height'			=> 'equal', // height = width ##
-				'pixel'				=> true, // handle for pixel image ##
-				'crop'				=> true, // hard crop ##
-				'open'				=> false // no open sized format
-			],
-			'horizontal' 			=> [
-			 	'sizes'				=> 'all', // create in all sizes 
-			 	'width'				=> 'equal', // height = width \ ratio ##
-				'height'			=> 'divide', // height = width \ ratio ## 
-			 	'crop'				=> true, // hard crop ##
-				'open'				=> 'width', // open sized image with no fixed width
-				'pixel'				=> true, // handle for pixel image ##
-			],
-			'vertical' 			=> [
-			 	'sizes'				=> 'all', // create in all sizes 
-			 	'width'				=> 'equal', // height = width \ ratio ##
-				'height'			=> 'multiply', // height = width * ratio ## 
-			 	'crop'				=> true, // hard crop ##
-				'open'				=> 'height', // open sized image with no fixed width
-				'pixel'				=> true, // handle for pixel image ##
-			],
-		],
-
-		// image_size logic based on BS grid breakpoints ##
-		'sizes'			=> [
-			'xs'				=> 300,
-			'sm'				=> 576,
-			'md'				=> 720,
-			'lg'				=> 960,
-			'xl'				=> 1200, 
-		]
 	],
 
-	// post_thumbnail -- ready for lazy loading ##
-	'media__thumbnail' => [
-		'markup' => '<img class="col-12 fill lazy mt-2 mb-2" src="" data-src="{{ src }}" srcset="{{ src_srcset }}" sizes="{{ src_sizes }}" alt="{{ src_alt }}" data-src-caption="{{ src_caption }}" data-src-title="{{ src_title }}" data-src-content="{{ src_description }}">',
-		'config' => [ 'meta'	=> true ], // add meta data ##
-		'config' => [ 'srcset'	=> true ] // add srcset data ##
+	// image_size logic based on BS grid breakpoints ##
+	'src_sizes'			=> [
+		'xs'				=> 300,
+		'sm'				=> 576,
+		'md'				=> 720,
+		'lg'				=> 960,
+		'xl'				=> 1200, 
+	]
+],
+
+// shape handles ##
+'handles'					=> [
+	'square' 				=> [
+		'sizes'				=> 'all', // create in all sizes 
+		'width'				=> 'equal', // height = width ##
+		'height'			=> 'equal', // height = width ##
+		'pixel'				=> true, // handle for pixel image ##
+		'crop'				=> true, // hard crop ##
+		'open'				=> false // no open sized format
 	],
-
-
-	'media__avatar' => [
-		'markup' => '<div class="col-12"><img class="avatar" src="{{ src }}"/></div>'
+	'horizontal' 			=> [
+		'sizes'				=> 'all', // create in all sizes 
+		'width'				=> 'equal', // height = width \ ratio ##
+		'height'			=> 'divide', // height = width \ ratio ## 
+		'crop'				=> true, // hard crop ##
+		'open'				=> 'width', // open sized image with no fixed width
+		'pixel'				=> true, // handle for pixel image ##
 	],
+	'vertical' 			=> [
+		'sizes'				=> 'all', // create in all sizes 
+		'width'				=> 'equal', // height = width \ ratio ##
+		'height'			=> 'multiply', // height = width * ratio ## 
+		'crop'				=> true, // hard crop ##
+		'open'				=> 'height', // open sized image with no fixed width
+		'pixel'				=> true, // handle for pixel image ##
+	],
+],
 
-];
+// post_thumbnail -- ready for lazy loading ##
+'thumbnail' => [
+	'markup' => [
+		'template' => '<img class="col-12 fill lazy mt-2 mb-2" src="" data-src="{{ src }}" srcset="{{ src_srcset }}" sizes="{{ src_sizes }}" alt="{{ src_alt }}" data-src-caption="{{ src_caption }}" data-src-title="{{ src_title }}" data-src-content="{{ src_description }}">'
+	],
+	// 'config' => [ 
+		// 'meta'		=> true, // add meta data ##
+		// 'srcset'	=> true // add srcset data ##
+	// ]
+],
+
+
+'avatar' => [
+	'markup' => [
+		'template' => '<div class="col-12"><img class="avatar" src="{{ src }}"/></div>'
+	]
+]
+
+] ];

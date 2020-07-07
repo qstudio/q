@@ -29,7 +29,7 @@ class option extends render\config {
     {
 
 		// only on admin ##
-		if ( ! is_admin() ){ return false; }
+		if ( ! \is_admin() ){ return false; }
 
         // add acf options page ##
         self::acf_add_options_page();
@@ -38,10 +38,10 @@ class option extends render\config {
         \add_action( 'acf/init', function() { plugin\acf::add_field_groups( self::add_field_groups() ); }, 1 );
 
 		// collapse repeaters ##
-		\add_action( 'acf/input/admin_head', [ get_class(), 'acf_repeater_collapse' ] );
+		// \add_action( 'acf/input/admin_head', [ get_class(), 'acf_repeater_collapse' ] );
 
 		// add data reset meta box ##
-		\add_action( 'acf/input/admin_head', [ get_class(), 'add_meta_box' ], 10 );
+		// \add_action( 'acf/input/admin_head', [ get_class(), 'add_meta_box' ], 10 );
 
 	}
 	
@@ -100,6 +100,7 @@ class option extends render\config {
 	}
 
 
+
 	public static function acf_add_options_page()
     {
 
@@ -141,7 +142,7 @@ class option extends render\config {
             array(
 				'key' => 'group_'.$option,
 				'title' => 'Context Settings for Willow Template Engine',
-				'fields' => self::fields( $option ), 
+				'fields' => self::fields_one( $option ), 
 				'location' => array(
 					array(
 						array(
@@ -169,7 +170,7 @@ class option extends render\config {
     }
 
 
-	public static function filter_load_value( $value, $post_id, $field ) {
+	public static function filter_load_value_one( $value, $post_id, $field ) {
 
 		// h::log( $value );
 
@@ -181,7 +182,7 @@ class option extends render\config {
 			&& is_array( $value )
 		){
 
-			h::log( 'd:>value already set, so return db value for: '.$field );
+			// h::log( 'd:>value already set, so return db value for: '.$field );
 
 			return $value;
 
@@ -202,7 +203,7 @@ class option extends render\config {
 		// h::log( $field_explode );
 
 		// load config value ##
-		$array = get::value( $field_explode[0], $field_explode[1] );
+		$array = get::value_one( $field_explode[0], $field_explode[1] );
 		// h::log( $value );
 
 		// last validate ##
@@ -220,7 +221,7 @@ class option extends render\config {
 
 
 
-	public static function fields( $option = null ){
+	public static function fields_one( $option = null ){
 
 		// @todo - sanity ##
 		if(
@@ -258,12 +259,15 @@ class option extends render\config {
 			// loop over tasks in context ##
 			foreach( get::task( $context ) as $task => $value ) {
 
+				// h::log( 'task: '.$task );
+				// h::log( 'value: '.$value );
+
 				// filter repeater values ##
-				add_filter('acf/load_value/name=q_config_'.$context.'__'.$value, [ get_class(), 'filter_load_value' ], 10, 3 );
+				add_filter('acf/load_value/name=q_config_'.$context.'__'.$value, [ get_class(), 'filter_load_value_one' ], 10, 3 );
 
 				$array[] = array(
 					'key' => 'field_'.$option.'_'.$context.'__'.$value,
-					'label' => ucwords( $value ) .' ( <a href="#'.$context.'__'.$value.'">Help</a> )',
+					'label' => strtoupper( $value ) .' ( <a href="#'.$context.'__'.$value.'">Help</a> )',
 					'name' => $option.'_'.$context.'__'.$value,
 					'type' => 'repeater',
 					'instructions' => '',
@@ -277,8 +281,8 @@ class option extends render\config {
 					'collapsed' => 'field_key',
 					'min' => 0,
 					'max' => 0,
-					'layout' => 'row',
-					'button_label' => 'Add Property',
+					'layout' => 'table',
+					'button_label' => 'Add '.ucwords($value) .' Property',
 					'sub_fields' => array(
 						array(
 							'key' => 'field_key',
@@ -291,7 +295,7 @@ class option extends render\config {
 							'placeholder' => 'Task Name',
 							'conditional_logic' => 0,
 							'wrapper' => array(
-								'width' => '',
+								'width' => '10',
 								'class' => '',
 								'id' => '',
 							),
@@ -306,7 +310,7 @@ class option extends render\config {
 							'required' => 1,
 							'conditional_logic' => 0,
 							'wrapper' => array(
-								'width' => '',
+								'width' => '90',
 								'class' => '',
 								'id' => '',
 							),
@@ -314,7 +318,7 @@ class option extends render\config {
 							'min' => 0,
 							'max' => 0,
 							'layout' => 'row',
-							'button_label' => 'Add Sub Property',
+							'button_label' => 'Add Value Property',
 							'sub_fields' => array(
 								array(
 									'key' => 'field_sub_key',
@@ -335,7 +339,7 @@ class option extends render\config {
 								),
 								array(
 									'key' => 'field_sub_type',
-									'label' => 'Property Type',
+									'label' => 'Type',
 									'name' => 'sub_type',
 									'type' => 'select',
 									'instructions' => '',
@@ -351,7 +355,7 @@ class option extends render\config {
 										'text' => 'Text',
 										'boolean' => 'Boolean',
 									),
-									'default_value' => 'code',
+									'default_value' => 'text',
 									'allow_null' => 0,
 									'multiple' => 0,
 									'ui' => 0,
@@ -447,6 +451,191 @@ class option extends render\config {
 				);
 
 			}
+
+			$array[] = array(
+				'key' => 'field_'.$option.'_'.$context.'__NEW_TASK',
+				'label' => 'NEW TASK',
+				'name' => $option.'_'.$context.'__NEW_TASK',
+				'type' => 'repeater',
+				'instructions' => '',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'collapsed' => 'field_key',
+				'min' => 0,
+				'max' => 0,
+				'layout' => 'table',
+				'button_label' => 'Add NEW TASK Property',
+				'sub_fields' => array(
+					array(
+						'key' => 'field_key',
+						'label' => 'Key',
+						'name' => 'key',
+						'type' => 'text',
+						'default_value'	=> '',
+						'instructions' => '',
+						'required' => 1,
+						'placeholder' => 'Task Name',
+						'conditional_logic' => 0,
+						'wrapper' => array(
+							'width' => '10',
+							'class' => '',
+							'id' => '',
+						),
+						'return_format' => 'value',
+					),
+					array(
+						'key' => 'field_value',
+						'label' => 'Values',
+						'name' => 'field_value',
+						'type' => 'repeater',
+						'instructions' => '',
+						'required' => 1,
+						'conditional_logic' => 0,
+						'wrapper' => array(
+							'width' => '90',
+							'class' => '',
+							'id' => '',
+						),
+						'collapsed' => 'field_sub_key',
+						'min' => 0,
+						'max' => 0,
+						'layout' => 'row',
+						'button_label' => 'Add Value Property',
+						'sub_fields' => array(
+							array(
+								'key' => 'field_sub_key',
+								'label' => 'Key',
+								'name' => 'sub_key',
+								'type' => 'text',
+								'default_value'	=> '',
+								'instructions' => '',
+								'required' => 1,
+								'placeholder'	=> 'Task Key',
+								'conditional_logic' => 0,
+								'wrapper' => array(
+									'width' => '',
+									'class' => '',
+									'id' => '',
+								),
+								'return_format' => 'value',
+							),
+							array(
+								'key' => 'field_sub_type',
+								'label' => 'Type',
+								'name' => 'sub_type',
+								'type' => 'select',
+								'instructions' => '',
+								'required' => 1,
+								'conditional_logic' => 0,
+								'wrapper' => array(
+									'width' => '',
+									'class' => '',
+									'id' => '',
+								),
+								'choices' => array(
+									'code' => 'Markup',
+									'text' => 'Text',
+									'boolean' => 'Boolean',
+								),
+								'default_value' => 'code',
+								'allow_null' => 0,
+								'multiple' => 0,
+								'ui' => 0,
+								'return_format' => 'value',
+								'ajax' => 0,
+								'placeholder' => '',
+							),
+							array(
+								'key' => 'field_sub_value_text',
+								'label' => 'Value',
+								'name' => 'sub_value_text',
+								'type' => 'text',
+								'default_value'	=> '',
+								'instructions' => '',
+								'required' => 1,
+								'placeholder'	=> 'Sub Task Value',
+								'conditional_logic' => array(
+									array(
+										array(
+											'field' => 'field_sub_type',
+											'operator' => '==',
+											'value' => 'text',
+										),
+									),
+								),
+								'wrapper' => array(
+									'width' => '',
+									'class' => '',
+									'id' => '',
+								),
+								'return_format' => 'value',
+							),
+							array(
+								'key' => 'field_sub_value_boolean',
+								'label' => 'Value',
+								'name' => 'sub_value_boolean',
+								'type' => 'true_false',
+								'instructions' => '',
+								'required' => 0,
+								'conditional_logic' => array(
+									array(
+										array(
+											'field' => 'field_sub_type',
+											'operator' => '==',
+											'value' => 'boolean',
+										),
+									),
+								),
+								'wrapper' => array(
+									'width' => '',
+									'class' => '',
+									'id' => '',
+								),
+								'message' => 'Set Configuration',
+								'default_value' => 1,
+								'ui' => 1,
+								'ui_on_text' => 'True',
+								'ui_off_text' => 'False',
+							),
+							array(
+								'key' => 'field_sub_value_code',
+								'label' => 'Value',
+								'name' => 'sub_value_code',
+								'type' => 'acf_code_field',
+								'instructions' => '',
+								'required' => 1,
+								// 'conditional_logic' => 0,
+								'conditional_logic' => array(
+									array(
+										array(
+											'field' => 'field_sub_type',
+											'operator' => '==',
+											'value' => 'code',
+										),
+									),
+								),
+								'wrapper' => array(
+									'width' => '',
+									'class' => '',
+									'id' => '',
+								),
+								'default_value' => '',
+								'placeholder' => 'Sub Task Value',
+								'mode' => 'htmlmixed',
+								'theme' => 'monokai',
+								'return_format' => 'value',
+							),
+						)
+
+					)
+				)
+
+			);
 
 		}
 
