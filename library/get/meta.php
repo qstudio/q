@@ -136,7 +136,7 @@ class meta extends \q\get {
 
 		// comments ##
 		if ( 
-			core\config::get([ 'context' => 'global', 'task' => 'allow_comments' ])
+			core\config::get([ 'context' => 'global', 'task' => 'config', 'property' => 'allow_comments' ])
 			&& 
 			'open' == $post->comment_status 
 		) {

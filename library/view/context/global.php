@@ -22,27 +22,6 @@ return [ 'global' 		=> [
 
 	],
 
-	
-
-	// // acf field groups ##
-	// 'group'  			=> [
-	// 	'config' 				=> [ 'run' => true ],
-	// 	// 'filter' => [ 'src' => true ] // add srcsets ##
-	// ],
-
-	// // single field ##
-	// 'field'  			=> [
-	// 	'config' 				=> [ 'run' => true ],
-	// 	// 'markup' 				=> '<span class="the-field the-field-%field%">%value%</span>',
-	// ],
-
-	// // UI controls 
-	// 'ui'  			=> [
-	// 	'config' 				=> [ 'run' => true ],
-	// 	// 'markup' 				=> '<span class="the-field the-field-%field%">%value%</span>',
-	// ],
-
-
 	/*
 	// search results ##
 	'search__query'  => [

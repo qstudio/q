@@ -534,7 +534,7 @@ class post extends \q\get {
 			\get_the_date( 
 				isset( $args['config']['date_format'] ) ? 
 				$args['date_format']['config'] : // take from value passed by caller ##
-					core\config::get([ 'context' => 'global', 'task' => 'date_format' ]) ?: // take from global config ##
+					core\config::get([ 'context' => 'global', 'task' => 'config', 'property' => 'date_format' ]) ?: // take from global config ##
 					\apply_filters( 'q/format/date', 'F j, Y' ), // standard ##
 				$args['config']['post']->ID
 			);

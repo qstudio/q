@@ -18,6 +18,7 @@ class functions extends \q\render {
     public static function prepare( $args = null ){
 
 		// h::log( $args['key'] );
+		h::log( 't:>TODO -- arguments and parameters passed from willow tags...' );
 
 		// sanity -- this requires ##
 		if ( 
@@ -274,7 +275,7 @@ class functions extends \q\render {
 					}
 
 					// function correction ##
-					if( 'render' == $class ) $class = '\\q\\'.$class;
+					if( 'w' == $class ) $class = '\\q\\render';
 
 					if ( 
 						! class_exists( $class )

@@ -251,8 +251,8 @@ class config extends \Q {
 
 		// config file extension ##
 		$extensions = \apply_filters( 'q/config/load/ext', [ 
+			'.willow',
 			'.php', 
-			// '.willow' 
 		] );
 
 		// config file path ( h::get will do fallback checks form child theme, parent theme, plugin + Q.. )
@@ -272,80 +272,71 @@ class config extends \Q {
 		// h::log( 'd:>looking for source: '.$source );
 
 		// loop over options ##
-		foreach( $array as $k => $v ){
+		foreach( $extensions as $ext ) {
+			foreach( $array as $k => $v ){
 
-			switch( $source ){
+				switch( $source ){
 
-				// child context lookup ##
-				case "child" :
+					// child context lookup ##
+					case "child" :
 
-					// check for theme method ##
-					if ( ! method_exists( 'q_theme', 'get_child_theme_path' ) ){ break; }
-					foreach( $extensions as $ext ) {
-						
+						// check for theme method ##
+						if ( ! method_exists( 'q_theme', 'get_child_theme_path' ) ){ break; }
 						$file = \q_theme::get_child_theme_path( '/library/'.$path.$source.'/'.$v.$ext );
-					
-					}
-					// h::log( 'd:>child->looking up file: '.$file );
+						// h::log( 'd:>child->looking up file: '.$file );
 
-				break  ;
+					break  ;
 
-				// parent lookup ## 
-				case "parent" :
+					// parent lookup ## 
+					case "parent" :
 
-					// check for theme method ##
-					if ( ! method_exists( 'q_theme', 'get_parent_theme_path' ) ){ break; }
-					foreach( $extensions as $ext ) {
-
+						// check for theme method ##
+						if ( ! method_exists( 'q_theme', 'get_parent_theme_path' ) ){ break; }
 						$file = \q_theme::get_parent_theme_path( '/library/'.$path.$source.'/'.$v.$ext );
+						// h::log( 'd:>parent->looking up file: '.$file );
 
-					}
-					// h::log( 'd:>parent->looking up file: '.$file );
+					break  ;
 
-				break  ;
+					// global lookup, so context/XX.php
+					default :
 
-				// global lookup, so context/XX.php
-				default :
-
-					foreach( $extensions as $ext ) {
-						
 						$file = h::get( $path.$v.$ext, 'return', 'path' );
 						// h::log( 'd:>global->looking up file: '.$file );
 
-					}
-
-				break ;
-
-			}
-
-			if ( 
-				$file
-				&& file_exists( $file ) // OR is_file ??
-				&& is_file( $file )
-			){
-
-				// skip file, if loaded already ##
-				if ( in_array( $file, self::$cache_files ) ) {
-
-					// h::log( 'd:>File: '.$file.' already loaded' );
-
-					continue;
+					break ;
 
 				}
 
-				// build cache key ##
-				$cache_key = 
-					! is_null( $source ) ? 
-					$k.'_'.$source.'_'.core\method::file_extension( $file ) : 
-					$k.'_'.core\method::file_extension( $file ) ;
+				if ( 
+					$file
+					&& file_exists( $file ) // OR is_file ??
+					&& is_file( $file )
+				){
 
-				// h::log( 'd:>Loading config file: '.$file.' cache key: '.$cache_key );
+					// skip file, if loaded already ##
+					if ( in_array( $file, self::$cache_files ) ) {
 
-				// send file to config loader ##
-				core\config::load( $file, $cache_key );
+						// h::log( 'd:>File: '.$file.' already loaded' );
 
-				// save file to cache ##
-				self::$cache_files[] = $file;
+						continue;
+
+					}
+
+					// build cache key ##
+					$cache_key = 
+						! is_null( $source ) ? 
+						$k.'_'.$source.'_'.core\method::file_extension( $file ) : 
+						$k.'_'.core\method::file_extension( $file ) ;
+
+					// h::log( 'd:>Loading config file: '.$file.' cache key: '.$cache_key );
+
+					// send file to config loader ##
+					core\config::load( $file, $cache_key );
+
+					// save file to cache ##
+					self::$cache_files[] = $file;
+
+				}
 
 			}
 
@@ -367,6 +358,27 @@ class config extends \Q {
 		// without $context or $task, we can't get anything specific, so just run main filter ##
 		// \apply_filters( 'q/config/get/all', self::$config, isset( $args['field'] ) ?: $args['field'] );
 
+		// shortcut.. allow for string passing, risky.. ##
+		if(
+			is_string( $args )
+		){
+
+			// @todo ##
+			if ( true === strpos( $args, '__' ) ){
+
+				$explode = explode( '__', $args );
+
+				// make an array ##
+				$args = [];
+				if ( isset( $explode[0] ) ) $args['context'] = $explode[0];
+				if ( isset( $explode[1] ) ) $args['task'] = $explode[1];
+				if ( isset( $explode[2] ) ) $args['property'] = $explode[2];
+
+			}
+
+		}
+
+		// capture passed args ##
 		self::$args = $args; // capture args ##
 
 		// sanity ##
@@ -404,14 +416,26 @@ class config extends \Q {
 			|| ! isset( self::$config[ $args['context'] ][ $args['task'] ] ) 
 		){
 	
-			h::log( 'd:>config not available : "'.$property.'"' );
+			// h::log( 'd:>config not available : "'.$property.'"' );
 
 			// continue;
 
 		} else {
 
-			// get property value ##
-			$return = self::$config[ $args['context'] ][ $args['task'] ];
+			// return single property ##
+			if ( 
+				isset( $args['property'] ) 
+				&& isset( self::$config[ $args['context'] ][ $args['task'] ][ $args['property'] ] )
+			){
+
+				$return = self::$config[ $args['context'] ][ $args['task'] ][ $args['property'] ];
+
+			} else {
+
+				// get property value ##
+				$return = self::$config[ $args['context'] ][ $args['task'] ];
+
+			}
 
 			// filter single property values -- too slow ??
 			// $return = \apply_filters( 'q/config/get/'.$args['context'].'/'.$args['task'], $return );
@@ -515,12 +539,26 @@ class config extends \Q {
 				// key ##
 				$file_key = basename( $file, ".willow" );
 
+				// check format ##
+				if( false === strpos( $file_key, '__' ) ){
+
+					h::log( 'e:>Error, file name not correclty formatted: '.$file );
+
+					return $return; #self::$config;
+
+				}
+
+				// we need to break file_key into parts ##
+				$explode = explode( '__', $file_key) ;
+				$context = $explode[0];
+				$task = $explode[1];
+
 				$contents = file_get_contents( $file );
 
-				h::log( '$key: '.$file_key );
-				h::log( $contents );
+				// h::log( '$context: '.$context.' task: '.$task );
+				// h::log( $contents );
 
-				$array[ $file_key ]['markup'] = $contents;
+				$array[ $context ][ $task ]['markup'] = $contents;
 
 				// return $return;
 
