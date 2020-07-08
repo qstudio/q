@@ -9,7 +9,7 @@ return [ 'partial' => [
 		'run' 			=> true,
 		
 		// context->task debugging ##
-		'debug'			=> false,
+		'debug'			=> true,
 
 	],
 

@@ -30,7 +30,7 @@ class taxonomy extends \q\get {
 
 		// try and get terms ##
 		if ( 
-			! $terms = \get_terms( $args['args'] )
+			! $terms = \get_terms( $args['query_args'] )
 		){
 	
 			h::log( 'd:>No terms found for taxonomy: '.$args['args']->taxonomy );

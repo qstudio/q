@@ -91,21 +91,24 @@ class markup extends \q\render {
         // check for any left over variables - remove them ##
         if ( 
 			// $placeholders = placeholder::get( $string ) 
-			$variables = render\variable::get( $string ) 
+			$variables = render\tag::get( $string, 'variable' ) 
         ) {
 
 			// log ##
 			h::log( self::$args['task'].'~>n:>"'.count( $variables ) .'" variables found in formatted string - these will be removed');
 
-            // h::log( $variables );
+			// h::log( $variables );
+			
+			h::log( 't:>moved from loop removal to regex model, make sure this does not cause other problems ##');
+			render\variable::cleanup();
 
             // remove any leftover variables in string ##
-            foreach( $variables as $key => $value ) {
+            // foreach( $variables as $key => $value ) {
             
 				// $string = placeholder::remove( $value, $string );
-				$string = render\variable::remove( $value, $string );
+				// $string = render\tag::remove( $value, $string, 'variable' );
             
-            }
+            // }
 
         }
 
@@ -302,7 +305,7 @@ class markup extends \q\render {
 		){
 
 			// default -- almost useless - but works for single values.. ##
-			$markup = tag::wrap([ 'open' => 'var_o', 'value' => 'value', 'close' => 'var_c' ]);
+			$markup = render\tags::wrap([ 'open' => 'var_o', 'value' => 'value', 'close' => 'var_c' ]);
 
 			// filter ##
 			$markup = \apply_filters( 'q/render/markup/default', $markup );
@@ -378,7 +381,7 @@ class markup extends \q\render {
 		// 	// example: markup->wrap = '<h2 class="mt-5">{{ content }}</h2>' ##
 		// 	$value = str_replace( 
 		// 		// '{{ content }}', 
-		// 		tag::wrap([ 'open' => 'var_o', 'value' => 'content', 'close' => 'var_c' ]), 
+		// 		render\tags::wrap([ 'open' => 'var_o', 'value' => 'content', 'close' => 'var_c' ]), 
 		// 		$value, 
 		// 		$markup 
 		// 	);
@@ -396,8 +399,8 @@ class markup extends \q\render {
         ]); 
 
 		// variable replacement -- regex way ##
-		$open = trim( tag::g( 'var_o' ) );
-		$close = trim( tag::g( 'var_c' ) );
+		$open = trim( tags::g( 'var_o' ) );
+		$close = trim( tags::g( 'var_c' ) );
 
 		// h::log( 'open: '.$open );
 		// "~\\$open\s+(.*?)\s+\\$close~" // note:: added "+" for multiple whitespaces.. not sure it's good yet...
@@ -475,7 +478,7 @@ class markup extends \q\render {
 			// example: markup->wrap = '<h2 class="mt-5">{{ content }}</h2>' ##
 			$string = str_replace( 
 				// '{{ content }}', 
-				tag::wrap([ 'open' => 'var_o', 'value' => 'content', 'close' => 'var_c' ]), 
+				render\tags::wrap([ 'open' => 'var_o', 'value' => 'content', 'close' => 'var_c' ]), 
 				$string, 
 				$markup 
 			);
@@ -554,10 +557,10 @@ class markup extends \q\render {
 
         // get target variable ##
 		// $placeholder = '{{ '.$field.' }}';
-		$variable = tag::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
+		$variable = render\tags::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
         if ( 
 			// ! placeholder::exists( $placeholder )
-			! render\variable::exists( $variable )
+			! render\tag::exists( $variable )
         ) {
 
 			// log ##
@@ -573,7 +576,7 @@ class markup extends \q\render {
         // get all variables from markup->$field ##
         if ( 
 			// ! $placeholders = placeholder::get( self::$markup[$field] ) 
-			! $variables = render\variable::get( self::$markup[$field] ) 
+			! $variables = render\tag::get( self::$markup[$field], 'variable' ) 
         ) {
 
 			// log ##
@@ -591,18 +594,18 @@ class markup extends \q\render {
         foreach( $variables as $key => $value ) {
 
 			// h::log( 'Working variable: '.$value );
-			// h::log( 'variable_open: '.tag::g( 'var_o' ) );
+			// h::log( 'variable_open: '.tags::g( 'var_o' ) );
 
 			// var open and close, with and without whitespace ##
 			$array_replace = [
-				tag::g( 'var_o' ),
-				trim( tag::g( 'var_o' ) ),
-				tag::g( 'var_c' ),
-				trim( tag::g( 'var_c' ) )
+				tags::g( 'var_o' ),
+				trim( tags::g( 'var_o' ) ),
+				tags::g( 'var_c' ),
+				trim( tags::g( 'var_c' ) )
 			];
 			// new variable ##
 			// h::log( 't:>todo.. make this new field name more reliable' );
-			$new = tag::g( 'var_o' ).trim($field).'__'.trim($count).'__'.trim( str_replace( $array_replace, '', trim($value) ) ).tag::g( 'var_c' );
+			$new = tags::g( 'var_o' ).trim($field).'__'.trim($count).'__'.trim( str_replace( $array_replace, '', trim($value) ) ).tags::g( 'var_c' );
 
 			// single whitespace max ## @might be needed ##
 			// $new = preg_replace( '!\s+!', ' ', $new );	

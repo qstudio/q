@@ -7,203 +7,176 @@ use q\core\helper as h;
 use q\ui;
 use q\render;
 
-class argument extends \q\render {
+class arguments extends \q\render {
 
 
-	/**
-	 * Scan for arguments in variables and convert to $config->data
-	 * 
-	 * @since 4.1.0
+	
+	/*
+	Decode arguments passed in string
+
+	Requirements: 
+
+	[[ new = test & config = debug:true, run:true ]]
+	[[ config->debug = true & config->handle = sm:medium, lg:large ]]
 	*/
-	public static function prepare( $args = null ){
+	public static function decode( $args = null ){
 
-		// sanity -- this requires ##
+		// @todo - sanity ##
+		if(
+			is_null( $args )
+			|| ! is_array( $args )
+			|| ! isset( $args['string'] )
+			|| ! isset( $args['field'] )
+			|| ! isset( $args['variable'] )
+			|| ! isset( $args['tag'] )
+		){
+
+			h::log( 'e:>Error in passed arguments' );
+
+			return false;
+
+		}
+		
+		// assign variables ##
+		$string = $args['string'];
+		$field = $args['field'];
+		$variable = $args['variable'];
+		$tag = $args['tag'];
+
+		// clean up string -- remove all white space ##
+		// $string = trim( $string );
+		$string = str_replace(' ', '', $string);
+		// h::log( 'd:> '.$string );
+
+		// check for ":"
+		if( false === strpos( $string, '=' ) ){
+
+			h::log( 'e:>Error in passed string format, missing "="' );
+
+			return false;
+
+		}
+
+		$array = render\method::parse_str( $string );
+
+		// h::log( $array );
+
+		return false;
+
+		// // check for ":"
+		// if( false === strpos( $string, '&' ) ){
+
+		// 	h::log( 'e:>Error in passed string format, missing ";"' );
+
+		// 	return false;
+
+		// }
+
+		// h::log( 'd:>'.$string );
+		// format should be key:value; key: value; key : value ;-- white space agnostic ##
+		$explode = explode( ';', $string );
+		
+		// validate ##
 		if ( 
-			! isset( self::$markup )
-			|| ! is_array( self::$markup )
-			|| ! isset( self::$markup['template'] )
+			! isset( $explode[0] )
+			|| ! isset( $explode[1] )
 		){
 
-			h::log( 'e:>Error in stored $markup' );
+			h::log( 'e:>Error in passed string format, missing ":"' );
 
 			return false;
 
 		}
 
-		// h::log( $args['key'] );
+		// trim again ##
+		$explode = array_map( 'trim', $explode );
 
-		// get markup ##
-		$string = self::$markup['template'];
+		/*
+		' handle: square-sm; '
+		*/
+		$array = [];
+		// h::log( $explode );
 
-		// sanity ##
-		if (  
-			! $string
-			|| is_null( $string )
-			// || ! isset( $args['key'] )
-			// || ! isset( $args['value'] )
-			// || ! isset( $args['string'] )
-		){
+		// make simple key->value array ##
+		$array_base = [];
+		$array_base[ $explode[0] ] = $explode[1];
 
-			h::log( self::$args['task'].'~>e:>Error in $markup' );
+		// REALLY UGLY ### to improve tomorrow ##
+		foreach( $array_base as $key => $value ){
 
-			return false;
+			// check if key is an array "->" ##
+			if( false !== strpos( $key, '->' ) ) {
 
-		}
+				$key_array = explode( '->', $key );
+				$array[ $key_array[0] ][ $key_array[1] ] = $value;
 
-		// h::log('d:>'.$string);
+			} else {
 
-		// get all variable variables from markup string ##
-        if ( 
-            ! $variables = render\variable::get( $string, 'variable' ) 
-        ) {
-
-			// h::log( self::$args['task'].'~>d:>No variables found in $markup');
-			// h::log( 'd:>No variables found in $markup: '.self::$args['task']);
-
-			return false;
-
-		}
-
-		// log ##
-		h::log( self::$args['task'].'~>d:>"'.count( $variables ) .'" variables found in string');
-		// h::log( 'd:>"'.count( $variables ) .'" variables found in string');
-
-		// remove any leftover variables in string ##
-		foreach( $variables as $key => $value ) {
-
-			// h::log( self::$args['task'].'~>d:>'.$value );
-
-			// now, we need to look for the config pattern, defined as field(setting:value;) and try to handle any data found ##
-			// $regex_find = \apply_filters( 'q/render/markup/config/regex/find', '/[[(.*?)]]/s' );
-			
-			// if ( 
-			// 	preg_match( $regex_find, $value, $matches ) 
-			// ){
-
-			if ( 
-				// $config_string = method::string_between( $value, '[[', ']]' )
-				$config_string = method::string_between( $value, trim( tag::g( 'arg_o' )), trim( tag::g( 'arg_c' )) )
-			){
-
-				// store variable ##
-				$variable = $value;
-
-				// $config_string = json_encode( $config_string );
-				// h::log( $config_string );
-
-				// // grab config JSON ##
-				// $config_string = '{ "handle":{ "all":"square-sm", "lg":"vertical-lg" }, "string": "value" }';
-				$config_object = json_decode( $config_string );
-				// $config_object = isset( $config_json[0] ) ? $config_json[0] : false ;
-
-				// h::log( 'd:>config: '.$config_string );
-				// h::log( $config_json );
-				// h::log( $config_object );
-
-				// sanity ##
-				if ( 
-					! $config_string
-					|| ! is_object( $config_object )
-					// || ! isset( $matches[0] ) 
-					// || ! $matches[0]
-				){
-
-					h::log( self::$args['task'].'~>e:>No config in variable: '.$variable ); // @todo -- add "loose" lookups, for white space '@s
-					// h::log( 'd:>No config in variable: '.$variable ); // @todo -- add "loose" lookups, for white space '@s''
-
-					continue;
-
-				}
-
-				// h::log( $matches[0] );
-
-				// get field ##
-				// h::log( 'value: '.$value );
-				
-				// $field = trim( method::string_between( $value, '{{ ', '[[' ) );
-				$field = str_replace( $config_string, '', $value );
-
-				// clean up field data ##
-				$field = preg_replace( "/[^A-Za-z0-9_]/", '', $field );
-
-				// h::log( 'field: '.$field );
-
-				// check if field is sub field i.e: "post__title" ##
-				if ( false !== strpos( $field, '__' ) ) {
-
-					$field_array = explode( '__', $field );
-
-					$field_name = $field_array[0]; // take first part ##
-					$field_type = $field_array[1]; // take second part ##
-
-				} else {
-
-					$field_name = $field; // take first part ##
-					$field_type = $field; // take second part ##
-
-				}
-
-				// we need field_name, so validate ##
-				if (
-					! $field_name
-					|| ! $field_type
-				){
-
-					h::log( self::$args['task'].'~>e:>Error extracting $field_name or $field_type from variable: '.$variable );
-
-					continue;
-
-				}
-
-				// matches[0] contains the whole string matched - for example "(handle:square;)" ##
-				// we can use this to work out the new_variable value
-				// $variable = $value;
-				// $new_variable = explode( '(', $variable )[0].' }}';
-				// $new_variable = '{{ '.$field.' }}';
-				$new_variable = tag::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
-
-				// test what we have ##
-				// h::log( "d:>variable: ".$value );
-				// h::log( "d:>new_variable: ".$new_variable);
-				// h::log( "d:>field_name: ".$field_name );
-				// h::log( "d:>field_type: ".$field_type );
-
-				foreach( $config_object as $k => $v ) {
-
-					// h::log( "d:>config_setting: ".$k );
-					// h::log( "d:>config_value: ".$v );
-
-					h::log( 't:> - add config handlers... based on field type ##');
-					// config::handle() ##
-					switch ( $field_type ) {
-
-						case "src" :
-							
-							// assign new $args[FIELDNAME]['src'] with value of config --
-							self::$args[$field_name]['config'][$k] = is_object( $v ) ? (array) $v : $v; // note, $v may be an array of values
-
-						break ;
-
-					}
-
-				}
-
-				// h::log( self::$args[$field_name] );
-
-				// now, edit the variable, to remove the config ##
-				render\variable::edit( $variable, $new_variable );
+				$array[ $key ] = $value;
 
 			}
-		
-        }
 
+		}
+
+		// return $array;
+
+		// h::log( $config_array );
+
+		// sanity ##
+		if ( 
+			// ! $config_string
+			! is_array( $array )
+			// || ! isset( $matches[0] ) 
+			// || ! $matches[0]
+		){
+
+			h::log( self::$args['task'].'~>e:>No config in variable: '.$variable ); // @todo -- add "loose" lookups, for white space '@s
+			h::log( 'd:>No config in variable: '.$variable ); // @todo -- add "loose" lookups, for white space '@s''
+
+			return false;
+
+		}
+
+		// What about affecting markup via config ?? 
+		// Check if config or markup key exists in $array ?? -- NOPE - because we might pass both in a single [[ xx ]]
+		// we need to build 2 seperate arrays, or split at this point
+		// LIKE ---> if ( array_key_exists( 'config', $array ) ) // make new args array ##
+		// LIKE ---> if ( array_key_exists( 'markup', $array ) ) // make new markup array ##
+
+		// merge in new args to args->field ##
+		self::$args[$field_name] = core\method::parse_args( self::$args[$field_name], $array );
+
+		/*
+		foreach( $array as $k => $v ) {
+
+			// h::log( "d:>config_setting: ".$k );
+			// h::log( "d:>config_value: ".$v );
+
+			h::log( 't:> - add config handlers... based on field type ##');
+			// config::handle() ##
+			switch ( $field_type ) {
+
+				case "src" :
+					
+					// assign new $args[FIELDNAME]['src'] with value of config --
+					self::$args[$field_name]['config'][$k] = is_array( $v ) ? (array) $v : $v; // note, $v may be an array of values
+
+				break ;
+
+			}
+
+		}
+		*/
+		
 	}
+
+
 
 
 	public static function cleanup(){
 
-		$open = trim( tag::g( 'arg_o' ) );
-		$close = trim( tag::g( 'arg_c' ) );
+		$open = trim( tags::g( 'arg_o' ) );
+		$close = trim( tags::g( 'arg_c' ) );
 
 		// h::log( self::$markup['template'] );
 

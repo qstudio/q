@@ -49,8 +49,8 @@ class comments extends \q\render {
 
 		// get all comments, add markup to $markup->$field ##
 		// note, we trim() white space off tags, as this is handled by the regex ##
-		$open = trim( tag::g( 'com_o' ) );
-		$close = trim( tag::g( 'com_c' ) );
+		$open = trim( tags::g( 'com_o' ) );
+		$close = trim( tags::g( 'com_c' ) );
 
 		// h::log( 'open: '.$open. ' - close: '.$close );
 
@@ -145,8 +145,8 @@ class comments extends \q\render {
 				h::log( 'd:>'.$comment );
 
 				// finally -- add a variable "{{ $field }}" before this comment block at $position to markup->template ##
-				$variable = tag::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
-				variable::set( $variable, $position, 'variable' ); // '{{ '.$field.' }}'
+				$variable = render\tags::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
+				render\tag::set( $variable, $position, 'variable' ); // '{{ '.$field.' }}'
 
 			}
 
@@ -157,8 +157,8 @@ class comments extends \q\render {
 
 	public static function cleanup(){
 
-		$open = trim( tag::g( 'com_o' ) );
-		$close = trim( tag::g( 'com_c' ) );
+		$open = trim( tags::g( 'com_o' ) );
+		$close = trim( tags::g( 'com_c' ) );
 
 		// strip all section blocks, we don't need them now ##
 		// $regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );

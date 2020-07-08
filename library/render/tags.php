@@ -8,7 +8,7 @@ use q\view;
 use q\get;
 use q\render;
 
-class tag extends \q\render {
+class tags extends \q\render {
 
 	// properties ##
 	protected static 
@@ -16,11 +16,11 @@ class tag extends \q\render {
 		// $tag_map = []
 	;
 
-	public static function __callStatic( $function, $args ){	
+	// public static function __callStatic( $function, $args ){	
 
-		self::g( $args );
+	// 	self::g( $args );
 
-	}
+	// }
 
 	private static function map( $tag = null ){
 
@@ -36,7 +36,7 @@ class tag extends \q\render {
 		}
 
 		// load tags ##
-		self::tags();
+		self::cache();
 
 		// check for class property ##
 		if (
@@ -83,9 +83,9 @@ class tag extends \q\render {
 
 
 
-	protected static function tags(){
+	protected static function cache(){
 
-		// check if we have already filtered tags ##
+		// check if we have already filtered load ##
 		if ( self::$filtered_tags ){
 
 			return self::$filtered_tags;
@@ -196,7 +196,7 @@ class tag extends \q\render {
 
 		// sanity ##
 		if (
-			! self::tags()
+			! self::cache()
 		){
 
 			h::log('e:>Error in stored $tags');
@@ -215,10 +215,10 @@ class tag extends \q\render {
 
 		}
 
-		// h::log( self::tags() );
+		// h::log( self::cache() );
 
 		// // get tags, with filter ##
-		// $tags = self::tags();
+		// $tags = self::cache();
 
 		// looking for long form ##
 		return self::$filtered_tags[ $args['tag'] ][ $args['method'] ] ;
@@ -258,7 +258,7 @@ class tag extends \q\render {
 		}
 
 		// get tags, with filter ##
-		$tags = self::tags();
+		$tags = self::cache();
 
 		// looking for long form ##
 		$return = 

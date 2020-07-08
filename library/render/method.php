@@ -839,4 +839,115 @@ class method extends \q\render {
 	}
 
 
+	/**
+	 * 
+	 * @link https://www.php.net/manual/en/function.parse-str.php
+	*/
+	public static function parse_str( $string = null ) {
+
+		# result array
+		$array = array();
+	  
+		# split on outer delimiter
+		$pairs = explode( '&', $string );
+	  
+		# loop through each pair
+		foreach ( $pairs as $i ) {
+
+			# split into name and value
+			list( $key, $value ) = explode( '=', $i, 2 );
+
+			// what about array values ##
+			// example -- sm:medium, lg:large
+			if( false !== strpos( $value, ':' ) ){
+
+				// temp array ##
+				$value_array = [];	
+
+				// split value into an array at "," ##
+				$value_pairs = explode( ',', str_replace( ' ', '', $value ) );
+
+				// h::log( $value_pairs );
+
+				# loop through each pair
+				foreach ( $value_pairs as $v_pair ) {
+
+					// h::log( $v_pair ); // 'sm:medium'
+
+					# split into name and value
+					list( $value_key, $value_value ) = explode( ':', $v_pair, 2 );
+
+					$value_array[ $value_key ] = $value_value;
+
+				}
+
+				// check if we have an array ##
+				if ( is_array( $value_array ) ){
+
+					$value = $value_array;
+
+				}
+
+			}
+		 
+			// $key might be in part__part format, so check ##
+			if( false !== strpos( $key, '->' ) ){
+
+				// explode, max 2 parts ##
+				$md_key = explode( '->', $key, 2 );
+
+				# if name already exists
+				if( isset( $array[ $md_key[0] ][ $md_key[1] ] ) ) {
+
+					# stick multiple values into an array
+					if( is_array( $array[ $md_key[0] ][ $md_key[1] ] ) ) {
+					
+						$array[ $md_key[0] ][ $md_key[1] ][] = $value;
+					
+					} else {
+					
+						$array[ $md_key[0] ][ $md_key[1] ] = array( $array[ $md_key[0] ][ $md_key[1] ], $value );
+					
+					}
+
+				# otherwise, simply stick it in a scalar
+				} else {
+
+					$array[ $md_key[0] ][ $md_key[1] ] = $value;
+
+				}
+
+			} else {
+
+				# if name already exists
+				if( isset($array[$key]) ) {
+
+					# stick multiple values into an array
+					if( is_array($array[$key]) ) {
+					
+						$array[$key][] = $value;
+					
+					} else {
+					
+						$array[$key] = array($array[$key], $value);
+					
+					}
+
+				# otherwise, simply stick it in a scalar
+				} else {
+
+					$array[$key] = $value;
+
+				}
+			  
+			}
+		}
+	  
+		# return result array
+		return $array;
+
+	  }
+	  
+
+
 }

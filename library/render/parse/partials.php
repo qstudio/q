@@ -9,6 +9,9 @@ use q\render;
 
 class partials extends \q\render {
 
+	// store ##
+	protected static $partials = [];
+
 	/**
 	 * Scan for partials in markup and convert to variables and $fields
 	 * 
@@ -68,10 +71,10 @@ class partials extends \q\render {
 
 		// get all sections, add markup to $markup->$field ##
 		// note, we trim() white space off tags, as this is handled by the regex ##
-		$open = trim( tag::g( 'par_o' ) );
-		$close = trim( tag::g( 'par_c' ) );
-		// $end = trim( tag::g( 'sec_e' ) );
-		// $end_preg = str_replace( '/', '\/', ( trim( tag::g( 'sec_e' ) ) ) );
+		$open = trim( tags::g( 'par_o' ) );
+		$close = trim( tags::g( 'par_c' ) );
+		// $end = trim( tags::g( 'sec_e' ) );
+		// $end_preg = str_replace( '/', '\/', ( trim( tags::g( 'sec_e' ) ) ) );
 		// $end = '{{\/#}}';
 
 		// h::log( 'open: '.$open. ' - close: '.$close );
@@ -141,6 +144,10 @@ class partials extends \q\render {
 				$partial = method::string_between( $matches[0][$match][0], $open, $close );
 				// $markup = method::string_between( $matches[0][$match][0], $close, $end );
 
+				// return entire partial string, including tags for tag swap ##
+				$partial_match = method::string_between( $matches[0][$match][0], $open, $close, true );
+				// h::log( '$function_match: '.$function_match );
+
 				// sanity ##
 				if ( 
 					! isset( $partial ) 
@@ -174,26 +181,24 @@ class partials extends \q\render {
 				){
 
 					h::log( self::$args['task'].'~>e:>Error in partial_data: "'.$partial.'"' );
+					h::log( 'e:>Error in partial_data: "'.$partial.'"' );
 
 					continue;
 
 				}
 
+				// h::log( $partial_data );
+
 				// data passed as a string, so format
 				if(
 					is_string( $partial_data )
-					// || ! is_array( $partial_data )
 				){
 
 					h::log( self::$args['task'].'~>d:>Partial: "'.$partial.'" only sent markup, so converting to array format' );
 
 					$partial_data = [
-						'markup'	=> [
-							'template' => $partial_data
-						]
+						'markup' => $partial_data
 					];
-
-					// continue;
 
 				}
 
@@ -211,6 +216,7 @@ class partials extends \q\render {
 				){
 
 					h::log( self::$args['task'].'~>n:>Partial "'.$partial.'" config->run defined as false, so stopping here...' );
+					h::log( 'd:>Partial "'.$partial.'" config->run defined as false, so stopping here...' );
 
 					continue;
 
@@ -218,33 +224,46 @@ class partials extends \q\render {
 
 				// hash ##
 				$hash = 'partial__'.$task;
+				// h::log( 'd:>partial hash: '.$hash );
 
-				// @todo -- currently only partials are handled... ##
-				switch( $context ) {
+				// // @todo -- currently only partials are handled... ##
+				// switch( $context ) {
 
-					case 'partial' :
+				// 	case 'partial' :
 
-						// so, we can add a new field value to $args array based on the field name - with the markup as value
-						render\fields::define([
-							// $function => render::{$function}()
-							$hash => $partial_data['markup']['template']
-						]);
+						// // so, we can add a new field value to $args array based on the field name - with the markup as value
+						// render\fields::define([
+						// 	// $function => render::{$function}()
+						// 	$hash => $partial_data['markup']
+						// ]);
 
-					break ;
+					// break ;
 
-					default :
+					// default :
 
-						h::log( self::$args['task'].'~>n:>Currently, only partial partials are supported... :)' );
+					// 	h::log( self::$args['task'].'~>n:>Currently, only partial partials are supported... :)' );
 
-					break ;
+					// break ;
 
-				}
+				// }
+
+				// store ##
+				self::$partials[$hash] = $partial_data['markup'];
 
 				// finally -- add a variable "{{ $field }}" before this partial block in markup->template ##
-				$variable = tag::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
-				variable::set( $variable, $position, 'variable' ); // '{{ '.$field.' }}'
+				$variable = render\tags::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
+				// variable::set( $variable, $position, 'variable' ); // '{{ '.$field.' }}'
+				render\tag::swap( $partial_match, $variable, 'partial', 'variable' ); // '{{ '.$field.' }}'
 
 			}
+
+			// h::log( self::$partials );
+
+			// so, we can add a new field value to $args array based on the field name - with the markup as value
+			render\fields::define( self::$partials );
+
+			// h::log( self::$fields );
+			// h::log( self::$markup['template'] );
 
 		}
 
@@ -254,8 +273,8 @@ class partials extends \q\render {
 
 	public static function cleanup(){
 
-		$open = trim( tag::g( 'par_o' ) );
-		$close = trim( tag::g( 'par_c' ) );
+		$open = trim( tags::g( 'par_o' ) );
+		$close = trim( tags::g( 'par_c' ) );
 
 		// strip all section blocks, we don't need them now ##
 		// $regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );

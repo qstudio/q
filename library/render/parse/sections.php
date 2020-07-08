@@ -49,10 +49,10 @@ class sections extends \q\render {
 
 		// get all sections, add markup to $markup->$field ##
 		// note, we trim() white space off tags, as this is handled by the regex ##
-		$open = trim( tag::g( 'sec_o' ) );
-		$close = trim( tag::g( 'sec_c' ) );
-		$end = trim( tag::g( 'sec_e' ) );
-		$end_preg = str_replace( '/', '\/', ( trim( tag::g( 'sec_e' ) ) ) );
+		$open = trim( tags::g( 'sec_o' ) );
+		$close = trim( tags::g( 'sec_c' ) );
+		$end = trim( tags::g( 'sec_e' ) );
+		$end_preg = str_replace( '/', '\/', ( trim( tags::g( 'sec_e' ) ) ) );
 		// $end = '{{\/#}}';
 
 		// h::log( 'open: '.$open. ' - close: '.$close. ' - end: '.$end );
@@ -154,8 +154,8 @@ class sections extends \q\render {
 				self::$markup[$hash] = $markup;
 
 				// finally -- add a variable "{{ $field }}" before this comment block at $position to markup->template ##
-				$variable = tag::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
-				variable::set( $variable, $position, 'variable' ); // '{{ '.$field.' }}'
+				$variable = render\tags::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
+				render\tag::set( $variable, $position, 'variable' ); // '{{ '.$field.' }}'
 
 			}
 
@@ -167,10 +167,10 @@ class sections extends \q\render {
 
 	public static function cleanup(){
 
-		$open = trim( tag::g( 'sec_o' ) );
-		// $close = trim( tag::g( 'sec_c' ) );
-		// $end = trim( tag::g( 'sec_e' ) );
-		$end_preg = str_replace( '/', '\/', ( trim( tag::g( 'sec_e' ) ) ) );
+		$open = trim( tags::g( 'sec_o' ) );
+		// $close = trim( tags::g( 'sec_c' ) );
+		// $end = trim( tags::g( 'sec_e' ) );
+		$end_preg = str_replace( '/', '\/', ( trim( tags::g( 'sec_e' ) ) ) );
 
 		// strip all section blocks, we don't need them now ##
 		// $regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );

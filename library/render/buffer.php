@@ -106,7 +106,7 @@ class buffer extends \q\render {
 		$args = [
 			'config'		=> [
 				'return' 	=> 'return',
-				'debug'		=> true
+				'debug'		=> false
 			],
 			'markup'		=> [
 				'template'	=> $string

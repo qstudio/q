@@ -65,7 +65,7 @@ class post extends \q\render {
 		render\fields::define([
 			'total' 		=> '0', // set to zero string value ##
 			'pagination' 	=> null, // empty field.. ##
-			'posts' 		=> self::$markup['no_results'] // replace posts with no_results markup ##
+			'results' 		=> self::$markup['empty'] // replace results with empty markup ##
 		]);
 
         // pass to get_posts -- and validate that we get an array back ##
@@ -111,7 +111,7 @@ class post extends \q\render {
 			self::$fields = [
 				'total' 		=> $array['query']->found_posts, // total posts ##
 				'pagination'	=> get\navigation::pagination( $args ), // get pagination, returns string ##
-				'posts'			=> $array['query']->posts // array of WP_Posts ##
+				'results'		=> $array['query']->posts // array of WP_Posts ##
 			];
 
 		}

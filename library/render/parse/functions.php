@@ -52,10 +52,10 @@ class functions extends \q\render {
 
 		// get all sections, add markup to $markup->$field ##
 		// note, we trim() white space off tags, as this is handled by the regex ##
-		$open = trim( tag::g( 'fun_o' ) );
-		$close = trim( tag::g( 'fun_c' ) );
-		// $end = trim( tag::g( 'sec_e' ) );
-		// $end_preg = str_replace( '/', '\/', ( trim( tag::g( 'sec_e' ) ) ) );
+		$open = trim( tags::g( 'fun_o' ) );
+		$close = trim( tags::g( 'fun_c' ) );
+		// $end = trim( tags::g( 'sec_e' ) );
+		// $end_preg = str_replace( '/', '\/', ( trim( tags::g( 'sec_e' ) ) ) );
 		// $end = '{{\/#}}';
 
 		// h::log( 'open: '.$open. ' - close: '.$close. ' - end: '.$end );
@@ -158,7 +158,7 @@ class functions extends \q\render {
 				
 				if ( 
 					// $config_string = method::string_between( $value, '[[', ']]' )
-					$config_string = method::string_between( $function, trim( tag::g( 'arg_o' )), trim( tag::g( 'arg_c' )) )
+					$config_string = method::string_between( $function, trim( tags::g( 'arg_o' )), trim( tags::g( 'arg_c' )) )
 				){
 	
 					// $config_string = json_encode( $config_string );
@@ -201,10 +201,10 @@ class functions extends \q\render {
 					// h::log( $matches[0] );
 	
 					// $field = trim( method::string_between( $value, '{{ ', '[[' ) );
-					// $function = str_replace( trim( tag::g( 'arg_o' )).$config_string.trim( tag::g( 'arg_c' )), '', $function );
+					// $function = str_replace( trim( tags::g( 'arg_o' )).$config_string.trim( tags::g( 'arg_c' )), '', $function );
 					// h::log( 'function: '.$function );
-					// $function = method::string_between( $function, trim( tag::g( 'fun_o' )), trim( tag::g( 'arg_o' )) );
-					$function_explode = explode( trim( tag::g( 'arg_o' )), $function );
+					// $function = method::string_between( $function, trim( tags::g( 'fun_o' )), trim( tags::g( 'arg_o' )) );
+					$function_explode = explode( trim( tags::g( 'arg_o' )), $function );
 					// h::log( $function_explode );
 					$function = $function_explode[0];
 					// $class = false;
@@ -230,6 +230,7 @@ class functions extends \q\render {
 		
 						}
 
+					// single arguments are always assigned as markup->template ##
 					} else {
 
 						// call_user_func_array requires an array, so casting here ##
@@ -248,6 +249,20 @@ class functions extends \q\render {
 				// $hash = 'function__'.preg_replace( "/[^A-Za-z0-9_]/", '', $function );
 				// $hash = 'function__'.\mt_rand();
 				// $hash = 'get_the_title';
+
+				// Q function correction ##
+				if( render\method::starts_with( $function, '~' ) ) {
+
+					// h::log( 'Function starts with ~: '.$function );
+
+					$function = str_replace( '~', '', $function );
+					
+					// format to q::function ##
+					$function = 'q::'.$function;
+
+					// h::log( 'Function now: '.$function );
+
+				}
 
 				// function might be passed in class::method format, let's check ##
 				if (
@@ -275,7 +290,7 @@ class functions extends \q\render {
 					}
 
 					// function correction ##
-					if( 'w' == $class ) $class = '\\q\\render';
+					if( 'q' == $class ) $class = '\\q\\render';
 
 					if ( 
 						! class_exists( $class )
@@ -369,9 +384,9 @@ class functions extends \q\render {
 				}
 
 				// finally -- add a variable "{{ $field }}" before this comment block at $position to markup->template ##
-				$variable = tag::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
+				$variable = render\tags::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
 				// variable::set( $variable, $position, 'variable' ); // '{{ '.$field.' }}'
-				variable::swap( $function_match, $variable ); // '{{ '.$field.' }}'
+				render\tag::swap( $function_match, $variable ); // '{{ '.$field.' }}'
 
 			}
 
@@ -391,8 +406,8 @@ class functions extends \q\render {
 
 	public static function cleanup(){
 
-		$open = trim( tag::g( 'fun_o' ) );
-		$close = trim( tag::g( 'fun_c' ) );
+		$open = trim( tags::g( 'fun_o' ) );
+		$close = trim( tags::g( 'fun_c' ) );
 
 		// strip all function blocks, we don't need them now ##
 		// // $regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );

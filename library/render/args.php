@@ -234,6 +234,9 @@ class args extends \q\render {
 		// assign class property ##
 		self::$args = $args;
 
+		// prepare markup, fields and handlers based on passed configuration ##
+		// render\parse::prepare( $args );
+
 		// pre-format markup ##
 		self::post_config();
 		

@@ -85,11 +85,11 @@ return [ 'post' => [
 			'template' 			=>
 									'<div class="pb-1 col-12 the-posts">
 										<div class="row"><h5 class="col-12 mt-2">{{ total }} Results Found.</h5></div>
-										<div class="row mt-3">{{ posts }}</div>
+										<div class="row mt-3">{{ results }}</div>
 										<div class="row"><div class="col-12">{{ pagination }}</div></div>
 									</div>',
 			// post template ##
-			'posts'				=> 
+			'results'				=> 
 									'<div class="card p-0 col-12 col-md-6 col-lg-4 mb-3">
 										<a href="{{ post_permalink }}" title="{{ post_title }}" class="mb-3">
 											<img class="lazy fit card-img-top" style="height: 200px;" data-src="{{ src }}" src="" />
@@ -108,8 +108,8 @@ return [ 'post' => [
 										</div>
 									</div>',
 			// no results ##
-			'no_results'		=> 
-									'<div class="col-12"><p>We cannot not find any matching posts, please check again later.</p></div>'
+			'empty'		=> 
+									'<div class="col-12"><p>We could not find any matching posts, please check again later.</p></div>'
 		], 
 
 		// config ##

@@ -8,7 +8,7 @@ return [ 'taxonomy' => [
 
 		// config ##
 		'config'				=> [ 
-			// 'run' 			=> true, 
+			'run' 				=> true, 
 			'debug' 			=> false, 
 		],
 		// 
@@ -27,7 +27,9 @@ return [ 'taxonomy' => [
 			 						{{/#}}	
 								',
 		],
-		'args' => [
+
+		// args ##
+		'query_args' => [
 			'taxonomy' 			=> 'category',
 			'hide_empty' 		=> true,
 			'parent'   			=> 0

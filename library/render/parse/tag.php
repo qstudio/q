@@ -7,172 +7,19 @@ use q\core\helper as h;
 use q\ui;
 use q\render;
 
-class variable extends \q\render {
+class tag extends \q\render {
 	
 
-	/**
-	 * Scan for arguments in variables and convert to $config->data
-	 * 
-	 * @since 4.1.0
-	*/
-	public static function prepare( $args = null ){
-
-		// sanity -- this requires ##
-		if ( 
-			! isset( self::$markup )
-			|| ! is_array( self::$markup )
-			|| ! isset( self::$markup['template'] )
-		){
-
-			h::log( 'e:>Error in stored $markup' );
-
-			return false;
-
-		}
-
-		// get markup ##
-		$string = self::$markup['template'];
-
-		// sanity ##
-		if (  
-			! $string
-			|| is_null( $string )
-			// || ! isset( $args['key'] )
-			// || ! isset( $args['value'] )
-			// || ! isset( $args['string'] )
-		){
-
-			h::log( self::$args['task'].'~>e:>Error in $markup' );
-			// h::log( 'd:>Error in $markup' );
-
-			return false;
-
-		}
-
-		// h::log('d:>'.$string);
-
-		// get all variable variables from markup string ##
-        if ( 
-            ! $variables = render\tag::get( $string, 'variable' ) 
-        ) {
-
-			// h::log( self::$args['task'].'~>d:>No variables found in $markup');
-			h::log( 'd:>No variables found in $markup: '.self::$args['task']);
-
-			return false;
-
-		}
-
-		// log ##
-		h::log( self::$args['task'].'~>d:>"'.count( $variables ) .'" variables found in string');
-		// h::log( 'd:>"'.count( $variables ) .'" variables found in string');
-
-		// remove any leftover variables in string ##
-		foreach( $variables as $key => $value ) {
-
-			h::log( self::$args['task'].'~>d:>'.$value );
-			// h::log( 'd:>'.$value );
-
-			// now, we need to look for the config pattern, defined as field(setting:value;) and try to handle any data found ##
-			// $regex_find = \apply_filters( 'q/render/markup/config/regex/find', '/[[(.*?)]]/s' );
-			
-			// if ( 
-			// 	preg_match( $regex_find, $value, $matches ) 
-			// ){
-
-			if ( 
-				// $config_string = method::string_between( $value, '[[', ']]' )
-				$config_string = method::string_between( $value, trim( tags::g( 'arg_o' )), trim( tags::g( 'arg_c' )) )
-			){
-
-				// store variable ##
-				$variable = $value;
-
-				// h::log( $matches[0] );
-
-				// get field ##
-				// h::log( 'value: '.$value );
-				
-				// $field = trim( method::string_between( $value, '{{ ', '[[' ) );
-				$field = str_replace( $config_string, '', $value );
-
-				// clean up field data ##
-				$field = preg_replace( "/[^A-Za-z0-9_]/", '', $field );
-
-				// h::log( 'field: '.$field );
-
-				// check if field is sub field i.e: "post__title" ##
-				if ( false !== strpos( $field, '__' ) ) {
-
-					$field_array = explode( '__', $field );
-
-					$field_name = $field_array[0]; // take first part ##
-					$field_type = $field_array[1]; // take second part ##
-
-				} else {
-
-					$field_name = $field; // take first part ##
-					$field_type = $field; // take second part ##
-
-				}
-
-				// we need field_name, so validate ##
-				if (
-					! $field_name
-					|| ! $field_type
-				){
-
-					h::log( self::$args['task'].'~>e:>Error extracting $field_name or $field_type from variable: '.$variable );
-
-					continue;
-
-				}
-
-				// matches[0] contains the whole string matched - for example "(handle:square;)" ##
-				// we can use this to work out the new_variable value
-				// $variable = $value;
-				// $new_variable = explode( '(', $variable )[0].' }}';
-				// $new_variable = '{{ '.$field.' }}';
-				$new_variable = render\tags::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
-
-				// test what we have ##
-				// h::log( "d:>variable: ".$value );
-				// h::log( "d:>new_variable: ".$new_variable);
-				// h::log( "d:>field_name: ".$field_name );
-				// h::log( "d:>field_type: ".$field_type );
-
-				// pass to argument handler ##
-				render\arguments::decode([ 
-					'string' 	=> $config_string, 
-					'field' 	=> $field_name, 
-					'variable' 	=> $variable,
-					'tag'		=> 'variable'	
-				]);
-
-				// h::log( self::$args[$field_name] );
-
-				// now, edit the variable, to remove the config ##
-				render\tag::swap( $variable, $new_variable );
-
-			}
-		
-        }
-
-	}
-
-
-
     /**
-     * Get all variables from passed string value 
+     * Get all tags of defined $type from passed $string 
      *  
      */
-	/*
-    public static function get( string $string = null ) {
+    public static function get( string $string = null, $type = 'variable' ) {
         
         // sanity ##
         if (
 			is_null( $string ) 
-			// || is_null( $type )
+			|| is_null( $type )
         ) {
 
 			// log ##
@@ -182,10 +29,10 @@ class variable extends \q\render {
 
 		}
 		
-		// switch ( $type ) {
+		switch ( $type ) {
 
-		// 	default :
-		// 	case "variable" :
+			default :
+			case "variable" :
 
 				// note, we trim() white space off tags, as this is handled by the regex ##
 				$open = trim( tags::g( 'var_o' ) );
@@ -199,9 +46,9 @@ class variable extends \q\render {
 					"~\\$open\s+(.*?)\s+\\$close~" // note:: added "+" for multiple whitespaces.. not sure it's good yet...
 				);
 
-		// 	break ;
+			break ;
 
-		// }
+		}
 
 		// $regex_find = \apply_filters( 'q/render/markup/variables/get', '~\{{\s(.*?)\s\}}~' );
 		// if ( ! preg_match_all('~\%(\w+)\%~', $string, $matches ) ) {
@@ -221,15 +68,14 @@ class variable extends \q\render {
         return $matches[0];
 
     }
-	*/
+
 
 
     /**
-     * Check if single variable exists 
+     * Check if single tag exists 
      * @todo - work on passed params 
      *  
      */
-	/*
     public static function exists( string $variable = null, $field = null ) {
 		
 		// if $markup template passed, check there, else check self::$markup ##
@@ -245,7 +91,7 @@ class variable extends \q\render {
         return true;
 
 	}
-	*/
+
 
 
 	/**
@@ -253,7 +99,7 @@ class variable extends \q\render {
      * 
      */
 	/*
-    public static function edit( string $variable = null, $new_variable = null ) {
+    public static function edit( string $from = null, $to = null, $from_type = 'function', $to_type = 'variable' ) {
 
         // sanity ##
         if (
@@ -317,13 +163,15 @@ class variable extends \q\render {
 	}
 	*/
 	
+	
 
 	/**
      * Set {{ variable }} in self:markup['template'] at defined position
      * 
      */
-	/*
     public static function set( string $variable = null, $position = null ) { // , $markup = null
+
+		h::log( 't:>Position based replacement seems shaky, lets move to str_replace' );
 
         // sanity ##
         if (
@@ -391,7 +239,7 @@ class variable extends \q\render {
         return true; #$markup['template'];
 
     }
-	*/
+
 
 
 	
@@ -399,16 +247,14 @@ class variable extends \q\render {
      * Set {{ variable }} in self:markup['template'] at defined position
      * 
      */
-	/*
-    public static function swap( string $from = null, string $variable = null ) { // , $markup = null
+    public static function swap( string $from = null, string $to = null, $from_type = 'function', $to_type = 'variable' ) { // , $markup = null
 
         // sanity ##
         if (
-			// is_null( $type ) 
-			// || 
-			is_null( $variable ) 
-			// || is_null( $markup )
+			is_null( $to ) 
+			|| is_null( $to_type ) 
 			|| is_null( $from )
+			|| is_null( $from_type ) 
 		) {
 
 			// log ##
@@ -418,40 +264,114 @@ class variable extends \q\render {
 
 		}
 		
-		// // what type of variable are we adding ##
-		// switch ( $type ) {
+		// validate to type ##
+		switch ( $to_type ) {
 
-		// 	default :
-		// 	case "variable" :
+			default :
+			case "variable" :
 
 				// check if variable is correctly formatted --> {{ STRING }} ##
 				$needle_start = tags::g( 'var_o' ); #'{{ ';
 				$needle_end = tags::g( 'var_c' ); #' }}';
 
-		// 	break ;
+			break ;
 
-		// }
+			case "partial" :
+
+				// check if variable is correctly formatted --> {{> STRING }} ##
+				$needle_start = tags::g( 'par_o' ); #'{{ ';
+				$needle_end = tags::g( 'par_c' ); #' }}';
+
+			break ;
+
+			case "section" :
+
+				// check if variable is correctly formatted --> {{> STRING }} ##
+				$needle_start = tags::g( 'sec_o' ); #'{{ ';
+				$needle_end = tags::g( 'sec_c' ); #' }}';
+
+			break ;
+
+			case "function" :
+
+				// check if variable is correctly formatted --> {{> STRING }} ##
+				$needle_start = tags::g( 'fun_o' ); #'{{ ';
+				$needle_end = tags::g( 'fun_c' ); #' }}';
+
+			break ;
+
+		}
 
         if (
-            ! render\method::starts_with( $variable, $needle_start ) 
-			|| ! render\method::ends_with( $variable, $needle_end ) 
+            ! render\method::starts_with( $to, $needle_start ) 
+			|| ! render\method::ends_with( $to, $needle_end ) 
         ) {
 
 			// log ##
-			h::log( self::$args['task'].'~>e:>Variable: "'.$variable.'" is not correctly formatted - missing {{ at start or }} at end.' );
+			h::log( self::$args['task'].'~>e:>tag: "'.$to.'" is not correctly formatted - missing "'.$needle_start.'" at start or "'.$needle_end.'" at end.' );
+
+            return false;
+
+		}
+
+		// validate from type ##
+		switch ( $from_type ) {
+
+			default :
+			case "variable" :
+
+				// check if variable is correctly formatted --> {{ STRING }} ##
+				$needle_start = tags::g( 'var_o' ); #'{{ ';
+				$needle_end = tags::g( 'var_c' ); #' }}';
+
+			break ;
+
+			case "partial" :
+
+				// check if variable is correctly formatted --> {{> STRING }} ##
+				$needle_start = tags::g( 'par_o' ); #'{{ ';
+				$needle_end = tags::g( 'par_c' ); #' }}';
+
+			break ;
+
+			case "section" :
+
+				// check if variable is correctly formatted --> {{> STRING }} ##
+				$needle_start = tags::g( 'sec_o' ); #'{{ ';
+				$needle_end = tags::g( 'sec_c' ); #' }}';
+
+			break ;
+
+			case "function" :
+
+				// check if variable is correctly formatted --> {{> STRING }} ##
+				$needle_start = tags::g( 'fun_o' ); #'{{ ';
+				$needle_end = tags::g( 'fun_c' ); #' }}';
+
+			break ;
+
+		}
+
+        if (
+            ! render\method::starts_with( $from, $needle_start ) 
+			|| ! render\method::ends_with( $from, $needle_end ) 
+        ) {
+
+			// log ##
+			h::log( self::$args['task'].'~>e:>tag: "'.$from.'" is not correctly formatted - missing "'.$needle_start.'" at start or "'.$needle_end.'" at end.' );
 
             return false;
 
 		}
 		
-		// h::log( 'd:>swapping from: "'.$from.'" to variable: "'.$variable.'"' );
+		// h::log( 'd:>swapping from: "'.$from.'" to: "'.$to.'"' );
 
 		// use strpos to get location of {{ variable }} ##
-		// $position = strpos( self::$markup, $variable );
+		// $position = strpos( self::$markup, $to );
 		// h::log( 'Position: '.$position );
 
-		// add new variable to $template as defined position - don't replace {{ variable }} yet... ##
-		$new_template = str_replace( $from, $variable, self::$markup['template'] );
+		// add new variable to $template as defined position - don't replace $from yet... ##
+		$new_template = str_replace( $from, $to, self::$markup['template'] );
 
 		// test ##
 		// h::log( 'd:>'.$new_template );
@@ -462,26 +382,26 @@ class variable extends \q\render {
 		// h::log( 'd:>'.$markup );
 
 		// log ##
-		// h::log( self::$args['task'].'~>variable_added:>"'.$variable.'" @position: "'.$position.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
+		// h::log( self::$args['task'].'~>variable_added:>"'.$to.'" @position: "'.$position.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
         return true; #$markup['template'];
 
     }
-	*/
+
 
 
     /**
      * Remove {{ variable }} from self:$args['markup'] array
      * 
      */
-	/*
-    public static function remove( string $variable = null, $markup = null ) {
+    public static function remove( string $variable = null, $markup = null, $type = 'variable' ) {
 
         // sanity ##
         if (
 			is_null( $variable ) 
 			|| is_null( $markup )
+			|| is_null( $type )
 		) {
 
 			// log ##
@@ -496,18 +416,18 @@ class variable extends \q\render {
         // check if variable is correctly formatted --> {{ STRING }} ##
 
 		// what type of variable are we adding ##
-		// switch ( $type ) {
+		switch ( $type ) {
 
-		// 	default :
-		// 	case "variable" :
+			default :
+			case "variable" :
 
 				// check if variable is correctly formatted --> {{ STRING }} ##
 				$needle_start = tags::g( 'var_o' ); #'{{ ';
 				$needle_end = tags::g( 'var_c' ); #' }}';
 
-			// break ;
+			break ;
 
-		// }
+		}
 
         if (
             ! render\method::starts_with( $variable, $needle_start ) 
@@ -541,64 +461,6 @@ class variable extends \q\render {
         return $markup;
 
     }
-	*/
-
-
-	public static function cleanup(){
-
-		$open = trim( tags::g( 'var_o' ) );
-		$close = trim( tags::g( 'var_c' ) );
-
-		// h::log( self::$markup['template'] );
-
-		// strip all function blocks, we don't need them now ##
-		// // $regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );
-		$regex = \apply_filters( 
-		 	'q/render/parse/variable/cleanup/regex', 
-			 // "/$open.*?$close/ms" 
-			//  "/$open\s+.*?\s+$close/s"
-			"~\\$open\s+(.*?)\s+\\$close~"
-		);
-
-		// use callback to allow for feedback ##
-		self::$markup['template'] = preg_replace_callback(
-			$regex, 
-			function($matches) {
-				
-				// h::log( $matches );
-				if ( 
-					! $matches 
-					|| ! is_array( $matches )
-					|| ! isset( $matches[1] )
-				){
-
-					return false;
-
-				}
-
-				// h::log( $matches );
-
-				// get count ##
-				$count = strlen($matches[1]);
-
-				if ( $count > 0 ) {
-
-					h::log( $count .' variable tags removed...' );
-
-				}
-
-				// return nothing for cleanup ##
-				return "";
-
-			}, 
-			self::$markup['template'] 
-		);
-
-		// h::log( self::$markup['template'] );
-		
-		// self::$markup['template'] = preg_replace( $regex, "", self::$markup['template'] ); 
-
-	}
 
 
 

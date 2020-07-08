@@ -167,7 +167,7 @@ class render {
 			],
 
 			// inversion ##  // else, no results ##
-			// @todo.... this might only work when pared with a section.. so, if the section returned false, render the inversion ## 
+			// @todo.... this proably will only work when pared with a section.. so, if the section returned false, render the inversion ## 
 			'inversion'		=> [
 				'open'		=> '{{^ ',
 				'close'		=> ' }}', 
@@ -224,7 +224,7 @@ class render {
 			// 'admin' => h::get( 'render/config/_load.php', 'return', 'path' ),
 
 			// tag management ##
-			'tag' => h::get( 'render/tag.php', 'return', 'path' ),
+			'tags' => h::get( 'render/tags.php', 'return', 'path' ),
 
 			// methods ##
 			'method' => h::get( 'render/method.php', 'return', 'path' ),

@@ -58,11 +58,18 @@ class config extends \Q {
 		// save stored config to file ##
 		\add_action( 'shutdown', [ get_class(), 'save_file' ], 100000 );
 
+		// notes ##
+		h::log( 't:>config is collecting data as it goes.. perhaps this will blow up, but seems ok so far..' );
+
 	}
 
 
 
-
+	/**
+	 * Save config file
+	 * 
+	 * @aince 4.1.0
+	*/
 	public static function save_file(){
 
 		// do not save file from admin, as it will be incomplete ##
@@ -86,7 +93,7 @@ class config extends \Q {
 		}
 
 		// if theme debugging, then load from single config files ##
-		if ( \q_theme::$debug ) {
+		if ( self::$debug ) {
 
 			// h::log('d:>Deubbing, so we do not need to resave __q.php.' );
 			// h::log( 't:>How to dump file / cache and reload from config files, other than to delete __q.php??' );
@@ -125,7 +132,11 @@ class config extends \Q {
 	}
 
 
-
+	/**
+	 * Load config file
+	 * 
+	 * @aince 4.1.0
+	*/
 	public static function load_file(){
 
 		if ( ! method_exists( 'q_theme', 'get_child_theme_path' ) ){ 
@@ -223,14 +234,21 @@ class config extends \Q {
 
 		// h::log( $args );
 
-		if ( self::$has_config ){ 
+		if ( 
+			self::$has_config 
+			&& isset( self::$config[ $args['context'] ] ) 
+			&& isset( self::$config[ $args['context'] ][ $args['task'] ] ) 
+		){ 
 			
-			// h::log( 'd:>Config loading from cache file..' ); 
+			// h::log( 'd:>Config loading from cache file: '.$args['context'].'->'.$args['task'] ); 
 			// h::log( self::$config );
 			
 			return $args; 
 		
 		}
+
+		// we got this far, so we need to re save the config file ##
+		self::$has_config = false;
 
 		// sanity ##
 		if ( 
@@ -260,9 +278,16 @@ class config extends \Q {
 
 		// array of config files to load -- key ( for cache ) + value ##
 		$array = [
+			// template__context__task ##
 			view\is::get().'__'.$args['context'].'__'.$args['task'] => view\is::get().'__'.$args['context'].'__'.$args['task'],
+
+			// context__task ##
 			$args['context'].'__'.$args['task'] => $args['context'].'__'.$args['task'],
+
+			// context ##
 			$args['context'] => $args['context'],
+
+			// global ##
 			'global' => 'global'
 		];
 
@@ -630,6 +655,8 @@ class config extends \Q {
 
 				// merge results into array ##
 				self::$config = core\method::parse_args( $array, self::$config );
+
+				// save file again ??
 
 				// return ##
 				return $return;

@@ -34,7 +34,10 @@ class parse extends render {
 
 		return $array = [
 
-			// variable arguments ##
+			// shared methods ##
+			'tag' => h::get( 'render/parse/tag.php', 'return', 'path' ),
+
+			// find + decode methods for variable + function arguments ##
 			'arguments' => h::get( 'render/parse/arguments.php', 'return', 'path' ),
 
 			// comments ##
@@ -49,7 +52,7 @@ class parse extends render {
 			// sections ##
 			'sections' => h::get( 'render/parse/sections.php', 'return', 'path' ),
 
-			// variables.. or what were placeholders ## ##
+			// variables.. ##
 			'variable' => h::get( 'render/parse/variable.php', 'return', 'path' ),
 
 		];
@@ -77,10 +80,11 @@ class parse extends render {
 		partials::prepare();
 
 		// pre-format markup to extract comments and place in html ##
-		comments::prepare(); // @todo ##
+		comments::prepare(); // 
 
-		// search for config settings passed in markup, such as "src" handle ##
-		// argument::prepare(); // @todo ##
+		// pre-format markup to extract variable arguments - 
+		// goes last, as other tags might have added new variables to prepare ##
+		variable::prepare(); // @todo ##
 
 	}
 
