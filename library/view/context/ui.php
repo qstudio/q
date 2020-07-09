@@ -32,10 +32,10 @@ return [ 'ui' => [
 	],
 
 	// ui close() ##
-	'close'  			=> [
-		'markup' => '
-			</div>
-		</main>'
-	],
+	// 'close'  			=> [
+	// 	'markup' => '
+	// 		</div>
+	// 	</main>'
+	// ],
 
 ]];

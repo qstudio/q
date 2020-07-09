@@ -21,13 +21,15 @@ class arguments extends \q\render {
 	*/
 	public static function decode( $args = null ){
 
+		// h::log( $args );
+
 		// @todo - sanity ##
 		if(
 			is_null( $args )
 			|| ! is_array( $args )
 			|| ! isset( $args['string'] )
-			|| ! isset( $args['field'] )
-			|| ! isset( $args['variable'] )
+			// || ! isset( $args['field'] )
+			|| ! isset( $args['value'] )
 			|| ! isset( $args['tag'] )
 		){
 
@@ -39,29 +41,51 @@ class arguments extends \q\render {
 		
 		// assign variables ##
 		$string = $args['string'];
-		$field = $args['field'];
-		$variable = $args['variable'];
+		$field = isset( $args['field'] ) ? $args['field'] : null ;
+		$value = $args['value'];
 		$tag = $args['tag'];
 
-		// clean up string -- remove all white space ##
-		// $string = trim( $string );
-		$string = str_replace(' ', '', $string);
-		// h::log( 'd:> '.$string );
+		// trim string ##
+		$string = trim( $string );
 
-		// check for ":"
-		if( false === strpos( $string, '=' ) ){
+		// check for "<" at start and ">" at end ##
+		if( 
+			! render\method::starts_with( $string, '@' )
+			// ||
+			// ! render\method::ends_with( $string, ']' ) 
+		){
 
-			h::log( 'e:>Error in passed string format, missing "="' );
+			// h::log( 'd:>Argument string does not start with "@" so not treated as an array' );
 
 			return false;
 
 		}
 
+		// check for "=" delimiter ##
+		if( false === strpos( $string, '=' ) ){
+
+			h::log( 'e:>Error in passed string format, missing delimiter "="' );
+
+			return false;
+
+		}
+
+		// ok, strip off leading @ ##
+		// $string = render\method::string_between( $string, '[', ']' );
+		$string = str_replace( '@', '', $string );
+
+		// clean up string -- remove all white space ##
+		// $string = trim( $string );
+		$string = str_replace( ' ', '', $string );
+		// h::log( 'd:> '.$string );
+
+		// extract data from string ##
 		$array = render\method::parse_str( $string );
 
 		// h::log( $array );
 
-		return false;
+		// return false;
+		/*
 
 		// // check for ":"
 		// if( false === strpos( $string, '&' ) ){
@@ -91,9 +115,6 @@ class arguments extends \q\render {
 		// trim again ##
 		$explode = array_map( 'trim', $explode );
 
-		/*
-		' handle: square-sm; '
-		*/
 		$array = [];
 		// h::log( $explode );
 
@@ -121,17 +142,19 @@ class arguments extends \q\render {
 		// return $array;
 
 		// h::log( $config_array );
+		*/
 
 		// sanity ##
 		if ( 
 			// ! $config_string
-			! is_array( $array )
+			! $array
+			|| ! is_array( $array )
 			// || ! isset( $matches[0] ) 
 			// || ! $matches[0]
 		){
 
-			h::log( self::$args['task'].'~>e:>No config in variable: '.$variable ); // @todo -- add "loose" lookups, for white space '@s
-			h::log( 'd:>No config in variable: '.$variable ); // @todo -- add "loose" lookups, for white space '@s''
+			h::log( self::$args['task'].'~>e:>No config found in value: '.$value ); // @todo -- add "loose" lookups, for white space '@s
+			h::log( 'd:>No config found in value: '.$value ); // @todo -- add "loose" lookups, for white space '@s''
 
 			return false;
 
@@ -143,8 +166,31 @@ class arguments extends \q\render {
 		// LIKE ---> if ( array_key_exists( 'config', $array ) ) // make new args array ##
 		// LIKE ---> if ( array_key_exists( 'markup', $array ) ) // make new markup array ##
 
-		// merge in new args to args->field ##
-		self::$args[$field_name] = core\method::parse_args( self::$args[$field_name], $array );
+		// h::log( $array );
+
+		switch( $tag ) {
+
+			case "function" :
+
+				// kick back to function handler ##
+				return $array;
+
+			break ;
+
+			case "variable" :
+
+				// merge in new args to args->field ##
+				if ( ! isset( self::$args[$field] ) ) self::$args[$field] = [];
+				self::$args[$field] = core\method::parse_args( $array, self::$args[$field] );
+
+			break;
+
+		}
+
+		// done ##
+		return true;
+
+		// h::log( self::$args[$field] );
 
 		/*
 		foreach( $array as $k => $v ) {

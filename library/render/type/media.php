@@ -57,6 +57,8 @@ class media extends render\type {
 
 				$array = get\media::src( $args );
 
+				// h::log( $array );
+
 			break ;
 
 		}

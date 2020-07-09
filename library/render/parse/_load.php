@@ -84,7 +84,7 @@ class parse extends render {
 
 		// pre-format markup to extract variable arguments - 
 		// goes last, as other tags might have added new variables to prepare ##
-		variable::prepare(); // @todo ##
+		variable::prepare();
 
 	}
 

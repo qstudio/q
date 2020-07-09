@@ -454,6 +454,7 @@ class render {
 
 			// prepare field data ##
 			render\fields::prepare();
+			// h::log( self::$markup );
 
 			// check if feature is enabled ##
 			if ( ! render\args::is_enabled() ) {

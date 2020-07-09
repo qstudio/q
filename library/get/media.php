@@ -134,7 +134,7 @@ class media extends \Q {
         // h::log( 'Handle: '.$args['handle'] );
 
         // test incoming args ##
-        // self::log( $args );
+        // h::log( render::$args[ $args['field'] ] );
 
         // set-up a new array ##
         $array = [];
@@ -147,6 +147,8 @@ class media extends \Q {
 			return false;
 
 		}
+
+		// h::log( $src );
 		
 		// take array items ##
 		$array['src'] = $src[0];
@@ -159,7 +161,13 @@ class media extends \Q {
 			\get_the_title( $args['post'] );
 
 		// image found ? ##
-		if ( ! $array['src'] ) { return false; }
+		if ( ! $array['src'] ) { 
+		
+			h::log( 'd:>array->src missing, so cannot continue...' );
+
+			return false; 
+		
+		}
 		
 		// conditional -- add img caption ##
 		if ( 

@@ -123,7 +123,22 @@ class method extends \Q {
             
                 return self::sanitize_key( $value ); // altered version of wp sanitize_key
                 break;
-            
+			
+			case( 'php_class' ):
+
+				return self::php_class( $value );
+				break;
+
+			case( 'php_namespace' ):
+
+				return self::php_namespace( $value );
+				break;
+
+			case( 'php_function' ):
+
+				return self::php_function( $value );
+				break;
+
             case( 'sql' ):
                 
                 return \esc_sql( $value );
@@ -149,8 +164,75 @@ class method extends \Q {
                 
         }
         
-    }
+	}
 
+
+	/**
+    * Sanitizes a php function name
+    *
+    * @since 1.3.0
+    * @param string $key String key
+    * @return string Sanitized key
+    */
+    public static function php_namespace( $key = null ) 
+    {
+        
+        // sanity check ##
+        if ( ! $key ) { return false; }
+        
+        // scan the key for allowed characters ##
+        $key = preg_replace( '^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*(\\\\[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*)*$', '', $key );
+        
+        // return the key ##
+        return $key;
+        
+	}
+
+
+	
+	/**
+    * Sanitizes a php function name
+    *
+    * @since 1.3.0
+    * @param string $key String key
+    * @return string Sanitized key
+    */
+    public static function php_function( $key = null ) 
+    {
+        
+        // sanity check ##
+        if ( ! $key ) { return false; }
+        
+        // scan the key for allowed characters ##
+        $key = preg_replace( '^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$', '', $key );
+        
+        // return the key ##
+        return $key;
+        
+	}
+
+
+
+    /**
+    * Sanitizes a php class name
+    *
+    * @since 1.3.0
+    * @param string $key String key
+    * @return string Sanitized key
+    */
+    public static function php_class( $key = null ) 
+    {
+        
+        // sanity check ##
+        if ( ! $key ) { return false; }
+        
+        // scan the key for allowed characters ##
+        $key = preg_replace( '^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$', '', $key );
+        
+        // return the key ##
+        return $key;
+        
+	}
 
     
     

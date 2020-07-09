@@ -59,7 +59,7 @@ class config extends \Q {
 		\add_action( 'shutdown', [ get_class(), 'save_file' ], 100000 );
 
 		// notes ##
-		h::log( 't:>config is collecting data as it goes.. perhaps this will blow up, but seems ok so far..' );
+		// h::log( 't:>config is collecting data as it goes.. perhaps this will blow up, but seems ok so far..' );
 
 	}
 
@@ -152,7 +152,7 @@ class config extends \Q {
 		// if theme debugging, then load from single config files ##
 		if ( self::$debug ) {
 
-			h::log( 'd:>Theme is debugging, so load from individual config files...' );
+			// h::log( 'd:>Theme is debugging, so load from individual config files...' );
 
 			// load ##
 			if ( self::$delete_config ) {

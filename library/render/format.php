@@ -492,6 +492,7 @@ class format extends \q\render {
 					// // note, we pass the attachment ID to src handler ##
 					// $attachment_id = \get_post_thumbnail_id( $wp_post );
 					// $attachment = \get_post( $attachment_id );
+					// h::log( self::$args );
 
 					$string = render\type::media( $wp_post, $type_field, $field, $context );
 

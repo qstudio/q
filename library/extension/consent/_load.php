@@ -68,7 +68,7 @@ class consent extends \Q {
 			|| true !== core\option::get('extension')->consent 
 		){
 
-			h::log( 'd:>Consent is not enabled.' );
+			// h::log( 'd:>Consent is not enabled.' );
 
 			return $array;
 

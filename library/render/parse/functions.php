@@ -128,7 +128,7 @@ class functions extends \q\render {
 				// $markup = method::string_between( $matches[0][$match][0], $close, $end );
 
 				// clean up ##
-				$function = trim($function);
+				$function = trim( $function );
 
 				// h::log( 'function: '.$function );
 
@@ -164,20 +164,34 @@ class functions extends \q\render {
 					// $config_string = json_encode( $config_string );
 					// h::log( $config_string );
 
-					if ( 
-						is_object( json_decode( $config_string ))
-					){
+					// if ( 
+					// 	is_object( json_decode( $config_string ))
+					// ){
 
-						// decode to JSON object ##
-						$config_object = json_decode( $config_string );
+					// 	// decode to JSON object ##
+					// 	$config_object = json_decode( $config_string );
 
-						h::log( 'is JSON..' );
+					// 	h::log( 'is JSON..' );
 
-					} else {
+					// } else {
 
-						$config_object = false;
+					// 	$config_object = false;
 
-					}
+					// }
+
+					// clean up string -- remove all white space ##
+					// $string = trim( $string );
+					// $config_string = str_replace( ' ', '', $config_string );
+					// h::log( 'd:> '.$string );
+
+					// pass to argument handler ##
+					$function_args = 
+						render\arguments::decode([ 
+							'string' 	=> $config_string, 
+							// 'field' 	=> $field_name, 
+							'value' 	=> $function,
+							'tag'		=> 'function'	
+						]);
 	
 					// h::log( 'd:>config: '.$config_string );
 					// h::log( $config_json );
@@ -186,6 +200,7 @@ class functions extends \q\render {
 					// sanity ##
 					if ( 
 						! $config_string
+						// || ! $config_array
 						// || ! is_array( $config_array )
 						// || ! isset( $matches[0] ) 
 						// || ! $matches[0]
@@ -216,45 +231,59 @@ class functions extends \q\render {
 					// $function_args = [ 'config' => [ 'hash' => $hash ] ];
 	
 					// h::log( 'function: '.$function );
+						
+					// if ( $config_object && is_object( $config_object ) ) {
 
-					if ( $config_object && is_object( $config_object ) ) {
-
-						foreach( $config_object as $k => $v ) {
+						// foreach( $config_object as $k => $v ) {
 
 							// $function_args = [];
 		
 							// h::log( "d:>config_setting: ".$k );
 							// h::log( $v ); // may be an array ##
 							
-							$function_args[$k] = $v;
+							// $function_args[$k] = $v;
 		
-						}
+						// }
 
 					// single arguments are always assigned as markup->template ##
-					} else {
+					// } else {
+					if ( 
+						! $function_args
+						|| ! is_array( $function_args ) 
+					) {
 
 						// call_user_func_array requires an array, so casting here ##
 						$function_args['markup']['template'] = $config_string;
 
 					}
 	
+				// perhaps function passed with ( ) and arguments -- check ##
+				} elseif( 
+					strstr( $function, '(' ) 
+					&& strstr( $function, ')' )
+				){
+
+					// try to get function args
+					$function_args = render\method::string_between( $function, '(', ')' );
+
+					// clean up ##
+					$function_args = trim( $function_args );
+
+					$function_explode = explode( '(', $function );
+
+					$function = trim( $function_explode[0] );
+
+					h::log( 'd:>function_args: '.$function_args );
+
 				}
 
-				// h::log( 'function: '.$function );
-
-				// $hash = 'function__'.$function; /// BIG PROBLEM ##
-
-				// sort of unique hash reference for placeholder and field key ##
-				// $hash = bin2hex( random_bytes(16) );
-				// $hash = 'function__'.preg_replace( "/[^A-Za-z0-9_]/", '', $function );
-				// $hash = 'function__'.\mt_rand();
-				// $hash = 'get_the_title';
+				// h::log( 'd:>function: '.$function );
 
 				// Q function correction ##
 				if( render\method::starts_with( $function, '~' ) ) {
 
 					// h::log( 'Function starts with ~: '.$function );
-
+					// Q functions are namespaced with "~" ##
 					$function = str_replace( '~', '', $function );
 					
 					// format to q::function ##
@@ -289,6 +318,14 @@ class functions extends \q\render {
 
 					}
 
+					// clean up class name @todo -- 
+					// $class = core\method::sanitize( $class, 'php_class' );
+					// $class = preg_replace( '/[^a-zA-Z0-9-_]/', '', (string) $class );
+
+					// clean up method name @todo --
+					// $method = core\method::sanitize( $method, 'php_function' );
+					// $method = preg_replace( '/[^a-zA-Z0-9-_]/', '', (string) $method );
+
 					// function correction ##
 					if( 'q' == $class ) $class = '\\q\\render';
 
@@ -308,9 +345,10 @@ class functions extends \q\render {
 
 					// h::log( 'd:>Function array created' );
 
-					// make function an array ##
+					// make class__method an array ##
 					$function_array = [ $class, $method ];
 
+				// try to locate function directly in global scope ##
 				} elseif ( ! function_exists( $function ) ) {
 
 					h::log( 'Cannot find function: '.$function );
@@ -341,7 +379,7 @@ class functions extends \q\render {
 						// h::log( $function_args );
 
 						render\fields::define([
-							$hash => call_user_func_array( $function_array, [ 0 => $function_args ] )
+							$hash => call_user_func_array( $function_array, [ 0 => $function_args ] ) // 0 index is for static class args gatherer ##
 						]);
 
 					} else { 
@@ -361,14 +399,18 @@ class functions extends \q\render {
 
 					// h::log( 'd:>Calling function' );
 
+					// clean up function name -- @todo ##
+					// $function = preg_replace( '/[^a-zA-Z0-9-_]/', '', (string) $function );
+					// $function = core\method::sanitize( $function, 'php_function' );
+
 					// pass args, if set ##
 					if( $function_args ){
 
-						// h::log( 'passing args array:' );
-						// h::log( $function_args );
+						h::log( 'passing args array:' );
+						h::log( $function_args );
 
 						render\fields::define([
-							$hash => call_user_func_array( $function, [ 0 => $function_args ] )
+							$hash => call_user_func( $function, $function_args )
 						]);
 
 					} else {
@@ -424,6 +466,12 @@ class functions extends \q\render {
 			$regex, 
 			function($matches) {
 				
+				if( ! isset( $matches[1] )) {
+
+					return "";
+
+				}
+
 				// h::log( $matches );
 
 				// get count ##
