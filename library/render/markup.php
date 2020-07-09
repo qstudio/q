@@ -6,6 +6,7 @@ use q\core;
 use q\core\helper as h;
 use q\ui;
 use q\render;
+use q\willow;
 
 class markup extends \q\render {
 
@@ -91,7 +92,7 @@ class markup extends \q\render {
         // check for any left over variables - remove them ##
         if ( 
 			// $placeholders = placeholder::get( $string ) 
-			$variables = render\tag::get( $string, 'variable' ) 
+			$variables = willow\markup::get( $string, 'variable' ) 
         ) {
 
 			// log ##
@@ -99,8 +100,8 @@ class markup extends \q\render {
 
 			// h::log( $variables );
 			
-			h::log( 't:>moved from loop removal to regex model, make sure this does not cause other problems ##');
-			render\variable::cleanup();
+			// h::log( 't:>moved from loop removal to regex model, make sure this does not cause other problems ##');
+			willow\variable::cleanup();
 
             // remove any leftover variables in string ##
             // foreach( $variables as $key => $value ) {
@@ -305,7 +306,7 @@ class markup extends \q\render {
 		){
 
 			// default -- almost useless - but works for single values.. ##
-			$markup = render\tags::wrap([ 'open' => 'var_o', 'value' => 'value', 'close' => 'var_c' ]);
+			$markup = willow\tags::wrap([ 'open' => 'var_o', 'value' => 'value', 'close' => 'var_c' ]);
 
 			// filter ##
 			$markup = \apply_filters( 'q/render/markup/default', $markup );
@@ -381,7 +382,7 @@ class markup extends \q\render {
 		// 	// example: markup->wrap = '<h2 class="mt-5">{{ content }}</h2>' ##
 		// 	$value = str_replace( 
 		// 		// '{{ content }}', 
-		// 		render\tags::wrap([ 'open' => 'var_o', 'value' => 'content', 'close' => 'var_c' ]), 
+		// 		willow\tags::wrap([ 'open' => 'var_o', 'value' => 'content', 'close' => 'var_c' ]), 
 		// 		$value, 
 		// 		$markup 
 		// 	);
@@ -399,8 +400,8 @@ class markup extends \q\render {
         ]); 
 
 		// variable replacement -- regex way ##
-		$open = trim( tags::g( 'var_o' ) );
-		$close = trim( tags::g( 'var_c' ) );
+		$open = trim( willow\tags::g( 'var_o' ) );
+		$close = trim( willow\tags::g( 'var_c' ) );
 
 		// h::log( 'open: '.$open );
 		// "~\\$open\s+(.*?)\s+\\$close~" // note:: added "+" for multiple whitespaces.. not sure it's good yet...
@@ -478,7 +479,7 @@ class markup extends \q\render {
 			// example: markup->wrap = '<h2 class="mt-5">{{ content }}</h2>' ##
 			$string = str_replace( 
 				// '{{ content }}', 
-				render\tags::wrap([ 'open' => 'var_o', 'value' => 'content', 'close' => 'var_c' ]), 
+				willow\tags::wrap([ 'open' => 'var_o', 'value' => 'content', 'close' => 'var_c' ]), 
 				$string, 
 				$markup 
 			);
@@ -537,7 +538,7 @@ class markup extends \q\render {
         }
 
         // check ##
-        // helper::log( 'Update template markup for field: '.$field.' @ count: '.$count );
+        // h::log( 'Update template markup for field: '.$field.' @ count: '.$count );
 
         // look for required markup ##
         // if ( ! isset( self::$args[$field] ) ) {
@@ -557,14 +558,14 @@ class markup extends \q\render {
 
         // get target variable ##
 		// $placeholder = '{{ '.$field.' }}';
-		$variable = render\tags::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
+		$tag = willow\tags::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
         if ( 
 			// ! placeholder::exists( $placeholder )
-			! render\tag::exists( $variable )
+			! self::contains( $tag )
         ) {
 
 			// log ##
-			h::log( self::$args['task'].'~>n:>Variable: "'.$variable.'" is not in the passed markup template' );
+			h::log( self::$args['task'].'~>n:>Tag: "'.$tag.'" is not in the passed markup template' );
 
             return false;
 
@@ -576,7 +577,7 @@ class markup extends \q\render {
         // get all variables from markup->$field ##
         if ( 
 			// ! $placeholders = placeholder::get( self::$markup[$field] ) 
-			! $variables = render\tag::get( self::$markup[$field], 'variable' ) 
+			! $variables = willow\markup::get( self::$markup[$field], 'variable' ) 
         ) {
 
 			// log ##
@@ -594,18 +595,18 @@ class markup extends \q\render {
         foreach( $variables as $key => $value ) {
 
 			// h::log( 'Working variable: '.$value );
-			// h::log( 'variable_open: '.tags::g( 'var_o' ) );
+			// h::log( 'variable_open: '.willow\tags::g( 'var_o' ) );
 
 			// var open and close, with and without whitespace ##
 			$array_replace = [
-				tags::g( 'var_o' ),
-				trim( tags::g( 'var_o' ) ),
-				tags::g( 'var_c' ),
-				trim( tags::g( 'var_c' ) )
+				willow\tags::g( 'var_o' ),
+				trim( willow\tags::g( 'var_o' ) ),
+				willow\tags::g( 'var_c' ),
+				trim( willow\tags::g( 'var_c' ) )
 			];
 			// new variable ##
 			// h::log( 't:>todo.. make this new field name more reliable' );
-			$new = tags::g( 'var_o' ).trim($field).'__'.trim($count).'__'.trim( str_replace( $array_replace, '', trim($value) ) ).tags::g( 'var_c' );
+			$new = willow\tags::g( 'var_o' ).trim($field).'__'.trim($count).'.'.trim( str_replace( $array_replace, '', trim($value) ) ).willow\tags::g( 'var_c' );
 
 			// single whitespace max ## @might be needed ##
 			// $new = preg_replace( '!\s+!', ' ', $new );	
@@ -627,7 +628,7 @@ class markup extends \q\render {
         // helper::log( $new_markup );
 
         // use strpos to get location of {{ variable }} ##
-        $position = strpos( self::$markup['template'], $variable );
+        $position = strpos( self::$markup['template'], $tag );
         // helper::log( 'Position: '.$position );
 
         // add new markup to $template as defined position - don't replace {{ variable }} yet... ##
@@ -642,7 +643,30 @@ class markup extends \q\render {
         // kick back ##
         return true;
 
-    }
+	}
+	
+
+
+	 /**
+     * Check if single tag exists 
+     * @todo - work on passed params 
+     *  
+     */
+    public static function contains( string $variable = null, $field = null ) {
+		
+		// if $markup template passed, check there, else check render::$markup ##
+		$markup = is_null( $field ) ? render::$markup['template'] : render::$markup[$field] ;
+
+        if ( ! substr_count( $markup, $variable ) ) {
+
+            return false;
+
+        }
+
+        // good ##
+        return true;
+
+	}
 
 
 }

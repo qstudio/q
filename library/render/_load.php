@@ -5,6 +5,7 @@ namespace q;
 use q\core;
 use q\core\helper as h;
 use q\render;
+use q\willow;
 
 /*
 
@@ -52,14 +53,8 @@ class render {
 		$markup 	= null, // array to store passed markup and extra keys added by formatting ##
 		$log 		= null, // tracking array for feedback ##
 		$buffer 	= null, // for buffering... ##
-		$buffering 	= false // for buffer switch... ##
+		// $buffering 	= false, // for buffer switch... ##
 
-	;
-
-	protected static
-
-		$extend = [], // allow apps to extend render methods ##
-		
 		// default args to merge with passed array ##
         $args_default = [
             'config'            => [
@@ -71,7 +66,26 @@ class render {
             //     'srcset' 		=> true, // add srcset to src references ##
 			// 	'picture' 		=> true // wrap src in 'picture' element, with srcset ##
             // ]      
-        ],
+        ]
+
+	;
+
+	protected static
+
+		$extend = [], // allow apps to extend render methods ##
+		
+		// // default args to merge with passed array ##
+        // $args_default = [
+        //     'config'            => [
+        //         'run'           => true, // don't run this item ##
+        //         'debug'         => false, // don't debug this item ##
+		// 		'return'        => 'echo', // default to echo return string ##
+        //     ],
+        //     // 'src'        		=> [
+        //     //     'srcset' 		=> true, // add srcset to src references ##
+		// 	// 	'picture' 		=> true // wrap src in 'picture' element, with srcset ##
+        //     // ]      
+        // ],
 
         // frontend pre-processor callbacks to update field values ##
         $callbacks = [
@@ -220,11 +234,8 @@ class render {
 
 		return $array = [
 
-			// admin ##
-			// 'admin' => h::get( 'render/config/_load.php', 'return', 'path' ),
-
 			// tag management ##
-			'tags' => h::get( 'render/tags.php', 'return', 'path' ),
+			// 'tags' => h::get( 'render/tags.php', 'return', 'path' ),
 
 			// methods ##
 			'method' => h::get( 'render/method.php', 'return', 'path' ),
@@ -233,16 +244,15 @@ class render {
 			'args' => h::get( 'render/args.php', 'return', 'path' ),
 
 			// parser ##
-			'parser' => h::get( 'render/parse/_load.php', 'return', 'path' ),
+			// 'parser' => h::get( 'render/parse/_load.php', 'return', 'path' ),
 
 			// buffer processor ##
-			'buffer' => h::get( 'render/buffer.php', 'return', 'path' ),
+			// 'buffer' => h::get( 'render/buffer.php', 'return', 'path' ),
 
 			// class extensions ##
 			'extend' => h::get( 'render/extend.php', 'return', 'path' ),
 
 			// check callbacks on defined fields ## 
-			// @todo - allow to be passed from calling method ['callback' => 'srcset' ] etc ##
 			'callback' => h::get( 'render/callback.php', 'return', 'path' ),
 
 			// get field data ##
@@ -350,7 +360,7 @@ class render {
 			
 			}
 
-			// extrac markup from passed args ##
+			// extract markup from passed args ##
 			render\markup::pre_validate( $args );
 
 			// make args an array, if it's not ##
@@ -404,7 +414,7 @@ class render {
 			}
 
 			// prepare markup, fields and handlers based on passed configuration ##
-			render\parse::prepare( $args );
+			willow\parse::prepare( $args );
 
 			// call class::method to gather data ##
 			// return render\ui::open( $args );
@@ -454,6 +464,7 @@ class render {
 
 			// prepare field data ##
 			render\fields::prepare();
+			// h::log( self::$fields );
 			// h::log( self::$markup );
 
 			// check if feature is enabled ##
@@ -476,7 +487,7 @@ class render {
 			render\markup::prepare();
 
 			// clean up left over tags ##
-			render\parse::cleanup();
+			willow\parse::cleanup();
 
 			// optional logging to show removals and stats ##
 			render\log::set( $args );

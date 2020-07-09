@@ -118,7 +118,9 @@ class method extends \q\render {
 	}
 
 
-
+	/**
+	 * Search string for string passed to wp search query
+	*/
 	public static function search_the_content( Array $args = null ) {
 
 		// sanity @todo ##
@@ -178,6 +180,7 @@ class method extends \q\render {
 	 * @link 	https://stackoverflow.com/questions/5696412/how-to-get-a-substring-between-two-strings-in-php
 	 * @since 4.1.0
 	*/
+	/*
 	public static function string_between( $string, $start, $end, $inclusive = false ){ 
 		
 		$string = " ".$string; 
@@ -212,13 +215,14 @@ class method extends \q\render {
 		return $string;
 	
 	} 
-
+	*/
 
 	/**
 	 * 
 	 * 
 	 * @link https://stackoverflow.com/questions/27078259/get-string-between-find-all-occurrences-php/27078384#27078384
 	*/
+	/*
 	public static function strings_between( $str, $startDelimiter, $endDelimiter ) {
 
 		$contents = array();
@@ -243,22 +247,7 @@ class method extends \q\render {
 		return $contents;
 
 	}
-
-
-	public static function sanitize_string( $string = null ) {
-
-		// Remove anything which isn't a word, whitespace, number
-		// or any of the following caracters -_~,;[]().
-		// If you don't need to handle multi-byte characters
-		// you can use preg_replace rather than mb_ereg_replace
-		$string = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $string );
-
-		// Remove any runs of periods (thanks falstro!)
-		$string = mb_ereg_replace("([\.]{2,})", '', $string);
-
-		return $string;
-
-	}
+	*/
 
 
     /**
@@ -440,13 +429,14 @@ class method extends \q\render {
 
 
 	/**
-     * Markup object based on %placeholders% and template
+     * Markup object based on {{ placeholders }} and template
 	 * This feature is not for formatting data, just applying markup to pre-formatted data
      *
      * @since    2.0.0
      * @return   Mixed
      */
-    public static function markup( $markup = null, $data = null, $args = [] )
+	/*
+    public static function markup( $markup = null, $data = null )
     {
 
         // sanity ##
@@ -551,7 +541,9 @@ class method extends \q\render {
         // return markup ##
         return $return;
 
-    }
+	}
+	*/
+
 
 
 	/**
@@ -664,7 +656,12 @@ class method extends \q\render {
 	// }
 	
 
-	/***/
+	/**
+	 * Check if array contains other arrays
+	 * 
+	 * 
+	 * @since 4.1.0
+	*/
 	public static function is_array_of_arrays( $array = null ) {
 
 		// h::log( $array );
@@ -800,6 +797,7 @@ class method extends \q\render {
 	 * 
 	 * @since 4.1.0
 	*/
+	/*
 	public static function starts_with( $haystack = null, $needle = null ){
 
 		// sanity ##
@@ -819,6 +817,7 @@ class method extends \q\render {
 		return ( substr( $haystack, 0, $length ) === $needle );
 	 
 	}
+	*/
 
 
 
@@ -827,6 +826,7 @@ class method extends \q\render {
 	 * 
 	 * @since 4.1.0
 	*/
+	/*
 	public static function ends_with( $haystack = null, $needle = null ){
 
 		// sanity ##
@@ -852,12 +852,14 @@ class method extends \q\render {
 		return ( substr( $haystack, -$length ) === $needle );
 
 	}
+	*/
 
 
 	/**
 	 * 
 	 * @link https://www.php.net/manual/en/function.parse-str.php
 	*/
+	/*
 	public static function parse_str( $string = null ) {
 
 		# result array
@@ -962,6 +964,7 @@ class method extends \q\render {
 		return $array;
 
 	  }
+	  */
 	  
 
 

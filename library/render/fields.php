@@ -165,9 +165,13 @@ class fields extends \q\render {
 
             return false;
 
-        }
+		}
+		
+		$args = [
+			'sf.sdfsd' => 'sfsdf' 
+		];
 
-        // helper::log( 'Adding field: '.$field );
+        // h::log( 'Adding field: '.$field );
 
         // add field to array ##
         self::$fields[$field] = $value;

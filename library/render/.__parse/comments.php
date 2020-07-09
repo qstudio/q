@@ -19,9 +19,9 @@ class comments extends \q\render {
 
 		// sanity -- this requires ##
 		if ( 
-			! isset( self::$markup )
-			|| ! is_array( self::$markup )
-			|| ! isset( self::$markup['template'] )
+			! isset( render::$markup )
+			|| ! is_array( render::$markup )
+			|| ! isset( render::$markup['template'] )
 		){
 
 			h::log( 'e:>Error in stored $markup' );
@@ -31,7 +31,7 @@ class comments extends \q\render {
 		}
 
 		// get markup ##
-		$string = self::$markup['template'];
+		$string = render::$markup['template'];
 
 		// sanity ##
 		if (  
@@ -72,7 +72,7 @@ class comments extends \q\render {
 			// 	"/$open.*?$close/ms" 
 			// 	// "/{{#.*?\/#}}/ms"
 			// );
-			// self::$markup['template'] = preg_replace( $regex_remove, "", self::$markup['template'] ); 
+			// render::$markup['template'] = preg_replace( $regex_remove, "", render::$markup['template'] ); 
 		
 			// preg_match_all( '/%[^%]*%/', $string, $matches, PREG_SET_ORDER );
 			// h::log( $matches[1] );
@@ -167,10 +167,10 @@ class comments extends \q\render {
 			"/$open.*?$close/ms" 
 			// "/{{#.*?\/#}}/ms"
 		);
-		// self::$markup['template'] = preg_replace( $regex_remove, "", self::$markup['template'] ); 
+		// render::$markup['template'] = preg_replace( $regex_remove, "", render::$markup['template'] ); 
 
 		// use callback to allow for feedback ##
-		self::$markup['template'] = preg_replace_callback(
+		render::$markup['template'] = preg_replace_callback(
 			$regex, 
 			function($matches) {
 				
@@ -200,7 +200,7 @@ class comments extends \q\render {
 				return "";
 
 			}, 
-			self::$markup['template'] 
+			render::$markup['template'] 
 		);
 
 	}

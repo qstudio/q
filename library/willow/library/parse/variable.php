@@ -1,13 +1,14 @@
 <?php
 
-namespace q\render;
+namespace q\willow;
 
-use q\core;
+use q\willow\core;
 use q\core\helper as h;
-use q\ui;
-use q\render;
+use q\willow;
 
-class variable extends \q\render {
+use q\render; // TODO
+
+class variable extends willow\parse {
 	
 
 	/**
@@ -19,9 +20,9 @@ class variable extends \q\render {
 
 		// sanity -- this requires ##
 		if ( 
-			! isset( self::$markup )
-			|| ! is_array( self::$markup )
-			|| ! isset( self::$markup['template'] )
+			! isset( render::$markup )
+			|| ! is_array( render::$markup )
+			|| ! isset( render::$markup['template'] )
 		){
 
 			h::log( 'e:>Error in stored $markup' );
@@ -31,7 +32,7 @@ class variable extends \q\render {
 		}
 
 		// get markup ##
-		$string = self::$markup['template'];
+		$string = render::$markup['template'];
 
 		// sanity ##
 		if (  
@@ -42,7 +43,7 @@ class variable extends \q\render {
 			// || ! isset( $args['string'] )
 		){
 
-			h::log( self::$args['task'].'~>e:>Error in $markup' );
+			h::log( render::$args['task'].'~>e:>Error in $markup' );
 			// h::log( 'd:>Error in $markup' );
 
 			return false;
@@ -53,24 +54,24 @@ class variable extends \q\render {
 
 		// get all variable variables from markup string ##
         if ( 
-            ! $variables = render\tag::get( $string, 'variable' ) 
+            ! $variables = willow\markup::get( $string, 'variable' ) 
         ) {
 
-			// h::log( self::$args['task'].'~>d:>No variables found in $markup');
-			// h::log( 'd:>No variables found in $markup: '.self::$args['task']);
+			// h::log( render::$args['task'].'~>d:>No variables found in $markup');
+			// h::log( 'd:>No variables found in $markup: '.render::$args['task']);
 
 			return false;
 
 		}
 
 		// log ##
-		h::log( self::$args['task'].'~>d:>"'.count( $variables ) .'" variables found in string');
+		h::log( render::$args['task'].'~>d:>"'.count( $variables ) .'" variables found in string');
 		// h::log( 'd:>"'.count( $variables ) .'" variables found in string');
 
 		// remove any leftover variables in string ##
 		foreach( $variables as $key => $value ) {
 
-			h::log( self::$args['task'].'~>d:>'.$value );
+			h::log( render::$args['task'].'~>d:>'.$value );
 			// h::log( 'd:>variable: "'.$value.'"' );
 
 			// now, we need to look for the config pattern, defined as field(setting:value;) and try to handle any data found ##
@@ -82,7 +83,7 @@ class variable extends \q\render {
 
 			if ( 
 				// $config_string = method::string_between( $value, '[[', ']]' )
-				$config_string = method::string_between( $value, trim( tags::g( 'arg_o' )), trim( tags::g( 'arg_c' )) )
+				$config_string = core\method::string_between( $value, trim( tags::g( 'arg_o' )), trim( tags::g( 'arg_c' )) )
 			){
 
 				// store variable ##
@@ -96,8 +97,8 @@ class variable extends \q\render {
 				// $field = trim( method::string_between( $value, '{{ ', '[[' ) );
 				$field = str_replace( $config_string, '', $value );
 
-				// clean up field data ##
-				$field = preg_replace( "/[^A-Za-z0-9_]/", '', $field );
+				// clean up field data ## -- @TODO, move to \Q::sanitize();
+				$field = preg_replace( "/[^A-Za-z0-9._]/", '', $field );
 
 				// h::log( 'field: '.$field );
 
@@ -122,7 +123,7 @@ class variable extends \q\render {
 					|| ! $field_type
 				){
 
-					h::log( self::$args['task'].'~>e:>Error extracting $field_name or $field_type from variable: '.$variable );
+					h::log( render::$args['task'].'~>e:>Error extracting $field_name or $field_type from variable: '.$variable );
 
 					continue;
 
@@ -133,7 +134,7 @@ class variable extends \q\render {
 				// $variable = $value;
 				// $new_variable = explode( '(', $variable )[0].' }}';
 				// $new_variable = '{{ '.$field.' }}';
-				$new_variable = render\tags::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
+				$new_variable = willow\tags::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
 
 				// test what we have ##
 				// h::log( 'd:>variable: "'.$value.'"' );
@@ -142,17 +143,17 @@ class variable extends \q\render {
 				// h::log( 'd:>field_type: "'.$field_type.'"' );
 
 				// pass to argument handler ##
-				render\arguments::decode([ 
-					'string' 	=> $config_string, 
+				willow\arguments::decode([ 
+					'string' 	=> $config_string, // string containing arguments ##
 					'field' 	=> $field_name, 
-					'value' 	=> $variable, // value being worked from loop ##
+					'value' 	=> $variable, // variable value being worked from loop ##
 					'tag'		=> 'variable'	
 				]);
 
-				// h::log( self::$args[$field_name] );
+				// h::log( render::$args[$field_name] );
 
 				// now, edit the variable, to remove the config ##
-				render\tag::swap( $variable, $new_variable, 'variable', 'variable' );
+				willow\markup::swap( $variable, $new_variable, 'variable', 'variable' );
 
 			}
 		
@@ -162,12 +163,12 @@ class variable extends \q\render {
 
 
 
-	public static function cleanup(){
+	public static function cleanup( $args = null ){
 
-		$open = trim( tags::g( 'var_o' ) );
-		$close = trim( tags::g( 'var_c' ) );
+		$open = trim( willow\tags::g( 'var_o' ) );
+		$close = trim( willow\tags::g( 'var_c' ) );
 
-		// h::log( self::$markup['template'] );
+		// h::log( render::$markup['template'] );
 
 		// strip all function blocks, we don't need them now ##
 		// // $regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );
@@ -179,7 +180,7 @@ class variable extends \q\render {
 		);
 
 		// use callback to allow for feedback ##
-		self::$markup['template'] = preg_replace_callback(
+		render::$markup['template'] = preg_replace_callback(
 			$regex, 
 			function($matches) {
 				
@@ -209,12 +210,12 @@ class variable extends \q\render {
 				return "";
 
 			}, 
-			self::$markup['template'] 
+			render::$markup['template'] 
 		);
 
-		// h::log( self::$markup['template'] );
+		// h::log( render::$markup['template'] );
 		
-		// self::$markup['template'] = preg_replace( $regex, "", self::$markup['template'] ); 
+		// render::$markup['template'] = preg_replace( $regex, "", render::$markup['template'] ); 
 
 	}
 

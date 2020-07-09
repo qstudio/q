@@ -1,53 +1,103 @@
 <?php
 
 /*
- * WordPress Framework
+ * logic-less, procedural semantic markup language 
  *
- * @package         q
+ * @package         q-willow
  * @author          Q Studio <social@qstudio.us>
  * @license         GPL-2.0+
  * @link            http://qstudio.us/
- * @copyright       2019 Q Studio
+ * @copyright       2010 Q Studio
  *
  * @wordpress-plugin
- * Plugin Name:     Q
+ * Plugin Name:     Q Willow
  * Plugin URI:      https://www.qstudio.us
- * Description:     Q is a Development Framework that provides an API to manage libraries, themes, plugins and widgets.
- * Version:         4.1.0
+ * Description:     Willow is a Simple, logic-less, procedural semantic markup language 
+ * Version:         0.0.1
  * Author:          Q Studio
  * Author URI:      https://www.qstudio.us
  * License:         GPL
  * Copyright:       Q Studio
- * Class:           Q
- * Text Domain:     q
+ * Class:           q_willow
+ * Text Domain:     q-willow
  * Domain Path:     /languages
- * GitHub Plugin URI: qstudio/q
+ * GitHub Plugin URI: qstudio/q-willow
 */
 
 // quick check :) ##
 defined( 'ABSPATH' ) OR exit;
 
 /* Check for Class */
-if ( ! class_exists( 'Q' ) ) {
+if ( ! class_exists( 'q_willow' ) ) {
 
     // instatiate plugin via WP plugins_loaded ##
-    add_action( 'plugins_loaded', array ( 'Q', 'get_instance' ), 0 );
+    add_action( 'plugins_loaded', array ( 'q_willow', 'get_instance' ), 1 );
 
     // Q Class ##
-    class Q {
+    class q_willow {
 
         // Refers to a single instance of this class. ##
         private static $instance = null;
 
         // Plugin Settings
-        const version = '4.1.0';
-        const text_domain = 'q-textdomain'; // for translation ##
-        static $debug = false; // global debugging, normally false, as individual plugins can control local level debugging ##
-		static $device = false; // current device ##
-		static $log = []; // global log ##
+        const version = '0.0.1';
+        const text_domain = 'q-willow'; // for translation ##
+        // static $debug = false; // global debugging, normally false, as individual plugins can control local level debugging ##
 
-        /// Theme Settings
-		// public static $config = []; // shared config array ##
+		protected static 
+
+			/* define template delimiters */
+			// based on Mustache, but not the same... https://github.com/bobthecow/mustache.php/wiki/Mustache-Tags
+			$tags = [
+
+				// variables ##
+				'variable'		=> [
+					'open' 		=> '{{ ', // open ## 
+					'close' 	=> ' }}', // close ##
+				],
+
+				// parameters / arguments ##
+				'argument'		=> [
+					'open' 		=> '[[ ', // open ## 
+					'close' 	=> ' ]]', // close ##
+				],
+				
+				// section ##
+				'section'		=> [
+					'open' 		=> '{{# ', // open ##
+					'close' 	=> ' }}', // close ##
+					'end'		=> '{{/#}}' // end statement ##
+				],
+
+				// inversion ##  // else, no results ##
+				// @todo.... this proably will only work when pared with a section.. so, if the section returned false, render the inversion ## 
+				'inversion'		=> [
+					'open'		=> '{{^ ',
+					'close'		=> ' }}', 
+					'end'		=> '{{/}}'
+				],
+
+				// function -- also, an unescaped variable -- @todo --- ##
+				'function'		=> [
+					'open' 		=> '{{{ ', // open ## 
+					'close' 	=> ' }}}', // close ##
+				],
+
+				// partial ##
+				'partial'		=> [
+					'open' 		=> '{{> ', // open ## 
+					'close' 	=> ' }}', // close ##
+				],
+
+				// comment ##
+				'comment'		=> [
+					'open' 		=> '{{! ', // open ## 
+					'close' 	=> ' }}', // close ##
+				],
+
+			]
+
+		;
 
         /**
          * Creates or returns an instance of this class.
@@ -106,7 +156,7 @@ if ( ! class_exists( 'Q' ) ) {
             );
 
             // init running, so update configuration flag ##
-            add_option( 'q_plugin', $q_options, '', true );
+            add_option( 'q_willow', $q_options, '', true );
 
         }
 
@@ -120,7 +170,7 @@ if ( ! class_exists( 'Q' ) ) {
         {
 
             // de-configure plugin ##
-            delete_option('q_plugin');
+            delete_option('q_willow');
 
         }
 
@@ -194,10 +244,10 @@ if ( ! class_exists( 'Q' ) ) {
 
             // check for what's needed ##
             if (
-                ! class_exists( 'ACF' )
+                ! class_exists( 'Q' )
             ) {
 
-                helper::log( 'e:>Q requires ACF to run correctly..' );
+                helper::log( 'e:>Q Willow requires Q to run correctly..' );
 
                 return false;
 
@@ -218,51 +268,48 @@ if ( ! class_exists( 'Q' ) ) {
 		private static function load_libraries()
         {
 
-            // methods ##
-			require_once self::get_plugin_path( 'library/core/_load.php' );
-
-			// getter ##
-			require_once self::get_plugin_path( 'library/get/_load.php' );
-
-			// render engine ##
-			require_once self::get_plugin_path( 'library/render/_load.php' );
-
-			// willow ##
-			require_once self::get_plugin_path( 'library/willow/q-willow.php' );
-			
-			// widgets ##
-			require_once self::get_plugin_path( 'library/widget/_load.php' );
-
-			// view ##
-			require_once self::get_plugin_path( 'library/view/_load.php' );
-
-			// assets ##
-			require_once self::get_plugin_path( 'library/asset/_load.php' );
-
-			// ui modules ##
-			require_once self::get_plugin_path( 'library/module/_load.php' );
-
-			// extensions ##
-			require_once self::get_plugin_path( 'library/extension/_load.php' );
-
-            // admin ##
-			require_once self::get_plugin_path( 'library/admin/_load.php' );
-
-			// test suite ##
-            require_once self::get_plugin_path( 'library/test/_load.php' );
-
-            // hooks ##
-            require_once self::get_plugin_path( 'library/hook/_load.php' );
-
-            // check for dependencies, required for UI components - admin will still run ##
+			// check for dependencies, required for UI components - admin will still run ##
             if ( ! self::has_dependencies() ) {
 
                 return false;
 
             }
 
+            // methods ##
+			require_once self::get_plugin_path( 'library/core/_load.php' );
+
+			// parsers ##
+			require_once self::get_plugin_path( 'library/parse/_load.php' );
+
+			// output buffer ##
+			require_once self::get_plugin_path( 'library/buffer/_load.php' );
+			
+			// tags ##
+			require_once self::get_plugin_path( 'library/tags/_load.php' );
+
+			// view ##
+			// require_once self::get_plugin_path( 'library/view/_load.php' );
+
+			// assets ##
+			// require_once self::get_plugin_path( 'library/asset/_load.php' );
+
+			// ui modules ##
+			// require_once self::get_plugin_path( 'library/module/_load.php' );
+
+			// extensions ##
+			// require_once self::get_plugin_path( 'library/extension/_load.php' );
+
+            // admin ##
+			// require_once self::get_plugin_path( 'library/admin/_load.php' );
+
+			// test suite ##
+            // require_once self::get_plugin_path( 'library/test/_load.php' );
+
+            // hooks ##
+            // require_once self::get_plugin_path( 'library/hook/_load.php' );
+
             // plugins ##
-            require_once self::get_plugin_path( 'library/plugin/_load.php' );
+            #require_once self::get_plugin_path( 'library/plugin/_load.php' );
 
         }
 

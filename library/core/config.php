@@ -53,10 +53,10 @@ class config extends \Q {
 		, 1000, 1 );
 
 		// load saved config ##
-		\add_action( 'wp', [ get_class(), 'load_file' ], 10 );
+		\add_action( 'wp', [ get_class(), 'get_cache' ], 10 );
 
 		// save stored config to file ##
-		\add_action( 'shutdown', [ get_class(), 'save_file' ], 100000 );
+		\add_action( 'shutdown', [ get_class(), 'set_cache' ], 100000 );
 
 		// notes ##
 		// h::log( 't:>config is collecting data as it goes.. perhaps this will blow up, but seems ok so far..' );
@@ -70,7 +70,7 @@ class config extends \Q {
 	 * 
 	 * @aince 4.1.0
 	*/
-	public static function save_file(){
+	public static function set_cache(){
 
 		// do not save file from admin, as it will be incomplete ##
 		if( 
@@ -84,6 +84,7 @@ class config extends \Q {
 		
 		}
 
+		/*
 		if ( ! method_exists( 'q_theme', 'get_child_theme_path' ) ){ 
 
 			h::log( 'e:>Q Theme class not available, perhaps this function was hooked too early?' );
@@ -91,6 +92,7 @@ class config extends \Q {
 			return false;
 
 		}
+		*/
 
 		// if theme debugging, then load from single config files ##
 		if ( self::$debug ) {
@@ -104,18 +106,28 @@ class config extends \Q {
 
 		if ( self::$has_config ){ 
 		
-			// h::log('d:>We do not need to resave the file, as it already exists' );
+			h::log('d:>We do not need to resave the file, as it already exists' );
 			// h::log( 't:>How to dump file / cache and reload from config files, other than to delete __q.php??' );
 
 			return false; 
 		
 		}
 
+		// cache in DB ##
+		\set_site_transient( 'q_willow_config', self::$config, 24 * HOUR_IN_SECONDS );
+
+		// h::log('d:>saved config to DB...' );
+
+		return true;
+		/*
+
 		// write to file ##
 		// self::file_put_array( \Q::get_plugin_path( 'library/render/config/__q.php' ), $array );
 		if ( method_exists( 'q_theme', 'get_child_theme_path' ) ){ 
 
 			// h::log( 'd:>Child theme method found, so trying to save data to __q.php' );
+
+			// \set_site_transient( 'q_willow_config', self::$config, 24 * HOUR_IN_SECONDS );
 
 			core\method::file_put_array( \q_theme::get_child_theme_path( '/__q.php' ), self::$config );
 
@@ -128,6 +140,7 @@ class config extends \Q {
 			return false;
 
 		}
+		*/
 
 	}
 
@@ -137,8 +150,9 @@ class config extends \Q {
 	 * 
 	 * @aince 4.1.0
 	*/
-	public static function load_file(){
+	public static function get_cache(){
 
+		/*
 		if ( ! method_exists( 'q_theme', 'get_child_theme_path' ) ){ 
 
 			h::log( 'e:>Q Theme class not available, perhaps this function was hooked too early?' );
@@ -146,16 +160,19 @@ class config extends \Q {
 			return false;
 
 		}
+		*/
 
 		// if ( method_exists( 'q_theme', 'get_child_theme_path' ) ){ 
 
-		// if theme debugging, then load from single config files ##
+		// if theme debugging, then load from indiviual config files ##
 		if ( self::$debug ) {
 
-			// h::log( 'd:>Theme is debugging, so load from individual config files...' );
+			// h::log( 'd:>Theme is debugging, so load from individual context files...' );
 
 			// load ##
 			if ( self::$delete_config ) {
+
+				\delete_site_transient( 'q_willow_config' );
 
 				$file = \q_theme::get_child_theme_path('/__q.php');
 
@@ -177,7 +194,33 @@ class config extends \Q {
 		}
 
 		// h::log( 'd:>Child theme method found, so trying to load data from __q.php' );
+		// h::log( \get_site_transient( 'q_willow_config' ) );
+		if ( 
+			$array = \get_site_transient( 'q_willow_config' )
+		) {
 
+			// log ##
+			// h::log( 'd:>DB Transient Found...' );
+
+			if( is_array( $array ) ) {
+
+				// store array in object cache ##
+				self::$config = $array;
+
+				// update flag ##
+				self::$has_config = true;
+
+				// log ##
+				// h::log( 'd:>Theme NOT debugging ( production mode ) -- so loaded config data DB' );
+
+				// good ##
+				return true;
+
+			}
+
+		}
+
+		/*
 		if( $file = \q_theme::get_child_theme_path('/__q.php') ) {
 
 			if ( is_file( $file ) ) {
@@ -206,8 +249,9 @@ class config extends \Q {
 			}
 			
 		}
+		*/
 
-		h::log( 'e:>failed to load config data from __q.php, perhaps we need to re-generate from here..' );
+		h::log( 'e:>failed to load config data from DB, perhaps we need to re-generate from here..' );
 
 		return false;
 

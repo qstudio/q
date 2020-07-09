@@ -1,14 +1,15 @@
 <?php
 
-namespace q\render;
+namespace q\willow;
 
-use q\core;
+use q\willow;
+use q\willow\core;
 use q\core\helper as h;
-use q\ui;
+
+// render -- @TODO ##
 use q\render;
 
-class functions extends \q\render {
-
+class functions extends willow\parse {
 
     /**
 	 * Scan for functions in markup and convert to variables and $fields
@@ -18,13 +19,13 @@ class functions extends \q\render {
     public static function prepare( $args = null ){
 
 		// h::log( $args['key'] );
-		h::log( 't:>TODO -- arguments and parameters passed from willow tags...' );
+		// h::log( 't:>TODO -- arguments and parameters passed from willow tags...' );
 
 		// sanity -- this requires ##
 		if ( 
-			! isset( self::$markup )
-			|| ! is_array( self::$markup )
-			|| ! isset( self::$markup['template'] )
+			! isset( render::$markup )
+			|| ! is_array( render::$markup )
+			|| ! isset( render::$markup['template'] )
 		){
 
 			h::log( 'e:>Error in stored $markup' );
@@ -34,7 +35,7 @@ class functions extends \q\render {
 		}
 
 		// get markup ##
-		$string = self::$markup['template'];
+		$string = render::$markup['template'];
 
 		// sanity ##
 		if (  
@@ -42,7 +43,7 @@ class functions extends \q\render {
 			|| is_null( $string )
 		){
 
-			h::log( self::$args['task'].'~>e:>Error in $markup' );
+			h::log( render::$args['task'].'~>e:>Error in $markup' );
 
 			return false;
 
@@ -52,8 +53,8 @@ class functions extends \q\render {
 
 		// get all sections, add markup to $markup->$field ##
 		// note, we trim() white space off tags, as this is handled by the regex ##
-		$open = trim( tags::g( 'fun_o' ) );
-		$close = trim( tags::g( 'fun_c' ) );
+		$open = trim( willow\tags::g( 'fun_o' ) );
+		$close = trim( willow\tags::g( 'fun_c' ) );
 		// $end = trim( tags::g( 'sec_e' ) );
 		// $end_preg = str_replace( '/', '\/', ( trim( tags::g( 'sec_e' ) ) ) );
 		// $end = '{{\/#}}';
@@ -78,7 +79,7 @@ class functions extends \q\render {
 			// 	"/$open.*?$close/ms" 
 			// 	// "/{{#.*?\/#}}/ms"
 			// );
-			// self::$markup['template'] = preg_replace( $regex_remove, "", self::$markup['template'] ); 
+			// render::$markup['template'] = preg_replace( $regex_remove, "", render::$markup['template'] ); 
 		
 			// preg_match_all( '/%[^%]*%/', $string, $matches, PREG_SET_ORDER );
 			// h::log( $matches[1] );
@@ -120,12 +121,12 @@ class functions extends \q\render {
 
 				// h::log( $matches[0][$match][0] );
 
-				$function = method::string_between( $matches[0][$match][0], $open, $close );
+				$function = core\method::string_between( $matches[0][$match][0], $open, $close );
 
 				// return entire function string, including tags for tag swap ##
-				$function_match = method::string_between( $matches[0][$match][0], $open, $close, true );
+				$function_match = core\method::string_between( $matches[0][$match][0], $open, $close, true );
 				// h::log( '$function_match: '.$function_match );
-				// $markup = method::string_between( $matches[0][$match][0], $close, $end );
+				// $markup = core\method::string_between( $matches[0][$match][0], $close, $end );
 
 				// clean up ##
 				$function = trim( $function );
@@ -157,8 +158,12 @@ class functions extends \q\render {
 				$config_string = false;
 				
 				if ( 
-					// $config_string = method::string_between( $value, '[[', ']]' )
-					$config_string = method::string_between( $function, trim( tags::g( 'arg_o' )), trim( tags::g( 'arg_c' )) )
+					// $config_string = core\method::string_between( $value, '[[', ']]' )
+					$config_string = core\method::string_between( 
+						$function, 
+						trim( willow\tags::g( 'arg_o' )), 
+						trim( willow\tags::g( 'arg_c' )) 
+					)
 				){
 	
 					// $config_string = json_encode( $config_string );
@@ -186,7 +191,7 @@ class functions extends \q\render {
 
 					// pass to argument handler ##
 					$function_args = 
-						render\arguments::decode([ 
+						willow\arguments::decode([ 
 							'string' 	=> $config_string, 
 							// 'field' 	=> $field_name, 
 							'value' 	=> $function,
@@ -206,7 +211,7 @@ class functions extends \q\render {
 						// || ! $matches[0]
 					){
 	
-						h::log( self::$args['task'].'~>e:>No valid config found in function: '.$function ); // @todo -- add "loose" lookups, for white space '@s
+						h::log( render::$args['task'].'~>e:>No valid config found in function: '.$function ); // @todo -- add "loose" lookups, for white space '@s
 						// h::log( 'd:>No config in placeholder: '.$placeholder ); // @todo -- add "loose" lookups, for white space '@s''
 	
 						continue;
@@ -215,11 +220,11 @@ class functions extends \q\render {
 	
 					// h::log( $matches[0] );
 	
-					// $field = trim( method::string_between( $value, '{{ ', '[[' ) );
+					// $field = trim( core\method::string_between( $value, '{{ ', '[[' ) );
 					// $function = str_replace( trim( tags::g( 'arg_o' )).$config_string.trim( tags::g( 'arg_c' )), '', $function );
 					// h::log( 'function: '.$function );
-					// $function = method::string_between( $function, trim( tags::g( 'fun_o' )), trim( tags::g( 'arg_o' )) );
-					$function_explode = explode( trim( tags::g( 'arg_o' )), $function );
+					// $function = core\method::string_between( $function, trim( tags::g( 'fun_o' )), trim( tags::g( 'arg_o' )) );
+					$function_explode = explode( trim( willow\tags::g( 'arg_o' )), $function );
 					// h::log( $function_explode );
 					$function = $function_explode[0];
 					// $class = false;
@@ -264,7 +269,7 @@ class functions extends \q\render {
 				){
 
 					// try to get function args
-					$function_args = render\method::string_between( $function, '(', ')' );
+					$function_args = core\method::string_between( $function, '(', ')' );
 
 					// clean up ##
 					$function_args = trim( $function_args );
@@ -280,11 +285,12 @@ class functions extends \q\render {
 				// h::log( 'd:>function: '.$function );
 
 				// Q function correction ##
-				if( render\method::starts_with( $function, '~' ) ) {
+				if( core\method::starts_with( $function, '~' ) ) {
 
 					// h::log( 'Function starts with ~: '.$function );
 					// Q functions are namespaced with "~" ##
 					$function = str_replace( '~', '', $function );
+					$function = str_replace( '::', '__', $function );
 					
 					// format to q::function ##
 					$function = 'q::'.$function;
@@ -406,7 +412,7 @@ class functions extends \q\render {
 					// pass args, if set ##
 					if( $function_args ){
 
-						h::log( 'passing args array:' );
+						// h::log( 'passing args array:' );
 						h::log( $function_args );
 
 						render\fields::define([
@@ -426,9 +432,9 @@ class functions extends \q\render {
 				}
 
 				// finally -- add a variable "{{ $field }}" before this comment block at $position to markup->template ##
-				$variable = render\tags::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
+				$variable = willow\tags::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
 				// variable::set( $variable, $position, 'variable' ); // '{{ '.$field.' }}'
-				render\tag::swap( $function_match, $variable ); // '{{ '.$field.' }}'
+				willow\markup::swap( $function_match, $variable, 'function', 'variable' ); // '{{ '.$field.' }}'
 
 			}
 
@@ -439,17 +445,17 @@ class functions extends \q\render {
 		// 	"/$open.*?$close/ms" 
 		// 	// "/{{#.*?\/#}}/ms"
 		// );
-		// self::$markup['template'] = preg_replace( $regex_remove, "", self::$markup['template'] ); 
+		// render::$markup['template'] = preg_replace( $regex_remove, "", render::$markup['template'] ); 
 
 		}
 
 	}
 
 
-	public static function cleanup(){
+	public static function cleanup( $args = null ){
 
-		$open = trim( tags::g( 'fun_o' ) );
-		$close = trim( tags::g( 'fun_c' ) );
+		$open = trim( willow\tags::g( 'fun_o' ) );
+		$close = trim( willow\tags::g( 'fun_c' ) );
 
 		// strip all function blocks, we don't need them now ##
 		// // $regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );
@@ -459,10 +465,10 @@ class functions extends \q\render {
 		// 	// "/{{#.*?\/#}}/ms"
 		);
 		
-		// self::$markup['template'] = preg_replace( $regex, "", self::$markup['template'] ); 
+		// render::$markup['template'] = preg_replace( $regex, "", render::$markup['template'] ); 
 
 		// use callback to allow for feedback ##
-		self::$markup['template'] = preg_replace_callback(
+		render::$markup['template'] = preg_replace_callback(
 			$regex, 
 			function($matches) {
 				
@@ -487,7 +493,7 @@ class functions extends \q\render {
 				return "";
 
 			}, 
-			self::$markup['template'] 
+			render::$markup['template'] 
 		);
 
 	}

@@ -6,6 +6,7 @@ use q\core;
 use q\core\helper as h;
 use q\ui;
 use q\render;
+use q\willow;
 
 class format extends \q\render {
 
@@ -321,8 +322,8 @@ class format extends \q\render {
 
         // remove variable from markup template
 		// self::$markup['template'] = render\markup::remove_placeholder( '{{ '.$field.' }}', self::$markup['template'] );
-		$variable = render\tags::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
-		self::$markup['template'] = render\tag::remove( $variable, self::$markup['template'], 'variable' );
+		$variable = willow\tags::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
+		self::$markup['template'] = willow\markup::remove( $variable, self::$markup['template'], 'variable' );
 
         // delete sending field ##
         render\fields::remove( $field, 'Removed by format_array after working' );
@@ -353,9 +354,9 @@ class format extends \q\render {
 
                 // h::log( 'Working "'.$r2.'" Key value: "'.$v2.'"' );
 
-                // create a new, named and numbered field based on field_COUNT__row_key ##
+                // create a new, named and numbered field based on field__COUNT.row_key ##
                 // $key_field = $field.'__'.$count.'__'.$r2;
-                render\fields::set( $field.'__'.$count.'__'.$r2, $v2 );
+                render\fields::set( $field.'__'.$count.'.'.$r2, $v2 );
 
             }
 
@@ -514,7 +515,7 @@ class format extends \q\render {
 			}
 
 			// assign field and value ##
-			render\fields::set( $field.'__'.$type_field, $string );
+			render\fields::set( $field.'.'.$type_field, $string );
 
 		}
 

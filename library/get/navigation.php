@@ -12,6 +12,9 @@ use q\get;
 // Q Theme ##
 use q\theme;
 
+// Willow ##
+use q\willow;
+
 class navigation extends \q\get {
 
 
@@ -169,7 +172,7 @@ class navigation extends \q\get {
 		$items = get\method::prepare_return( $args, $items );
 
 		// markup array ##
-		$string = render\method::markup( $config['markup']['template'], $items, $config['markup'] );
+		$string = willow\markup::string( $config['markup']['template'], $items );
 
 		// echo ##
 		// if ( 'return' == $return ){ 
