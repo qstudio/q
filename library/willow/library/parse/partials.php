@@ -92,7 +92,7 @@ class partials extends willow\parse {
 		){
 
 			// clean up tags, if not buffering ##
-			if ( is_null( render::$buffer ) ) self::cleanup();
+			// if ( is_null( render::$buffer ) ) self::cleanup();
 
 			// // strip all section blocks, we don't need them now ##
 			// // $regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );

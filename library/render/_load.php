@@ -7,39 +7,10 @@ use q\core\helper as h;
 use q\render;
 use q\willow;
 
-/*
-
-------- One rendering Engine for all use cases ----------
-
-Requirements:
-# pass standerdized args ( markup, callbacks, filter ets )
-# log on global or call specific basis
-# manipulate markup and data to return at once 
-# option to return pure data or marked-up data ( render/ or get/ ) 
-# friendly from templates etc -- render\the_title();
-@ pass fake data ( fields = [ 'the_title', 'Hello' ] ) - skips data fetching for field?? all??
-# __magic function finder _find()
-
-Modules:
-# group - render field data from ACF field group
-# post - wordpress posts, title etc.. include getters and render methods
-# ui - layout elements
-# field ( deal with single use case post_fields )
-~ media ( src, video, gallery etc )
-
-filters:
-# validate args ( check requirements, filter.. )
-# callbacks ( either via config or args -- defined list, any other render method, wp functions, openhouse.. ?? )
-# pre process ( filter config, filter fields )
-# format return ( filter args, filter data, apply markup.. filter again.. )
-@ post-process ( js callbacks, srcset etc.. )
-
-*/
-
 // load it up ##
 \q\render::run();
 
-class render {
+class render { // why not extend \Q ?? @todo ##
 
 	public static
 
@@ -62,17 +33,13 @@ class render {
                 'debug'         => false, // don't debug this item ##
 				'return'        => 'echo', // default to echo return string ##
             ],
-            // 'src'        		=> [
-            //     'srcset' 		=> true, // add srcset to src references ##
-			// 	'picture' 		=> true // wrap src in 'picture' element, with srcset ##
-            // ]      
         ]
 
 	;
 
 	protected static
 
-		$extend = [], // allow apps to extend render methods ##
+		// $extend = [], // allow apps to extend context methods ##
 		
 		// // default args to merge with passed array ##
         // $args_default = [
@@ -155,10 +122,12 @@ class render {
 			'src', // @todo.. needs to merge into media ##
 			// 'media', 
 
-		],
+		]
 		
 		/* define template delimiters */
 		// based on Mustache, but not the same... https://github.com/bobthecow/mustache.php/wiki/Mustache-Tags
+		// @TODO - move to willow/tags
+		/*
 		$tags = [
 
 			// variables ##
@@ -207,6 +176,7 @@ class render {
 			],
 
 		]
+		*/
 
 	;
 	
@@ -250,7 +220,7 @@ class render {
 			// 'buffer' => h::get( 'render/buffer.php', 'return', 'path' ),
 
 			// class extensions ##
-			'extend' => h::get( 'render/extend.php', 'return', 'path' ),
+			// 'extend' => h::get( 'render/extend.php', 'return', 'path' ),
 
 			// check callbacks on defined fields ## 
 			'callback' => h::get( 'render/callback.php', 'return', 'path' ),
@@ -280,7 +250,7 @@ class render {
 			'log' => h::get( 'render/log.php', 'return', 'path' ),
 
 			// context classes ##
-			'context' => h::get( 'render/context/_load.php', 'return', 'path' ),
+			// 'context' => h::get( 'render/context/_load.php', 'return', 'path' ),
 
 		];
 
@@ -305,6 +275,7 @@ class render {
 	 * extension__
 	 * widget__
 	 */
+	/*
 	public static function __callStatic( $function, $args ){	
 
 		// h::log( '$function: '.$function );
@@ -507,6 +478,6 @@ class render {
 		return false;
 
 	}
-
+	*/
 
 }

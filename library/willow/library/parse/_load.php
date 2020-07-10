@@ -71,20 +71,20 @@ class parse extends \q_willow {
 		// h::log( self::$args['markup'] );
 
 		// pre-format markup to extract functions ##
-		functions::prepare();
+		functions::prepare( $args );
 
 		// pre-format markup to extract sections ##
-		sections::prepare();
+		sections::prepare( $args );
 
 		// search for partials in passed markup ##
-		partials::prepare();
+		partials::prepare( $args );
 
 		// pre-format markup to extract comments and place in html ##
-		comments::prepare(); // 
+		comments::prepare( $args ); // 
 
 		// pre-format markup to extract variable arguments - 
 		// goes last, as other tags might have added new variables to prepare ##
-		variable::prepare();
+		variable::prepare( $args );
 
 	}
 

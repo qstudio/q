@@ -66,6 +66,8 @@ class navigation extends \q\get {
 		// get config ##
 		$config = core\config::get([ 'context' => 'navigation', 'task' => 'pagination' ]);
 
+		// h::log( $config );
+
 		// validate config ##
 		if ( ! $config ) {
 
@@ -172,7 +174,9 @@ class navigation extends \q\get {
 		$items = get\method::prepare_return( $args, $items );
 
 		// markup array ##
-		$string = willow\markup::string( $config['markup']['template'], $items );
+		$string = willow\markup::string( $config['markup']['template'], $items, $config['markup'] );
+
+		h::log( $string );
 
 		// echo ##
 		// if ( 'return' == $return ){ 
@@ -186,7 +190,7 @@ class navigation extends \q\get {
 		// }
 
 		// kick back ##
-		return true;
+		// return true;
 		
 	}
 

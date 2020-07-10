@@ -288,6 +288,7 @@ class format extends \q\render {
         } else {
 
 			// h::log( 'd:>Array is an Array..' );
+			// h::log( $value );
 
             // check how many items are in array and format ##
             $count = 0;
@@ -299,7 +300,11 @@ class format extends \q\render {
                 // h::log( $key );
 
                 // create a new, named and numbered field based on field_COUNT -- empty value ##
-                $key_field = $field.'__'.$count;
+				$key_field = $field.'.'.$count;
+				/*
+				WAS
+				$key_field = $field.'_'.$count;
+				*/
                 render\fields::set( $key_field, '' );
 
                 // Format each field value based on type ( int, string, array, WP_Post Object ) ##
@@ -334,7 +339,20 @@ class format extends \q\render {
         // returning false will delete the original passed field ##
         return true;
 
-    }
+	}
+	
+
+	public static function is_associative_array( $array ) { 
+
+		foreach ( $array as $key => $value ) { 
+			if ( is_string( $key ) ) {
+				return true; 
+			}
+		} 
+		
+		return false; 
+
+	}
 
 
 
@@ -355,8 +373,9 @@ class format extends \q\render {
                 // h::log( 'Working "'.$r2.'" Key value: "'.$v2.'"' );
 
                 // create a new, named and numbered field based on field__COUNT.row_key ##
-                // $key_field = $field.'__'.$count.'__'.$r2;
-                render\fields::set( $field.'__'.$count.'.'.$r2, $v2 );
+				// $key_field = $field.'__'.$count.'__'.$r2;
+				// render\fields::set( $field.'__'.$count.'__'.$r2, $v2 );
+                render\fields::set( $field.'.'.$count.'.'.$r2, $v2 );
 
             }
 
@@ -516,6 +535,7 @@ class format extends \q\render {
 
 			// assign field and value ##
 			render\fields::set( $field.'.'.$type_field, $string );
+			// render\fields::set( $field.'__'.$type_field, $string );
 
 		}
 

@@ -148,47 +148,65 @@ class functions extends willow\parse {
 
 				// default args ##
 				// $hash = 'function__'.mt_rand();
-				$hash = $function; // set hash to entrire function, in case this has no config and is not class_method format ##
+				$hash = $function; // set hash to entire function, in case this has no config and is not class_method format ##
 				// h::log( 'hash set to: '.$hash );
 				// $function_args = [ 'config' => [ 'hash' => $hash ] ];
-				$function_args = [];
+				// $function_args = [];
+
+				$function_args = '';
+
 				$class = false;
 				$method = false;
 				$function_array = false;
 				$config_string = false;
-				
+
+				// $config_string = core\method::string_between( $value, '[[', ']]' )
+				$config_string = core\method::string_between( 
+					$function, 
+					trim( willow\tags::g( 'arg_o' )), 
+					trim( willow\tags::g( 'arg_c' )) 
+				);
+
+				// args set to >> strip << - this should remove any markup set ##
+				/*
+				if ( 'strip' == $config_string ){
+
+					h::log( 'unsetting markup for function: '.$function );
+
+					// $function_hash_args['markup'] = [];
+					// h::log( render::$args );
+
+					// add config ##
+					$function_args = \q\core\method::parse_args( 
+						$function_args, 
+						[ 
+							'config' => [ 
+								'strip' => true 
+							] 
+						]
+					);
+
+					// update function ##
+					$function = str_replace( [ $config_string, tags::g( 'arg_o' ), tags::g( 'arg_c' ) ], '', $function );
+
+					// falsey ##
+					$config_string = '';
+
+					h::log( 'function after strip: "'.$function.'"' );
+
+				}
+				*/
+
+				// go with it ##
 				if ( 
-					// $config_string = core\method::string_between( $value, '[[', ']]' )
-					$config_string = core\method::string_between( 
-						$function, 
-						trim( willow\tags::g( 'arg_o' )), 
-						trim( willow\tags::g( 'arg_c' )) 
-					)
+					$config_string 
 				){
 	
-					// $config_string = json_encode( $config_string );
-					// h::log( $config_string );
-
-					// if ( 
-					// 	is_object( json_decode( $config_string ))
-					// ){
-
-					// 	// decode to JSON object ##
-					// 	$config_object = json_decode( $config_string );
-
-					// 	h::log( 'is JSON..' );
-
-					// } else {
-
-					// 	$config_object = false;
-
-					// }
-
 					// clean up string -- remove all white space ##
 					// $string = trim( $string );
 					// $config_string = str_replace( ' ', '', $config_string );
 					// h::log( 'd:> '.$string );
-
+	
 					// pass to argument handler ##
 					$function_args = 
 						willow\arguments::decode([ 
@@ -198,26 +216,7 @@ class functions extends willow\parse {
 							'tag'		=> 'function'	
 						]);
 	
-					// h::log( 'd:>config: '.$config_string );
-					// h::log( $config_json );
-					// h::log( $config_array );
-	
-					// sanity ##
-					if ( 
-						! $config_string
-						// || ! $config_array
-						// || ! is_array( $config_array )
-						// || ! isset( $matches[0] ) 
-						// || ! $matches[0]
-					){
-	
-						h::log( render::$args['task'].'~>e:>No valid config found in function: '.$function ); // @todo -- add "loose" lookups, for white space '@s
-						// h::log( 'd:>No config in placeholder: '.$placeholder ); // @todo -- add "loose" lookups, for white space '@s''
-	
-						continue;
-	
-					}
-	
+
 					// h::log( $matches[0] );
 	
 					// $field = trim( core\method::string_between( $value, '{{ ', '[[' ) );
@@ -226,29 +225,13 @@ class functions extends willow\parse {
 					// $function = core\method::string_between( $function, trim( tags::g( 'fun_o' )), trim( tags::g( 'arg_o' )) );
 					$function_explode = explode( trim( willow\tags::g( 'arg_o' )), $function );
 					// h::log( $function_explode );
-					$function = $function_explode[0];
+					$function = trim( $function_explode[0] );
 					// $class = false;
 					// $method = false;
 
 					$hash = $function; // update hash to take simpler function name.. ##
 					// h::log( 'hash updated to: '.$hash );
-
-					// $function_args = [ 'config' => [ 'hash' => $hash ] ];
-	
-					// h::log( 'function: '.$function );
-						
-					// if ( $config_object && is_object( $config_object ) ) {
-
-						// foreach( $config_object as $k => $v ) {
-
-							// $function_args = [];
-		
-							// h::log( "d:>config_setting: ".$k );
-							// h::log( $v ); // may be an array ##
-							
-							// $function_args[$k] = $v;
-		
-						// }
+					h::log( 'function: "'.$function.'"' );
 
 					// single arguments are always assigned as markup->template ##
 					// } else {
@@ -257,7 +240,7 @@ class functions extends willow\parse {
 						|| ! is_array( $function_args ) 
 					) {
 
-						// call_user_func_array requires an array, so casting here ##
+						// create required array structure + value
 						$function_args['markup']['template'] = $config_string;
 
 					}
@@ -278,18 +261,75 @@ class functions extends willow\parse {
 
 					$function = trim( $function_explode[0] );
 
-					h::log( 'd:>function_args: '.$function_args );
+					// h::log( 'd:>function_args: '.$function_args );
 
 				}
 
-				// h::log( 'd:>function: '.$function );
+				h::log( 'd:>function: '.$function );
 
-				// Q function correction ##
+				// starts with "~" so, ALL return values should be escaped #
 				if( core\method::starts_with( $function, '~' ) ) {
+
+					// h::log( 'Function starts with "~": '.$function );
+					$function = str_replace( '~', '', $function );
+
+					// update hash ##
+					$hash = $function;
+					
+					// h::log( 'Function now: '.$function );
+
+					// add config ##
+					$function_args = \q\core\method::parse_args( 
+						$function_args, 
+						[ 
+							'config' => [ 
+								'escape' => true 
+							] 
+						]
+					);
+
+				}
+
+				// starts with "~" so, ALL return values should be escaped #
+				if( core\method::starts_with( $function, '-' ) ) {
+
+					h::log( 'Function starts with "-": '.$function );
+					$function = str_replace( '-', '', $function );
+
+					// update hash ##
+					$hash = $function;
+					
+					// h::log( 'Function now: '.$function );
+
+					// add config ##
+					$function_args = \q\core\method::parse_args( 
+						$function_args, 
+						[ 
+							'config' => [ 
+								'strip' => true 
+							] 
+						]
+					);
+
+				}
+
+				// function scope "\" indicates global, outsode of context scope ##
+				if( core\method::starts_with( $function, '\\' ) ) {
+
+					// h::log( 'Function starts with "\": '.$function );
+					// global functions are escaped with "\" ##
+					$function = str_replace( '\\', '', $function );
+
+					// update hash ##
+					$hash = $function;
+					
+					// h::log( 'Function now: '.$function );
+
+				} else {
 
 					// h::log( 'Function starts with ~: '.$function );
 					// Q functions are namespaced with "~" ##
-					$function = str_replace( '~', '', $function );
+					// $function = str_replace( '~', '', $function );
 					$function = str_replace( '::', '__', $function );
 					
 					// format to q::function ##
@@ -308,7 +348,7 @@ class functions extends willow\parse {
 
 					list( $class, $method ) = explode( '::', $function );
 
-					$hash = $method; //  PROBLEM ##
+					$hash = $method; 
 					// h::log( 'hash updated again to: '.$hash );
 
 					// h::log( 'class: '.$class.' - method: '.$method );
@@ -333,7 +373,7 @@ class functions extends willow\parse {
 					// $method = preg_replace( '/[^a-zA-Z0-9-_]/', '', (string) $method );
 
 					// function correction ##
-					if( 'q' == $class ) $class = '\\q\\render';
+					if( 'q' == $class ) $class = '\\q\\context';
 
 					if ( 
 						! class_exists( $class )
@@ -347,8 +387,6 @@ class functions extends willow\parse {
 
 					}	
 
-					// if we are calling q\render.. we need to wrap up the current process or append args.. how ??
-
 					// h::log( 'd:>Function array created' );
 
 					// make class__method an array ##
@@ -357,7 +395,7 @@ class functions extends willow\parse {
 				// try to locate function directly in global scope ##
 				} elseif ( ! function_exists( $function ) ) {
 
-					h::log( 'Cannot find function: '.$function );
+					h::log( 'd:>Cannot find function: '.$function );
 
 					continue;
 
@@ -365,13 +403,33 @@ class functions extends willow\parse {
 
 				// test what we have ##
 				// h::log( 'd:>function: "'.$function.'"' );
+				$hash = $hash.'.'.rand();
 				// h::log( 'hash at end is...: '.$hash );
 
 				// if ( function_exists( $function ) ) build list of functions to call later at end of current process.. pre-output.. placeholder can be added now.. fields added to list... how??
 
+				// h::log( $function_args );
+
 				// class and method set ## 
 
 				if ( $class && $method ) {
+
+					// correcting args ##
+					$function_hash_args = [];
+
+					// buffer hash ##
+					// $function_hash_args['config']['hash'] = $hash ;
+
+					// merge in new args ##
+					// $function_args = \q\core\method::parse_args( $function_args, $function_hash_args );
+					$function_args = \q\core\method::parse_args( 
+						$function_args, 
+						[ 
+							'config' => [ 
+								'hash' => $hash 
+							] 
+						]
+					);
 
 					// collect current process state ##
 					render\args::collect();
@@ -403,7 +461,7 @@ class functions extends willow\parse {
 
 				} else {
 
-					// h::log( 'd:>Calling function' );
+					// h::log( 'd:>Calling function: '.$function );
 
 					// clean up function name -- @todo ##
 					// $function = preg_replace( '/[^a-zA-Z0-9-_]/', '', (string) $function );
@@ -413,7 +471,7 @@ class functions extends willow\parse {
 					if( $function_args ){
 
 						// h::log( 'passing args array:' );
-						h::log( $function_args );
+						// h::log( $function_args );
 
 						render\fields::define([
 							$hash => call_user_func( $function, $function_args )
@@ -431,7 +489,7 @@ class functions extends willow\parse {
 
 				}
 
-				// finally -- add a variable "{{ $field }}" before this comment block at $position to markup->template ##
+				// finally -- add a variable "{{ $field }}" where the function tag block was in markup->template ##
 				$variable = willow\tags::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
 				// variable::set( $variable, $position, 'variable' ); // '{{ '.$field.' }}'
 				willow\markup::swap( $function_match, $variable, 'function', 'variable' ); // '{{ '.$field.' }}'

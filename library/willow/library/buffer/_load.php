@@ -5,6 +5,7 @@ namespace q\willow;
 use q\core;
 use q\core\helper as h;
 use q\render;
+use q\context;
 use q\view;
 use q\willow;
 
@@ -81,7 +82,7 @@ class buffer extends \q_willow {
 
 			// @TODO... this needs to be more graceful, and render needs to have "blocks", which can be passed / set
 			// echo theme\view\ui\header::render();
-			render::ui__header();
+			context::ui__header();
 		
 			// Apply any filters to the final output
 			// echo \apply_filters( 'ob_output', $string );
@@ -89,7 +90,7 @@ class buffer extends \q_willow {
 
 			// @TODO... this needs to be more graceful, and render needs to have "blocks", which can be passed / set
 			// echo theme\view\ui\footer::render();
-			render::ui__footer();
+			context::ui__footer();
 
 		}, 0);
 
@@ -169,6 +170,8 @@ class buffer extends \q_willow {
 		// h::log( render::$buffer );
 		render\fields::define( render::$buffer );
 
+		// h::log( render::$args );
+
 		// Prepare template markup ##
 		render\markup::prepare();
 
@@ -185,7 +188,7 @@ class buffer extends \q_willow {
 		willow\parse::cleanup();
 
 		// check what we have ##
-		// h::log( self::$markup['template'] );
+		// h::log( render::$markup['template'] );
 		
 		// clear object cache ##
 		render::$buffer = [];

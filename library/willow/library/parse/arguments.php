@@ -16,8 +16,8 @@ class arguments extends willow\parse {
 
 	Requirements: 
 
-	[[ new = test & config = debug:true, run:true ]]
-	[[ config->debug = true & config->handle = sm:medium, lg:large ]]
+	>> new = test & config = debug:true, run:true <<
+	>> config->debug = true & config->handle = sm:medium, lg:large <<
 	*/
 	public static function decode( $args = null ){
 

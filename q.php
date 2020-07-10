@@ -227,7 +227,10 @@ if ( ! class_exists( 'Q' ) ) {
 			// render engine ##
 			require_once self::get_plugin_path( 'library/render/_load.php' );
 
-			// willow ##
+			// data contexts ##
+			require_once self::get_plugin_path( 'library/context/_load.php' );
+
+			// willow -- @TODO -- move to seperate plugin ##
 			require_once self::get_plugin_path( 'library/willow/q-willow.php' );
 			
 			// widgets ##

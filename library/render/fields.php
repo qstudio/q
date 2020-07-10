@@ -102,6 +102,7 @@ class fields extends \q\render {
     }
 
 
+
 	
 	/**
 	 * Define $fields args for render methods
@@ -125,9 +126,16 @@ class fields extends \q\render {
 		// assign string to key 'value' ##
 		if ( is_string( $args ) ){
 
+			h::log( 'e:>Calling fields/define with a string value is __deprectated..' );
 			return self::$fields['value'] = $args;
 
 		}
+
+		// prepfix fields for uniqueness ##
+		// $args = array_combine(
+		// 	array_map(function($k){ return 'prefix__'.$k; }, array_keys($args)),
+		// 	$args
+		// );
 
 		// h::log( $args );
 		// else, loop over array ##

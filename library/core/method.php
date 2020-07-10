@@ -559,7 +559,7 @@ class method extends \Q {
 			// stripslashes ## .. hmmm ##
 			$contents = str_replace( '\\', '', $contents );
 
-			h::log( 'd:>Array data good, saving to file' );
+			// h::log( 'd:>Array data good, saving to file' );
 
 			// save in php as an array, ready to return ##
 			file_put_contents( $path, "<?php\n return {$contents};\n") ;

@@ -4,7 +4,7 @@ namespace q\willow;
 
 use q\willow;
 use q\willow\core;
-use q\willow\core\helper as h;
+use q\core\helper as h;
 
 // use q\ui;
 use q\render; // @TODO
@@ -102,7 +102,7 @@ class markup extends willow\parse {
      * @since    2.0.0
      * @return   Mixed
      */
-    public static function string( $markup = null, $data = null )
+    public static function string( $markup = null, $data = null, $args = null )
     {
 
         // sanity ##
@@ -190,7 +190,7 @@ class markup extends willow\parse {
 
 		}
 
-		// h::log( $args );
+		h::log( $args );
 
 		// wrap string in defined string ?? ##
 		if ( isset( $args['wrap'] ) ) {
@@ -345,7 +345,7 @@ class markup extends willow\parse {
 		// push back into main stored markup ##
 		render::$markup['template'] = $new_template;
 		
-		// h::log( 'd:>'.$markup );
+		// h::log( 'd:>'.$new_template );
 
 		// log ##
 		// h::log( render::$args['task'].'~>variable_added:>"'.$tag.'" @position: "'.$position.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );

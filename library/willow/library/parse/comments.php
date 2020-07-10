@@ -137,9 +137,16 @@ class comments extends willow\parse {
 				// $hash = bin2hex( random_bytes(16) );
 				$hash = 'comment__'.\mt_rand();
 
+				// no escaping.. yet
+				// $config = [ 'config' => [ 'escape' => false ] ];
+				// h::log( $config );
+				// if ( ! isset( render::$args[$hash] ) ) render::$args[$hash] = [];
+				// render::$args[$hash] = \q\core\method::parse_args( $config, render::$args[$hash] );
+				// h::log( render::$args );
+
 				// so, we can add a new field value to $args array based on the field name - with the comment as value
 				render\fields::define([
-					$hash => '<!-- '.$comment.' -->'
+					$hash 		=> '<!-- '.$comment.' -->',
 				]);
 				
 				// also, add a log entry ##

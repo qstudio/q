@@ -84,16 +84,6 @@ class config extends \Q {
 		
 		}
 
-		/*
-		if ( ! method_exists( 'q_theme', 'get_child_theme_path' ) ){ 
-
-			h::log( 'e:>Q Theme class not available, perhaps this function was hooked too early?' );
-
-			return false;
-
-		}
-		*/
-
 		// if theme debugging, then load from single config files ##
 		if ( self::$debug ) {
 
@@ -118,29 +108,17 @@ class config extends \Q {
 
 		// h::log('d:>saved config to DB...' );
 
-		return true;
-		/*
+		// return true;
 
-		// write to file ##
-		// self::file_put_array( \Q::get_plugin_path( 'library/render/config/__q.php' ), $array );
 		if ( method_exists( 'q_theme', 'get_child_theme_path' ) ){ 
 
-			// h::log( 'd:>Child theme method found, so trying to save data to __q.php' );
-
-			// \set_site_transient( 'q_willow_config', self::$config, 24 * HOUR_IN_SECONDS );
+			// h::log( 'e:>Q Theme class not available, perhaps this function was hooked too early?' );
 
 			core\method::file_put_array( \q_theme::get_child_theme_path( '/__q.php' ), self::$config );
 
-			return true;
-
-		} else {
-
-			h::log( 'e:>Child theme method NOT found, could not write __q.php' );
-
-			return false;
-
 		}
-		*/
+
+		return true;
 
 	}
 
@@ -174,13 +152,19 @@ class config extends \Q {
 
 				\delete_site_transient( 'q_willow_config' );
 
-				$file = \q_theme::get_child_theme_path('/__q.php');
+				// h::log( 'd:>Deleted config cache from DB...' );
 
-				if ( $file && file_exists( $file ) ) {
+				if ( method_exists( 'q_theme', 'get_child_theme_path' ) ){ 
 
-					unlink( $file );
+					$file = \q_theme::get_child_theme_path('/__q.php');
 
-					h::log( 'd:>...also deleting __q.php, so cache is clear' );
+					if ( $file && file_exists( $file ) ) {
+
+						unlink( $file );
+
+						// h::log( 'd:>...also deleting __q.php, so cache is clear' );
+
+					}
 
 				}
 
@@ -432,7 +416,7 @@ class config extends \Q {
 			is_string( $args )
 		){
 
-			// @todo ##
+			// pre format ##
 			if ( true === strpos( $args, '__' ) ){
 
 				$explode = explode( '__', $args );
@@ -475,7 +459,7 @@ class config extends \Q {
 		self::run_filter();
 
 		// define property for logging ##
-		$property = $args['context'].' -> '.$args['task'] ;
+		$property = $args['context'].'::'.$args['task'] ;
 
 		// h::log('d:>Looking for $config property: '.$property );
 		// h::log( self::$config );
@@ -514,6 +498,7 @@ class config extends \Q {
 
 			// ok ##
 			// h::log( 'd:>config set to : "'.$property.'"' );
+			// h::log( $return );
 
 		}
 

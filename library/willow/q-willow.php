@@ -42,8 +42,8 @@ if ( ! class_exists( 'q_willow' ) ) {
         // Plugin Settings
         const version = '0.0.1';
         const text_domain = 'q-willow'; // for translation ##
-        // static $debug = false; // global debugging, normally false, as individual plugins can control local level debugging ##
-
+		// static $debug = false; // global debugging, normally false, as individual plugins can control local level debugging ##
+		
 		protected static 
 
 			/* define template delimiters */
@@ -58,8 +58,8 @@ if ( ! class_exists( 'q_willow' ) ) {
 
 				// parameters / arguments ##
 				'argument'		=> [
-					'open' 		=> '[[ ', // open ## 
-					'close' 	=> ' ]]', // close ##
+					'open' 		=> '>> ', // open ## 
+					'close' 	=> ' <<', // close ##
 				],
 				
 				// section ##

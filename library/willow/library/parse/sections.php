@@ -17,6 +17,8 @@ class sections extends willow\parse {
 	*/
 	public static function prepare( $args = null ){
 
+		// h::log( $args );
+
 		// sanity -- this requires ##
 		if ( 
 			! isset( render::$markup )
@@ -144,14 +146,19 @@ class sections extends willow\parse {
 
 				// $hash = 'section__'.\mt_rand();
 				$hash = $field;
+				// $hash = $args['context'].'__'.$args['task'].'__'.rand();
 
 				// test what we have ##
 				// h::log( 'd:>field: "'.$field.'"' );
 				// h::log( "d:>markup: $markup" );
+				// h::log( "d:>has: $hash" );
 
 				// so, we can add a new field value to $args array based on the field name - with the markup as value
 				// render::$args[$field] = $markup;
 				render::$markup[$hash] = $markup;
+
+				// force hash ?? ##
+				// render::$args['config']['hash'] = $hash;
 
 				// finally -- add a variable "{{ $field }}" before this block at $position to markup->template ##
 				$variable = willow\tags::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);

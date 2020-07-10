@@ -66,14 +66,15 @@ class output extends \q\render {
 
 			// hash should be context__task ##
 			$hash = 
-				// isset( self::$args['config']['hash'] ) ? 
-				// self::$args['config']['hash'] : 
+				isset( self::$args['config']['hash'] ) ? 
+				self::$args['config']['hash'] : 
 				self::$args['context'].'__'.self::$args['task'] ;
 
 			// if ( isset( self::$args['config']['hash'] ) ) h::log( 'd:>hash via config->hash' );
 			// h::log( 'd:>hash set to: '.$hash );
 
-			// store in buffer also -- @todo, make this conditional on buffering running.. perhaps just knowing we are returning data is enough to presume it's buffering?? ##
+			// store in buffer also -- 
+			// @todo, make this conditional on buffering running.. perhaps just knowing we are returning data is enough to presume it's buffering?? ##
 			self::$buffer[ $hash ] = $return;
 
 			// reset all args ##

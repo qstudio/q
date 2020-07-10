@@ -133,6 +133,50 @@ class markup extends \q\render {
 
 
 
+	// @todo - escape ## per call, or globally ## ??
+	public static function escape( $value ) {
+
+		// h::log( self::$args );
+
+		// return $value;
+
+		if ( isset( self::$args['config']['escape'] ) ){
+
+			// h::log( 'd:>escaping value: '.self::$args['config']['hash'] );
+
+			$value = mb_convert_encoding( $value, 'UTF-8', 'UTF-8' );
+			$value = htmlentities( $value, ENT_QUOTES, 'UTF-8' ); 
+
+		}
+
+		return $value;
+
+	}
+
+
+
+	// @todo - escape ## per call, or globally ## ??
+	public static function strip( $value ) {
+
+		// h::log( self::$args );
+
+		// return $value;
+
+		if ( isset( self::$args['config']['strip'] ) ){
+
+			h::log( 'd:>stripping value: '.$value );
+
+			$value = strip_tags( $value );
+			// $value = htmlentities( $value, ENT_QUOTES, 'UTF-8' ); 
+
+		}
+
+		return $value;
+
+	}
+
+
+
 	/**
 	 * filter passed args for markup
 	 * 
@@ -157,7 +201,7 @@ class markup extends \q\render {
 		// empty stored markup ##
 		self::$markup = [];
 
-		$for = '';#' - '.$args['context'].'_'.$args['task'];
+		// $for = '';#' - '.$args['context'].'_'.$args['task'];
 
 		// if "markup" set in args, take this ##
 		if ( 
@@ -303,6 +347,7 @@ class markup extends \q\render {
 		// @todo no additional markup passes from config.. so we should check if we actually have a markup->template
 		if (
 			! isset( self::$markup['template'] )
+			// || null == self::$markup['template']
 		){
 
 			// default -- almost useless - but works for single values.. ##
@@ -415,7 +460,15 @@ class markup extends \q\render {
              'parameters'    => [ 'string' => $string ], // pass ( $string ) as single array ##
              'filter'        => 'q/render/markup/string/after/'.self::$args['task'].'/'.$key, // filter handle ##
              'return'        => $string
-        ]); 
+		]); 
+		
+		h::log( 't:>Move pre-render formats to some sort of system / class' );
+
+		// escape ##
+		$string = self::escape( $string );
+
+		// strip ##
+		$string = self::strip( $string );
 
 		// return ##
 		return $string;
@@ -606,7 +659,13 @@ class markup extends \q\render {
 			];
 			// new variable ##
 			// h::log( 't:>todo.. make this new field name more reliable' );
-			$new = willow\tags::g( 'var_o' ).trim($field).'__'.trim($count).'.'.trim( str_replace( $array_replace, '', trim($value) ) ).willow\tags::g( 'var_c' );
+			$new = willow\tags::g( 'var_o' ).trim($field).'.'.trim($count).'.'.trim( str_replace( $array_replace, '', trim($value) ) ).willow\tags::g( 'var_c' );
+
+			/*
+			WAS
+
+			$new = willow\tags::g( 'var_o' ).trim($field).'__'.trim($count).'__'.trim( str_replace( $array_replace, '', trim($value) ) ).willow\tags::g( 'var_c' );
+			*/
 
 			// single whitespace max ## @might be needed ##
 			// $new = preg_replace( '!\s+!', ' ', $new );	
