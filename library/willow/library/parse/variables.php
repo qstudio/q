@@ -8,8 +8,7 @@ use q\willow;
 
 use q\render; // TODO
 
-class variable extends willow\parse {
-	
+class variables extends willow\parse {
 
 	/**
 	 * Scan for arguments in variables and convert to $config->data

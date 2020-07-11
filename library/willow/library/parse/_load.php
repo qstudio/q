@@ -53,7 +53,7 @@ class parse extends \q_willow {
 			'sections' => h::get( 'parse/sections.php', 'return', 'path' ),
 
 			// variables.. ##
-			'variable' => h::get( 'parse/variable.php', 'return', 'path' ),
+			'variables' => h::get( 'parse/variables.php', 'return', 'path' ),
 
 		];
 
@@ -84,7 +84,7 @@ class parse extends \q_willow {
 
 		// pre-format markup to extract variable arguments - 
 		// goes last, as other tags might have added new variables to prepare ##
-		variable::prepare( $args );
+		variables::prepare( $args );
 
 	}
 
@@ -113,7 +113,7 @@ class parse extends \q_willow {
 		comments::cleanup(); // @todo ##
 
 		// pre-format markup to extract functions ##
-		variable::cleanup();
+		variables::cleanup();
 
 		// search for config settings passed in markup, such as "src" handle ##
 		// argument::cleanup(); // @todo ##

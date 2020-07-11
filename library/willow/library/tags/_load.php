@@ -68,9 +68,11 @@ class tags extends \q_willow {
 			'par_c' => self::$filtered_tags['partial']['close'],
 			'com_o' => self::$filtered_tags['comment']['open'],
 			'com_c' => self::$filtered_tags['comment']['close'],
-			'inv_o' => self::$filtered_tags['inversion']['open'],
-			'inv_c' => self::$filtered_tags['inversion']['close'],
-			'inv_e' => self::$filtered_tags['inversion']['end'],
+			'fla_o' => self::$filtered_tags['flag']['open'],
+			'fla_c' => self::$filtered_tags['flag']['close'],
+			// 'inv_o' => self::$filtered_tags['inversion']['open'],
+			// 'inv_c' => self::$filtered_tags['inversion']['close'],
+			// 'inv_e' => self::$filtered_tags['inversion']['end'],
 		];
 
 		// full back, in case not requested via shortcode ##

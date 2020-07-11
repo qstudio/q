@@ -160,6 +160,8 @@ class sections extends willow\parse {
 				// force hash ?? ##
 				// render::$args['config']['hash'] = $hash;
 
+				h::log( 't:>INVERSION - No need for a whole new tag, just pass an "inversion/default" string in case of no results - perhaps defined with the class->method or picked up via a flag "*value"' );
+
 				// finally -- add a variable "{{ $field }}" before this block at $position to markup->template ##
 				$variable = willow\tags::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
 				willow\markup::set( $variable, $position, 'variable' ); // '{{ '.$field.' }}'

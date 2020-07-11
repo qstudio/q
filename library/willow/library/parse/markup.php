@@ -415,6 +415,14 @@ class markup extends willow\parse {
 
 			break ;
 
+			case "comment" :
+
+				// check if variable is correctly formatted --> {{> STRING }} ##
+				$needle_start = tags::g( 'com_o' ); #'{{ ';
+				$needle_end = tags::g( 'com_c' ); #' }}';
+
+			break ;
+
 		}
 
         if (
@@ -446,6 +454,14 @@ class markup extends willow\parse {
 				// check if variable is correctly formatted --> {{> STRING }} ##
 				$needle_start = tags::g( 'par_o' ); #'{{ ';
 				$needle_end = tags::g( 'par_c' ); #' }}';
+
+			break ;
+
+			case "comment" :
+
+				// check if variable is correctly formatted --> {{> STRING }} ##
+				$needle_start = tags::g( 'com_o' ); #'{{ ';
+				$needle_end = tags::g( 'com_c' ); #' }}';
 
 			break ;
 

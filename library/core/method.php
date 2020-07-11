@@ -204,7 +204,7 @@ class method extends \Q {
         if ( ! $key ) { return false; }
         
         // scan the key for allowed characters ##
-        $key = preg_replace( '^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$', '', $key );
+        $key = preg_replace( '/[^A-Za-z0-9-_]+/', '', $key );
         
         // return the key ##
         return $key;
@@ -227,7 +227,7 @@ class method extends \Q {
         if ( ! $key ) { return false; }
         
         // scan the key for allowed characters ##
-        $key = preg_replace( '^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$', '', $key );
+        $key = preg_replace( '/[^A-Za-z0-9-\\\\_]+/', '', $key );
         
         // return the key ##
         return $key;

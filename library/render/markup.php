@@ -101,7 +101,7 @@ class markup extends \q\render {
 			// h::log( $variables );
 			
 			// h::log( 't:>moved from loop removal to regex model, make sure this does not cause other problems ##');
-			willow\variable::cleanup();
+			willow\variables::cleanup();
 
             // remove any leftover variables in string ##
             // foreach( $variables as $key => $value ) {
@@ -142,7 +142,7 @@ class markup extends \q\render {
 
 		if ( isset( self::$args['config']['escape'] ) ){
 
-			// h::log( 'd:>escaping value: '.self::$args['config']['hash'] );
+			h::log( 'd:>escaping value: '.self::$args['config']['hash'] );
 
 			$value = mb_convert_encoding( $value, 'UTF-8', 'UTF-8' );
 			$value = htmlentities( $value, ENT_QUOTES, 'UTF-8' ); 
@@ -164,7 +164,7 @@ class markup extends \q\render {
 
 		if ( isset( self::$args['config']['strip'] ) ){
 
-			h::log( 'd:>stripping value: '.$value );
+			h::log( 'd:>stripping tags from value: '.$value );
 
 			$value = strip_tags( $value );
 			// $value = htmlentities( $value, ENT_QUOTES, 'UTF-8' ); 

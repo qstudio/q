@@ -162,15 +162,15 @@ class buffer extends \q_willow {
 		// so.. let's parser prepare an array in $buffer of hash + value.. then pass this to fields::define ??
 		willow\parse::prepare( $args );
 
-		// h::log( self::$markup );
-		// h::log( self::$buffer );
+		// h::log( render::$markup );
+		// h::log( render::$buffer );
 
 		// prepare field data ##
 		// render\fields::prepare();
 		// h::log( render::$buffer );
 		render\fields::define( render::$buffer );
 
-		// h::log( render::$args );
+		// h::log( render::$fields );
 
 		// Prepare template markup ##
 		render\markup::prepare();

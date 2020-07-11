@@ -11,6 +11,27 @@ use q\render;
 
 class comments extends willow\parse {
 
+	private static 
+
+		$hash, 
+		$comment,
+		$comment_match,
+		$flags
+		// $position
+	
+	;
+
+
+	private static function reset(){
+
+		self::$hash = false; 
+		self::$comment = false;
+		self::$comment_match = false;
+		self::$flags = false;
+		// self::$position = false;
+
+	}
+
 	/**
 	 * Scan for comments in markup and convert to variables and $fields and also to error log ##
 	 * 
@@ -56,7 +77,7 @@ class comments extends willow\parse {
 		// h::log( 'open: '.$open. ' - close: '.$close );
 
 		$regex_find = \apply_filters( 
-			'q/render/markup/comment/regex/find', 
+			'q/willow/parse/comments/regex/find', 
 			"/$open\s+(.*?)\s+$close/s"  // note:: added "+" for multiple whitespaces.. not sure it's good yet...
 			// "/{{#(.*?)\/#}}/s" 
 		);
@@ -66,16 +87,6 @@ class comments extends willow\parse {
 			preg_match_all( $regex_find, $string, $matches, PREG_OFFSET_CAPTURE ) 
 		){
 
-			// strip all section blocks, we don't need them now ##
-			// $regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );
-			// $regex_remove = \apply_filters( 
-			// 	'q/render/markup/comment/regex/remove', 
-			// 	"/$open.*?$close/ms" 
-			// 	// "/{{#.*?\/#}}/ms"
-			// );
-			// render::$markup['template'] = preg_replace( $regex_remove, "", render::$markup['template'] ); 
-		
-			// preg_match_all( '/%[^%]*%/', $string, $matches, PREG_SET_ORDER );
 			// h::log( $matches[1] );
 
 			// sanity ##
@@ -93,6 +104,9 @@ class comments extends willow\parse {
 
 			foreach( $matches[1] as $match => $value ) {
 
+				// clear slate ##
+				self::reset();
+
 				// position to add placeholder ##
 				if ( 
 					! is_array( $value )
@@ -109,16 +123,47 @@ class comments extends willow\parse {
 
 				// h::log( 'd:>Searching for comments data...' );
 
-				$position = $matches[0][$match][1]; // take from first array ##
+				// self::$position = $matches[0][$match][1]; // take from first array ##
 				// h::log( 'd:>position: '.$position );
 				// h::log( 'd:>position from 1: '.$matches[0][$match][1] ); 
 				
 				// get a single comment ##
-				$comment = core\method::string_between( $matches[0][$match][0], $open, $close );
+				self::$comment = core\method::string_between( $matches[0][$match][0], $open, $close );
+
+				// return entire function string, including tags for tag swap ##
+				self::$comment_match = core\method::string_between( $matches[0][$match][0], $open, $close, true );
+
+				// look for flags ##
+				self::flags();
+				/*
+				if(
+					strstr( self::$comment, trim( willow\tags::g( 'fla_o' ) ) )
+					&& strstr( self::$comment, trim( willow\tags::g( 'fla_c' ) ) )
+				){
+
+					h::log( 'd:>FOUND flags...' );
+
+					$flags = trim(
+						core\method::string_between( 
+							self::$comment, 
+							trim( willow\tags::g( 'fla_o' ) ), 
+							trim( willow\tags::g( 'fla_c' ) ) 
+						)
+					);
+
+					self::$flags = str_split( $flags );
+					self::$flags = array_fill_keys( self::$flags, true );
+					// h::log( self::$flags );
+
+					// remove flags ##
+					self::$comment = str_replace( $flags, '', self::$comment );
+
+				}
+				*/
 
 				// sanity ##
 				if ( 
-					! isset( $comment ) 
+					! isset( self::$comment ) 
 				){
 
 					h::log( 'e:>Error in returned match function' );
@@ -128,14 +173,13 @@ class comments extends willow\parse {
 				}
 
 				// clean up ##
-				$comment = trim($comment);
+				self::$comment = trim(self::$comment);
 
 				// test what we have ##
-				// h::log( 'd:>comment: "'.$comment.'"' );
+				// h::log( 'd:>comment: "'.self::$comment.'"' );
 
 				// hash ##
-				// $hash = bin2hex( random_bytes(16) );
-				$hash = 'comment__'.\mt_rand();
+				self::$hash = 'comment__'.\mt_rand();
 
 				// no escaping.. yet
 				// $config = [ 'config' => [ 'escape' => false ] ];
@@ -144,19 +188,76 @@ class comments extends willow\parse {
 				// render::$args[$hash] = \q\core\method::parse_args( $config, render::$args[$hash] );
 				// h::log( render::$args );
 
-				// so, we can add a new field value to $args array based on the field name - with the comment as value
-				render\fields::define([
-					$hash 		=> '<!-- '.$comment.' -->',
-				]);
-				
-				// also, add a log entry ##
-				h::log( 'd:>'.$comment );
+				// default is an html comment - also indicated with flag 'h', if set ##
+				if ( 
+					empty( self::$flags ) 
+					|| isset( self::$flags['h'] )
+				){
 
-				// finally -- add a variable "{{ $field }}" before this comment block at $position to markup->template ##
-				$variable = willow\tags::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
-				willow\markup::set( $variable, $position, 'variable' ); // '{{ '.$field.' }}'
+					// so, we can add a new field value to $args array based on the field name - with the comment as value
+					render\fields::define([
+						self::$hash 		=> '<!-- '.self::$comment.' -->',
+					]);
+
+					// add a variable "{{ $field }}" before this comment block to markup->template ##
+					$variable = willow\tags::wrap([ 'open' => 'var_o', 'value' => self::$hash, 'close' => 'var_c' ]);
+					willow\markup::swap( self::$comment_match, $variable, 'comment', 'variable' ); // '{{ '.$field.' }}'
+
+				}
+				
+				if ( 
+					isset( self::$flags['p'] )
+				){
+
+					// also, add a log entry ##
+					h::log( 'd:>'.self::$comment );
+
+				}
+
+				// clear slate ##
+				self::reset();
 
 			}
+
+		}
+
+	}
+
+
+
+	public static function flags( $string = null ){
+
+		// sanity ##
+		h::log( 't:>make flags::prepare() method, make $flags a property of parse.. ' );
+
+		if(
+			// strstr( self::$comment, trim( willow\tags::g( 'fla_o' ) ) )
+			// && strstr( self::$comment, trim( willow\tags::g( 'fla_c' ) ) )
+			core\method::starts_with( self::$comment, trim( willow\tags::g( 'fla_o' ) ) )
+			&& $flags = core\method::string_between( self::$comment, trim( willow\tags::g( 'fla_o' ) ), trim( willow\tags::g( 'fla_c' ) ) )
+		){
+
+			h::log( 'd:>FOUND flags...' );
+
+			$flags = trim(
+				core\method::string_between( 
+					self::$comment, 
+					trim( willow\tags::g( 'fla_o' ) ), 
+					trim( willow\tags::g( 'fla_c' ) ) 
+				)
+			);
+
+			self::$flags = str_split( $flags );
+			self::$flags = array_fill_keys( self::$flags, true );
+			// h::log( self::$flags );
+
+			$flags_all = core\method::string_between( self::$comment, trim( willow\tags::g( 'fla_o' ) ), trim( willow\tags::g( 'fla_c' ) ), true );
+
+			// remove flags ##
+			self::$comment = str_replace( $flags_all, '', self::$comment );
+
+			// kick it back ##
+			// return $string
 
 		}
 

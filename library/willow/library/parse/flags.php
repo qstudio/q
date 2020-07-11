@@ -9,15 +9,15 @@ use q\core\helper as h;
 // use q\ui;
 use q\render; // @TODO ##
 
-class arguments extends willow\parse {
+class flags extends willow\parse {
 	
 	/*
-	Decode arguments passed in string
+	Decode flags passed in string
 
 	Requirements: 
 
-	>> new = test & config = debug:true, run:true <<
-	>> config->debug = true & config->handle = sm:medium, lg:large <<
+	[f]
+	[-@]
 	*/
 	public static function decode( $args = null ){
 

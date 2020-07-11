@@ -58,8 +58,14 @@ if ( ! class_exists( 'q_willow' ) ) {
 
 				// parameters / arguments ##
 				'argument'		=> [
-					'open' 		=> '>> ', // open ## 
-					'close' 	=> ' <<', // close ##
+					'open' 		=> '( ', // open ## 
+					'close' 	=> ' )', // close ##
+				],
+
+				// flags ##
+				'flag'		=> [
+					'open' 		=> '[ ', // open ## 
+					'close' 	=> ' ]', // close ##
 				],
 				
 				// section ##
@@ -71,11 +77,13 @@ if ( ! class_exists( 'q_willow' ) ) {
 
 				// inversion ##  // else, no results ##
 				// @todo.... this proably will only work when pared with a section.. so, if the section returned false, render the inversion ## 
+				/*
 				'inversion'		=> [
 					'open'		=> '{{^ ',
 					'close'		=> ' }}', 
 					'end'		=> '{{/}}'
 				],
+				*/
 
 				// function -- also, an unescaped variable -- @todo --- ##
 				'function'		=> [
