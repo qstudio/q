@@ -14,7 +14,7 @@ class functions extends willow\parse {
 	private static 
 
 		$hash, 
-		$flags,
+		// $flags,
 		$function,
 		$function_match, // full string matched ##
 		$function_args,
@@ -42,6 +42,7 @@ class functions extends willow\parse {
 	}
 
 
+	/*
 	public static function flags(){
 
 		if(
@@ -68,6 +69,7 @@ class functions extends willow\parse {
 		}
 
 	}
+	*/
 	
 
     /**
@@ -174,7 +176,10 @@ class functions extends willow\parse {
 				// h::log( '$function_match: '.$function_match );
 
 				// look for flags ##
-				self::flags();
+				// self::flags();
+				self::$function = flags::get( self::$function );
+				// h::log( self::$flags );
+				// h::log( self::$function );
 
 				// clean up ##
 				self::$function = trim( self::$function );
@@ -282,7 +287,7 @@ class functions extends willow\parse {
 				}
 
 				// @TODO -- make patterns and improve flag system ( --f --c -- d etc.. )
-				$function = self::flags(); 
+				// $function = self::flags(); 
 
 				// function name might still contain opening and closing args brakets, which were empty - so remove them ##
 				self::$function = str_replace( [
@@ -329,7 +334,7 @@ class functions extends willow\parse {
 
 						// update hash? ##
 						self::$hash = self::$function;
-						// h::log( 'Function now: '.$function );
+						// h::log( 'Function now: '.self::$function );
 
 					}
 
@@ -358,10 +363,7 @@ class functions extends willow\parse {
 					// clean up method name --
 					self::$method = \q\core\method::sanitize( self::$method, 'php_function' );
 
-					// h::log( 'class: '.self::$class.' - method: '.self::$method );
-
-					// // function correction ##
-					// if( 'q' == self::$class ) self::$class = '\\q\\context';
+					// h::log( 'class::method -- '.self::$class.'::'.self::$method );
 
 					if ( 
 						! class_exists( self::$class )
@@ -375,32 +377,20 @@ class functions extends willow\parse {
 
 					}	
 
-					// h::log( 'd:>Function array created' );
-
 					// make class__method an array ##
 					self::$function_array = [ self::$class, self::$method ];
 
 				// simple function string ##
 				} else {
 
+					// clean up function name ##
+					self::$function = \q\core\method::sanitize( self::$function, 'php_function' );
+
 					if( 
 						// core\method::starts_with( self::$function, '+' ) 
 						isset( self::$flags['g'] )
 					) {
 	
-						// h::log( 'Function starts with "+": '.$function );
-						// global functions are escaped with "+" ##
-						// self::$function = str_replace( '+', '', self::$function );
-	
-						// update hash ##
-						// self::$hash = self::$function;
-
-						// scope tracker ##
-						// self::$is_global = true;
-	
-						// clean up function name ##
-						self::$function = \q\core\method::sanitize( self::$function, 'php_function' );
-
 						// try to locate function directly in global scope ##
 						if ( ! function_exists( self::$function ) ) {
 	
@@ -411,9 +401,6 @@ class functions extends willow\parse {
 						}
 
 					} else {
-
-						// clean up function name -- @todo ##
-						self::$function = \q\core\method::sanitize( self::$function, 'php_function' );
 
 						// try to locate function directly in global scope ##
 						if ( ! function_exists( self::$function ) ) {
@@ -439,16 +426,10 @@ class functions extends willow\parse {
 				// class and method set -- so call ## 
 				if ( self::$class && self::$method ) {
 
-					// correcting args ##
-					// $function_hash_args = [];
+					// define args for internal functions ##
+					if( ! isset( self::$flags['g'] ) ) { 
 
-					// buffer hash ##
-					// $function_hash_args['config']['hash'] = $hash ;
-
-					// merge in new args ##
-					// if( ! self::$is_global ) { // unless in the global scope ##
-					if( ! isset( self::$flags['g'] ) ) { // unless in the global scope ##
-
+						// pass hash to buffer ##
 						self::$function_args = \q\core\method::parse_args( 
 							self::$function_args, 
 							[ 
@@ -457,10 +438,6 @@ class functions extends willow\parse {
 								] 
 							]
 						);
-						
-					}
-
-					if( ! isset( self::$flags['g'] ) ) { // unless in the global scope ##
 
 						// e = escape --- escape html ##
 						if( isset( self::$flags['e'] ) ) { // unless in the global scope ##
@@ -475,7 +452,7 @@ class functions extends willow\parse {
 							);
 						}
 
-						// r = raw --- strip html / php tags ##
+						// s = strip --- strip html / php tags ##
 						if( isset( self::$flags['s'] ) ) {
 
 							self::$function_args = \q\core\method::parse_args( 
@@ -501,10 +478,21 @@ class functions extends willow\parse {
 						// h::log( 'passing args array:' );
 						// h::log( self::$function_args );
 
-						render\fields::define([
-							self::$hash => call_user_func_array( 
-								self::$function_array, [ 0 => self::$function_args ] ) // 0 index is for static class args gatherer ##
-						]);
+						// global scope - bypass renderer ##
+						if( isset( self::$flags['g'] ) ) {
+
+							render::$buffer[ self::$hash ] = self::$class::{ self::$method }( self::$function_args );
+
+						} else {
+
+							render\fields::define([
+								self::$hash => 
+									// self::$class::{ self::$method }( [ 0 => self::$function_args ] )
+									call_user_func_array( 
+										self::$function_array, [ 0 => self::$function_args ] ) // 0 index is for static class args gatherer ##
+							]);
+
+						}
 
 					} else { 
 
@@ -541,11 +529,13 @@ class functions extends willow\parse {
 					// pass args, if set ##
 					if( self::$function_args ){
 
-						// h::log( 'passing args:' );
-						// h::log( self::$function_args );
+						h::log( 'passing args:' );
+						h::log( self::$function_args );
 
 						render\fields::define([
-							self::$hash => call_user_func( self::$function, self::$function_args )
+							self::$hash => 
+								// self::$function( self::$function_args )
+								call_user_func( self::$function, self::$function_args )
 						]);
 
 					} else {
@@ -558,7 +548,7 @@ class functions extends willow\parse {
 						]);
 						*/
 
-						// external functions skip internal processing and return their results directly to the buffer ##
+						// global functions skip internal processing and return their results directly to the buffer ##
 						render::$buffer[ self::$hash ] = self::$function;
 
 					}

@@ -11,10 +11,17 @@ use q\willow;
 
 class parse extends \q_willow {
 
-	protected static $regex = [
-		'clean'	=>"/[^A-Za-z0-9_]/" // clean up string to alphanumeric + _
-		// @todo.. move other regexes here ##
-	];
+	protected static 
+		$regex = [
+			'clean'	=>"/[^A-Za-z0-9_]/" // clean up string to alphanumeric + _
+			// @todo.. move other regexes here ##
+
+		],
+
+		// per match flags ##
+		$flags = false
+
+	;
 
 	
 	public static function run(){
@@ -36,6 +43,9 @@ class parse extends \q_willow {
 
 			// markup methods ##
 			'markup' => h::get( 'parse/markup.php', 'return', 'path' ),
+
+			// flags ##
+			'flags' => h::get( 'parse/flags.php', 'return', 'path' ),
 
 			// find + decode methods for variable + function arguments ##
 			'arguments' => h::get( 'parse/arguments.php', 'return', 'path' ),
@@ -100,6 +110,9 @@ class parse extends \q_willow {
 
 		// h::log( self::$args['markup'] );
 
+		// remove all flags ##
+		flags::cleanup();
+
 		// clean up stray function tags ##
 		functions::cleanup();
 
@@ -112,7 +125,7 @@ class parse extends \q_willow {
 		// clean up stray comment tags ##
 		comments::cleanup(); // @todo ##
 
-		// pre-format markup to extract functions ##
+		// remove all spare vars ##
 		variables::cleanup();
 
 		// search for config settings passed in markup, such as "src" handle ##

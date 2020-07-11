@@ -127,7 +127,7 @@ class markup extends \q\render {
         return self::$output = $string;
 
         // return ##
-        return true;
+        // return true;
 
 	}
 
@@ -142,7 +142,7 @@ class markup extends \q\render {
 
 		if ( isset( self::$args['config']['escape'] ) ){
 
-			h::log( 'd:>escaping value: '.self::$args['config']['hash'] );
+			// h::log( 'd:>escaping value: '.self::$args['config']['hash'] );
 
 			$value = mb_convert_encoding( $value, 'UTF-8', 'UTF-8' );
 			$value = htmlentities( $value, ENT_QUOTES, 'UTF-8' ); 
@@ -164,7 +164,7 @@ class markup extends \q\render {
 
 		if ( isset( self::$args['config']['strip'] ) ){
 
-			h::log( 'd:>stripping tags from value: '.$value );
+			// h::log( 'd:>stripping tags from value: '.$value );
 
 			$value = strip_tags( $value );
 			// $value = htmlentities( $value, ENT_QUOTES, 'UTF-8' ); 
@@ -462,7 +462,7 @@ class markup extends \q\render {
              'return'        => $string
 		]); 
 		
-		h::log( 't:>Move pre-render formats to some sort of system / class' );
+		h::log( 't:>Move pre-render formats to some sort of system / class, add filters and allow for extensions' );
 
 		// escape ##
 		$string = self::escape( $string );

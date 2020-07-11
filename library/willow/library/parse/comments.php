@@ -15,8 +15,8 @@ class comments extends willow\parse {
 
 		$hash, 
 		$comment,
-		$comment_match,
-		$flags
+		$comment_match
+		// $flags
 		// $position
 	
 	;
@@ -31,6 +31,8 @@ class comments extends willow\parse {
 		// self::$position = false;
 
 	}
+
+
 
 	/**
 	 * Scan for comments in markup and convert to variables and $fields and also to error log ##
@@ -134,7 +136,9 @@ class comments extends willow\parse {
 				self::$comment_match = core\method::string_between( $matches[0][$match][0], $open, $close, true );
 
 				// look for flags ##
-				self::flags();
+				// self::flags();
+				self::$comment = flags::get( self::$comment );
+				// h::log( self::$flags );
 				/*
 				if(
 					strstr( self::$comment, trim( willow\tags::g( 'fla_o' ) ) )
@@ -225,6 +229,7 @@ class comments extends willow\parse {
 
 
 
+	/*
 	public static function flags( $string = null ){
 
 		// sanity ##
@@ -262,6 +267,7 @@ class comments extends willow\parse {
 		}
 
 	}
+	*/
 
 
 	public static function cleanup( $args = null ){

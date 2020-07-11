@@ -184,7 +184,7 @@ class sections extends willow\parse {
 		// strip all section blocks, we don't need them now ##
 		// $regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );
 		$regex = \apply_filters( 
-			'q/render/parse/section/regex/remove', 
+			'q/willow/parse/sections/regex/remove', 
 			"/$open.*?$end_preg/ms" 
 			// "/{{#.*?\/#}}/ms"
 		);

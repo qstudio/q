@@ -174,7 +174,7 @@ class variables extends willow\parse {
 		// strip all function blocks, we don't need them now ##
 		// // $regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );
 		$regex = \apply_filters( 
-		 	'q/render/parse/variable/cleanup/regex', 
+		 	'q/willow/parse/variables/cleanup/regex', 
 			 // "/$open.*?$close/ms" 
 			//  "/$open\s+.*?\s+$close/s"
 			"~\\$open\s+(.*?)\s+\\$close~"

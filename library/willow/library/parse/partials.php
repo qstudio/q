@@ -280,7 +280,7 @@ class partials extends willow\parse {
 		// strip all section blocks, we don't need them now ##
 		// $regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );
 		$regex = \apply_filters( 
-			'q/render/parse/partial/cleanup/regex', 
+			'q/willow/parse/partials/cleanup/regex', 
 			"/$open.*?$close/ms" 
 			// "/{{#.*?\/#}}/ms"
 		);
