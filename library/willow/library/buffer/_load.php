@@ -4,10 +4,10 @@ namespace q\willow;
 
 use q\core;
 use q\core\helper as h;
-use q\render;
-use q\context;
-use q\view;
 use q\willow;
+use q\willow\render;
+// use q\view;
+// use q\willow;
 
 \q\willow\buffer::run();
 
@@ -40,7 +40,7 @@ class buffer extends \q_willow {
 		// \add_action( 'get_header',  [ get_class(), 'ob_start' ], 0 ); // try -- template_redirect.. was init
 		\add_action( 'get_header',  function(){ 
 			
-			if ( 'willow' == view\is::format() ){
+			if ( 'willow' == \q\view\is::format() ){
 
 				// h::log( 'd:>starting OB, as on a willow template: "'.\q\view\is::format().'"' );
 
@@ -60,7 +60,7 @@ class buffer extends \q_willow {
 
 		\add_action( 'shutdown', function() {
 
-			if ( 'willow' != view\is::format() ){
+			if ( 'willow' != \q\view\is::format() ){
 
 				// h::log( 'e:>No buffer.. so no go' );
 				
@@ -136,10 +136,10 @@ class buffer extends \q_willow {
 		];
 
 		// force methods to return for collection by output buffer ##
-		render::$args_default['config']['return'] = 'return';
+		self::$args_default['config']['return'] = 'return';
 
 		// reset args ##
-		render\args::reset();
+		willow\render\args::reset();
 
 		// extract markup from passed args ##
 		render\markup::pre_validate( $args );
@@ -160,7 +160,7 @@ class buffer extends \q_willow {
 
 		// prepare markup, fields and handlers based on passed configuration ##
 		// so.. let's parser prepare an array in $buffer of hash + value.. then pass this to fields::define ??
-		willow\parse::prepare( $args );
+		parse::prepare( $args );
 
 		// h::log( render::$markup );
 		// h::log( render::$buffer );
@@ -182,7 +182,7 @@ class buffer extends \q_willow {
 		render\log::set( $args );
 
 		// assign output to markup->template ##
-		render::$markup['template'] = render\output::prepare();
+		self::$markup['template'] = render\output::prepare();
 
 		// clean up left over tags ##
 		willow\parse::cleanup();
@@ -191,10 +191,10 @@ class buffer extends \q_willow {
 		// h::log( render::$markup['template'] );
 		
 		// clear object cache ##
-		render::$buffer = [];
+		self::$buffer = [];
 
 		// return to OB ##
-		return render::$markup['template'];
+		return self::$markup['template'];
 
     }
 

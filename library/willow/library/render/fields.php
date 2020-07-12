@@ -1,15 +1,15 @@
 <?php
 
-namespace q\render;
+namespace q\willow\render;
 
-use q\core;
+// use q\core;
 use q\core\helper as h;
-use q\ui;
+use q\view;
 use q\get;
-use q\plugin;
-use q\render;
+use q\willow;
+use q\willow\render;
 
-class fields extends \q\render {
+class fields extends willow\render {
 
 
     /**
@@ -31,14 +31,14 @@ class fields extends \q\render {
         }
 
         // filter $args now that we have fields data from ACF ##
-        self::$args = core\filter::apply([ 
+        self::$args = \q\core\filter::apply([ 
             'parameters'    => [ 'fields' => self::$fields, 'args' => self::$args ], // pass ( $fields, $args ) as single array ##
             'filter'        => 'q/render/fields/prepare/before/args/'.self::$args['task'], // filter handle ##
             'return'        => self::$args
         ]); 
 
         // filter all fields before processing ##
-        self::$fields = core\filter::apply([ 
+        self::$fields = \q\core\filter::apply([ 
             'parameters'    => [ 'fields' => self::$fields, 'args' => self::$args ], // pass ( $fields, $args ) as single array ##
             'filter'        => 'q/render/fields/prepare/before/fields/'.self::$args['task'], // filter handle ##
             'return'        => self::$fields
@@ -63,7 +63,7 @@ class fields extends \q\render {
             }
 
             // filter field before callback ##
-            $field = core\filter::apply([ 
+            $field = \q\core\filter::apply([ 
                 'parameters'    => [ 'field' => $field, 'value' => $value, 'args' => self::$args, 'fields' => self::$fields ], // params
                 'filter'        => 'q/render/fields/prepare/before/callback/'.self::$args['task'].'/'.$field, // filter handle ##
                 'return'        => $field
@@ -77,7 +77,7 @@ class fields extends \q\render {
             // h::log( $value );
 
             // filter field before format ##
-            $field = core\filter::apply([ 
+            $field = \q\core\filter::apply([ 
                 'parameters'    => [ 'field' => $field, 'value' => $value, 'args' => self::$args, 'fields' => self::$fields ], // params
                 'filter'        => 'q/render/fields/prepare/before/format/'.self::$args['task'].'/'.$field, // filter handle ##
                 'return'        => $field
@@ -93,7 +93,7 @@ class fields extends \q\render {
         }
 
         // filter all fields ##
-        self::$fields = core\filter::apply([ 
+        self::$fields = \q\core\filter::apply([ 
             'parameters'    => [ 'fields' => self::$fields, 'args' => self::$args ], // pass ( $fields, $args ) as single array ##
             'filter'        => 'q/render/fields/prepare/after/fields/'.self::$args['task'], // filter handle ##
             'return'        => self::$fields
@@ -110,6 +110,8 @@ class fields extends \q\render {
 	 * @since 4.0.0
 	*/
 	public static function define( $args = null ){
+
+		// h::log( $args );
 
 		// sanity ##
 		if (
@@ -130,12 +132,6 @@ class fields extends \q\render {
 			return self::$fields['value'] = $args;
 
 		}
-
-		// prepfix fields for uniqueness ##
-		// $args = array_combine(
-		// 	array_map(function($k){ return 'prefix__'.$k; }, array_keys($args)),
-		// 	$args
-		// );
 
 		// h::log( $args );
 		// else, loop over array ##
@@ -185,7 +181,7 @@ class fields extends \q\render {
         self::$fields[$field] = $value;
 
 		// log ##
-		h::log( self::$args['task'].'~>fields_added:>"'.$field.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
+		h::log( self::$args['task'].'~>fields_added:>"'.$field.'" by "'.\q\core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
         return true;
@@ -214,7 +210,7 @@ class fields extends \q\render {
         unset( self::$fields[$field] );
 
         // log ##
-		h::log( self::$args['task'].'~>fields_removed:>"'.$field.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
+		h::log( self::$args['task'].'~>fields_removed:>"'.$field.'" by "'.\q\core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
         return true;
@@ -294,7 +290,7 @@ class fields extends \q\render {
 		){
 
 			// get caller ##
-			$backtrace = core\method::backtrace([ 'level' => 2, 'return' => 'class_function' ]);
+			$backtrace = \q\core\method::backtrace([ 'level' => 2, 'return' => 'class_function' ]);
 
 			h::log( self::$args['task'].'~>n:>'.$backtrace.' -> Field: "'.$field.'" $args->fields empty' );
 
@@ -303,7 +299,7 @@ class fields extends \q\render {
 		}
 
         if ( 
-			$key = core\method::array_search( 'key', 'field_'.$field, self::$args['fields'] )
+			$key = \q\core\method::array_search( 'key', 'field_'.$field, self::$args['fields'] )
         ){
 
             // h::log( self::$args['fields'][$key] );
@@ -353,7 +349,7 @@ class fields extends \q\render {
 		if ( ! isset( self::$args['fields'] ) ) {
 
 			// get caller ##
-			$backtrace = core\method::backtrace([ 'level' => 2, 'return' => 'class_function' ]);
+			$backtrace = \q\core\method::backtrace([ 'level' => 2, 'return' => 'class_function' ]);
 
 			// log ##
 			h::log( self::$args['task'].'~>n:>'.$backtrace.' -> "$args[fields]" is not defined' );
@@ -364,7 +360,7 @@ class fields extends \q\render {
 
 		// h::log( self::$args['fields'] );
         if ( 
-            ! $key = core\method::array_search( 'key', 'field_'.$field, self::$args['fields'] )
+            ! $key = \q\core\method::array_search( 'key', 'field_'.$field, self::$args['fields'] )
         ){
 
 			// log ##
@@ -411,7 +407,7 @@ class fields extends \q\render {
 		h::log( self::$args['task'].'~>n:>Field: "'.$field.'" has callback: "'.$callback['method'].'" sending back to caller' );
 
         // filter ##
-        $callback = core\filter::apply([ 
+        $callback = \q\core\filter::apply([ 
             'parameters'    => [ 'callback' => $callback, 'field' => $field, 'args' => self::$args, 'fiekds' => self::$fields ], // params ##
             'filter'        => 'q/render/fields/get_callback/'.self::$args['task'].'/'.$field, // filter handle ##
             'return'        => $callback

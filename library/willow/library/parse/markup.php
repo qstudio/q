@@ -24,7 +24,7 @@ class markup extends willow\parse {
         ) {
 
 			// log ##
-			h::log( render::$args['task'].'~>e:>No string or type value passed to method' );
+			h::log( self::$args['task'].'~>e:>No string or type value passed to method' );
 
             return false;
 
@@ -56,7 +56,7 @@ class markup extends willow\parse {
         if ( ! preg_match_all( $regex_find, $string, $matches ) ) {
 
 			// log ##
-			h::log( render::$args['task'].'~>n:>No extra variables found in string to clean up - good!' );
+			h::log( self::$args['task'].'~>n:>No extra variables found in string to clean up - good!' );
 
             return false;
 
@@ -79,8 +79,8 @@ class markup extends willow\parse {
      */
     public static function contains( string $variable = null, $field = null ) {
 		
-		// if $markup template passed, check there, else check render::$markup ##
-		$markup = is_null( $field ) ? render::$markup['template'] : render::$markup[$field] ;
+		// if $markup template passed, check there, else check self::$markup ##
+		$markup = is_null( $field ) ? self::$markup['template'] : self::$markup[$field] ;
 
         if ( ! substr_count( $markup, $variable ) ) {
 
@@ -127,6 +127,7 @@ class markup extends willow\parse {
 
         // h::log( $data );
 		#helper::log( $markup );
+		h::log( 't:>replace {{ with tag::var_o' );
 
 		// empty ##
 		$return = '';
@@ -226,7 +227,7 @@ class markup extends willow\parse {
 		) {
 
 			// log ##
-			h::log( render::$args['task'].'~>e:>No variable or new_variable value passed to method' );
+			h::log( self::$args['task'].'~>e:>No variable or new_variable value passed to method' );
 
             return false;
 
@@ -258,7 +259,7 @@ class markup extends willow\parse {
         ) {
 
 			// log ##
-			h::log( render::$args['task'].'~>e:>Placeholder is not correctly formatted - missing {{ at start or }} at end.' );
+			h::log( self::$args['task'].'~>e:>Placeholder is not correctly formatted - missing {{ at start or }} at end.' );
 			// h::log( 'd:>Placeholder is not correctly formatted - missing {{ at start or end }}.' );
 
             return false;
@@ -266,13 +267,13 @@ class markup extends willow\parse {
 		}
 		
 		// ok - we should be good to search and replace old for new ##
-		$string = str_replace( $variable, $new_variable, render::$markup['template'] );
+		$string = str_replace( $variable, $new_variable, self::$markup['template'] );
 
 		// test new string ##
 		// h::log( 'd:>'.$string );
 
 		// overwrite markup property ##
-		render::$markup['template'] = $string;
+		self::$markup['template'] = $string;
 
 		// kick back ##
 		return true;
@@ -299,7 +300,7 @@ class markup extends willow\parse {
 		) {
 
 			// log ##
-			h::log( render::$args['task'].'~>e:Error in data passed to method' );
+			h::log( self::$args['task'].'~>e:Error in data passed to method' );
 
             return false;
 
@@ -325,7 +326,7 @@ class markup extends willow\parse {
         ) {
 
 			// log ##
-			h::log( render::$args['task'].'~>e:>passed tag: "'.$tag.'" is not correctly formatted - missing {{ at start or }} at end.' );
+			h::log( self::$args['task'].'~>e:>passed tag: "'.$tag.'" is not correctly formatted - missing {{ at start or }} at end.' );
 
             return false;
 
@@ -337,18 +338,18 @@ class markup extends willow\parse {
 		// todo - sanitize tag value ##
 
 		// add new variable to $template as defined position - don't replace {{ variable }} yet... ##
-		$new_template = substr_replace( render::$markup['template'], $tag, $position, 0 );
+		$new_template = substr_replace( self::$markup['template'], $tag, $position, 0 );
 
 		// test ##
 		// h::log( 'd:>'.$new_template );
 
 		// push back into main stored markup ##
-		render::$markup['template'] = $new_template;
+		self::$markup['template'] = $new_template;
 		
 		// h::log( 'd:>'.$new_template );
 
 		// log ##
-		// h::log( render::$args['task'].'~>variable_added:>"'.$tag.'" @position: "'.$position.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
+		// h::log( self::$args['task'].'~>variable_added:>"'.$tag.'" @position: "'.$position.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
         return true; #$markup['template'];
@@ -373,7 +374,7 @@ class markup extends willow\parse {
 		) {
 
 			// log ##
-			h::log( render::$args['task'].'~>e:Error in data passed to method' );
+			h::log( self::$args['task'].'~>e:Error in data passed to method' );
 
             return false;
 
@@ -431,7 +432,7 @@ class markup extends willow\parse {
         ) {
 
 			// log ##
-			h::log( render::$args['task'].'~>e:>tag: "'.$to.'" is not correctly formatted - missing "'.$needle_start.'" at start or "'.$needle_end.'" at end.' );
+			h::log( self::$args['task'].'~>e:>tag: "'.$to.'" is not correctly formatted - missing "'.$needle_start.'" at start or "'.$needle_end.'" at end.' );
 
             return false;
 
@@ -489,7 +490,7 @@ class markup extends willow\parse {
         ) {
 
 			// log ##
-			h::log( render::$args['task'].'~>e:>tag: "'.$from.'" is not correctly formatted - missing "'.$needle_start.'" at start or "'.$needle_end.'" at end.' );
+			h::log( self::$args['task'].'~>e:>tag: "'.$from.'" is not correctly formatted - missing "'.$needle_start.'" at start or "'.$needle_end.'" at end.' );
 
             return false;
 
@@ -498,22 +499,22 @@ class markup extends willow\parse {
 		// h::log( 'd:>swapping from: "'.$from.'" to: "'.$to.'"' );
 
 		// use strpos to get location of {{ variable }} ##
-		// $position = strpos( render::$markup, $to );
+		// $position = strpos( self::$markup, $to );
 		// h::log( 'Position: '.$position );
 
 		// add new variable to $template as defined position - don't replace $from yet... ##
-		$new_template = str_replace( $from, $to, render::$markup['template'] );
+		$new_template = str_replace( $from, $to, self::$markup['template'] );
 
 		// test ##
 		// h::log( 'd:>'.$new_template );
 
 		// push back into main stored markup ##
-		render::$markup['template'] = $new_template;
+		self::$markup['template'] = $new_template;
 		
 		// h::log( 'd:>'.$markup );
 
 		// log ##
-		// h::log( render::$args['task'].'~>variable_added:>"'.$to.'" @position: "'.$position.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
+		// h::log( self::$args['task'].'~>variable_added:>"'.$to.'" @position: "'.$position.'" by "'.core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
         return true; #$markup['template'];
@@ -536,7 +537,7 @@ class markup extends willow\parse {
 		) {
 
 			// log ##
-			h::log( render::$args['task'].'~>e:>No variable or markkup value passed to method' );
+			h::log( self::$args['task'].'~>e:>No variable or markkup value passed to method' );
 
             return false;
 
@@ -566,7 +567,7 @@ class markup extends willow\parse {
         ) {
 
 			// log ##
-			h::log( render::$args['task'].'~>e:>Placeholder: "'.$variable.'" is not correctly formatted - missing "{{ " at start or " }}" at end.' );
+			h::log( self::$args['task'].'~>e:>Placeholder: "'.$variable.'" is not correctly formatted - missing "{{ " at start or " }}" at end.' );
 
             return false;
 
@@ -586,7 +587,7 @@ class markup extends willow\parse {
 		// h::log( 'd:>'.$markup );
 
 		// log ##
-		h::log( render::$args['task'].'~>variable_removed:>"'.$variable.'" by "'.\q\core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
+		h::log( self::$args['task'].'~>variable_removed:>"'.$variable.'" by "'.\q\core\method::backtrace([ 'level' => 2, 'return' => 'function' ]).'"' );
 
         // positive ##
         return $markup;

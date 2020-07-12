@@ -33,7 +33,7 @@ class core extends \Q {
 		require_once self::get_plugin_path( 'library/core/log.php' );
 		require_once self::get_plugin_path( 'library/core/filter.php' );
 		require_once self::get_plugin_path( 'library/core/load.php' );
-		require_once self::get_plugin_path( 'library/core/config.php' );
+		// require_once self::get_plugin_path( 'library/core/config.php' );
 		require_once self::get_plugin_path( 'library/core/device.php' );
 		require_once self::get_plugin_path( 'library/core/media.php' );
 		require_once self::get_plugin_path( 'library/core/option.php' );

@@ -3,6 +3,7 @@
 namespace q\core;
 
 use q\core as core;
+use q\willow;
 use q\core\helper as h;
 
 // Q Theme Config ##
@@ -172,7 +173,7 @@ class media extends \Q {
 		// core\config::get();
 		// h::log( core\config::get( 'src' ) );
 		// $global = core\config::get([ 'context' => 'media', 'task' => 'src' ]);
-		$config = core\config::get([ 'context' => 'media', 'task' => 'config' ]);
+		$config = willow\core\config::get([ 'context' => 'media', 'task' => 'config' ]);
 		if ( ! $config ) {
 
 			h::log( 'e:>Error in stored src config' );

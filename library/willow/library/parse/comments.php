@@ -5,9 +5,7 @@ namespace q\willow;
 use q\willow;
 use q\willow\core;
 use q\core\helper as h;
-
-// @todo ##
-use q\render;
+use q\willow\render;
 
 class comments extends willow\parse {
 
@@ -43,9 +41,9 @@ class comments extends willow\parse {
 
 		// sanity -- this requires ##
 		if ( 
-			! isset( render::$markup )
-			|| ! is_array( render::$markup )
-			|| ! isset( render::$markup['template'] )
+			! isset( self::$markup )
+			|| ! is_array( self::$markup )
+			|| ! isset( self::$markup['template'] )
 		){
 
 			h::log( 'e:>Error in stored $markup' );
@@ -55,7 +53,7 @@ class comments extends willow\parse {
 		}
 
 		// get markup ##
-		$string = render::$markup['template'];
+		$string = self::$markup['template'];
 
 		// sanity ##
 		if (  
@@ -63,7 +61,7 @@ class comments extends willow\parse {
 			|| is_null( $string )
 		){
 
-			h::log( render::$args['task'].'~>e:>Error in $markup' );
+			h::log( self::$args['task'].'~>e:>Error in $markup' );
 
 			return false;
 
@@ -188,9 +186,9 @@ class comments extends willow\parse {
 				// no escaping.. yet
 				// $config = [ 'config' => [ 'escape' => false ] ];
 				// h::log( $config );
-				// if ( ! isset( render::$args[$hash] ) ) render::$args[$hash] = [];
-				// render::$args[$hash] = \q\core\method::parse_args( $config, render::$args[$hash] );
-				// h::log( render::$args );
+				// if ( ! isset( self::$args[$hash] ) ) self::$args[$hash] = [];
+				// self::$args[$hash] = \q\core\method::parse_args( $config, self::$args[$hash] );
+				// h::log( self::$args );
 
 				// default is an html comment - also indicated with flag 'h', if set ##
 				if ( 
@@ -282,10 +280,10 @@ class comments extends willow\parse {
 			"/$open.*?$close/ms" 
 			// "/{{#.*?\/#}}/ms"
 		);
-		// render::$markup['template'] = preg_replace( $regex_remove, "", render::$markup['template'] ); 
+		// self::$markup['template'] = preg_replace( $regex_remove, "", self::$markup['template'] ); 
 
 		// use callback to allow for feedback ##
-		render::$markup['template'] = preg_replace_callback(
+		self::$markup['template'] = preg_replace_callback(
 			$regex, 
 			function($matches) {
 				
@@ -315,7 +313,7 @@ class comments extends willow\parse {
 				return "";
 
 			}, 
-			render::$markup['template'] 
+			self::$markup['template'] 
 		);
 
 	}

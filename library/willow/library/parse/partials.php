@@ -5,8 +5,7 @@ namespace q\willow;
 use q\willow;
 use q\willow\core;
 use q\core\helper as h;
-
-use q\render; // @TODO
+use q\willow\render;
 
 class partials extends willow\parse {
 
@@ -23,7 +22,7 @@ class partials extends willow\parse {
 		// h::log( $args['key'] );
 
 		// global ##
-		$config = \q\core\config::get([ 'context' => 'partial', 'task' => 'config' ]);
+		$config = core\config::get([ 'context' => 'partial', 'task' => 'config' ]);
 		// h::log( $config );
 
 		if ( 
@@ -34,7 +33,7 @@ class partials extends willow\parse {
 			h::log( 'Partial config->run defined as false, so stopping here...' );
 
 			// clean up tags, if not buffering ##
-			// if ( is_null( render::$buffer ) ) self::cleanup();
+			// if ( is_null( self::$buffer ) ) self::cleanup();
 
 			return false;
 
@@ -42,9 +41,9 @@ class partials extends willow\parse {
 
 		// sanity -- this requires ##
 		if ( 
-			! isset( render::$markup )
-			|| ! is_array( render::$markup )
-			|| ! isset( render::$markup['template'] )
+			! isset( self::$markup )
+			|| ! is_array( self::$markup )
+			|| ! isset( self::$markup['template'] )
 		){
 
 			h::log( 'e:>Error in stored $markup' );
@@ -54,7 +53,7 @@ class partials extends willow\parse {
 		}
 
 		// get markup ##
-		$string = render::$markup['template'];
+		$string = self::$markup['template'];
 
 		// sanity ##
 		if (  
@@ -62,7 +61,7 @@ class partials extends willow\parse {
 			|| is_null( $string )
 		){
 
-			h::log( render::$args['task'].'~>e:>Error in $string' );
+			h::log( self::$args['task'].'~>e:>Error in $string' );
 
 			return false;
 
@@ -92,7 +91,7 @@ class partials extends willow\parse {
 		){
 
 			// clean up tags, if not buffering ##
-			// if ( is_null( render::$buffer ) ) self::cleanup();
+			// if ( is_null( self::$buffer ) ) self::cleanup();
 
 			// // strip all section blocks, we don't need them now ##
 			// // $regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );
@@ -101,7 +100,7 @@ class partials extends willow\parse {
 			// 	"/$open.*?$close/ms" 
 			// 	// "/{{#.*?\/#}}/ms"
 			// );
-			// render::$markup['template'] = preg_replace( $regex_remove, "", render::$markup['template'] ); 
+			// self::$markup['template'] = preg_replace( $regex_remove, "", self::$markup['template'] ); 
 		
 			// preg_match_all( '/%[^%]*%/', $string, $matches, PREG_SET_ORDER );
 			// h::log( $matches[1] );
@@ -113,7 +112,7 @@ class partials extends willow\parse {
 				|| ! $matches[1]
 			){
 
-				h::log( render::$args['task'].'~>e:>Error in returned matches array' );
+				h::log( self::$args['task'].'~>e:>Error in returned matches array' );
 
 				return false;
 
@@ -129,7 +128,7 @@ class partials extends willow\parse {
 					|| ! isset( $matches[0][$match][1] )
 				) {
 
-					h::log( render::$args['task'].'~>e:>Error in returned matches - no position' );
+					h::log( self::$args['task'].'~>e:>Error in returned matches - no position' );
 
 					continue;
 
@@ -156,7 +155,7 @@ class partials extends willow\parse {
 					// || ! isset( $markup ) 
 				){
 
-					h::log( render::$args['task'].'~>e:>Error in returned match function' );
+					h::log( self::$args['task'].'~>e:>Error in returned match function' );
 
 					continue; 
 
@@ -170,10 +169,10 @@ class partials extends willow\parse {
 
 				// test what we have ##
 				// h::log( 'd:>partial: "'.$partial.'"' );
-				// h::log( render::$args );
+				// h::log( self::$args );
 
 				// perhaps better to hand this to a function, which can grab args ??
-				$partial_data = \q\core\config::get([ 'context' => $context, 'task' => $task ]);
+				$partial_data = core\config::get([ 'context' => $context, 'task' => $task ]);
 
 				// no data, no go ##
 				if(
@@ -181,7 +180,7 @@ class partials extends willow\parse {
 					// || ! is_array( $partial_data )
 				){
 
-					h::log( render::$args['task'].'~>e:>Error in partial_data: "'.$partial.'"' );
+					h::log( self::$args['task'].'~>e:>Error in partial_data: "'.$partial.'"' );
 					h::log( 'e:>Error in partial_data: "'.$partial.'"' );
 
 					continue;
@@ -195,7 +194,7 @@ class partials extends willow\parse {
 					is_string( $partial_data )
 				){
 
-					h::log( render::$args['task'].'~>d:>Partial: "'.$partial.'" only sent markup, so converting to array format' );
+					h::log( self::$args['task'].'~>d:>Partial: "'.$partial.'" only sent markup, so converting to array format' );
 
 					$partial_data = [
 						'markup' => $partial_data
@@ -216,7 +215,7 @@ class partials extends willow\parse {
 					&& false == $partial_data['config']['run']
 				){
 
-					h::log( render::$args['task'].'~>n:>Partial "'.$partial.'" config->run defined as false, so stopping here...' );
+					h::log( self::$args['task'].'~>n:>Partial "'.$partial.'" config->run defined as false, so stopping here...' );
 					h::log( 'd:>Partial "'.$partial.'" config->run defined as false, so stopping here...' );
 
 					continue;
@@ -234,7 +233,7 @@ class partials extends willow\parse {
 
 						// // so, we can add a new field value to $args array based on the field name - with the markup as value
 						// render\fields::define([
-						// 	// $function => render::{$function}()
+						// 	// $function => self::{$function}()
 						// 	$hash => $partial_data['markup']
 						// ]);
 
@@ -242,7 +241,7 @@ class partials extends willow\parse {
 
 					// default :
 
-					// 	h::log( render::$args['task'].'~>n:>Currently, only partial partials are supported... :)' );
+					// 	h::log( self::$args['task'].'~>n:>Currently, only partial partials are supported... :)' );
 
 					// break ;
 
@@ -264,7 +263,7 @@ class partials extends willow\parse {
 			render\fields::define( self::$partials );
 
 			// h::log( self::$fields );
-			// h::log( render::$markup['template'] );
+			// h::log( self::$markup['template'] );
 
 		}
 
@@ -284,10 +283,10 @@ class partials extends willow\parse {
 			"/$open.*?$close/ms" 
 			// "/{{#.*?\/#}}/ms"
 		);
-		// render::$markup['template'] = preg_replace( $regex_remove, "", render::$markup['template'] ); 
+		// self::$markup['template'] = preg_replace( $regex_remove, "", self::$markup['template'] ); 
 
 		// use callback to allow for feedback ##
-		render::$markup['template'] = preg_replace_callback(
+		self::$markup['template'] = preg_replace_callback(
 			$regex, 
 			function($matches) {
 				
@@ -315,7 +314,7 @@ class partials extends willow\parse {
 				return "";
 
 			}, 
-			render::$markup['template'] 
+			self::$markup['template'] 
 		);
 
 	}

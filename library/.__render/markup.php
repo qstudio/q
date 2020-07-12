@@ -66,7 +66,7 @@ class markup extends \q\render {
 				&& ! \is_int( $value ) 
 			) {
 
-				// h::log( 'The value of: '.$key.' is not a string or integer - so we cannot render it' );
+				h::log( 'The value of: '.$key.' is not a string or integer - so we cannot render it' );
 
 				// log ##
 				h::log( self::$args['task'].'~>n:>The value of: "'.$key.'" is not a string or integer - so it will be skipped and removed from markup...');
@@ -215,13 +215,15 @@ class markup extends \q\render {
 				// && isset( $args['markup']['template'] ) // we can't validate "template" yet, as it might be pulled from config
 			) {
 
-				// h::log('d:>Using array markup'.$for );
+				// h::log('d:>Using array markup' );
+				// h::log( $args['markup'] );
 
 				return self::$markup = $args['markup'];
 
 			} else {
 
-				//  h::log('d:>Using single markup'.$for );
+				// h::log('d:>Using single markup' );
+				// h::log( $args['markup'] );
 
 				return self::$markup['template'] = $args['markup'];
 
@@ -235,7 +237,8 @@ class markup extends \q\render {
 			// create args array ##
 			// $args = [];
 
-			// h::log('d:>Using string markup'.$for );
+			// h::log('d:>Using string markup:' );
+			h::log( $args );
 
 			// add markup->template ##
 			return self::$markup = [
@@ -463,6 +466,8 @@ class markup extends \q\render {
 		]); 
 		
 		h::log( 't:>Move pre-render formats to some sort of system / class, add filters and allow for extensions' );
+
+		// h::log( 'd:>'.$string );
 
 		// escape ##
 		$string = self::escape( $string );

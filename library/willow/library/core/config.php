@@ -1,14 +1,14 @@
 <?php
 
-namespace q\core;
+namespace q\willow\core;
 
 use q\core;
 use q\core\helper as h;
 use q\view;
 
-\q\core\config::run();
+\q\willow\core\config::run();
 
-class config extends \Q {
+class config extends \q_willow {
 
 	private static
 		// loaded config ##
@@ -17,7 +17,7 @@ class config extends \Q {
 		$cache_files = [], // track array of files loaded, with ful path, so we can remove duplicates ##
 		$config = [],
 		$cache = [],
-		$args = [] // passed args ##
+		$config_args = [] // passed args ##
 	;
 
 	public static function run(){
@@ -85,7 +85,7 @@ class config extends \Q {
 		}
 
 		// if theme debugging, then load from single config files ##
-		if ( self::$debug ) {
+		if ( \Q::$debug ) {
 
 			// h::log('d:>Deubbing, so we do not need to resave __q.php.' );
 			// h::log( 't:>How to dump file / cache and reload from config files, other than to delete __q.php??' );
@@ -143,7 +143,7 @@ class config extends \Q {
 		// if ( method_exists( 'q_theme', 'get_child_theme_path' ) ){ 
 
 		// if theme debugging, then load from indiviual config files ##
-		if ( self::$debug ) {
+		if ( \Q::$debug ) {
 
 			// h::log( 'd:>Theme is debugging, so load from individual context files...' );
 
@@ -384,7 +384,7 @@ class config extends \Q {
 					// h::log( 'd:>Loading config file: '.$file.' cache key: '.$cache_key );
 
 					// send file to config loader ##
-					core\config::load( $file, $cache_key );
+					self::load( $file, $cache_key );
 
 					// save file to cache ##
 					self::$cache_files[] = $file;
@@ -432,7 +432,7 @@ class config extends \Q {
 		}
 
 		// capture passed args ##
-		self::$args = $args; // capture args ##
+		self::$config_args = $args; // capture args ##
 
 		// sanity ##
 		if ( 
@@ -443,7 +443,7 @@ class config extends \Q {
 		){
 
 			// get caller ##
-			$backtrace = core\method::backtrace([ 'level' => 2, 'return' => 'class_function' ]);
+			$backtrace = \q\core\method::backtrace([ 'level' => 2, 'return' => 'class_function' ]);
 
 			// config is loaded by context or process, so we need one of those to continue ##
 			h::log( 'e:>Q -> '.$backtrace.': config is loaded by context and process, so we need both of those to continue' );
@@ -512,10 +512,10 @@ class config extends \Q {
 
 		// sanity ##
 		if (
-			is_null( self::$args )
-			|| ! is_array( self::$args )
-			|| ! isset( self::$args['context'] )
-			|| ! isset( self::$args['task'] )
+			is_null( self::$config_args )
+			|| ! is_array( self::$config_args )
+			|| ! isset( self::$config_args['context'] )
+			|| ! isset( self::$config_args['task'] )
 		){
 
 			h::log('e:>Error in passed args');
@@ -526,7 +526,7 @@ class config extends \Q {
 
 		// h::log( $args );
 
-		\apply_filters( 'q/config/load', self::$args );
+		\apply_filters( 'q/config/load', self::$config_args );
 
 	}
 
@@ -543,7 +543,7 @@ class config extends \Q {
 	{
 
 		// return args for other filters ### ?? ###
-		$return = self::$args;
+		$return = self::$config_args;
 
 		// sanity ##
 		if (
@@ -660,14 +660,14 @@ class config extends \Q {
 
 				// filter single property values -- too slow ??
 				// perhaps this way is too open, and we should just run this at single property usage time... ##
-				if ( isset( $array[ self::$args['context'].'__'.self::$args['task'] ] ) ) {
+				if ( isset( $array[ self::$config_args['context'].'__'.self::$config_args['task'] ] ) ) {
 
-					$key = self::$args['context'].'__'.self::$args['task'];
+					$key = self::$config_args['context'].'__'.self::$config_args['task'];
 					$property = $array[ $key ];
 
 					$filter = 
 						\apply_filters( 
-							'q/config/load/'.self::$args['context'].'/'.self::$args['task'], 
+							'q/willow/config/load/'.self::$config_args['context'].'/'.self::$config_args['task'], 
 							$property
 					);
 

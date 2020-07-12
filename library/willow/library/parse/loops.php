@@ -8,13 +8,205 @@ use q\core\helper as h;
 
 use q\render; // TODO ##
 
-class sections extends willow\parse {
+class loops extends willow\parse {
+
+	/*
+
+	------ using config include ------
+
+	{{{ ui::hello }}}
+
+	{{# data }}
+		<div class="col-12">You are {{ who }} and the time is {{ time }}</div>
+	{{/#}}
+
+
+	------ direct in template ------
+
+	{{{ ui::hello (
+		{{# data }}
+			<div class="col-12">You are {{ who }} and the time is {{ time }}</div>
+		{{/#}}
+	) }}}
+
+
+	------ preferred format, with inversion ------
+
+	{{{ ui::hello ( [l]
+		default = "Nothing found" &
+		data = "<div class='col-12'>You are {{ who }} and the time is {{ time }}</div>"
+	) }}}
+	
+	
+	*/
+
+	private static function reset(){
+
+		$swap = false; 
+		$func_args = false;
+		$variable = false;
+		$position = false;
+
+	}
+
+
+	/**
+	 * Set loop markup in place of $function in markup 
+	 * 
+	 * @since 4.1.0
+	*/
+	public static function set( $args = null ){
+
+		// h::log( $args );
+
+		// sanity ##
+		if(
+			is_null( $args )
+			|| ! is_array( $args )
+			// || ! isset( $args['swap'] )
+			|| ! isset( $args['func_args'] )
+			// || ! isset( $args['position'] )
+		){
+
+			h::log( 'e:>Error in passed arguments' );
+
+			return false;
+
+		}
+
+		// clear slate ##
+		self::reset();
+		
+		// assign variables ##
+		// $swap = $args['swap'];
+		$func_args = $args['func_args'];
+		// $position = $args['position'];
+
+		// all loops require a "template" key, so ensure this is set ##
+		if( ! isset( $func_args['template'] ) ) {
+
+			h::log( 'e:>Loops require a "template" markup key, please add.' );
+
+			return false;
+
+		}
+
+		// func_args might contain 2 keys:
+		// 'default' = default value to add to markup.. which will get overwritten later.. somehow ?? perhaps needs to go in field data - HOW ?
+		// 'XX' = 'markup'
+		$array = []; // config = default:xx, lg:large
+		// $array['markup']['template'] = '<div>{{ data }}</div>'; // @todo, this needs to be passed also
+
+		// all loops require a "data" field, which is wrapped in the markup->template, add a basic version, if this is missing ##
+		/*
+		if( ! isset( $func_args['template'] ) ){
+
+			$array['markup']['template'] = willow\tags::wrap([ 'open' => 'var_o', 'value' => 'data', 'close' => 'var_c' ]);
+
+		}
+		*/
+
+		foreach( $func_args as $key => $value ){
+
+			// // // default ##
+			// if( 'default' != $key ){
+
+			// // 	// .. todo
+			// // 	// $string .= 'config->args = default : '.trim( $value, '"' );
+			// // 	$array['markup'] = [ 
+			// // 		'default' => trim( $value, '"' ) 
+			// // 	];
+
+			// } else {
+
+				$array['markup'][$key] = trim( $value, '"' );
+				// $field = $key;
+
+			// }
+
+		}
+
+		// h::log( $array );
+		// h::log( 'position: '.$position );
+		// h::log( self::$args );
+
+		// $field = core\method::string_between( $matches[0][$match][0], $open, $close );
+		// $markup = core\method::string_between( $matches[0][$match][0], $close, $end );
+
+		// sanity ##
+		if ( 
+			! isset( $array ) 
+		){
+
+			h::log( 'e:>Error in returned args string' );
+
+			return false; 
+
+		}
+
+		// finally -- add a variable "{{ $field }}" before this block at $position to markup->template ##
+		// $variable = willow\tags::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
+		// willow\markup::set( $variable, $position, 'variable' ); // '{{ '.$field.' }}'
+
+		// done, let functions know ##
+		return $array;
+
+		// return $array;
+
+		// clean up ##
+		/*
+		$field = trim($field);
+		$markup = trim($markup);
+
+		$field = trim( $field, '"' );
+		$markup = trim( $markup, '"' );
+
+		// $hash = 'section__'.\mt_rand();
+		$hash = $field;
+		// $hash = $args['context'].'__'.$args['task'].'__'.rand();
+
+		// test what we have ##
+		h::log( 'd:>field: "'.$field.'"' );
+		h::log( "d:>markup: $markup" );
+		h::log( "d:>hash: $hash" );
+		*/
+
+		// so, we can add a new field value to $args array based on the field name - with the markup as value
+		// self::$args[$field] = $markup;
+		// self::$markup[$hash] = $markup;
+
+		// h::log( 't:>INVERSION - No need for a whole new tag, just pass an "inversion/default" string in case of no results - perhaps defined with the class->method or picked up via a flag "*value"' );
+
+		// get position of ??
+
+		// finally -- add a variable "{{ $field }}" before this block at $position to markup->template ##
+		// $variable = willow\tags::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
+		// willow\markup::swap( $swap, $variable ); // '{{ '.$field.' }}'
+		// willow\markup::set( $variable, $position, 'variable' ); // '{{ '.$field.' }}'
+
+		// done, let functions know ##
+		// return $array;
+
+
+
+
+
+
+
+
+
+
+	}
+
+
+
 
 	/**
 	 * Scan for sections in markup and convert to variables and $fields
 	 * 
 	 * @since 4.1.0
 	*/
+	/*
 	public static function prepare( $args = null ){
 
 		// h::log( $args );
@@ -149,9 +341,9 @@ class sections extends willow\parse {
 				// $hash = $args['context'].'__'.$args['task'].'__'.rand();
 
 				// test what we have ##
-				h::log( 'd:>field: "'.$field.'"' );
-				h::log( "d:>markup: $markup" );
-				h::log( "d:>hash: $hash" );
+				// h::log( 'd:>field: "'.$field.'"' );
+				// h::log( "d:>markup: $markup" );
+				// h::log( "d:>has: $hash" );
 
 				// so, we can add a new field value to $args array based on the field name - with the markup as value
 				// self::$args[$field] = $markup;
@@ -160,7 +352,7 @@ class sections extends willow\parse {
 				// force hash ?? ##
 				// self::$args['config']['hash'] = $hash;
 
-				// h::log( 't:>INVERSION - No need for a whole new tag, just pass an "inversion/default" string in case of no results - perhaps defined with the class->method or picked up via a flag "*value"' );
+				h::log( 't:>INVERSION - No need for a whole new tag, just pass an "inversion/default" string in case of no results - perhaps defined with the class->method or picked up via a flag "*value"' );
 
 				// finally -- add a variable "{{ $field }}" before this block at $position to markup->template ##
 				$variable = willow\tags::wrap([ 'open' => 'var_o', 'value' => $hash, 'close' => 'var_c' ]);
@@ -171,9 +363,9 @@ class sections extends willow\parse {
 		}
 
 	}
+	*/
 
-
-
+	/*
 	public static function cleanup( $args = null ){
 
 		$open = trim( willow\tags::g( 'sec_o' ) );
@@ -224,6 +416,7 @@ class sections extends willow\parse {
 
 
 	}
+	*/
 
 
 }

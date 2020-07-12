@@ -19,7 +19,8 @@ class parse extends \q_willow {
 		],
 
 		// per match flags ##
-		$flags = false
+		$flags = false,
+		$flags_args = false
 
 	;
 
@@ -61,6 +62,9 @@ class parse extends \q_willow {
 
 			// sections ##
 			'sections' => h::get( 'parse/sections.php', 'return', 'path' ),
+
+			// loops ##
+			'loops' => h::get( 'parse/loops.php', 'return', 'path' ),
 
 			// variables.. ##
 			'variables' => h::get( 'parse/variables.php', 'return', 'path' ),

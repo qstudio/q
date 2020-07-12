@@ -6,7 +6,7 @@ use q\core;
 use q\core\helper as h;
 use q\ui;
 use q\get;
-use q\render;
+use q\willow;
 
 class media extends \Q {
 
@@ -112,17 +112,17 @@ class media extends \Q {
 
 		// handle filtered into config by markup pre-processor ##
 		} else if ( 
-			isset( render::$args )
+			isset( willow\render::$args )
 			&& isset( $args['field'] )
-			&& isset( render::$args[ $args['field'] ]['config']['handle'] ) 
+			&& isset( willow\render::$args[ $args['field'] ]['config']['handle'] ) 
 		){
 
-			$args['handle'] = render::$args[ $args['field'] ]['config']['handle'];
+			$args['handle'] = willow\render::$args[ $args['field'] ]['config']['handle'];
 
 		// filterable default ##
 		} else {
 
-			$args['handle'] = \apply_filters( 'q/render/type/src/handle', 'medium' );
+			$args['handle'] = \apply_filters( 'q/willow/render/type/src/handle', 'medium' );
 
 		}
 
@@ -173,14 +173,14 @@ class media extends \Q {
 		if ( 
 			// set locally..
 			(
-				isset( render::$args['config']['meta'] )
-				&& true == render::$args['config']['meta'] 
+				isset( willow\render::$args['config']['meta'] )
+				&& true == willow\render::$args['config']['meta'] 
 			)
 			||
 			// OR, set globally ##
 			(
-				isset( core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta'] )
-				&& true == core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta']
+				isset( willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta'] )
+				&& true == willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta']
 			)
 		) {
 
@@ -198,14 +198,14 @@ class media extends \Q {
         if ( 
 			// set locally..
 			(
-				isset( render::$args['config']['srcset'] )
-            	&& true == render::$args['config']['srcset'] 
+				isset( willow\render::$args['config']['srcset'] )
+            	&& true == willow\render::$args['config']['srcset'] 
 			)
 			||
 			// OR, set globally ##
 			(
-				isset( core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset'] )
-				&& true == core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset']
+				isset( willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset'] )
+				&& true == willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset']
 			)
         ) {
 

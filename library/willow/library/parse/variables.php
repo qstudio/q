@@ -10,6 +10,37 @@ use q\render; // TODO
 
 class variables extends willow\parse {
 
+	private static 
+
+		$arguments
+		// $flags,
+		// $function,
+		// $function_match, // full string matched ##
+		// $function_args,
+		// $class,
+		// $method,
+		// $function_array,
+		// $config_string
+		// $is_global
+	
+	;
+
+
+	private static function reset(){
+
+		self::$arguments = false; 
+		// self::$flags = false;
+		// self::$function = false;
+		// self::$function_args = false;
+		// self::$class = false;
+		// self::$method = false;
+		// self::$function_array = false;
+		// self::$config_string = false;
+		// self::$is_global = false;
+
+	}
+
+
 	/**
 	 * Scan for arguments in variables and convert to $config->data
 	 * 
@@ -21,9 +52,9 @@ class variables extends willow\parse {
 
 		// sanity -- this requires ##
 		if ( 
-			! isset( render::$markup )
-			|| ! is_array( render::$markup )
-			|| ! isset( render::$markup['template'] )
+			! isset( self::$markup )
+			|| ! is_array( self::$markup )
+			|| ! isset( self::$markup['template'] )
 		){
 
 			h::log( 'e:>Error in stored $markup' );
@@ -33,7 +64,7 @@ class variables extends willow\parse {
 		}
 
 		// get markup ##
-		$string = render::$markup['template'];
+		$string = self::$markup['template'];
 
 		// sanity ##
 		if (  
@@ -44,7 +75,7 @@ class variables extends willow\parse {
 			// || ! isset( $args['string'] )
 		){
 
-			h::log( render::$args['task'].'~>e:>Error in $markup' );
+			h::log( self::$args['task'].'~>e:>Error in $markup' );
 			// h::log( 'd:>Error in $markup' );
 
 			return false;
@@ -58,21 +89,24 @@ class variables extends willow\parse {
             ! $variables = willow\markup::get( $string, 'variable' ) 
         ) {
 
-			// h::log( render::$args['task'].'~>d:>No variables found in $markup');
-			// h::log( 'd:>No variables found in $markup: '.render::$args['task']);
+			// h::log( self::$args['task'].'~>d:>No variables found in $markup');
+			// h::log( 'd:>No variables found in $markup: '.self::$args['task']);
 
 			return false;
 
 		}
 
 		// log ##
-		h::log( render::$args['task'].'~>d:>"'.count( $variables ) .'" variables found in string');
+		h::log( self::$args['task'].'~>d:>"'.count( $variables ) .'" variables found in string');
 		// h::log( 'd:>"'.count( $variables ) .'" variables found in string');
 
 		// remove any leftover variables in string ##
 		foreach( $variables as $key => $value ) {
 
-			h::log( render::$args['task'].'~>d:>'.$value );
+			// clear slate ##
+			self::reset();
+
+			h::log( self::$args['task'].'~>d:>'.$value );
 			// h::log( 'd:>variable: "'.$value.'"' );
 
 			// now, we need to look for the config pattern, defined as field(setting:value;) and try to handle any data found ##
@@ -124,17 +158,13 @@ class variables extends willow\parse {
 					|| ! $field_type
 				){
 
-					h::log( render::$args['task'].'~>e:>Error extracting $field_name or $field_type from variable: '.$variable );
+					h::log( self::$args['task'].'~>e:>Error extracting $field_name or $field_type from variable: '.$variable );
 
 					continue;
 
 				}
 
-				// matches[0] contains the whole string matched - for example "(handle:square;)" ##
-				// we can use this to work out the new_variable value
-				// $variable = $value;
-				// $new_variable = explode( '(', $variable )[0].' }}';
-				// $new_variable = '{{ '.$field.' }}';
+				// create new variable for markup, based on $field value ##
 				$new_variable = willow\tags::wrap([ 'open' => 'var_o', 'value' => $field, 'close' => 'var_c' ]);
 
 				// test what we have ##
@@ -143,22 +173,34 @@ class variables extends willow\parse {
 				// h::log( 'd:>field_name: "'.$field_name.'"' );
 				// h::log( 'd:>field_type: "'.$field_type.'"' );
 
-				// pass to argument handler ##
-				willow\arguments::decode([ 
-					'string' 	=> $config_string, // string containing arguments ##
-					'field' 	=> $field_name, 
-					'value' 	=> $variable, // variable value being worked from loop ##
-					'tag'		=> 'variable'	
-				]);
+				// pass to argument handler -- returned value ##
+				if ( 
+					self::$arguments = willow\arguments::decode([ 
+						'string' 	=> $config_string, // string containing arguments ##
+					])
+				){
 
-				// h::log( render::$args[$field_name] );
+					// merge in new args to args->field ##
+					if ( ! isset( self::$args[$field_name] ) ) self::$args[$field_name] = [];
+
+					self::$args[$field_name] = \q\core\method::parse_args( self::$arguments, self::$args[$field_name] );
+
+				}
+
+				// h::log( self::$args[$field_name] );
 
 				// now, edit the variable, to remove the config ##
 				willow\markup::swap( $variable, $new_variable, 'variable', 'variable' );
 
 			}
 		
-        }
+		}
+		
+		// clear slate ##
+		self::reset();
+
+		// kick back ##
+		return true;
 
 	}
 
@@ -169,7 +211,7 @@ class variables extends willow\parse {
 		$open = trim( willow\tags::g( 'var_o' ) );
 		$close = trim( willow\tags::g( 'var_c' ) );
 
-		// h::log( render::$markup['template'] );
+		// h::log( self::$markup['template'] );
 
 		// strip all function blocks, we don't need them now ##
 		// // $regex_remove = \apply_filters( 'q/render/markup/section/regex/remove', "/{{#.*?\/#}}/ms" );
@@ -181,7 +223,7 @@ class variables extends willow\parse {
 		);
 
 		// use callback to allow for feedback ##
-		render::$markup['template'] = preg_replace_callback(
+		self::$markup['template'] = preg_replace_callback(
 			$regex, 
 			function($matches) {
 				
@@ -211,12 +253,12 @@ class variables extends willow\parse {
 				return "";
 
 			}, 
-			render::$markup['template'] 
+			self::$markup['template'] 
 		);
 
-		// h::log( render::$markup['template'] );
+		// h::log( self::$markup['template'] );
 		
-		// render::$markup['template'] = preg_replace( $regex, "", render::$markup['template'] ); 
+		// self::$markup['template'] = preg_replace( $regex, "", self::$markup['template'] ); 
 
 	}
 

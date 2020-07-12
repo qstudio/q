@@ -5,6 +5,7 @@ namespace q\extension\search;
 // Q ##
 use q\core;
 use q\get;
+use q\willow;
 use q\core\helper as h;
 use q\extension;
 
@@ -101,7 +102,7 @@ class method extends extension\search {
             // h::log( self::$passed_args );
 
             // self::config();
-			self::$properties = core\config::get([ 'context' => 'extension', 'task' => 'search' ]); 
+			self::$properties = willow\core\config::get([ 'context' => 'extension', 'task' => 'search' ]); 
 			// h::log( self::$properties );
 
 		}

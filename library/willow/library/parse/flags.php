@@ -16,10 +16,10 @@ class flags extends willow\parse {
 
 	Requirements: 
 
-	[f]
-	[-@]
+	[seg] = split, escape, global
+	[a] = array
 	*/
-	public static function get( $string = null ){
+	public static function get( $string = null, $use = 'tag' ){
 
 		// sanity ##
 		if(
@@ -40,8 +40,6 @@ class flags extends willow\parse {
 			&& $flags = core\method::string_between( $string, trim( willow\tags::g( 'fla_o' ) ), trim( willow\tags::g( 'fla_c' ) ) )
 		){
 
-			// h::log( 'd:>FOUND flags...' );
-
 			$flags = trim(
 				core\method::string_between( 
 					$string, 
@@ -50,9 +48,32 @@ class flags extends willow\parse {
 				)
 			);
 
-			self::$flags = str_split( $flags );
-			self::$flags = array_fill_keys( self::$flags, true );
-			// h::log( self::$flags );
+			// h::log( 'd:>FOUND flags in string: '.$string );
+			// h::log( $flags );
+
+			// assign flags based on use-case ##
+			switch( $use ) {
+
+				default :
+				case "tag" :
+
+					// h::log( 'd:>Preparing flags for tag' );
+					self::$flags = str_split( $flags );
+					self::$flags = array_fill_keys( self::$flags, true );
+					// h::log( self::$flags );
+
+				break ;
+
+				case "argument" :
+
+					// h::log( 'd:>Preparing flags_args for argument' );
+					self::$flags_args = str_split( $flags );
+					self::$flags_args = array_fill_keys( self::$flags_args, true );
+					// h::log( self::$flags );
+
+				break ;
+
+			}
 
 			$flags_all = core\method::string_between( $string, trim( willow\tags::g( 'fla_o' ) ), trim( willow\tags::g( 'fla_c' ) ), true );
 
@@ -64,7 +85,7 @@ class flags extends willow\parse {
 
 		}
 
-		// kick it back ##
+		// kick it back whole, as no flags found ##
 		return $string;
 		
 	}
@@ -88,7 +109,7 @@ class flags extends willow\parse {
 		);
 
 		// use callback to allow for feedback ##
-		render::$markup['template'] = preg_replace_callback(
+		self::$markup['template'] = preg_replace_callback(
 			$regex, 
 			function($matches) {
 				
@@ -118,7 +139,7 @@ class flags extends willow\parse {
 				return "";
 
 			}, 
-			render::$markup['template'] 
+			self::$markup['template'] 
 		);
 		
 	}

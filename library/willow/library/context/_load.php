@@ -1,27 +1,23 @@
 <?php
 
-namespace q;
+namespace q\willow;
 
-use q\core;
+// use q\core;
 use q\core\helper as h;
-use q\render;
+use q\willow\core\helper as wh;
+use q\willow\render;
+use q\willow\context;
 use q\willow;
 
 // load it up ##
-\q\context::run();
+\q\willow\context::run();
 
-class context extends \Q {
-
-	protected static
-
-		$extend = [] // allow apps to extend context methods ##
-
-	;
+class context extends \q_willow {
 
 	public static function run(){
 
 		// load libraries ##
-		core\load::libraries( self::load() );
+		\q\core\load::libraries( self::load() );
 
 	}
 
@@ -36,37 +32,37 @@ class context extends \Q {
 		return $array = [
 
 			// class extensions ##
-			'extend' => h::get( 'context/extend.php', 'return', 'path' ),
+			'extend' => wh::get( 'context/extend.php', 'return', 'path' ),
 
 			// acf field groups ##
-			'group' => h::get( 'context/group.php', 'return', 'path' ),
+			'group' => wh::get( 'context/group.php', 'return', 'path' ),
 
 			// post objects content, title, excerpt etc ##
-			'post' => h::get( 'context/post.php', 'return', 'path' ),
+			'post' => wh::get( 'context/post.php', 'return', 'path' ),
 
 			// author, custom fields etc. ##
-			'meta' => h::get( 'context/meta.php', 'return', 'path' ),
+			'meta' => wh::get( 'context/meta.php', 'return', 'path' ),
 
 			// navigation items ##
-			'navigation' => h::get( 'context/navigation.php', 'return', 'path' ),
+			'navigation' => wh::get( 'context/navigation.php', 'return', 'path' ),
 
 			// media items ##
-			'media' => h::get( 'context/media.php', 'return', 'path' ),
+			'media' => wh::get( 'context/media.php', 'return', 'path' ),
 
 			// taxonomies ##
-			'taxonomy' => h::get( 'context/taxonomy.php', 'return', 'path' ),
+			'taxonomy' => wh::get( 'context/taxonomy.php', 'return', 'path' ),
 
 			// extension ##
-			'extension' => h::get( 'context/extension.php', 'return', 'path' ),
+			'extension' => wh::get( 'context/extension.php', 'return', 'path' ),
 
 			// widgets ##
-			'widget' => h::get( 'context/widget.php', 'return', 'path' ),
+			'widget' => wh::get( 'context/widget.php', 'return', 'path' ),
 
 			// ui render methods - open, close.. etc ##
-			'ui' => h::get( 'context/ui.php', 'return', 'path' ),
+			'ui' => wh::get( 'context/ui.php', 'return', 'path' ),
 
 			// elements, html snippets, which can be processed to expand via {{> markdown }} ##
-			'partial' => h::get( 'context/partial.php', 'return', 'path' ),
+			'partial' => wh::get( 'context/partial.php', 'return', 'path' ),
 
 			// perhaps type css ##
 			// perhaps type js ##
@@ -273,8 +269,11 @@ class context extends \Q {
 			render\markup::prepare();
 
 			// h::log( 'running-> '.$extend['class'].'::'.$extend['method'] );
-			// h::log( render::$fields );
-			// h::log( render::$markup );
+			if( 'hello' == $args['task'] ) {
+				// h::log( $args['context'].'__'.$args['task'] );
+				// h::log( render::$fields );
+				// h::log( render::$markup );
+			}
 
 			// clean up left over tags ## --- REMOVED ##
 			// willow\parse::cleanup();
