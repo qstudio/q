@@ -4,7 +4,7 @@ namespace q\extension;
 
 // Q ##
 use q\core;
-use q\willow\render;
+use q\strings;
 use q\get;
 use q\core\helper as h;
 

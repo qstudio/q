@@ -6,7 +6,6 @@ use q\core;
 use q\core\helper as h;
 use q\ui;
 use q\get;
-use q\willow;
 
 class media extends \Q {
 
@@ -112,12 +111,13 @@ class media extends \Q {
 
 		// handle filtered into config by markup pre-processor ##
 		} else if ( 
-			isset( willow\render::$args )
+			class_exists( 'q_willow' )
+			&& isset( \q_willow::$args )
 			&& isset( $args['field'] )
-			&& isset( willow\render::$args[ $args['field'] ]['config']['handle'] ) 
+			&& isset( \q_willow::$args[ $args['field'] ]['config']['handle'] ) 
 		){
 
-			$args['handle'] = willow\render::$args[ $args['field'] ]['config']['handle'];
+			$args['handle'] = \q_willow\render::$args[ $args['field'] ]['config']['handle'];
 
 		// filterable default ##
 		} else {
@@ -134,7 +134,7 @@ class media extends \Q {
         // h::log( 'Handle: '.$args['handle'] );
 
         // test incoming args ##
-        // h::log( render::$args[ $args['field'] ] );
+        // h::log( \q_willow::$args[ $args['field'] ] );
 
         // set-up a new array ##
         $array = [];
@@ -173,14 +173,16 @@ class media extends \Q {
 		if ( 
 			// set locally..
 			(
-				isset( willow\render::$args['config']['meta'] )
-				&& true == willow\render::$args['config']['meta'] 
+				class_exists( 'q_willow' )
+				&& isset( \q_willow::$args['config']['meta'] )
+				&& true == \q_willow::$args['config']['meta'] 
 			)
 			||
 			// OR, set globally ##
 			(
-				isset( willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta'] )
-				&& true == willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta']
+				class_exists( 'q_willow' )
+				&& isset( \q\willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta'] )
+				&& true == \q\willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta']
 			)
 		) {
 
@@ -197,15 +199,17 @@ class media extends \Q {
 		// conditional -- add img meta values ( sizes ) and srcset ##
         if ( 
 			// set locally..
-			(
-				isset( willow\render::$args['config']['srcset'] )
-            	&& true == willow\render::$args['config']['srcset'] 
+			(	
+				class_exists( 'q_willow' )
+				&& isset( \q_willow::$args['config']['srcset'] )
+            	&& true == \q_willow::$args['config']['srcset'] 
 			)
 			||
 			// OR, set globally ##
 			(
-				isset( willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset'] )
-				&& true == willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset']
+				class_exists( 'q_willow' )
+				&& isset( \q\willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset'] )
+				&& true == \q\willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset']
 			)
         ) {
 

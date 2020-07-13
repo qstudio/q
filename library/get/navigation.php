@@ -6,8 +6,8 @@ namespace q\get;
 use q\core;
 use q\core\helper as h;
 use q\ui;
-use q\willow;
 use q\get;
+use q\strings;
 
 // Q Theme ##
 use q\theme;
@@ -174,7 +174,7 @@ class navigation extends \q\get {
 		$items = get\method::prepare_return( $args, $items );
 
 		// markup array ##
-		$string = willow\markup::string( $config['markup']['template'], $items, $config['markup'] );
+		$string = strings\method::markup( $config['markup']['template'], $items, $config['markup'] );
 
 		h::log( $string );
 
@@ -475,7 +475,7 @@ class navigation extends \q\get {
 		}
 
 		// Parse incoming $args into an array and merge it with $defaults - caste to object ##
-		$args = \q\core\method::parse_args( $args['args'], willow\core\config::get([ 'context' => 'navigation', 'task' => 'menu' ])['args'] );
+		$args = core\method::parse_args( $args['args'], core\config::get([ 'context' => 'navigation', 'task' => 'menu' ])['args'] );
 		// h::log( $args );
 		
         if ( ! \has_nav_menu( $args['menu'] ) ) {

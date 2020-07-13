@@ -16,7 +16,7 @@ namespace q\hook;
 
 use q\core;
 use q\core\helper as h;
-use q\willow\render;
+use q\strings;
 use q\get;
 
 // load it up ##
@@ -239,13 +239,13 @@ class wp_head extends \Q {
         if ( ! $meta_desc ) { $meta_desc = \get_the_title( $id ); }
 
         // clean up ##
-        $meta_desc = render\method::rip_tags($meta_desc);
+        $meta_desc = strings\method::rip_tags($meta_desc);
 
         // replacements ##
         $meta_desc = str_replace( "\"", "'", $meta_desc );
 
         // keep it all to size ##
-        $meta_desc = render\method::chop( $meta_desc, $length );
+        $meta_desc = strings\method::chop( $meta_desc, $length );
 
         // apply filters ##
         $meta_desc = \apply_filters( 'q/simple_seo/meta_description', $meta_desc );

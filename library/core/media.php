@@ -3,11 +3,10 @@
 namespace q\core;
 
 use q\core as core;
-use q\willow;
 use q\core\helper as h;
 
 // Q Theme Config ##
-use q\theme as theme;
+// use q\theme as theme;
 
 // load it up ##
 \q\core\media::run();

@@ -4,7 +4,7 @@ namespace q\extension;
 
 // Q ##
 use q\core;
-use q\willow\render;
+use q\strings;
 use q\get;
 use q\core\helper as h;
 
@@ -137,7 +137,7 @@ class facebook extends \Q {
         $string = get\post::excerpt_from_id( $the_post->ID, 200 );
 
         // clean up ##
-        $string = render\method::rip_tags( $string );
+        $string = strings\method::rip_tags( $string );
 
         // replacements ##
         $string = str_replace( "\"", "'", $string );

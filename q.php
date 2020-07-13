@@ -224,8 +224,8 @@ if ( ! class_exists( 'Q' ) ) {
 			// getter ##
 			require_once self::get_plugin_path( 'library/get/_load.php' );
 
-			// render engine ##
-			// require_once self::get_plugin_path( 'library/render/_load.php' );
+			// string methods ##
+			require_once self::get_plugin_path( 'library/strings/_load.php' );
 
 			// data contexts ##
 			// require_once self::get_plugin_path( 'library/context/_load.php' );

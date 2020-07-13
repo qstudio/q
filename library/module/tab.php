@@ -670,7 +670,7 @@ class tab extends \Q {
 
 
     /**
-     * Markup array of tabs based onpassed config
+     * Markup array of tabs based on passed config
      *
      * @since   2.0.0
      * @return  Mixed Boolean on error or String

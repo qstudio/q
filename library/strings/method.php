@@ -1,16 +1,16 @@
 <?php
 
-namespace q\render;
+namespace q\strings;
 
 use q\core;
 use q\core\helper as h;
 // use q\ui;
-use q\plugin;
-use q\get;
-use q\view;
+// use q\plugin;
+// use q\get;
+// use q\view;
 use q\asset;
 
-class method extends \q\render {
+class method extends \q\strings {
 
 
     /**
@@ -253,6 +253,140 @@ class method extends \q\render {
 
 	}
 	
+
+
+
+	/**
+     * Markup object based on {{ placeholders }} and template
+	 * This feature is not for formatting data, just applying markup to pre-formatted data
+     *
+     * @since    2.0.0
+     * @return   Mixed
+     */
+    public static function markup( $markup = null, $data = null, $args = null )
+    {
+
+        // sanity ##
+        if (
+            is_null( $markup )
+            || is_null( $data )
+            ||
+            (
+                ! is_array( $data )
+                && ! is_object( $data )
+            )
+        ) {
+
+            h::log( 'e:>missing parameters' );
+
+            return false;
+
+		}
+
+		if (
+			class_exists( 'q_willow' )
+		){
+
+			// variable replacement -- regex way ##
+			$open = trim( \q\willow\tags::g( 'var_o' ) );
+			$close = trim( \q\willow\tags::g( 'var_c' ) );
+
+		} else {
+
+			h::log( 'e:>Q Willow Library Missing, using presumed default tags' );
+
+			$open = '{{ ';
+			$close = ' }}';
+
+		}
+		
+		// capture missing placeholders ##
+		// $capture = [];
+
+        // h::log( $data );
+		#helper::log( $markup );
+		// h::log( 't:>replace {{ with tag::var_o' );
+
+		// empty ##
+		$return = '';
+
+        // format markup with translated data ##
+        foreach( $data as $key => $value ) {
+
+			if (
+				is_array( $value )
+			){
+
+				// check on the value ##
+				// h::log( 'd:>key: '.$key.' is array - going deeper..' );
+
+				$return_inner = $markup;
+
+				foreach( $value as $k => $v ) {
+
+					// $string_inner = $markup;
+
+					// check on the value ##
+					// h::log( 'd:>key: '.$k.' / value: '.$v );
+
+					// only replace keys found in markup ##
+					if ( false === strpos( $return_inner, $open.$k.$close ) ) {
+
+						// h::log( 'd:>skipping '.$k );
+		
+						continue ;
+		
+					}
+
+					// template replacement ##
+					$return_inner = str_replace( $open.$k.$close, $v, $return_inner );
+
+				}
+
+				$return .= $return_inner;
+
+				continue;
+
+			}
+
+			// get new markup row ##
+			$return .= $markup;
+
+			// check on the value ##
+			// h::log( 'd:>key: '.$key.' / value: '.$value );
+
+            // only replace keys found in markup ##
+            if ( false === strpos( $return, $open.$key.$close ) ) {
+
+                h::log( 'd:>skipping '.$key );
+
+                continue ;
+
+			}
+
+			// template replacement ##
+			$return = str_replace( $open.$key.$close, $value, $return );
+
+		}
+
+		h::log( $args );
+
+		// wrap string in defined string ?? ##
+		if ( isset( $args['wrap'] ) ) {
+
+			// h::log( 'd:>wrapping string before return.' );
+
+			// template replacement ##
+			$return = str_replace( $open.'content'.$close, $return, $args['wrap'] );
+
+		}
+
+        // h::log( $return );
+
+        // return markup ##
+        return $return;
+
+	}
 
 
 }

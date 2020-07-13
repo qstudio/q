@@ -30,12 +30,45 @@ class search extends \Q {
 
 
 	/**
+         * Check for required breaking dependencies
+         *
+         * @return      Boolean
+         * @since       1.0.0
+         */
+        public static function has_dependencies()
+        {
+
+            // check for what's needed ##
+            if (
+                ! class_exists( 'q_willow' )
+            ) {
+
+                helper::log( 'e:>This extension requires Q Willow to run correctly..' );
+
+                return false;
+
+            }
+
+            // ok ##
+            return true;
+
+        }
+
+
+	/**
 	* Load Libraries
 	*
 	* @since        2.0
 	*/
 	private static function load()
 	{
+
+		// check for dependencies, required for UI components - admin will still run ##
+		if ( ! self::has_dependencies() ) {
+
+			return false;
+
+		}
 
 		$array = [
 
@@ -46,8 +79,8 @@ class search extends \Q {
 
 		// h::log( core\option::get('extension') );
 		if ( 
-			! isset( core\option::get('extension')->nprogress )
-			|| true !== core\option::get('extension')->nprogress 
+			! isset( core\option::get('extension')->search )
+			|| true !== core\option::get('extension')->search 
 		){
 
 			// h::log( 'd:>search is not enabled.' );
