@@ -5,6 +5,7 @@ namespace q\asset;
 use q\core\core;
 use q\core\helper as h;
 use q\asset;
+use q\strings;
 
 // load it up ##
 \q\asset\css::run();
@@ -274,7 +275,7 @@ Date:       {$date}
                 $string .= implode( "", self::$array );
 
                 // mimnify ##
-                $string = asset\method::minify( $string, 'css' );
+                $string = strings\method::minify( $string, 'css' );
 
                 // add header to empty string ##
                 $string = self::header().$string;

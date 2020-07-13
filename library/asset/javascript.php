@@ -5,7 +5,7 @@ namespace q\asset;
 use q\core;
 use q\core\helper as h;
 use q\asset;
-use q\render;
+use q\strings;
 
 // load it up ##
 \q\asset\javascript::run();
@@ -273,7 +273,7 @@ Date:       {$date}
                 $string .= implode( "", self::$array );
 
                 // mimnify ##
-                $string = render\method::minify( $string, 'js' );
+                $string = strings\method::minify( $string, 'js' );
 
                 // add header to empty string ##
                 $string = self::header().$string;
