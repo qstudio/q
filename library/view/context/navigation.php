@@ -22,7 +22,7 @@ return [ 'navigation' => [
 		],
 		'markup'             	=> [
 			'template'			=> '<li class="{{ li_class }}{{ active-class }}">{{ item }}</li>',
-			'wrap'             	=> '<div class="row row justify-content-center mt-5 mb-5"><ul class="pagination">{{ content }}</ul></div>'
+			'wrap'             	=> '<div class="row row justify-content-center mt-5 mb-5"><ul class="pagination">{{ template }}</ul></div>'
 		],
 	],
 
@@ -36,7 +36,7 @@ return [ 'navigation' => [
 		],
 		'markup'             	=> [
 			'template'			=> '<li class="{{ li_class }}{{ active-class }}">{{ item }}</li>',
-			'wrap'             	=> '<div class="row row justify-content-center mt-5 mb-5"><ul class="pagination">{{ content }}</ul></div>'
+			'wrap'             	=> '<div class="row row justify-content-center mt-5 mb-5"><ul class="pagination">{{ template }}</ul></div>'
 		],
 	],
 
@@ -54,7 +54,7 @@ return [ 'navigation' => [
 	'pagination'  	=> [
 		'markup'             	=> [
 			'template'			=> '<li class="{{ li_class }}{{ active-class }}">{{ item }}</li>',
-			'wrap'             	=> '<div class="row row justify-content-center mt-5 mb-5"><ul class="pagination">{{ content }}</ul></div>'
+			'wrap'             	=> '<div class="row row justify-content-center mt-5 mb-5"><ul class="pagination">{{ template }}</ul></div>'
 		],
 		'end_size'				=> 0,
 		'mid_size'				=> 2,

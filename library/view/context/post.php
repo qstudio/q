@@ -48,7 +48,7 @@ return [ 'post' => [
 								{{/#}}
 								Comments: <a href="{{ comment_permalink }}" title="Comments">{{ comment_title }} </a>
 								',
-			'wrap'				=> '<div class="post-meta col-12 mb-3">{{ content }}</div>'
+			'wrap'				=> '<div class="post-meta col-12 mb-3">{{ template }}</div>'
 		]
 	],
 
@@ -108,7 +108,7 @@ return [ 'post' => [
 										</div>
 									</div>',
 			// no results ##
-			'empty'		=> 
+			'default'		=> 
 									'<div class="col-12"><p>We could not find any matching posts, please check again later.</p></div>'
 		], 
 

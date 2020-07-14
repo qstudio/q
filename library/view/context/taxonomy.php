@@ -16,7 +16,7 @@ return [ 'taxonomy' => [
 		'markup'            	=> [
 			'wrap'				=> '<div class="row">
 										<div class="col-12 list-group list-group-flush list-group navigation navigation-terms">
-											{{ content }}
+											{{ template }}
 										</div>
 									</div>',
 			'template'			=> '

@@ -288,8 +288,8 @@ class method extends \q\strings {
 		){
 
 			// variable replacement -- regex way ##
-			$open = trim( \q\willow\tags::g( 'var_o' ) );
-			$close = trim( \q\willow\tags::g( 'var_c' ) );
+			$open = \q\willow\tags::g( 'var_o' );
+			$close = \q\willow\tags::g( 'var_c' );
 
 		} else {
 
@@ -358,7 +358,7 @@ class method extends \q\strings {
             // only replace keys found in markup ##
             if ( false === strpos( $return, $open.$key.$close ) ) {
 
-                h::log( 'd:>skipping '.$key );
+                // h::log( 'd:>skipping '.$key );
 
                 continue ;
 
@@ -369,15 +369,15 @@ class method extends \q\strings {
 
 		}
 
-		h::log( $args );
+		// h::log( $return );
 
 		// wrap string in defined string ?? ##
 		if ( isset( $args['wrap'] ) ) {
 
-			// h::log( 'd:>wrapping string before return.' );
+			// h::log( 'd:>wrapping string before return: '.$args['wrap'] );
 
 			// template replacement ##
-			$return = str_replace( $open.'content'.$close, $return, $args['wrap'] );
+			$return = str_replace( $open.'template'.$close, $return, $args['wrap'] );
 
 		}
 

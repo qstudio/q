@@ -27,6 +27,8 @@ class navigation extends \q\get {
     */
 	public static function pagination( $args = null ) {
 
+		// h::log( $args );
+
 		// sanity ##
 		if (
 			is_null( $args )
@@ -173,10 +175,12 @@ class navigation extends \q\get {
 		// filters and checks ##
 		$items = get\method::prepare_return( $args, $items );
 
+		// h::log( $items );
+
 		// markup array ##
 		$string = strings\method::markup( $config['markup']['template'], $items, $config['markup'] );
 
-		h::log( $string );
+		// h::log( $string );
 
 		// echo ##
 		// if ( 'return' == $return ){ 

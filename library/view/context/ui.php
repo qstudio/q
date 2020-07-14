@@ -18,10 +18,10 @@ return [ 'ui' => [
 		'markup' => ''
 	],
 
-	// ui footer ##
-	'footer'  			=> [
-		'markup' => ''
-	],
+	// // ui footer ##
+	// 'footer'  			=> [
+	// 	'markup' => ''
+	// ],
 
 	// ui open ##
 	'open'  			=> [
