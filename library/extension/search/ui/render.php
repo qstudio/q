@@ -29,10 +29,12 @@ class render extends extension\search {
 	 * @since       0.1
 	 * @return      HTML
 	 */
-	public static function module(){
+	public static function ui(){
 
 	// h::log( 'rendering...' );
 	// h::log( method::properties( 'args' ) );
+
+	ob_start();
 
     // let's check if there are any posts to search, defined on very high, loose terms... ##
     if ( method::has_posts() ) {
@@ -61,7 +63,14 @@ class render extends extension\search {
 		// nothing to search :( ##
 		self::no_posts();
 
-    }
+	}
+	
+	/// HMMM, but effective ##
+	$string = ob_get_clean();
+
+	// h::log( $string );
+
+	return $string;
 
 }
 

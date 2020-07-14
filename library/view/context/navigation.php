@@ -44,9 +44,21 @@ return [ 'navigation' => [
 	'menu'  		=> [
 		'config'				=> [
 			// 'type'				=> ''
+			'return'			=> true
 		],		
 		'args' 					=> [
-			'echo'				=> true,
+			'echo'				=> false,
+			'menu'				=> 'q-header-menu',
+			'depth'	          	=> 1, // 1 = no dropdowns, 2 = with dropdowns.
+			'container'       	=> 'div',
+			'container_class' 	=> 'collapse navbar-collapse mb-4',
+			'container_id'    	=> 'navbar_content',
+			'menu_class'      	=> 'navbar-nav mr-auto',
+			'fallback_cb'     	=> 'Q_Nav_Walker::fallback',
+			'walker'          	=> new \Q_Nav_Walker(),
+		], 
+		'markup'				=> [
+			'template'			=> '{{ menu }}'
 		]
 	],
 

@@ -11,12 +11,18 @@ return [ 'ui' => [
 		// context->task debugging ##
 		'debug'			=> false,
 
+		// 'return'		=> 'return'
+
 	],
 
 	// ui header ##
+	/*
 	'header'  			=> [
-		'markup' => ''
+		'config' 		=> [
+			'return'	=> 'echo'
+		]	
 	],
+	*/
 
 	// // ui footer ##
 	// 'footer'  			=> [

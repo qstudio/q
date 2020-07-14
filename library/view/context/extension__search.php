@@ -22,6 +22,9 @@ return [ 'extension' => [
 			
 			// context->task debugging ##
 			'debug'			=> false,
+
+			// do not echo ##
+			'return'		=> 'return'
 	
 		],
 
@@ -37,7 +40,9 @@ return [ 'extension' => [
 							],
 		
 		// markup ##
-		'markup' 			=> '
+		'markup' 			=> [
+
+			'result'		=> '
 								<div class="col-12 col-md-6 col-lg-4 ajax-loaded {{class }}">
 									<a href="{{ post_permalink }}" title="{{ post_title }}">
 										<div class="lazy card-img-top" data-src="{{ src }}" alt="Open {{ post_title }}" src="{{ src }}"></div>
@@ -51,6 +56,8 @@ return [ 'extension' => [
 										</p>
 									</div>
 								</div>',
+			'template'		=> '{{ search }}'
+		],
 		
 		// text ##
 		'widget_title'		=> 'Search',

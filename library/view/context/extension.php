@@ -11,6 +11,9 @@ return [ 'extension' => [
 		// context->task debugging ##
 		'debug'			=> false,
 
+		// do not echo ## ?? 
+		// 'return'		=> true,
+
 	],
 
 ]];

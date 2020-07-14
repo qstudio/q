@@ -465,6 +465,8 @@ class navigation extends \q\get {
     public static function menu( $args = null, $blog_id = 1 )
     {
 
+		// h::log( $args );
+
 		// sanity ##
 		if(
 			is_null( $args )
@@ -499,14 +501,14 @@ class navigation extends \q\get {
             ! \is_multisite() 
         ) {
 
-            #h::log( $args );
+            // h::log( $args );
             return \wp_nav_menu( $args );
 
         }
 
         \switch_to_blog( $blog_id );
         #h::log( 'get_current_blog_id(): '.\get_current_blog_id()  );
-        #h::log( $args );
+        // h::log( $args );
 	    \wp_nav_menu( $args );
         \restore_current_blog();
 
