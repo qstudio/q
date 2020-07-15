@@ -44,7 +44,7 @@ return [ 'navigation' => [
 	'menu'  		=> [
 		'config'				=> [
 			// 'type'				=> ''
-			'return'			=> true
+			'return'			=> true // do not echo ##
 		],		
 		'args' 					=> [
 			'echo'				=> false,
