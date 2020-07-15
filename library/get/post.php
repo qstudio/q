@@ -7,7 +7,8 @@ use q\core;
 use q\core\helper as h;
 use q\ui;
 use q\get;
-use q\render;
+use q\willow\render;
+use q\strings;
 
 // Q Theme ##
 use q\theme;
@@ -387,7 +388,7 @@ class post extends \q\get {
 
             $array['content'] =
                 \get_the_author_meta( 'description' ) ?
-                render\method::chop( nl2br( \get_the_author_meta( 'description' ), intval( isset( $args['limit'] ) ? $args['limit'] : 200 ) ) ) :
+                strings\method::chop( nl2br( \get_the_author_meta( 'description' ), intval( isset( $args['limit'] ) ? $args['limit'] : 200 ) ) ) :
                 self::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( isset( $args['limit'] ) ? $args['limit'] : 200 ) );
 
         } else if (
@@ -401,7 +402,7 @@ class post extends \q\get {
 
             $array['content'] =
                 \category_description() ?
-                render\method::chop( nl2br( \category_description(), intval( isset( $args['limit'] ) ? $args['limit'] : 200 ) ) ) :
+                strings\method::chop( nl2br( \category_description(), intval( isset( $args['limit'] ) ? $args['limit'] : 200 ) ) ) :
                 self::excerpt_from_id( intval( \get_option( 'page_for_posts' ) ), intval( isset( $args['limit'] ) ? $args['limit'] : 200 ) );
 
         } else {
@@ -494,7 +495,7 @@ class post extends \q\get {
 		$array = [];
 
 		// get the post_content with filters applied ##
-		$array['content'] = \apply_filters( 'the_content', render\method::clean( \get_post_field( 'post_content', $args['config']['post'] ) ) );
+		$array['content'] = \apply_filters( 'the_content', strings\method::clean( \get_post_field( 'post_content', $args['config']['post'] ) ) );
 
 		// h::log( $array );
 
