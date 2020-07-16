@@ -3,21 +3,16 @@
 // return an array ##
 return [ 'media' => [
 
-	'config'			=> [
+	'config'						=> [
 		
 		// run context->task ##
-		'run' 			=> true,
+		'run' 						=> true,
 		
 		// context->task debugging ##
-		'debug'			=> false,
-
-	// ],
-
-	// // image sizes ## @todo - add sizes and function to add via add_image_sizes in config ##
-	// 'src'							=> [ 
+		'debug'						=> false,
 
 		// add srcset to src references ##
-		'srcset' 					=> false, 
+		'srcset' 					=> true, 
 
 		// get attachment media data -- can be enabled on a per reference basis ##
 		'meta' 						=> true, 
@@ -81,7 +76,8 @@ return [ 'media' => [
 		'markup' 					=> '<img class="col-12 fill lazy mt-2 mb-2" src="" data-src="{{ src }}" srcset="{{ src_srcset }}" sizes="{{ src_sizes }}" alt="{{ src_alt }}" data-src-caption="{{ src_caption }}" data-src-title="{{ src_title }}" data-src-content="{{ src_description }}" />',
 		'config' 					=> [ 
 			'meta'					=> true, // add meta data ##
-			'srcset'				=> true // add srcset data ##
+			'srcset'				=> true, // add srcset data #,
+			'handle'				=> 'vertical-lg' // default handle ##
 		],
 	],
 

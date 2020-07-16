@@ -17,7 +17,7 @@ return [ 'global' 		=> [
 		// date format ##
 		'date_format'      	=> 'F j, Y',
 
-		// by default, rendering should return values ##
+		// by default, willow should echo values ## ?? @TODO, do we want to echo or collect ??
 		'return'        => 'echo'
 
 	],

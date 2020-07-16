@@ -17,6 +17,8 @@ class media extends \Q {
     public static function thumbnail( $args = null )
     {
 
+		// h::log( \q_willow::$args );
+
 		// sanity ##
 		if (
 			is_null( $args )
@@ -72,7 +74,10 @@ class media extends \Q {
 		// h::log( $array );
 
         // kick back array ##
-        return $array;
+		// return $array;
+		
+		// return ##
+		return get\method::prepare_return( $args, $array );
 
     }
 
@@ -169,14 +174,16 @@ class media extends \Q {
 		
 		}
 		
+		// h::log( 't:>MEDIA config is not respecting passed values from willow or task specific config - why not??' );
 		// conditional -- add img caption ##
 		if ( 
 			// set locally..
 			(
 				class_exists( 'q_willow' )
 				&& isset( \q_willow::$args['config']['meta'] )
-				&& true == \q_willow::$args['config']['meta'] 
+				&& true === \q_willow::$args['config']['meta'] 
 			)
+			/*
 			||
 			// OR, set globally ##
 			(
@@ -184,6 +191,7 @@ class media extends \Q {
 				&& isset( \q\willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta'] )
 				&& true == \q\willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta']
 			)
+			*/
 		) {
 
 			// h::log( 'd:>Adding media meta' );
@@ -196,14 +204,16 @@ class media extends \Q {
 		
 		}
 
+		// h::log( 't:>global / local logic is wrong, as global always overrules local... look into that..' );
 		// conditional -- add img meta values ( sizes ) and srcset ##
         if ( 
 			// set locally..
 			(	
 				class_exists( 'q_willow' )
 				&& isset( \q_willow::$args['config']['srcset'] )
-            	&& true == \q_willow::$args['config']['srcset'] 
+            	&& true === \q_willow::$args['config']['srcset'] 
 			)
+			/*
 			||
 			// OR, set globally ##
 			(
@@ -211,6 +221,7 @@ class media extends \Q {
 				&& isset( \q\willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset'] )
 				&& true == \q\willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset']
 			)
+			*/
         ) {
 
 			// h::log( 'd:>Adding srcset' );
