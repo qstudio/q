@@ -122,7 +122,7 @@ class media extends \Q {
 			&& isset( \q_willow::$args[ $args['field'] ]['config']['handle'] ) 
 		){
 
-			$args['handle'] = \q_willow\render::$args[ $args['field'] ]['config']['handle'];
+			$args['handle'] = \q_willow::$args[ $args['field'] ]['config']['handle'];
 
 		// filterable default ##
 		} else {

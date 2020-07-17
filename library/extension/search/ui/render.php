@@ -34,8 +34,6 @@ class render extends extension\search {
 	// h::log( 'rendering...' );
 	// h::log( method::properties( 'args' ) );
 
-	ob_start();
-
     // let's check if there are any posts to search, defined on very high, loose terms... ##
     if ( method::has_posts() ) {
 
@@ -65,13 +63,6 @@ class render extends extension\search {
 
 	}
 	
-	/// HMMM, but effective ##
-	$string = ob_get_clean();
-
-	// h::log( $string );
-
-	return $string;
-
 }
 
 
