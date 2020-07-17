@@ -293,7 +293,7 @@ class method extends \q\strings {
 
 		} else {
 
-			h::log( 'e:>Q Willow Library Missing, using presumed default tags' );
+			h::log( 'e:>Q Willow Library Missing, using presumed variable tags {{ xxx }}' );
 
 			$open = '{{ ';
 			$close = ' }}';
@@ -303,8 +303,9 @@ class method extends \q\strings {
 		// capture missing placeholders ##
 		// $capture = [];
 
-        // h::log( $data );
-		#helper::log( $markup );
+        // // h::log( $data );
+		// h::log( $markup );
+		// h::log( $data );
 		// h::log( 't:>replace {{ with tag::var_o' );
 
 		// empty ##

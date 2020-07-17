@@ -289,9 +289,9 @@ class post extends \q\get {
 
 			// h::log( 'Here..' );
 
-            $array['permalink'] = \get_permalink( $object->ID );
-            $arrayx['slug'] = $object->post_name;
-            $array['title'] = $object->post_title;
+            $array['permalink'] = \get_permalink( $args['config']['post']->ID );
+            $array['slug'] = $args['config']['post']->post_name;
+            $array['title'] = $args['config']['post']->post_title;
 
 		// is singular post ##
 		} elseif ( \is_single( $args['config']['post'] ) ) {
@@ -479,6 +479,8 @@ class post extends \q\get {
     public static function content( $args = null )
     {
 
+		// h::log( 'e:>post->content hit..' );
+
 		// sanity ##
 		if (
 			is_null( $args )
@@ -493,6 +495,8 @@ class post extends \q\get {
 
         // set-up new array ##
 		$array = [];
+
+		// h::log( \get_post_field( 'post_content', $args['config']['post'] ) );
 
 		// get the post_content with filters applied ##
 		$array['content'] = \apply_filters( 'the_content', strings\method::clean( \get_post_field( 'post_content', $args['config']['post'] ) ) );
