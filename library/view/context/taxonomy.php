@@ -20,7 +20,7 @@ return [ 'taxonomy' => [
 										</div>
 									</div>',
 			'template'			=> '
-			 						{@ {+ terms +}
+			 						{@ {: terms :}
 			 						<a class="list-group-item list-group-item-action{{ active }}" href="{{ permalink }}">
 			 							{{ title }}
 			 						</a>

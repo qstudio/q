@@ -24,7 +24,7 @@ return [ 'ui' => [
 	],
 	*/
 
-	// // ui footer ##
+	// ui footer ##
 	// 'footer'  			=> [
 	// 	'markup' => ''
 	// ],
