@@ -114,7 +114,7 @@ return [ 'post' => [
 
 		// config ##
 		'wp_query_args'			=> [
-									'post_type'				=> [ 'post' ], // post -- force no results ##
+									'post_type'				=> [ 'post' ], // blah -- force no results ##
 									'posts_per_page'        => \get_option( "posts_per_page", 10 ),// per page ##
 									'limit'                 => \get_option( "posts_per_page", 10 ), // posts to load ##
 									// 'query_vars'            => false, // only wp_query what we pass in config ##

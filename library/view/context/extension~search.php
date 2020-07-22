@@ -10,10 +10,10 @@ defined( 'ABSPATH' ) OR exit;
 
 // re-usable config ------ ##
 
-// return an array ##
-return [ 'extension' => [
+// h::log( 't:>Check if extension->search array set, if not set when adding to cache.. to allow for simpler array format in config files??' ) ;
 
-	'search' => [
+// return an array ##
+return [ 'extension' => [ 'search' => [
 
 		'config'			=> [
 		
