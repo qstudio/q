@@ -2,13 +2,13 @@
 
 namespace q\controller;
 
-use q\core\core as core;
-use q\core\helper as helper;
-use q\core\config as config;
+use q\core\core;
+use q\core\helper as h;
+// use q\core\config as config;
 
-use q\controller\generic as generic;
-use q\controller\javascript as javascript;
-use q\controller\css as css;
+// use q\controller\generic as generic;
+use q\asset\javascript;
+use q\asset\css;
 
 // load it up ##
 \q\controller\toggle::run();

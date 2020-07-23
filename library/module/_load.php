@@ -35,7 +35,7 @@ class module extends \Q {
 			// 'scroll' => h::get( 'ui/module/scroll.php', 'return', 'path' ),
 			// 'push' => h::get( 'ui/module/push.php', 'return', 'path' ),
 			// 'filter' => h::get( 'ui/module/filter.php', 'return', 'path' ),
-			// 'toggle' => h::get( 'ui/module/toggle.php', 'return', 'path' ),
+			'toggle' => h::get( 'module/toggle.php', 'return', 'path' ),
 			// 'load' => h::get( 'ui/module/load.php', 'return', 'path' ),
 		];
 
