@@ -27,13 +27,13 @@ class is {
 			// return false;
 			
 			// changes to return WP template -- check for introduced issues ##
-			return str_replace( '.php', '', \get_page_template_slug() );
+			return str_replace( [ '.php', '.willow' ], '', \get_page_template_slug() );
 
         } else {
 
             // h::log( 'Page template: '.$GLOBALS['q_template'] );
 
-            return str_replace( '.php', '', $GLOBALS['q_template'] );        
+            return str_replace( [ '.php', '.willow' ], '', $GLOBALS['q_template'] );        
 
         }
 

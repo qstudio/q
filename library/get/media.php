@@ -147,7 +147,7 @@ class media extends \Q {
         // self::log( 'Handle: '.$args['handle'] );
 		if ( ! $src = \wp_get_attachment_image_src( $args['attachment_id'], $args['handle'] ) ){
 
-			h::log( 'd:>wp_get_attachment_image_src did not return data' );
+			h::log( \q_willow::$args['task'].'~>n wp_get_attachment_image_src did not return data' );
 
 			return false;
 
