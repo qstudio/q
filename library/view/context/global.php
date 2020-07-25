@@ -1,15 +1,15 @@
 <?php
 
 // return an array ##
-return [ 'global' 		=> [
+return [ 'global' 			=> [
 
-	'config'			=> [
+	'config'				=> [
 		
 		// run context->task ##
-		'run' 			=> true,
+		'run' 				=> true,
 		
 		// context->task debugging ##
-		'debug'			=> false,
+		'debug'				=> false,
 
 		// comments are ok ##
 		'allow_comments' 	=> true,
@@ -18,7 +18,7 @@ return [ 'global' 		=> [
 		'date_format'      	=> 'F j, Y',
 
 		// by default, willow should echo values ## ?? @TODO, do we want to echo or collect ??
-		'return'        => 'echo'
+		'return'       	 	=> 'echo'
 
 	],
 

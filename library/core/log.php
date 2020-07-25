@@ -13,7 +13,7 @@ class log extends \Q {
 
 	// track who called what ##
 	public static 
-		$file				= \WP_CONTENT_DIR."/debug.log",
+		$file				= \WP_CONTENT_DIR."/q.debug.log",
 		$empty 				= false, // track emptied ##
 		$backtrace 			= false,
 		$backtrace_key 		= false,

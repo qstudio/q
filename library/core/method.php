@@ -44,7 +44,7 @@ class method extends \Q {
                         
                         if ( isset( $_GET[ $key ] ) ) {  
                             
-                            if ( $debug === true ) { pr($_GET[ $key ]); } // debug ##
+                            // if ( $debug === true ) { pr($_GET[ $key ]); } // debug ##
                             
                             return self::sanitize( $_GET[ $key ], \sanitize_text_field ( $sanitize ) );
                             
@@ -57,7 +57,7 @@ class method extends \Q {
                         
                         if ( isset( $_POST[ $key ] ) ) {  
                             
-                            if ( $debug === true ) { wp_die($_POST[ $key ]); } // debug ##
+                            // if ( $debug === true ) { wp_die($_POST[ $key ]); } // debug ##
                             
                             return self::sanitize( $_POST[ $key ], \sanitize_text_field ( $sanitize ) );
                             
