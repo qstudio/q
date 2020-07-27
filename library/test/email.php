@@ -219,7 +219,7 @@ class email extends \Q {
             $EasyWPSMTP	= \EasyWPSMTP::get_instance();
 
             // test ##
-            $results = $EasyWPSMTP->test_mail( 'wordpress@greenheart.org', 'Q Test Email', 'Test message...' );
+            $results = $EasyWPSMTP->test_mail( 'wordpress@qstudio.us', 'Q Test Email', 'Test message...' );
 
             // helper::log( $results );
 

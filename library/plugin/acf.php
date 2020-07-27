@@ -120,7 +120,7 @@ class acf extends \Q {
         // the $group string might be passed without the prefix "group_" - if it's missing, add it ##
         if ( 'group_' !== substr( $group, 0, 6 ) ) {
 
-            h::log( 'e:>Notice -> "group" "group_" prefix REMOVED...' );
+            // h::log( 'e:>Notice -> "group" "group_" prefix REMOVED...' );
 
             // $group = "group_".$group;
 

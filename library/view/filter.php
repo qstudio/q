@@ -496,7 +496,7 @@ class filter {
             ) 
         ) {
 
-            // h::log( 'template file found and set to: '.$file );
+            // h::log( 'e:>template file found and set to: '.$file );
 
             // add global ##
             $GLOBALS['q_template'] = $_wp_page_template;

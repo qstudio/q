@@ -22,7 +22,7 @@ class is {
 
         if( ! isset( $GLOBALS['q_template'] ) ) {
 
-            // h::log( 'Page template empty' );
+            // h::log( 'e:>Page template empty' );
             
 			// return false;
 			
