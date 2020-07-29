@@ -471,7 +471,7 @@ class navigation extends \q\get {
 		if(
 			is_null( $args )
 			|| ! is_array( $args )
-			|| ! isset( $args['args']['menu'] )
+			|| ! isset( $args['args']['theme_location'] )
 		){
 
 			h::log( 'e:>Error in passed args' );
@@ -480,39 +480,50 @@ class navigation extends \q\get {
 
 		}
 
-		// Parse incoming $args into an array and merge it with $defaults - caste to object ##
-		$args = core\method::parse_args( $args['args'], core\config::get([ 'context' => 'navigation', 'task' => 'menu' ])['args'] );
-		// h::log( $args );
+		// get context / task ##
+		$context = isset( $args['context'] ) ? $args['context'] : 'navigation' ;
+		$task = isset( $args['task'] ) ? $args['task'] : 'menu' ;
+
+		// Parse incoming $args into an array and merge it with $defaults ##
+		$args = core\method::parse_args( $args['args'], core\config::get([ 'context' => $context, 'task' => $task ])['args'] );
+		// h::log( 'e:>MENU: '.$args['theme_location'] );
 		
-        if ( ! \has_nav_menu( $args['menu'] ) ) {
+        if ( ! \has_nav_menu( $args['theme_location'] ) ) {
         
-            h::log( 'd:>! has nav menu: '.$args['theme-location'] );
+            h::log( 'd:>! has nav menu: '.$args['theme_location'] );
 
             return false;
 
         }
-
-        #global $blog_id;
-        $blog_id = \absint( $blog_id );
-
-        // h::log( 'nav_menu - $blog_id: '.$blog_id.' / $origin_id: '.$origin_id );
 
         if ( 
             ! \is_multisite() 
         ) {
 
             // h::log( $args );
-            return \wp_nav_menu( $args );
+			$menu = \wp_nav_menu( $args );
+			
+			// test ##
+			// h::log( $menu );
 
-        }
+			// return ##
+			return $menu;
+
+		}
+		
+		#global $blog_id;
+		$blog_id = \absint( $blog_id );
+
+		// h::log( 'nav_menu - $blog_id: '.$blog_id.' / $origin_id: '.$origin_id );
 
         \switch_to_blog( $blog_id );
         #h::log( 'get_current_blog_id(): '.\get_current_blog_id()  );
         // h::log( $args );
-	    \wp_nav_menu( $args );
+		$menu = \wp_nav_menu( $args );
+		// h::log( $menu );
         \restore_current_blog();
 
-		return;
+		return $menu;
 
     }
 

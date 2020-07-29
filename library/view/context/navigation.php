@@ -40,6 +40,8 @@ return [ 'navigation' => [
 		],
 	],
 
+
+
 	// navigation ---------
 	'menu'  		=> [
 		'config'				=> [
@@ -48,11 +50,11 @@ return [ 'navigation' => [
 		],		
 		'args' 					=> [
 			'echo'				=> false,
-			'menu'				=> 'q-header-menu',
+			'theme_location'	=> 'q-header-menu',
 			'depth'	          	=> 1, // 1 = no dropdowns, 2 = with dropdowns.
 			'container'       	=> 'div',
-			'container_class' 	=> 'collapse navbar-collapse mb-4',
-			'container_id'    	=> 'navbar_content',
+			'container_class' 	=> 'collapse navbar-collapse mb-4 menu_content', 
+			'container_id'    	=> 'main_menu_content',
 			'menu_class'      	=> 'navbar-nav mr-auto',
 			'fallback_cb'     	=> 'Q_Nav_Walker::fallback',
 			'walker'          	=> new \Q_Nav_Walker(),
@@ -61,6 +63,8 @@ return [ 'navigation' => [
 			'template'			=> '{{ menu }}'
 		]
 	],
+
+	
 
 	// use your pagination ---------
 	'pagination'  	=> [

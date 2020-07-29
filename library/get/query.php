@@ -139,6 +139,67 @@ class query extends \q\get {
 
 
 
+
+	/**
+     * Get Post object by post_meta query
+     *
+     * @since       1.0.4
+     * @return      Object      $args
+     */
+    public static function post_id_by_title( $args = null )
+    {
+
+		/*
+        // Parse incoming $args into an array and merge it with $defaults - caste to object ##
+        $args = \wp_parse_args( $args, core\config::get(['context' => 'query', 'task' => 'post_id_by_title' ]) );
+
+        // grab page - polylang will take care of language selection ##
+        $post_args = array(
+            'meta_query'        => array(
+                array(
+                    'key'       => $args->meta_key,
+                    'value'     => $args->meta_value
+                )
+            ),
+            'post_type'         => $args->post_type,
+            'posts_per_page'    => $args->posts_per_page,
+            'order'				=> $args->order,
+            'orderby'			=> $args->orderby
+		);
+		*/
+
+		// test ##
+		h::log( $args );
+
+		// sanity ##
+		if(
+			is_null( $args )
+			// || ! is_array( $args )
+			// || ! isset( $args[0] )
+		){
+
+			h::log( 'e:>Error in passed args' );
+
+			return false;
+
+		}
+
+        // run query ##
+        $post = \get_page_by_title( $args );
+
+        // check results ##
+        if ( ! $post || \is_wp_error( $post ) ) return false;
+
+        // test it ##
+        // h::log( $post );
+
+        // kick back result->ID ##
+        return $post->ID;
+
+	}
+
+
+
 	
     /**
     * Get post with title %like% search term
