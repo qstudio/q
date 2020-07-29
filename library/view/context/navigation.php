@@ -45,7 +45,6 @@ return [ 'navigation' => [
 	// navigation ---------
 	'menu'  		=> [
 		'config'				=> [
-			// 'type'				=> ''
 			'return'			=> true // do not echo ##
 		],		
 		'args' 					=> [

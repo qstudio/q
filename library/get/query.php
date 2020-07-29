@@ -169,7 +169,7 @@ class query extends \q\get {
 		*/
 
 		// test ##
-		h::log( $args );
+		// h::log( $args );
 
 		// sanity ##
 		if(
