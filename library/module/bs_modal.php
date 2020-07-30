@@ -1,6 +1,6 @@
 <?php
 
-namespace q\controller;
+namespace q\module;
 
 use q\core\core as core;
 use q\core\helper as helper;
@@ -9,26 +9,26 @@ use q\controller\javascript as javascript;
 use q\controller\css as css;
 
 // load it up ##
-\q\controller\modal::run();
+\q\module\bs_modal::__run();
 
-class modal extends \Q {
+class bs_modal extends \Q {
     
     static $args = array();
 
-    public static function run()
+    public static function __run()
     {
 
         // add assets ##
         // \add_action( 'wp_enqueue_scripts', [ get_class(), 'wp_enqueue_scripts' ], 1000000 );
 
-        // add JS to footer ##
+        // add html to footer ##
         \add_action( 'wp_footer', [ get_class(), 'wp_footer' ], 3 );
 
         // add CSS to header ##
-        \add_action( 'wp_head', [ get_class(), 'wp_head' ], 3 );
+        // \add_action( 'wp_head', [ get_class(), 'wp_head' ], 3 );
 
         // add JS to footer ##
-        \add_action( 'wp_footer', [ get_class(), 'run_javascript' ], 10000000 );
+        // \add_action( 'wp_footer', [ get_class(), 'run_javascript' ], 10000000 );
 
     }
 
@@ -84,12 +84,36 @@ class modal extends \Q {
     public static function wp_footer()
     {
 
+		/*
         javascript::ob_get([
             'view'      => get_class(), 
             'method'    => 'javascript',
             'priority'  => 3,
             'handle'    => 'Modal'
-        ]);
+		]);
+		*/
+		
+?>
+<!-- Modal -->
+<div class="modal fade" id="q_modal" tabindex="-1" role="dialog" aria-labelledby="q_modal_title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="q_modal_long_title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<?php
 
     }
 

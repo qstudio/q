@@ -29,6 +29,7 @@ class module extends \Q {
 			'navigation' => h::get( 'module/navigation.php', 'return', 'path' ), 
 			'cookie' => h::get( 'module/cookie.php', 'return', 'path' ),
 			// 'filter' => h::get( 'ui/module/filter.php', 'return', 'path' ),
+			'bs_modal' => h::get( 'module/bs_modal.php', 'return', 'path' ),
 			// 'modal' => h::get( 'ui/module/modal.php', 'return', 'path' ),
 			// 'tab' => h::get( 'ui/module/tab.php', 'return', 'path' ),
 			// 'select' => h::get( 'ui/module/select.php', 'return', 'path' ),
