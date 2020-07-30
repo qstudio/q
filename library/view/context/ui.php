@@ -37,6 +37,11 @@ return [ 'ui' => [
 		'
 	],
 
+	// comments ##
+	'comment'  			=> [
+		'markup' => '{{ comment }}'
+	],
+
 	// ui close() ##
 	// 'close'  			=> [
 	// 	'markup' => '

@@ -2,11 +2,10 @@
 
 namespace q\module;
 
-use q\core\core as core;
-use q\core\helper as helper;
-use q\core\config as config;
-use q\controller\javascript as javascript;
-use q\controller\css as css;
+use q\core;
+use q\core\helper as h;
+// use q\core\config as config;
+use q\asset;
 
 // load it up ##
 \q\module\bs_modal::__run();
@@ -17,6 +16,21 @@ class bs_modal extends \Q {
 
     public static function __run()
     {
+
+		// add extra options in extension select API ##
+		\add_filter( 'acf/load_field/name=q_option_extension', [ get_class(), 'filter_acf_extension' ], 10, 1 );
+
+		// h::log( core\option::get('modal') );
+		if ( 
+			! isset( core\option::get('extension')->modal )
+			|| true !== core\option::get('extension')->modal 
+		){
+
+			// h::log( 'd:>Modal is not enabled.' );
+
+			return false;
+
+		}
 
         // add assets ##
         // \add_action( 'wp_enqueue_scripts', [ get_class(), 'wp_enqueue_scripts' ], 1000000 );
@@ -45,6 +59,32 @@ class bs_modal extends \Q {
 
     }
 
+
+
+	/**
+     * Add new libraries to Q Settings via API
+     * 
+     * @since 2.3.0
+     */
+    public static function filter_acf_extension( $field )
+    {
+
+        // h::log( $field['choices'] );
+        // h::log( $field['default_value'] );
+
+		// pop on a new choice ##
+		$field['choices']['modal'] = 'Bootstrap Modal';
+		// $field['choices']['banner'] = '@todo - News Banner';
+
+		// make it selected ##
+		$field['default_value'][0] = 'modal';
+		
+        // h::log( $field['choices'] );
+        // h::log( $field['default_value'] );
+
+         return $field;
+
+	}
 
     
     
@@ -84,14 +124,21 @@ class bs_modal extends \Q {
     public static function wp_footer()
     {
 
-		/*
-        javascript::ob_get([
+        \q\asset\javascript::ob_get([
             'view'      => get_class(), 
             'method'    => 'javascript',
             'priority'  => 3,
             'handle'    => 'Modal'
 		]);
-		*/
+
+/*
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-title="test" data-body="body" data-target="#q_modal">
+	Launch Modal
+</button>
+*/
+
+// @todo - MAKE HTML filterable ##
 		
 ?>
 <!-- Modal -->
@@ -129,10 +176,57 @@ class bs_modal extends \Q {
     public static function javascript( $args = null )
     {
 
-    // helper::log( self::$args );
+	// helper::log( self::$args );
+	
+	// @TODO - re-add hash controls - perhaps not back and forwards, but loading modal from fragement - perhaps like tabs.. 
 
 ?>
 <script>
+
+// open modal with dynamic data ##
+jQuery(document).on("click","[data-toggle='modal']", function (e) {
+
+	// stop ##
+	e.preventDefault();
+
+	// get target ##
+	var target = jQuery(this).attr('data-target');
+	// console.log('modal target: ' + target);
+
+	var title = jQuery(this).attr('data-title');
+	var body = jQuery(this).attr('data-body');
+
+	// sanity ##
+	if( ! title || ! body ){
+		console.log( 'Error in passed params' );
+		// jQuery(target).modal('dispose');
+		// return false;
+	}
+
+	// add data ##
+	jQuery(target).find('.modal-title').html(title);
+	jQuery(target).find('.modal-body').html(body);
+
+	// open modal ##
+	// jQuery(target).modal("show");
+
+});
+
+/*
+function q_modal( e ){
+
+	event.preventDefault();
+	var e = jQuery(this);
+	var title = e.data('title');
+	var body = e.data('body');
+	jQuery("#q_modal").modal("show");
+	jQuery('#modal-title').html(title);
+	jQuery('#modal-body').html(body);
+	
+}
+*/
+
+/*
 // hash ##
 $q_modal_hash_value = false;
 $q_modal_key = false;
@@ -161,9 +255,7 @@ if ( typeof jQuery !== 'undefined' ) {
 }
 
 
-/*
-Run modal... ##
-*/
+// Run modal... ##
 function q_modal( $args )
 {
 
@@ -381,6 +473,7 @@ function q_modal_callback( $q_modal_args, $q_modal_key ) {
     }
 
 }
+*/
 
 </script>
 <?php
