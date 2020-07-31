@@ -387,9 +387,7 @@ class tab extends \Q {
                 'style' => 'default',
                 'label_placement' => 'top',
                 'instruction_placement' => 'label',
-                'hide_on_screen' => array(
-                    // 0 => 'the_content',
-                ),
+                'hide_on_screen' => '',
                 'active' => 1,
                 'description' => '',
             ),

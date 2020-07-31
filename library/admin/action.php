@@ -27,7 +27,7 @@ class action extends \Q {
         }
 
         // remove admin search bar ##
-        \add_action( 'admin_bar_menu', array( get_class(), 'admin_bar_menu' ), 999 );   
+        // \add_action( 'admin_bar_menu', array( get_class(), 'admin_bar_menu' ), 999 );   
 
         // remove admin color schemes - silly idea ##
         \remove_action( 'admin_color_scheme_picker', 'admin_color_scheme_picker' );
