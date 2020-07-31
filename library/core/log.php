@@ -695,7 +695,7 @@ class log extends \Q {
 
 	}
 
-
+	/*
 	public static function array_unique_multidimensional($input)
 	{
 
@@ -706,9 +706,10 @@ class log extends \Q {
 		return array_intersect_key($input, $unique);
 	
 	}
+	*/
 
 
-
+	
 	/**
 	 * Replacement error_log function, with custom return format 
 	 * 
