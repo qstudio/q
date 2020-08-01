@@ -15,19 +15,21 @@ return [ 'ui' => [
 
 	],
 
-	// ui header ##
-	/*
-	'header'  			=> [
-		'config' 		=> [
-			'return'	=> 'echo'
-		]	
-	],
-	*/
-
 	// ui footer ##
-	// 'footer'  			=> [
-	// 	'markup' => ''
-	// ],
+	'footer'  			=> [
+		'markup' => '
+				<footer class="container footer" data-scroll="footer">
+					<div class="row">
+						<div class="col-12 col-lg-8 mt-3 mb-3">
+							PARTIAL FOOTER
+						</div>
+					</div>
+				</footer> 
+				{~ action~wp_footer ~}
+			</body>
+		</html>
+		'
+	],
 
 	// ui open ##
 	'open'  			=> [
@@ -37,16 +39,17 @@ return [ 'ui' => [
 		'
 	],
 
+	// ui close() ##
+	'close'  			=> [
+		'markup' => '
+			</div>
+		</main>
+		'
+	],
+
 	// comments ##
 	'comment'  			=> [
 		'markup' => '{{ comment }}'
 	],
-
-	// ui close() ##
-	// 'close'  			=> [
-	// 	'markup' => '
-	// 		</div>
-	// 	</main>'
-	// ],
 
 ]];
