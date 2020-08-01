@@ -83,7 +83,8 @@ class wp_head extends \Q {
         \add_action( 'admin_head', array ( get_class(), 'favicon' ), 9999999 ); // add to backend ##
 
         // filter meta title ##
-        \add_filter( 'wp_title', array ( get_class(), 'wp_title' ), 10, 2 );
+		// \add_filter( 'wp_title', array ( get_class(), 'wp_title' ), 10, 2 );
+		\add_filter( 'pre_get_document_title', array ( get_class(), 'pre_get_document_title' ), 10, 11 );
 
         // add body classes ##
         \add_filter( 'body_class', array ( get_class(), 'body_class' ), 15, 1 );
@@ -394,7 +395,7 @@ class wp_head extends \Q {
 
     /**
      * Filters the page title appropriately depending on the current page
-     * This function is attached to the 'wp_title' filter hook.
+     * This function is attached to the 'pre_get_document_title' filter hook.
      *
      * @uses	get_bloginfo()
      * @uses	is_home()
@@ -402,14 +403,29 @@ class wp_head extends \Q {
      *
      * @since       0.1
      */
-    public static function wp_title( $title, $sep ) {
+    public static function pre_get_document_title() {
+
+		// define seperator ##
+		$sep = ' | ';
 
         global $page, $paged, $post;
 
-        $page_title = $title;
+		if ( \is_front_page() ) {
 
-        // h::log( $page_title );
+			$title = '';
 
+		} else {
+		
+			$get_title = \q\get\post::title([ 'filter' => true ]);
+			// h::log( $get_title );
+			$title = $get_title['title'];
+
+			$title = $title.$sep;
+
+		}
+
+		// h::log( 'e:>'.$title );
+		
         // get site desription ##
         $site_description = \get_bloginfo( 'description' );
 
@@ -483,12 +499,12 @@ class wp_head extends \Q {
         #$filtered_title = $page_title; // without site name ##
 
         // add site description if not empty and on front page ##
-        $page_title .= ( ! empty( $site_description ) && ( \is_front_page() ) ) ? ' | ' . $site_description : '' ;
+        $page_title .= ( ! empty( $site_description ) && ( \is_front_page() ) ) ? $sep . $site_description : '' ;
 
         // add paging number, if paged ##
-        $page_title .= ( 2 <= $paged || 2 <= $page ) ? ' | ' . sprintf( __( 'Page %s' ), max( $paged, $page ) ) : '' ;
+        $page_title .= ( 2 <= $paged || 2 <= $page ) ? $sep . sprintf( __( 'Page %s' ), max( $paged, $page ) ) : '' ;
 
-        // h::log( $page_title );
+        // h::log( 'e:>'.$page_title );
 
         // filter ##
         $page_title = \apply_filters( 'q/hook/wp_head/wp_title', $page_title );

@@ -160,7 +160,7 @@ class post extends \q\get {
 			|| ! is_array( $args )
 		){
 
-			h::log( 'Error in passed args' );
+			h::log( 'e:>Error in passed args' );
 
 			return false;
 
