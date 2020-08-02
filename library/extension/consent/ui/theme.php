@@ -196,10 +196,9 @@ class theme extends extension\consent {
         <div class="q-tab modal-data" data-modal-key="consent" style="display: none">
             <div class="q-bsg q-consent">
                 <div class="q-consent-modal">
-                    <ul class="q-tab-triggers nav nav-tabs" role="tablist">
+                    <ul class="q-tab-triggers nav nav-tabs bs-tabs" role="tablist">
                         <li class="nav-item"><a href="<?php echo \get_permalink(); ?>#/modal/consent/tab/settings" class="q-tab-trigger nav-link" data-tab-trigger="settings">Settings</a></li>
                         <li class="nav-item"><a href="<?php echo \get_permalink(); ?>#/modal/consent/tab/privacy" class="q-tab-trigger nav-link" data-tab-trigger="privacy">Privacy</a></li>
-
                     </ul>
 
                     <div class="tab-targets">

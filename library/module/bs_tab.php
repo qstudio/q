@@ -183,7 +183,7 @@ if( typeof jQuery !== 'undefined' ) {
 		var hash = document.location.hash;
 		var prefix = "tab_";
 		if (hash) {
-			jQuery('.nav-tabs a[href="'+hash.replace(prefix,"")+'"]').tab('show');
+			jQuery('.bs-tabs a[href="'+hash.replace(prefix,"")+'"]').tab('show');
 		} 
 
 		// allow external tab triggers ##
@@ -195,7 +195,7 @@ if( typeof jQuery !== 'undefined' ) {
 		} );
 
 		// update hash value when bs4 tabs are used ##
-		jQuery('.nav-tabs a').click(function (e) {
+		jQuery('.bs-tabs a').click(function (e) {
 			window.location.hash = this.hash;
 		});
 

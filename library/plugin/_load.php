@@ -32,7 +32,7 @@ class plugin extends \Q {
 			'acf' => h::get( 'plugin/acf.php', 'return', 'path' ),
 
 			// gravityforms ##
-			'gravityforms' => h::get( 'plugin/gravityforms.php', 'return', 'path' ),
+			// 'gravityforms' => h::get( 'plugin/gravityforms.php', 'return', 'path' ),
 
 			// aesop ##
 			// 'aesop' => h::get( 'plugin/aesop.php', 'return', 'path' ),

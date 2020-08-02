@@ -51,7 +51,7 @@ class is {
 
         if( ! isset( $GLOBALS['q_template'] ) ) {
 
-			// changes to return WP template -- check for introduced issues ##
+			// changed to return WP template -- check for introduced issues ##
 			$template = \get_page_template_slug();
 
         } else {
@@ -62,7 +62,14 @@ class is {
 
 		}
 		
-		return core\method::file_extension( $template );
+		// h::log( 'e:>Template: "'.$template.'"' );
+
+		$extension = core\method::file_extension( $template );
+
+		// h::log( 'e:>Extension: "'.$extension.'"' );
+
+		// kick back ##
+		return $extension;
 
 	}
 
