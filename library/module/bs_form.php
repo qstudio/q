@@ -8,9 +8,9 @@ use q\core\helper as h;
 use q\asset;
 
 // load it up ##
-\q\module\bs_tab::__run();
+\q\module\bs_form::__run();
 
-class bs_tab extends \Q {
+class bs_form extends \Q {
     
     static $args = array();
 
@@ -21,13 +21,13 @@ class bs_tab extends \Q {
 		\add_filter( 'acf/load_field/name=q_option_extension', [ get_class(), 'filter_acf_extension' ], 10, 1 );
 
 		// make running dependent on module selection in Q settings ##
-		// h::log( core\option::get('tab') );
+		// h::log( core\option::get('toast') );
 		if ( 
-			! isset( core\option::get('extension')->bs_tab )
-			|| true !== core\option::get('extension')->bs_tab 
+			! isset( core\option::get('extension')->bs_form )
+			|| true !== core\option::get('extension')->bs_form 
 		){
 
-			// h::log( 'd:>Tab is not enabled.' );
+			// h::log( 'd:>Toast is not enabled.' );
 
 			return false;
 
@@ -37,7 +37,7 @@ class bs_tab extends \Q {
         // add assets ##
         // \add_action( 'wp_enqueue_scripts', [ get_class(), 'wp_enqueue_scripts' ], 1000000 );
 
-        // add html to footer ##
+        // add js to footer ##
         \add_action( 'wp_footer', [ get_class(), 'wp_footer' ], 3 );
 
         // add CSS to header ##
@@ -74,11 +74,11 @@ class bs_tab extends \Q {
         // h::log( $field['default_value'] );
 
 		// pop on a new choice ##
-		$field['choices']['bs_tab'] = 'Bootstrap Tabs';
+		$field['choices']['bs_form'] = 'Bootstrap Form';
 		// $field['choices']['banner'] = '@todo - News Banner';
 
 		// make it selected ##
-		$field['default_value'][0] = 'bs_tab';
+		$field['default_value'][0] = 'bs_form';
 		
         // h::log( $field['choices'] );
         // h::log( $field['default_value'] );
@@ -123,8 +123,8 @@ class bs_tab extends \Q {
         asset\javascript::ob_get([
             'view'      => get_class(), 
             'method'    => 'javascript',
-            'priority'  => 20,
-            'handle'    => 'BS Tab'
+            'priority'  => 5,
+            'handle'    => 'BS Form'
 		]);
 
     }
@@ -145,63 +145,24 @@ class bs_tab extends \Q {
 
 ?>
 <script>
-if( typeof jQuery !== 'undefined' ) {
-	/*
-	jQuery(document).ready(function() {
-
-	// modern browsers 
-	jQuery( window ).bind( 'hashchange', function( e ) {
-
-		// console.log( 'Doing hash change...' );
-
-		history.navigationMode = 'compatible';
-		e.preventDefault();
-		$the_hash = q_toggle_hash();
-		if($the_hash) q_toggle( $the_hash );
-
-	});
-
-	});
-	*/
-
-	jQuery(window).load(function(){
-
-		/*
-		// store open tab in localstorage ## 
-		jQuery('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-			localStorage.setItem('activeTab', jQuery(e.target).attr('href'));
-			console.log( 'Store tab: '+jQuery(e.target).attr('href') );
-		});
-
-		var activeTab = localStorage.getItem('activeTab');
-		if(activeTab){
-			jQuery('.nav-tabs a[href="' + activeTab + '"]').tab('show');
-		}
-		*/
-
-		// read hash from page load and change tab
-		var hash = document.location.hash;
-		var prefix = "tab_";
-		if (hash) {
-			jQuery('.bs-tabs a[href="'+hash.replace(prefix,"")+'"]').tab('show');
-		} 
-
-		// allow external tab triggers ##
-		jQuery( '[data-trigger="tab"]' ).click( function( e ) {
-			var href = jQuery( this ).attr( 'href' );
-			e.preventDefault();
-			window.location.hash = href;
-			jQuery( '[data-toggle="tab"][href="' + href + '"]' ).trigger( 'click' );
-		} );
-
-		// update hash value when bs4 tabs are used ##
-		jQuery('.bs-tabs a').click(function (e) {
-			window.location.hash = this.hash;
-		});
-
-	});
-
-};
+// BS Form validation
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
 </script>
 <?php
 

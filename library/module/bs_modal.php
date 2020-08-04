@@ -22,8 +22,8 @@ class bs_modal extends \Q {
 
 		// h::log( core\option::get('modal') );
 		if ( 
-			! isset( core\option::get('extension')->modal )
-			|| true !== core\option::get('extension')->modal 
+			! isset( core\option::get('extension')->bs_modal )
+			|| true !== core\option::get('extension')->bs_modal 
 		){
 
 			// h::log( 'd:>Modal is not enabled.' );
@@ -73,11 +73,11 @@ class bs_modal extends \Q {
         // h::log( $field['default_value'] );
 
 		// pop on a new choice ##
-		$field['choices']['modal'] = 'Bootstrap Modal';
+		$field['choices']['bs_modal'] = 'Bootstrap Modal';
 		// $field['choices']['banner'] = '@todo - News Banner';
 
 		// make it selected ##
-		$field['default_value'][0] = 'modal';
+		$field['default_value'][0] = 'bs_modal';
 		
         // h::log( $field['choices'] );
         // h::log( $field['default_value'] );
@@ -128,7 +128,7 @@ class bs_modal extends \Q {
             'view'      => get_class(), 
             'method'    => 'javascript',
             'priority'  => 3,
-            'handle'    => 'Modal'
+            'handle'    => 'BS Modal'
 		]);
 
 /*

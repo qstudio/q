@@ -8,7 +8,7 @@ use q\asset;
 use q\strings;
 
 // load it up ##
-\q\asset\javascript::run();
+\q\asset\javascript::__run();
 
 class javascript extends \Q {
     
@@ -16,10 +16,10 @@ class javascript extends \Q {
     static $array = array();
     static $force = false; // force refresh of JS file ##
 
-    public static function run()
+    public static function __run()
     {
 
-        #helper::log( 'scripts file loaded...' );
+        #h::log( 'scripts file loaded...' );
 
         // add JS to footer if debugging or script if not ##
         \add_action( 'wp_footer', [ get_class(), 'wp_footer' ], 10000000000 );
@@ -31,8 +31,8 @@ class javascript extends \Q {
     public static function args( $args = false )
     {
 
-        #helper::log( 'passed args to class' );
-        #helper::log( $args );
+        #h::log( 'passed args to class' );
+        #h::log( $args );
 
         // update passed args ##
         self::$args = \wp_parse_args( $args, self::$args );
@@ -56,7 +56,7 @@ class javascript extends \Q {
     }
 
 
-    public static function comment( $string = null, $priority = 10 )
+    public static function comment( $string = null, $hash = null )
     {
 
         // sanity ##
@@ -70,7 +70,7 @@ $return =
 "
 /**
 $string
-Priority: {$priority}
+Hash: {$hash}
 */
 ";
 
@@ -93,7 +93,7 @@ Priority: {$priority}
             || ! isset( $args["method"] )
         ){
 
-            helper::log( 'Missing args..' );
+            h::log( 'e:>Missing args..' );
 
             return false;
 
@@ -104,13 +104,13 @@ Priority: {$priority}
             || ! is_callable( array( $args['view'], $args['method'] ) )
         ){
 
-            helper::log( 'handler wrong - class:'.$args['view'].' / method: '.$args['method'] );
+            h::log( 'e:>handler wrong - class:'.$args['view'].' / method: '.$args['method'] );
 
             return false;
 
         }
 
-        // helper::log( self::$args );
+        // h::log( self::$args );
         ob_start();
 
         // call class method and pass arguments ##
@@ -124,13 +124,13 @@ Priority: {$priority}
 
         if ( ! $data ) {
             
-            helper::log( 'Handler method returned bad data..' );
+            h::log( 'e:>Handler method returned bad data..' );
 
             return false;
 
         }
 
-        #helper::log( $string );
+        #h::log( $string );
 
         // add script ##
         self::add( $data, $args["priority"], $args["handle"] ) ;
@@ -149,28 +149,33 @@ Priority: {$priority}
     * @since    2.0.0
     * @return   String HTML
     */
-    public static function add( $string = null, $priority = 10, $comment = false )
+    public static function add( $string = null, $priority = 10, $handle = false )
     {
-
-        // helper::log( 'javascript render called for: '.$comment .' --- length: '. strlen( $string ) );
 
         // sanity ##
         if ( is_null( $string ) ) {
 
-            #helper::log( 'nothing passed to renderer...' );
+            h::log( 'e:>nothing passed to renderer...' );
 
             return false;
 
-        }
+		}
+
+		// h::log( 'javascript handle called for: '.$hash .' --- length: '. strlen( $string ) );
+		
+		// create hash ##
+		$hash = \sanitize_key( $handle );
+
+		// h::log( 'javascript render called for: '.$hash .' --- length: '. strlen( $string ) );
 
         // we need to strip the <script> tags ##
         $string = self::strip_script( $string );
 
         // add the passed value to the array ##
-        self::$array[$priority] = 
-            isset( $array[$priority] ) ?
-            $array[$priority].self::comment( $comment, $priority ).$string :
-            self::comment( $comment, $priority ).$string ;
+        self::$array[$hash] = 
+            isset( $array[$hash] ) ?
+            $array[$hash].self::comment( $handle, $hash ).$string :
+            self::comment( $handle, $hash ).$string ;
 
     }
 
@@ -207,8 +212,8 @@ Date:       {$date}
     public static function wp_footer()
     {
 
-        #helper::log( 'javascript footer called...' );
-        #helper::log( self::$array );
+        #h::log( 'javascript footer called...' );
+        #h::log( self::$array );
 
         // sanity ##
         if ( 
@@ -244,7 +249,7 @@ Date:       {$date}
                 // wrap in tags ##
                 $string = self::add_script( $string );
 
-                #helper::log( $string );
+                #h::log( $string );
 
                 // echo back into the end of the markup ##
                 echo $string;
@@ -258,12 +263,12 @@ Date:       {$date}
                 //  file ##
                 $file = \q_theme::get_parent_theme_path( '/library/asset/js/module/theme.js' );
 
-                // helper::log( 'File: '.$file );
-                // helper::log( 'File: '.$file );
+                // h::log( 'File: '.$file );
+                // h::log( 'File: '.$file );
 
                 if ( ! file_exists( $file ) ) {
 
-                    // helper::log( 'theme/javascript/q.theme.js missing, so creating..' );
+                    // h::log( 'theme/javascript/q.theme.js missing, so creating..' );
 
                     touch( $file ) ;
 
@@ -317,7 +322,7 @@ Date:       {$date}
 
             \delete_site_transient( 'q_javascript_length' );
 
-            helper::log( 'Force refresh of JS file..' );
+            h::log( 'Force refresh of JS file..' );
 
             return false;
 
@@ -328,7 +333,7 @@ Date:       {$date}
             is_null( $length ) 
         ) {
 
-            #helper::log( 'Error in passed parameters.' );
+            #h::log( 'Error in passed parameters.' );
 
             // defer to negative ##
             return false;
@@ -338,25 +343,25 @@ Date:       {$date}
         // get the stored file length from teh database ##
         if ( false === ( $stored_length = \get_site_transient( 'q_javascript_length' ) ) ) {
 
-            #helper::log( 'Nothing found in transients.' );
+            #h::log( 'Nothing found in transients.' );
 
             return false;
 
         }
 
         // log ##
-        #helper::log( 'stored length: '.$stored_length );
+        #h::log( 'stored length: '.$stored_length );
 
         // compare lengths ##
         if ( $length == $stored_length ) {
 
-            #helper::log( 'File is unchanged ( '.$length.' == '.$stored_length.' ), so not remaking' );
+            #h::log( 'File is unchanged ( '.$length.' == '.$stored_length.' ), so not remaking' );
 
             return true;
 
         }
 
-        #helper::log( 'File length is different ( '.$length.' != '.$stored_length.' ), so remaking' );
+        #h::log( 'File length is different ( '.$length.' != '.$stored_length.' ), so remaking' );
 
         return false;
 

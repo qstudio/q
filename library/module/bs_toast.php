@@ -23,8 +23,8 @@ class bs_toast extends \Q {
 		// make running dependent on module selection in Q settings ##
 		// h::log( core\option::get('toast') );
 		if ( 
-			! isset( core\option::get('extension')->toast )
-			|| true !== core\option::get('extension')->toast 
+			! isset( core\option::get('extension')->bs_toast )
+			|| true !== core\option::get('extension')->bs_toast 
 		){
 
 			// h::log( 'd:>Toast is not enabled.' );
@@ -74,11 +74,11 @@ class bs_toast extends \Q {
         // h::log( $field['default_value'] );
 
 		// pop on a new choice ##
-		$field['choices']['toast'] = 'Bootstrap Toast';
+		$field['choices']['bs_toast'] = 'Bootstrap Toast';
 		// $field['choices']['banner'] = '@todo - News Banner';
 
 		// make it selected ##
-		$field['default_value'][0] = 'toast';
+		$field['default_value'][0] = 'bs_toast';
 		
         // h::log( $field['choices'] );
         // h::log( $field['default_value'] );
@@ -124,7 +124,7 @@ class bs_toast extends \Q {
             'view'      => get_class(), 
             'method'    => 'javascript',
             'priority'  => 4,
-            'handle'    => 'Toast'
+            'handle'    => 'BS Toast'
 		]);
 
     }

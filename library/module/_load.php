@@ -32,6 +32,7 @@ class module extends \Q {
 			'bs_modal' => h::get( 'module/bs_modal.php', 'return', 'path' ),
 			'bs_toast' => h::get( 'module/bs_toast.php', 'return', 'path' ),
 			'bs_tab' => h::get( 'module/bs_tab.php', 'return', 'path' ),
+			'bs_form' => h::get( 'module/bs_form.php', 'return', 'path' ),
 			// 'modal' => h::get( 'ui/module/modal.php', 'return', 'path' ),
 			// 'tab' => h::get( 'ui/module/tab.php', 'return', 'path' ),
 			// 'select' => h::get( 'ui/module/select.php', 'return', 'path' ),
