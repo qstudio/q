@@ -47,7 +47,7 @@ class service extends \Q {
 			'twitter' => h::get( 'extension/service/twitter.php', 'return', 'path' ),
 
 			// youtube ##
-			'youtube' => h::get( 'extension/service/youtube.php', 'return', 'path' ),
+			// 'youtube' => h::get( 'extension/service/youtube.php', 'return', 'path' ),
 
 		];
 
