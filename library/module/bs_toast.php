@@ -153,7 +153,7 @@ function q_snack( options ){
 	// check if the object exists ##
 	if ( typeof jQuery.snack === 'undefined' ) {
 
-		console.log( 'No snacks available...');
+		// console.log( 'No snacks available...');
 
 		return false;
 
@@ -162,7 +162,7 @@ function q_snack( options ){
 	// no content, no snack ##
 	if( ! options.content ){
 
-		console.log( 'No snack content' );
+		// console.log( 'No snack content' );
 
 		return false;
 
@@ -202,7 +202,7 @@ function q_toast( options ){
 	// check if the object exists ##
 	if ( typeof jQuery.toast === 'undefined' ) {
 
-		console.log( 'No toast available...');
+		// console.log( 'No toast available...');
 
 		return false;
 
@@ -211,7 +211,7 @@ function q_toast( options ){
 	// no content, no snack ##
 	if( ! options.content ){
 
-		console.log( 'No toast content' );
+		// console.log( 'No toast content' );
 
 		return false;
 
