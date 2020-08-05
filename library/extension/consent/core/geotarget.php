@@ -45,16 +45,16 @@ class geotarget extends extension\consent {
         // $region = getenv( 'HTTP_GEOIP_REGION' );
 
         // log ##
-        // helper::log( 'get $country: '.$country );
+        // h::log( 'get $country: '.$country );
 
         // fake ##
         // $country = 'ES';
 
         // log ##
-        // helper::log( 'fake $country: '.$country );
+        // h::log( 'fake $country: '.$country );
 
         // log ##
-        // helper::log( 'FAKE: '. $country );
+        // h::log( 'FAKE: '. $country );
 
         // if nothing cooking, bale ##
         if (
@@ -63,7 +63,7 @@ class geotarget extends extension\consent {
             && ! h::is_localhost()
         ) {
 
-            // helper::log( 'HTTP_GEOIP_COUNTRY_CODE empty' );
+            // h::log( 'e:>HTTP_GEOIP_COUNTRY_CODE empty' );
 
         }
 
@@ -100,7 +100,7 @@ class geotarget extends extension\consent {
             // || ! isset( $country['continent'] )
         ){
 
-            // helper::log( 'No country code passed or corrupt.' );
+            // h::log( 'No country code passed or corrupt.' );
 
             return false;
 
@@ -112,7 +112,7 @@ class geotarget extends extension\consent {
         //     // || ! geoip_country_list()
         // ) {
 
-        //     helper::log( 'geoip_country_list function missing' );
+        //     h::log( 'geoip_country_list function missing' );
 
         //     return false;
             
@@ -123,7 +123,7 @@ class geotarget extends extension\consent {
             ! self::geoip_country_list()
         ) {
 
-            // helper::log( 'geoip_country_list function returned empty results' );
+            // h::log( 'geoip_country_list function returned empty results' );
 
             return false;
             
@@ -138,13 +138,13 @@ class geotarget extends extension\consent {
             || ! isset( $countries[$country]['continent'] )
         ){
 
-            // helper::log( 'No match in country list for: '.$country );
+            // h::log( 'No match in country list for: '.$country );
 
             return false;
 
         }
 
-        // helper::log( 'Contient: '.$countries[$country]['continent'] );
+        // h::log( 'Contient: '.$countries[$country]['continent'] );
 
         // kick it back ##
         return $countries[$country]['continent'];
@@ -164,7 +164,7 @@ class geotarget extends extension\consent {
         // localhost override
         if ( h::is_localhost() ) {
 
-            // helper::log( 'Localhost geotarget override' );
+            // h::log( 'Localhost geotarget override' );
 
             return true;
 

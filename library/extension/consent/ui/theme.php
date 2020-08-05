@@ -9,7 +9,7 @@ use q\core\helper as h;
 use q\extension;
 
 // load it up ##
-\q\extension\consent\theme::run();
+\q\extension\consent\theme::__run();
 
 class theme extends extension\consent {
 
@@ -19,7 +19,7 @@ class theme extends extension\consent {
      * @since       0.2
      * @return      void
      */
-    public static function run()
+    public static function __run()
     {
 
         // render consent bar markup - after brand bar at 3 ##
@@ -45,7 +45,7 @@ class theme extends extension\consent {
             // && is_object( core\option::get( 'extension' ) )
             // && isset( core\option::get( 'extension' )->consent )
 			// && 
-			true == core\option::get( 'extension' )->consent // wow.. long way around ##
+			true == core\option::get( 'extension' )->consent // wow.. short way around ##
         ) {
 
             // h::log( 'd:>Consent UI active' );
@@ -84,7 +84,7 @@ class theme extends extension\consent {
         }
 
         // Register the script ##
-        \wp_register_script( 'q-consent-js', h::get( 'extension/consent/library/ui/asset/js/q-consent.js', 'return' ), array( 'jquery' ), self::version, true );
+        \wp_register_script( 'q-consent-js', h::get( 'extension/consent/ui/asset/js/consent.js', 'return' ), array( 'jquery' ), self::version, true );
 
         // Now we can localize the script with our data.
         $translation_array = array(
@@ -130,7 +130,7 @@ class theme extends extension\consent {
         self::bar();
 
         // add modal content ##
-        self::modal();
+        // self::modal();
 
     }
 
@@ -171,10 +171,15 @@ class theme extends extension\consent {
                         </div>
 
                         <div class="col-xl-3 col-lg-4 col-md-5 col-12 cta">
-                            <a class="btn btn-border" href="<?php echo \get_permalink(); ?>#/modal/consent/tab/settings/" class="modal-trigger" data-tab-trigger="settings">
+							<a 
+								class="btn btn-border" 
+								href="#consent" 
+								data-modal-target="#q_modal" 
+								data-modal-size="modal-lg" 
+								data-modal-title="Consent Settings" 
+								data-modal-body="<?php echo \esc_html( self::settings() ); ?>">
                                 SETTINGS
                             </a>
-
                             <button type="button" class="btn btn-light accept q-consent-set" data-q-consent-marketing="1" data-q-consent-analytics="1">
                                 ACCEPT
                             </button>
@@ -230,24 +235,24 @@ class theme extends extension\consent {
     public static function settings()
     {
 
+		ob_start();
+
 ?>
-        <div class="q-tab-target" data-tab-target="settings">
+        <div class="col-12 p-0">
             <h3>Cookie Consent Settings</h3>
-            <p>Greenheart uses cookies to let you interact with our services, and for marketing and advertising purposes. Some of these cookies are strictly necessary for our sites to function and by using this site you agree that you have read and understand our use of cookies.</p>
-            <p>Our marketing and advertising cookies are non-essential and you can opt out of using them with this tool. Blocking cookies may impact your experience on our website.</p>
+            <p>This website uses cookies to let you interact with our services and for marketing and advertising purposes. Some of these cookies are strictly necessary for our sites to function and by using this site you agree that you have read and understand our use of cookies.</p>
+			<p>Our marketing and advertising cookies are non-essential and you can opt out of using them with this tool. Blocking cookies may impact your experience on our website.</p>
+			<hr />
 
             <div class="settings">
                 <div class="setting">
                     <div class="row">
-                        <div class="col-sm-3 col-12">
-                            <h5>Functional Cookies</h5>
-                        </div>
-
-                        <div class="col-sm-7 col-12">
+                        <div class="col-10">
+							<h5>Functional Cookies</h5>
                             <p>These cookies are necessary for our sites to function properly. These cookies secure our forms, support login sessions and remember user dialogue. Because the site does not function without these cookies, opt-out is not available. They are not used for marketing or analytics.</p>
-                        </div>
-
-                        <div class="col-sm-2 col-12">
+						</div>
+						
+                        <div class="col-2 pt-4 pr-5 text-right">
                             <div class="q-consent-wrapper">
                                 <?php echo self::option([
                                     'field'     => 'functional',
@@ -257,19 +262,18 @@ class theme extends extension\consent {
                             </div>
                         </div>
                     </div>
-                </div>
+				</div>
+				
+				<hr />
 
                 <div class="setting">
                     <div class="row">
-                        <div class="col-sm-3 col-12">
+                        <div class="col-10">
                             <h5>Marketing Cookies</h5>
-                        </div>
-
-                        <div class="col-sm-7 col-12">
                             <p>These cookies are used to enhance the relevance of our advertising on social media and to tailor messages relevant to your interests.</p>
                         </div>
 
-                        <div class="col-sm-2 col-12">
+                        <div class="col-2 pt-4 pr-5 text-right">
                             <div class="q-consent-wrapper">
                                 <?php echo self::option([
                                     'field'     => 'marketing',
@@ -279,19 +283,18 @@ class theme extends extension\consent {
                             </div>
                         </div>
                     </div>
-                </div>
+				</div>
+				
+				<hr />
 
                 <div class="setting">
                     <div class="row">
-                        <div class="col-sm-3 col-12">
+                        <div class="col-10">
                             <h5>Analytical Cookies</h5>
-                        </div>
-
-                        <div class="col-sm-7 col-12">
                             <p>These cookies collect anonymous data on how visitors use our site and how our pages perform. We use this information to make the best site possible for our users.</p>
                         </div>
 
-                        <div class="col-sm-2 col-12">
+                        <div class="col-2 pt-4 pr-5 text-right">
                             <div class="q-consent-wrapper">
                                 <?php echo self::option([
                                     'field'     => 'analytics',
@@ -302,23 +305,26 @@ class theme extends extension\consent {
                         </div>
                     </div>
                 </div>
-            </div>
-
+			</div>
+			
+			<hr />
 
             <div class="text-right">
                 <button type="button" class="btn btn-dark reset q-consent-reset">RESET</button>
                 <a
-                        href="<?php echo \get_permalink(); ?>#/modal/consent/tab/settings/"
-                        data-tab-trigger="settings"
-                        class="featherlight-close btn btn-success modal-trigger accept q-consent-set"
-                        data-q-consent-marketing="<?php echo self::$cookie['marketing']; ?>"
-                        data-q-consent-analytics="<?php echo self::$cookie['analytics']; ?>"
+					href="<?php echo \get_permalink(); ?>#/modal/consent/tab/settings/"
+					data-tab-trigger="settings"
+					class="btn btn-primary modal-trigger accept q-consent-set"
+					data-q-consent-marketing="<?php echo self::$cookie['marketing']; ?>"
+					data-q-consent-analytics="<?php echo self::$cookie['analytics']; ?>"
                 >SAVE</a>
             </div>
         </div>
-
-
 <?php
+
+		$data = ob_get_clean();
+
+		return $data;
 
     }
 
@@ -360,11 +366,10 @@ class theme extends extension\consent {
         }
 
 ?>
-        <div class="q-consent-option" data-q-consent-field="<?php echo $args["field"]; ?>">
-            <label class="switch">
-                <input type="checkbox" value="1" <?php echo $args['disabled'] ? 'disabled' : '' ?> <?php echo $args['value'] == '1' ? 'checked' : '' ?>>
-                <span class="slider round"></span>
-            </label>
+		<div class="checkbox q-consent-option <?php echo $args['disabled'] ? 'disabled' : '' ?>" data-q-consent-field="<?php echo $args["field"]; ?>">
+			<label>
+				<input data-toggle="toggle" class="q-toggle" type="checkbox" value="1" <?php echo $args['disabled'] ? 'disabled' : '' ?> <?php echo $args['value'] == '1' ? 'checked' : '' ?>>
+			</label>
         </div>
 <?php
 

@@ -7,6 +7,7 @@
 if ( typeof jQuery !== 'undefined' ) {
 
     (function ($) {
+
         // $( window ).on( "load", function(){
          //    $('.q-tab-trigger').removeClass('active');
 		// 	$('.q-tab-current').addClass('active');
@@ -17,43 +18,37 @@ if ( typeof jQuery !== 'undefined' ) {
          //    $('.q-tab-current').addClass('active');
 		// });
 
-        $( document.body).on( "click", ".q-consent-option .slider", function(e){
-            // reject disabled option ##
-            if ($(this).prev().is(':disabled')) {
-                q_snackbar({
-					content:    q_consent.disabled, // msg ##
-					timeout:    5000, // never timeout ##
-					style: 		'error'
-				});
+		// $( document.body).on( "click", ".q-consent-open", function(e){
+		$('#q_modal').on('show.bs.modal', function (event) {
 
-				return false;
-			}
+			// console.log( 'INIT toggle..' );
+			$('.q-toggle').bootstrapToggle();
+
+		});
+
+        $( document.body ).on( "click", ".toggle.disabled", function(e){
+			// console.log( 'Clicked DISABLED consent input' );
+			q_toast({
+				content:    q_consent.disabled, // msg ##
+				timeout:    5000, // 5 ##
+				style: 		'info'
+			});
+
+			return false;
         });
 
-		$( document.body).on( "change", ".q-consent-option input", function(e){
+		$( document.body ).on( "change", ".q-consent-option input", function(e){
+
+			// console.log( 'Clicked consent input' );
 			var t = this;
 
 			var $field = $(t).closest('.q-consent-option').data('q-consent-field'); // get field ##
 			var $value = $(t).is(':checked') ? $(t).val() : 0; // get value ##
-			// update tracking values ##
-            $btn = $(t).closest('.q-consent-modal').find('.q-consent-set');
-			// $btn.attr( 'disabled', false );
-            $btn.data( 'q-consent-'+$field, $value );
-			$btn.attr( 'data-q-consent-'+$field, $value );
+			// console.log( 'field: '+$field + ' value: '+$value )
 
-			// $('[data-q-consent-="'+$field+'"]').val( $value );
-			// $( '.q-consent-set' ).data( 'q-consent-marketing', $value );
+			$( '.q-consent-set' ).data( 'q-consent-'+$field, $value );
 
 		});
-
-		// bootstrap-js hack - Bolts on the active class for bootstrap tabs - nothing else ##
-        $( document.body ).on( "click", ".q-tab-trigger", function(e){
-        	//this doesn't work. the existing q-tabs JS writes over it. That global JS should be updated to accomodate Bootstrap tab styles
-        	var t = e.target;
-        	$('.q-tab-trigger').removeClass('active');
-        	$(t).addClass('active');
-
-        });
 
 		// save settings ##
         $( document.body ).on( "click", ".q-consent-set", function(e){
@@ -95,7 +90,7 @@ if ( typeof jQuery !== 'undefined' ) {
 
 					if ( '200' == response.status ) {
 
-						q_snackbar({
+						q_toast({
 							content:    response.message, // msg ##
 							timeout:    5000, // never timeout ##
 							style: 		'success'
@@ -110,7 +105,7 @@ if ( typeof jQuery !== 'undefined' ) {
 
 						if ( typeof NProgress !== 'undefined' ) { NProgress.done(); }
 
-						q_snackbar({
+						q_toast({
 							content:    response.message, // msg ##
 							timeout:    5000, // never timeout ##
 							style: 		'error'
@@ -152,9 +147,14 @@ if ( typeof jQuery !== 'undefined' ) {
 				success: function (response) {
 
 					if ( response ) {
-					    self.closest('.q-consent-modal').find('.settings input[type=checkbox]').attr('checked', 'checked');
 
-						q_snackbar({
+						// toggles on ##
+						$('.q-toggle').bootstrapToggle('on');
+
+						// set inputs to default ##
+					    self.closest('#q_modal').find('.settings input[type=checkbox]').attr('checked', 'checked');
+
+						q_toast({
 							content:    response.message, // msg ##
 							timeout:    5000, // never timeout ##
 							style: 		'success'
@@ -164,7 +164,7 @@ if ( typeof jQuery !== 'undefined' ) {
 
 					} else {
 
-						q_snackbar({
+						q_toast({
 							content:    q_consent.error, // msg ##
 							timeout:    5000, // never timeout ##
 							style: 		'error'

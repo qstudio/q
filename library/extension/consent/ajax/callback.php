@@ -55,7 +55,7 @@ class callback extends extension\consent {
         ) {
 
             // log ##
-            // helper::log( 'Cookie found and emptied.' );
+            // h::log( 'Cookie found and emptied.' );
 
             unset( $_COOKIE[self::$slug] );
             setcookie( self::$slug, null, -1, '/' );
@@ -68,7 +68,7 @@ class callback extends extension\consent {
         } else {
 
             // log ##
-            // helper::log( 'No cookie found, so no action taken...' );
+            // h::log( 'No cookie found, so no action taken...' );
 
             $return = [
                 'status'    => false,
@@ -99,8 +99,8 @@ class callback extends extension\consent {
     public static function set()
     {
 
-        // helper::log( 'We are setting the Consent...' );
-        // helper::log( $_POST );
+        // h::log( 'We are setting the Consent...' );
+        // h::log( $_POST );
 
         // try to set cookie ##
         $set_cookie = true;
@@ -108,10 +108,10 @@ class callback extends extension\consent {
         // AJAX referer check removed, as failing for no clear reason - security not so important to justify UX hickup ##
         // // check nonce ##
         // // if ( ! \check_ajax_referer( 'q_consent', 'nonce', false ) ) {
-        // helper::log( \wp_verify_nonce( 'ajax_consent' ) );
+        // h::log( \wp_verify_nonce( 'ajax_consent' ) );
         // if ( ! \wp_verify_nonce( 'ajax_consent' ) ) {
 
-        //     helper::log( 'AJAX referer failed...' );
+        //     h::log( 'AJAX referer failed...' );
 
         //     $return = [
         //         'status'    => '400',
@@ -146,7 +146,7 @@ class callback extends extension\consent {
         // continue ##
         if ( $set_cookie ) {
 
-            // helper::log( $_POST );
+            h::log( $_POST );
 
             // format array... ##
             $array = [];
@@ -161,13 +161,13 @@ class callback extends extension\consent {
             $array['consent'] = 1;
 
             // check ##
-            // helper::log( $array );
+            h::log( $array );
 
             // check for stored cookie -if found, update ##
             if ( cookie::set( $array ) ) {
 
                 // log ##
-                // helper::log( 'AJAX saved cookie data' );
+                h::log( 'AJAX saved cookie data' );
 
                 // positive outcome ##
                 $return = [
@@ -178,7 +178,7 @@ class callback extends extension\consent {
             } else {
 
                 // log ##
-                // helper::log( 'AJAX failed to save cookie data' );
+                h::log( 'AJAX failed to save cookie data' );
 
                 // negative outcome ##
                 $return = [

@@ -408,7 +408,10 @@ class wp_head extends \Q {
 		// define seperator ##
 		$sep = ' | ';
 
-        global $page, $paged, $post;
+		global $page, $paged, $post;
+		
+		// start empty ##
+		$page_title = '';
 
 		if ( \is_front_page() ) {
 

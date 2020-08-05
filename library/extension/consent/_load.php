@@ -7,11 +7,11 @@ use q\core;
 use q\core\helper as h;
 
 // load it up ##
-\q\extension\consent::run();
+\q\extension\consent::__run();
 
 class consent extends \Q {
 
-	// slug ??
+	// plugin slug for translations ##
 	static $slug = 'q-consent';
 
 	// will contain the geotarget variables - https://wpengine.com/support/developers-guide-geotarget/ ## 
@@ -37,7 +37,7 @@ class consent extends \Q {
 	 * @since       0.2
 	 * @return      void
 	 */
-	public static function run()
+	public static function __run()
     {
 
 		// @todo -- add admin controls to selected privacy page, block delete.. custom fields etc..
@@ -76,7 +76,7 @@ class consent extends \Q {
 
 		// h::log( 'd:>Loading rest of Consent System files...' );
 
-		$array['api'] = h::get( 'extension/consent/core/api.php', 'return', 'path' );
+		// $array['api'] = h::get( 'extension/consent/core/api.php', 'return', 'path' );
 		$array['geotarget'] = h::get( 'extension/consent/core/geotarget.php', 'return', 'path' );
 		$array['cookie'] = h::get( 'extension/consent/core/cookie.php', 'return', 'path' );
 

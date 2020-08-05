@@ -144,7 +144,7 @@ class bs_modal extends \Q {
 <!-- Modal -->
 <div class="modal fade" id="q_modal" tabindex="-1" role="dialog" aria-labelledby="q_modal_title" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
+    <div class="modal-content"><!-- TODO -->
       <div class="modal-header">
         <h5 class="modal-title" id="q_modal_long_title"></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -184,31 +184,35 @@ class bs_modal extends \Q {
 <script>
 
 // open modal with dynamic data ##
-jQuery(document).on("click","[data-toggle='modal']", function (e) {
+jQuery(document).on("click","[data-modal-target]", function (e) {
 
 	// stop ##
 	e.preventDefault();
 
 	// get target ##
-	var target = jQuery(this).attr('data-target');
+	var target = jQuery(this).attr('data-modal-target');
 	// console.log('modal target: ' + target);
 
-	var title = jQuery(this).attr('data-title');
-	var body = jQuery(this).attr('data-body');
+	var title = jQuery(this).attr('data-modal-title');
+	var body = jQuery(this).attr('data-modal-body');
+	var size = jQuery(this).attr('data-modal-size') ? jQuery(this).attr('data-modal-size') : 'modal-normal' ;
 
 	// sanity ##
-	if( ! title || ! body ){
+	if( ! title || ! body || ! size ){
 		console.log( 'Error in passed params' );
 		// jQuery(target).modal('dispose');
 		// return false;
 	}
 
+	// console.log( 'size: '+size );
+
 	// add data ##
 	jQuery(target).find('.modal-title').html(title);
 	jQuery(target).find('.modal-body').html(body);
+	jQuery(target).find('.modal-dialog').addClass(size);
 
 	// open modal ##
-	// jQuery(target).modal("show");
+	jQuery(target).modal("show");
 
 });
 

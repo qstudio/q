@@ -61,7 +61,7 @@ class cookie extends extension\consent {
 
         }
 
-        // helper::log( 'd:>Running set default cookie....' );
+        // h::log( 'd:>Running set default cookie....' );
 
         // set default ##
         self::set( self::$defaults ); 
@@ -69,7 +69,7 @@ class cookie extends extension\consent {
         // assign defaults to static property - returns an array ##
         self::$cookie = self::$defaults;
 
-        // helper::log( self::$cookie );
+        // h::log( self::$cookie );
 
         // return cookie values ##
         return self::$cookie;      
@@ -89,8 +89,8 @@ class cookie extends extension\consent {
 
         }
 
-        // helper::log( 'Cookie check: '.$check );
-        // helper::log( self::$cookie );
+        // h::log( 'Cookie check: '.$check );
+        // h::log( self::$cookie );
 
         // check if cookie set and correct ##
         if (
@@ -100,7 +100,7 @@ class cookie extends extension\consent {
         ) {
 
             d::log( 'd:>Error finding requested cookie value: '.$check );
-            // helper::log( self::$cookie );
+            // h::log( self::$cookie );
 
             return false;
 
@@ -129,7 +129,7 @@ class cookie extends extension\consent {
 
             // get ##
             $cookie = $_COOKIE[self::$slug];
-            // helper::log( $cookie );
+            // h::log( $cookie );
 
             // cookie values are serialized when stored ##
             if ( 
@@ -140,10 +140,10 @@ class cookie extends extension\consent {
                 // as cookie format has changed, we need to check for old format and convert to new format ##
                 if ( strpos( $cookie, '#' ) ) {
 
-                    // helper::log( $cookie );
+                    // h::log( $cookie );
 
                     // old format ##
-                    // helper::log( 'Cookie data stored in old format' );
+                    // h::log( 'Cookie data stored in old format' );
 
                     // string replace "_" to "__" ##
                     $cookie = str_replace( '_', '__', $cookie ) ;
@@ -152,17 +152,17 @@ class cookie extends extension\consent {
                     $cookie = str_replace( '#', '_', $cookie ) ;
 
                     // test ##
-                    // helper::log( $cookie );
+                    // h::log( $cookie );
 
                     // reasign cookie ##
                     $_COOKIE[self::$slug] = $cookie;
 
                 }
 
-                // helper::log( 'Cookie in string format, unpick...' );
+                // h::log( 'Cookie in string format, unpick...' );
 
                 $explode = explode( '__', $cookie );
-                // helper::log( $explode );
+                // h::log( $explode );
 
                 // new array ##
                 $array = [];
@@ -184,20 +184,20 @@ class cookie extends extension\consent {
             // it should now be an array ##
             if ( ! is_array( $cookie ) ) {
 
-                d::log( 'd:>WTF...' );
+                d::log( 'e:>WTF...' );
 
                 return false;
 
             }
 
-            // helper::log( 'Cookie already set and returned' );
-            // helper::log( $cookie );
+            // h::log( 'Cookie already set and returned' );
+            // h::log( $cookie );
 
             return $cookie;
 
         }
 
-        // helper::log( 'Cookie not set...' );
+        // h::log( 'Cookie not set...' );
 
         // set default ##
         // self::set_cookie( self::$defaults );  
@@ -231,7 +231,7 @@ class cookie extends extension\consent {
 
         }
 
-        // helper::log( $array );
+        // h::log( $array );
 
         // we need to convert our named array into something nice to store in the cookie ##
         // consent_1_marketing_0_analytics_1 ##
@@ -247,7 +247,7 @@ class cookie extends extension\consent {
         $string = trim( $string, '__' );
 
         // check it out ##
-        // helper::log( $string );
+        // h::log( $string );
 
         $urlparts = parse_url( \home_url() );
 
@@ -257,7 +257,7 @@ class cookie extends extension\consent {
         $domain = '/';
 
         // check domain ##
-        // helper::log( 'Domain: '.$domain );
+        // h::log( 'Domain: '.$domain );
 
         // set the cookie ##
         setcookie( self::$slug, $string, time() + 62208000, $domain ); // domain as empty string ##
@@ -266,8 +266,8 @@ class cookie extends extension\consent {
         $_COOKIE[self::$slug] = $string; 
 
         // what happened ##
-        // helper::log( 'Set cookie::' );
-        // helper::log( $array );
+        // h::log( 'Set cookie::' );
+        // h::log( $array );
 
         // kick back feedback ##
         return true ;
@@ -285,8 +285,8 @@ class cookie extends extension\consent {
     public static function consent()
     {
 
-        // helper::log( 'Checking if consent has been given..' );
-        // helper::log( self::$cookie ) ;
+        // h::log( 'Checking if consent has been given..' );
+        // h::log( self::$cookie ) ;
 
         // check for active consent ##
         if ( 
@@ -297,14 +297,14 @@ class cookie extends extension\consent {
             || ! self::$cookie['consent'] 
         ) {
 
-            // helper::log( 'We cannot 100% confirm consent given, so show the bar again..' );
+            h::log( 'e:>We cannot 100% confirm consent given, so show the bar again..' );
 
             // if there is any error with the data, we presume no consent has been given ##
             return false;
 
         }
 
-        // helper::log('The user has actively given their consent.. no need to show the bar..');
+        h::log( 'd:>The user has actively given their consent.. no need to show the bar..');
 
         return true;
 
