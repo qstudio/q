@@ -8,9 +8,9 @@ use q\core\helper as h;
 use q\extension;
 
 // load it up ##
-\q\extension\search\ui::run();
+\q\extension\search\view::run();
 
-class ui extends extension\search {
+class view extends extension\search {
 
 	public static function run(){
 
@@ -29,8 +29,8 @@ class ui extends extension\search {
     {
 
 		return [ 
-			'render' => h::get( 'extension/search/ui/render.php', 'return', 'path' ),
-			'asset' => h::get( 'extension/search/ui/asset/_load.php', 'return', 'path' ),
+			'render' => h::get( 'extension/search/view/render.php', 'return', 'path' ),
+			'asset' => h::get( 'extension/search/view/asset/_load.php', 'return', 'path' ),
 			// 'library' => h::get( 'ui/render.php', 'return', 'path' )
 		];
 

@@ -297,14 +297,14 @@ class cookie extends extension\consent {
             || ! self::$cookie['consent'] 
         ) {
 
-            h::log( 'e:>We cannot 100% confirm consent given, so show the bar again..' );
+            // h::log( 'e:>We cannot 100% confirm consent given, so show the bar again..' );
 
             // if there is any error with the data, we presume no consent has been given ##
             return false;
 
         }
 
-        h::log( 'd:>The user has actively given their consent.. no need to show the bar..');
+        // h::log( 'd:>The user has actively given their consent.. no need to show the bar..');
 
         return true;
 

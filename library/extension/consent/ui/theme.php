@@ -22,7 +22,7 @@ class theme extends extension\consent {
     public static function __run()
     {
 
-        // render consent bar markup - after brand bar at 3 ##
+        // render consent bar ##
         \add_action( 'q_action_body_open', [ get_class(), 'render' ], 4 );
 
         // styles and scripts ##
@@ -163,11 +163,7 @@ class theme extends extension\consent {
                 <div class="container-fluid">
                     <div class="row align-items-center">
                         <div class="col-xl-9 col-lg-8 col-md-7 col-12 content">
-                            This website uses cookies for basic functionality, analytics, and marketing. Visit our <a
-                                href="<?php echo \get_permalink(); ?>#/modal/consent/tab/privacy/"
-                                class="modal-trigger"
-                                data-tab-trigger="privacy"
-                            >Privacy Policy</a> page to find out more.
+                            This website uses cookies for basic functionality, analytics, and marketing. Visit our <a href="<?php echo \get_permalink(); ?>privacy/" >Privacy Policy</a> page to find out more.
                         </div>
 
                         <div class="col-xl-3 col-lg-4 col-md-5 col-12 cta">
@@ -239,7 +235,7 @@ class theme extends extension\consent {
 
 ?>
         <div class="col-12 p-0">
-            <h3>Cookie Consent Settings</h3>
+			
             <p>This website uses cookies to let you interact with our services and for marketing and advertising purposes. Some of these cookies are strictly necessary for our sites to function and by using this site you agree that you have read and understand our use of cookies.</p>
 			<p>Our marketing and advertising cookies are non-essential and you can opt out of using them with this tool. Blocking cookies may impact your experience on our website.</p>
 			<hr />

@@ -161,13 +161,13 @@ class callback extends extension\consent {
             $array['consent'] = 1;
 
             // check ##
-            h::log( $array );
+            // h::log( $array );
 
             // check for stored cookie -if found, update ##
             if ( cookie::set( $array ) ) {
 
                 // log ##
-                h::log( 'AJAX saved cookie data' );
+                // h::log( 'AJAX saved cookie data' );
 
                 // positive outcome ##
                 $return = [
@@ -178,7 +178,7 @@ class callback extends extension\consent {
             } else {
 
                 // log ##
-                h::log( 'AJAX failed to save cookie data' );
+                // h::log( 'AJAX failed to save cookie data' );
 
                 // negative outcome ##
                 $return = [

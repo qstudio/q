@@ -27,7 +27,7 @@ class asset extends extension\search {
     {
 
 		return $array = [
-			'enqueue' => h::get( 'extension/search/ui/asset/enqueue.php', 'return', 'path' ),
+			'enqueue' => h::get( 'extension/search/view/asset/enqueue.php', 'return', 'path' ),
 		];
 
     }
