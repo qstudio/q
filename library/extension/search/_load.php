@@ -92,6 +92,7 @@ class search extends \Q {
 		// h::log( 'd:>search is enabled.' );
 
 		$array['context'] = h::get( 'extension/search/context/extension.php', 'return', 'path' );
+		$array['asset'] = h::get( 'extension/search/asset/_load.php', 'return', 'path' );
 		$array['method'] = h::get( 'extension/search/core/method.php', 'return', 'path' );
 		$array['admin'] = h::get( 'extension/search/admin/_load.php', 'return', 'path' );
 		$array['ui'] = h::get( 'extension/search/view/_load.php', 'return', 'path' );

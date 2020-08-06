@@ -46,9 +46,7 @@ class extension {
      */
     public static function search( $args = null ) {
 
-		return [
-			'search' => extensions\search\render::ui( $args )
-		];
+		return extensions\search\render::ui( $args );
 
 	}
 

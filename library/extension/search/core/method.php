@@ -624,36 +624,13 @@ class method extends extension\search {
                 // iterate ##
                 $count ++;
 
-                // if ( 
-                //     class_exists( $args['class'] ) 
-                //     && method_exists( $args['class'], 'q_search' ) 
-                // ) {
-
-                //     // h::log( "class found.." );
-
-                //     // call class method ##
-                //     call_user_func_array (
-                //         array( $args['class'], "q_search" ),
-                //         array(
-                //             \get_the_ID(),
-                //             self::properties()
-                //         )
-                //     );
-
-                // } else {
-
-                    // h::log( 'default template..' );
-
-                    render::result();
-
-                // } // template ##
+				render::result();
 
             } // while loop ##
 
         } else {
 
             // h::log( 'No results found, we need to show that..' );
-
             render::no_results();
 
         }

@@ -141,6 +141,8 @@ class theme extends extension\consent {
 		\q\willow\render\template::partial([
 			'context' 	=> 'extension', 
 			'task' 		=> 'consent',
+			'markup'	=> 'bar', // markup->property ##
+			// 'return'	=> 'echo' // also defined in config ## 
 			// array of data to include in template ##
 			'data'		=> [
 				'settings' 			=> \esc_html( self::settings() ),
@@ -148,8 +150,6 @@ class theme extends extension\consent {
 				'privacy_permalink'	=> \get_permalink().'privacy/',
 				'data'				=> 'data-q-consent-marketing="1" data-q-consent-analytics="1"'
 			],
-			'template'	=> 'bar', // markup->property ##
-			// 'return'	=> 'echo' // also defined in config ## 
 		]);
 
     }
@@ -170,37 +170,38 @@ class theme extends extension\consent {
 		return \q\willow\render\template::partial([
 			'context' 	=> 'extension', 
 			'task' 		=> 'consent',
+			'markup'	=> 'settings', // markup->property ##
+			'return'	=> 'return', // also defined in config ## 
 			// array of data to include in template ##
-			'data' => [
+			'data' 		=> [
 				'option_functional'	=> 
-								self::option([
-									'field'     => 'functional',
-									'value'     => 1, // no opt-out ##
-									'disabled'  => true
-								]),
+					self::option([
+						'field'     => 'functional',
+						'value'     => 1, // no opt-out ##
+						'disabled'  => true
+					]),
 				'option_marketing'	=> 
-								self::option([
-									'field'     => 'marketing',
-									'value'     => self::$cookie['marketing'],
-									'disabled'  => false
-								]),
+					self::option([
+						'field'     => 'marketing',
+						'value'     => self::$cookie['marketing'],
+						'disabled'  => false
+					]),
 				'option_analytics'	=> 
-								self::option([
-									'field'     => 'analytics',
-									'value'     => self::$cookie['analytics'],
-									'disabled'  => false
-								]),
-				'buttons'			=> '<button type="button" class="btn btn-dark reset q-consent-reset">RESET</button>
-										<a
-										href="#"
-										data-tab-trigger="settings"
-										class="btn btn-primary modal-trigger accept q-consent-set"
-										data-q-consent-marketing="'.self::$cookie['marketing'].'"
-										data-q-consent-analytics="'.self::$cookie['analytics'].'"
-									>SAVE</a>'
+					self::option([
+						'field'     => 'analytics',
+						'value'     => self::$cookie['analytics'],
+						'disabled'  => false
+					]),
+				'buttons'			=> '
+					<button type="button" class="btn btn-dark reset q-consent-reset">RESET</button>
+						<a
+						href="#"
+						data-tab-trigger="settings"
+						class="btn btn-primary modal-trigger accept q-consent-set"
+						data-q-consent-marketing="'.self::$cookie['marketing'].'"
+						data-q-consent-analytics="'.self::$cookie['analytics'].'"
+					>SAVE</a>'
 			],
-			'template'			=> 'settings', // markup->property ##
-			'return'			=> 'return' // also defined in config ## 
 		]);
 
     }

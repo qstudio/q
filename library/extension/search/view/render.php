@@ -8,17 +8,51 @@ use q\core\helper as h;
 use q\extension;
 
 // load it up ##
-// \q\search\ui\render::run();
+\q\extension\search\render::__run();
 
 class render extends extension\search {
 
-	public static function run()
+	public static function __run()
   	{
 
-		// image sizes ##
-		// \add_action( 'after_setup_theme', array( get_class(), 'add_image_sizes' ) );
+		// add assets on get_header --> priorirty 10 ##
+		\add_action( 'get_header', [ '\\q\\extension\\search\\enqueue', 'wp_enqueue_scripts' ], 10 );
+		
+		// add q_search jS callback ##        
+        \add_action( 'wp_footer', [ get_class(), 'q_search_callback' ], 10 );
 
 	}
+
+
+
+
+	
+    /**
+    * Q_Search Results Markup
+    *
+    * @since    2.0.0
+    * @return   String
+    */
+    public static function q_search_callback()
+    {
+
+?>
+<script>
+    function q_search_callback( $args ) {
+ 
+        // console.log( 'doing q_search_work_callback' );
+
+        // do lazy loading ##
+        if ( typeof q_do_lazy === "function" ) {
+			// console.log( 'LAZY..' );
+			q_do_lazy();
+		}
+        
+    }
+</script>
+<?php
+
+    }
 
 
 
@@ -34,34 +68,43 @@ class render extends extension\search {
 	// h::log( 'rendering...' );
 	// h::log( method::properties( 'args' ) );
 
+	$array = [];
+
     // let's check if there are any posts to search, defined on very high, loose terms... ##
     if ( method::has_posts() ) {
 
-		// add inline JS to instatiate AJAX call ##
-		self::scripts();
+		// add inline JS to instatiate AJAX call -- returns <script> block ##
+		$array['scripts'] = self::scripts();
 
+		/*
 ?>
 		<div id="q-search-content" class="row row mt-3">
 <?php
+*/
 
 			// build filter navigation ##
-			self::filters();
+			$array['filters'] = self::filters();
 
 			// add AJAX section -- this might be empty on load state ##
-			self::results();
+			$array['results'] = self::results();
 
+/*
 ?>
 		</div>
 <?php
+*/
 
     } else {
 
-      	// h::log( 'has_posts returned zero' );
+		// h::log( 'has_posts returned zero' );
 
 		// nothing to search :( ##
-		self::no_posts();
+		$array['no_posts'] = self::no_posts();
 
 	}
+
+	// kick back ##
+	return $array;
 	
 }
 
@@ -91,13 +134,17 @@ class render extends extension\search {
 		} else {
 
 			// allow message to be passed ##
-			$message = __( "No Results Found", 'q-search' ) ;
+			$message = method::properties( 'no_results' ) ;
 
 		}
+
+		ob_start();
 
 	?>
     	<div class="row no-results"><?php echo $message; ?></div>
 <?php
+
+		return ob_get_clean();
 
 	}
 
@@ -111,6 +158,78 @@ class render extends extension\search {
 	 */
   	public static function result()
   	{
+
+		// check we can get a post object ##
+        if ( ! $object = \q\get\post::object() ) { 
+        
+            h::log( 'e:>error getting q_search row..' );
+            
+            return false; 
+            
+		}
+		
+		// get template ##
+		// $config = \q\core\config::get([ 'context' => 'extension', 'task' => 'search' ]);
+		$handle = method::properties( 'src_handle' ) ?: 'medium' ;
+		// h::log( 'handle: '.$handle );
+
+        // check what we got back ##
+        // h::log( $object );
+        #h::log( $args['markup'] );
+
+        // pre-format values in preperation for generic template markup ##
+
+        // date needs to be in 'days ago' format ##
+        #h::log( 'date: '. \get_the_time('U') );
+        $post_date = 
+            \wp_doing_ajax() ? 
+            human_time_diff( get_the_time('U'), current_time('timestamp') ) . ' ago' : 
+            \get_the_time('U');
+
+        // add author name and permalink ##
+        $author_permalink = \get_author_posts_url( \get_the_author_meta( 'ID' ), \get_the_author_meta( 'user_nicename' ) );;
+        $author_name = \get_the_author();
+
+        // grab first category ##
+        #h::log( \get_category_link( $object->category[0]->term_id ) );
+		#h::log( 'term_id: '.$object->category[0]->term_id );
+		$object->category = \get_the_category();
+        $category_permalink = 
+            ( isset( $object->category ) && is_array( $object->category ) ) ? 
+            \esc_url( \get_category_link( $object->category[0]->term_id ) ) : 
+            '#'; // dead ##
+        $category_name = 
+            ( isset( $object->category ) && is_array( $object->category ) ) ? 
+            $object->category[0]->name : 
+            \__( "Uncategorized" );
+
+        // class ##
+        $class = \is_sticky() ? 'is_sticky' : 'not_sticky' ;
+
+		// pass to willow render template method ##
+		echo \q\willow\render\template::partial([
+			'context' 	=> 'extension', 
+			'task' 		=> 'search',
+			'markup'	=> 'result', // markup->property ##
+			'return'	=> 'echo', // also defined in config ## 
+			// array of data to include in template ##
+			'data'		=> [
+				'class'					=> $class,
+				'post_permalink' 		=> \get_the_permalink(),
+				'src'					=> \get_the_post_thumbnail_url( \get_the_ID(), $handle ),
+				'post_title'			=> \get_the_title(),
+				'post_excerpt'			=> \get_the_excerpt(),
+				'post_date_human'		=> $post_date,
+				'category_permalink'	=> $category_permalink,
+				'category_name'			=> $category_name,
+			],
+		]);
+
+		// h::log( $return );
+
+		return true;
+
+		/*
 
 ?>
 	<div class="col-12 col-md-6 col-lg-4 ajax-loaded q-search-default">
@@ -127,6 +246,7 @@ class render extends extension\search {
 		</div>
 	</div>
 <?php
+		*/
 
   	}
 
@@ -140,6 +260,8 @@ class render extends extension\search {
 	 */
 	public static function results()
 	{
+
+		ob_start();
 
 ?>
     <div id="ajax-content" class="col-12">
@@ -156,6 +278,8 @@ class render extends extension\search {
     </div>
 <?php
 
+	return ob_get_clean();
+
   }
 
 
@@ -170,6 +294,8 @@ class render extends extension\search {
 	 */
 	protected static function filters()
 	{
+
+		ob_start();
 
 		// check for passed values or merge defaults ##
 		$post_type = array( method::properties( 'post_type' ) );
@@ -280,6 +406,8 @@ class render extends extension\search {
 			</div>
 		</form>
 <?php
+
+		return ob_get_clean();
 
   	}
 
@@ -708,6 +836,8 @@ class render extends extension\search {
 	// filter_position:    method::properties( 'filter_position'); ##
 	// h::log( 'd:>'.method::properties( 'callback' ) );
 
+	ob_start();
+
 ?>
     <script type="text/javascript">
 
@@ -732,8 +862,10 @@ class render extends extension\search {
             nonce:              '<?php echo $nonce; ?>'
         };
 
-    </script>
+	</script>
 <?php
+
+	return ob_get_clean();
 
   	}
 
@@ -776,7 +908,7 @@ class render extends extension\search {
 
 ?>
     <div class="no-results text-center col-12 mt-0 mb-0">
-		<img class="push-20" src="<?php echo h::get( "ui/asset/css/images/search-no-results.svg", 'return' ); ?>" />
+		<img class="push-20" src="<?php echo h::get( "asset/css/images/extension/search/search-no-results.svg", 'return' ); ?>" />
 		<h5 class='push-20'><?php echo $message; ?></h5>
 		<div>Sorry, that filter combination returned no results.</div>
 		<div>Please try different criteria or <a href="#" class="qs-reset">Clear all Filters</a>.</div>
@@ -803,7 +935,7 @@ class render extends extension\search {
 
 ?>
     <div class="no-results text-center col-12 mt-0 mb-0">
-		<img class="push-20" src="<?php echo h::get( "extension/search/ui/asset/css/images/search-no-results.svg", 'return' ); ?>" />
+		<img class="push-20" src="<?php echo h::get( "asset/css/images/extension/search/search-no-results.svg", 'return' ); ?>" />
 		<h5 class='push-20'><?php echo $message['title']; ?></h5>
 		<div><?php echo $message['body']; ?></div>
     </div>

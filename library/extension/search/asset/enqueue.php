@@ -19,6 +19,8 @@ class enqueue extends extension\search {
 	*/
 	public static function wp_enqueue_scripts() {
 
+		// h::log( 'ADDING Q Search assets...' );
+
 		// get Q stored option ##
 		// $option = config::get();
 		// // h::log( $option );
@@ -33,8 +35,8 @@ class enqueue extends extension\search {
 
 			// h::log( 'd:>adding q search CSS assets..' );
 
-			\wp_register_style( 'q-search-css', h::get( "extension/search/view/asset/css/index.css", 'return' ), '', self::version, 'all' );
-			\wp_enqueue_style( 'q-search-css' );
+			// \wp_register_style( 'q-search-css', h::get( "extension/search/asset/css/index.css", 'return' ), '', self::version, 'all' );
+			// \wp_enqueue_style( 'q-search-css' );
 
 		// }
 
@@ -47,7 +49,7 @@ class enqueue extends extension\search {
 			// h::log( 'd:>adding q search JS assets..' );
 
 			// add JS ## -- after all dependencies ##
-			\wp_enqueue_script( 'q-search-js', h::get( "extension/search/view/asset/javascript/q.search.js", 'return' ), array( 'jquery' ), self::version, true );
+			\wp_enqueue_script( 'q-search-js', h::get( "extension/search/asset/javascript/q.search.js", 'return' ), array( 'jquery' ), self::version, true );
 
 			// pass variable values defined in parent class ##
 			\wp_localize_script( 'q-search-js', 'q_search', array(

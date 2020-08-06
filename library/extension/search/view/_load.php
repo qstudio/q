@@ -30,7 +30,7 @@ class view extends extension\search {
 
 		return [ 
 			'render' => h::get( 'extension/search/view/render.php', 'return', 'path' ),
-			'asset' => h::get( 'extension/search/view/asset/_load.php', 'return', 'path' ),
+			// 'asset' => h::get( 'extension/search/view/asset/_load.php', 'return', 'path' ),
 			// 'library' => h::get( 'ui/render.php', 'return', 'path' )
 		];
 

@@ -6,11 +6,11 @@ use q\core\helper as h;
 use q\extension;
 
 // load it up ##
-\q\extension\nprogress\theme::run();
+\q\extension\nprogress\theme::__run();
 
 class theme extends extension\nprogress {
 
-	public static function run(){
+	public static function __run(){
 
 		// front-end options ##
 		if (
@@ -38,12 +38,7 @@ class theme extends extension\nprogress {
 	public static function wp_enqueue_scripts()
 	{
 
-		// add CSS ##
-		// \wp_register_style( 'q-nprogress', self::get_plugin_url( 'library/ui/css/q.nprogress.css' ), '', self::version );
-		// \wp_enqueue_style( 'q-nprogress' );
-
 		// add JS ##
-		// @todo - move to _source and complile into single JS ##
 		\wp_enqueue_script( 'q-nprogresss', h::get( 'extension/nprogress/asset/js/nprogress.js', 'return' ), array( "jquery" ), self::version, false );
 
 	}
@@ -54,51 +49,52 @@ class theme extends extension\nprogress {
 
 ?>
 	<script>
-		// configure ##
-		NProgress.configure({ showSpinner: false });
+		if ( typeof NProgress !== 'undefined' ) {
 
-		// Show the progress bar
-		NProgress.start();
+			// configure ##
+			NProgress.configure({ showSpinner: false });
 
-		// Increase randomly
-		var interval = setInterval(function() { NProgress.inc(); }, 1000);
+			// Show the progress bar
+			NProgress.start();
+
+			// Increase randomly
+			var interval = setInterval(function() { NProgress.inc(); }, 1000);
+
+		}
 
 		// Trigger finish when page fully loaded
 		jQuery(window).load(function () {
 			clearInterval(interval);
-			NProgress.done();
+			if ( typeof NProgress !== 'undefined' ) NProgress.done();
 		});
 
 		// Trigger bar when exiting the page
 		window.onbeforeunload = function() {
 			//console.log("triggered");
-			NProgress.start();
+			if ( typeof NProgress !== 'undefined' ) NProgress.start();
 		};
 
 		// target progress bar on all form submits ##
 		jQuery( document ).on('submit', function(){
 			//console.log("progress triggered");
-			NProgress.start();
+			if ( typeof NProgress !== 'undefined' ) NProgress.start();
 		});
 
 		// stop progress on GF confirmation about submit ##
 		jQuery( document ).bind('gform_confirmation_loaded', function( event, form_id ){
 			//console.log("progress done");
-			NProgress.done();
+			if ( typeof NProgress !== 'undefined' ) NProgress.done();
 		});
 
 		// stop progress on GF AJAX loaded, with validation errors ##
 		jQuery( document ).bind( 'gform_post_render', function(){
-			if ( typeof NProgress !== 'undefined' ) {
-				//console.log("progress done");
-				NProgress.done();
-			}
+			if ( typeof NProgress !== 'undefined' ) NProgress.done();
 		});
 
 		// stop progress bar on all AJAX completions ##
 		jQuery( document ).ajaxComplete( function() {
 			//console.log("progress done");
-			NProgress.done();
+			if ( typeof NProgress !== 'undefined' ) NProgress.done();
 		});
 	</script>
 <?php
