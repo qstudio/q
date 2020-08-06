@@ -56,11 +56,11 @@ class javascript extends \Q {
     }
 
 
-    public static function comment( $string = null, $hash = null )
+    public static function comment( $hash = null )
     {
 
         // sanity ##
-        if ( is_null( $string ) ) {
+        if ( is_null( $hash ) ) {
 
             return false;
 
@@ -69,8 +69,7 @@ class javascript extends \Q {
 $return = 
 "
 /**
-$string
-Hash: {$hash}
+{$hash}
 */
 ";
 
@@ -104,7 +103,7 @@ Hash: {$hash}
             || ! is_callable( array( $args['view'], $args['method'] ) )
         ){
 
-            h::log( 'e:>handler wrong - class:'.$args['view'].' / method: '.$args['method'] );
+            h::log( 'e:>handler wrong - class: '.$args['view'].' / method: '.$args['method'] );
 
             return false;
 
@@ -133,7 +132,7 @@ Hash: {$hash}
         #h::log( $string );
 
         // add script ##
-        self::add( $data, $args["priority"], $args["handle"] ) ;
+        self::add( $data, $args["handle"] ) ;
 
         // ok ##
         return true;
@@ -149,11 +148,14 @@ Hash: {$hash}
     * @since    2.0.0
     * @return   String HTML
     */
-    public static function add( $string = null, $priority = 10, $handle = false )
+    public static function add( $string = null, $handle = null )
     {
 
         // sanity ##
-        if ( is_null( $string ) ) {
+        if ( 
+			is_null( $string )
+			|| is_null( $handle ) 
+		) {
 
             h::log( 'e:>nothing passed to renderer...' );
 
@@ -164,7 +166,7 @@ Hash: {$hash}
 		// h::log( 'javascript handle called for: '.$hash .' --- length: '. strlen( $string ) );
 		
 		// create hash ##
-		$hash = \sanitize_key( $handle );
+		$hash = 'js_'.\sanitize_key( $handle ).'_'.rand();
 
 		// h::log( 'javascript render called for: '.$hash .' --- length: '. strlen( $string ) );
 
@@ -174,15 +176,15 @@ Hash: {$hash}
         // add the passed value to the array ##
         self::$array[$hash] = 
             isset( $array[$hash] ) ?
-            $array[$hash].self::comment( $handle, $hash ).$string :
-            self::comment( $handle, $hash ).$string ;
+            $array[$hash].self::comment( $hash ).$string :
+            self::comment( $hash ).$string ;
 
     }
 
 
 
 
-    public static function header()
+    public static function header( $length = 0 )
     {
 
         // version ##
@@ -192,9 +194,11 @@ Hash: {$hash}
         $date = date( 'd/m/Y h:i:s a' );
 
 // return it ##
-return "/**
+return "
+/**
 Plugin:     Q Theme
 Version:    {$version}
+Length:		{$length}
 Date:       {$date}
 */
 ";
@@ -244,7 +248,7 @@ Date:       {$date}
                 }
 
                 // prefix header to string ##
-                $string = self::header().$string;
+                $string = self::header( strlen( $string ) ).$string;
 
                 // wrap in tags ##
                 $string = self::add_script( $string );
@@ -261,7 +265,7 @@ Date:       {$date}
             default:
 
                 //  file ##
-                $file = \q_theme::get_parent_theme_path( '/library/asset/js/module/theme.js' );
+                $file = \q_theme::get_parent_theme_path( '/library/asset/js/module/theme.min.js' );
 
                 // h::log( 'File: '.$file );
                 // h::log( 'File: '.$file );
@@ -281,7 +285,7 @@ Date:       {$date}
                 $string = strings\method::minify( $string, 'js' );
 
                 // add header to empty string ##
-                $string = self::header().$string;
+                $string = self::header( strlen( $string ) ).$string;
 
                 // get the length of the total new string with header ##
                 $length = strlen( $string );

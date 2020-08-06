@@ -25,6 +25,7 @@ class module extends \Q {
     {
 
 		return $array = [
+			'javascript' => h::get( 'module/javascript.php', 'return', 'path' ),
 			// 'comment' => h::get( 'module/comment.php', 'return', 'path' ),
 			'navigation' => h::get( 'module/navigation.php', 'return', 'path' ), 
 			'cookie' => h::get( 'module/cookie.php', 'return', 'path' ),

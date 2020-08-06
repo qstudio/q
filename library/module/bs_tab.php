@@ -34,7 +34,13 @@ class bs_tab extends \Q {
 		}
 		
         // add html to footer ##
-        \add_action( 'wp_footer', [ get_class(), 'wp_footer' ], 3 );
+        \add_action( 'wp_footer', function(){
+			asset\javascript::ob_get([
+				'view'      => get_class(), 
+				'method'    => 'javascript',
+				'handle'    => str_replace( __NAMESPACE__.'\\', '', __CLASS__ )
+			]);
+		}, 3 );
 
     }
 
@@ -60,25 +66,6 @@ class bs_tab extends \Q {
 
 
     
-
-    
-    /**
-     * Deal nicely with JS
-     */
-    public static function wp_footer()
-    {
-
-        asset\javascript::ob_get([
-            'view'      => get_class(), 
-            'method'    => 'javascript',
-            'priority'  => 20,
-            'handle'    => 'BS Tab'
-		]);
-
-    }
-
-
-
     
     /**
     * JS for modal
@@ -94,23 +81,6 @@ class bs_tab extends \Q {
 ?>
 <script>
 if( typeof jQuery !== 'undefined' ) {
-	/*
-	jQuery(document).ready(function() {
-
-	// modern browsers 
-	jQuery( window ).bind( 'hashchange', function( e ) {
-
-		// console.log( 'Doing hash change...' );
-
-		history.navigationMode = 'compatible';
-		e.preventDefault();
-		$the_hash = q_toggle_hash();
-		if($the_hash) q_toggle( $the_hash );
-
-	});
-
-	});
-	*/
 
 	jQuery(window).load(function(){
 

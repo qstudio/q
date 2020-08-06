@@ -33,34 +33,27 @@ class bs_toast extends \Q {
 
 		}
 		
-
-        // add assets ##
-        \add_action( 'wp_enqueue_scripts', [ get_class(), 'wp_enqueue_scripts' ], 1000000 );
-
         // add html to footer ##
-        \add_action( 'wp_footer', [ get_class(), 'wp_footer' ], 3 );
+        \add_action( 'wp_footer', function(){
+			asset\javascript::ob_get([
+				'view'      => get_class(), 
+				'method'    => 'javascript',
+				'handle'    => str_replace( __NAMESPACE__.'\\', '', __CLASS__ )
+			]);
+		}, 3 );
 
         // add CSS to header ##
-        // \add_action( 'wp_head', [ get_class(), 'wp_head' ], 3 );
-
-        // add JS to footer ##
-        // \add_action( 'wp_footer', [ get_class(), 'run_javascript' ], 10000000 );
+        \add_action( 'wp_head', function(){
+			asset\css::ob_get([
+				'view'      => get_class(), 
+				'method'    => 'css',
+				'handle'    => str_replace( __NAMESPACE__.'\\', '', __CLASS__ )
+			]);
+		}, 3 );
 
     }
 
 
-
-    public static function args( $args = false )
-    {
-
-        #helper::log( 'passed args to modal' );
-        // helper::log( $args );
-
-        // update passed args ##
-        self::$args = \wp_parse_args( $args, self::$args );
-
-	}
-	
 
 	/**
      * Add new libraries to Q Settings via API
@@ -70,67 +63,18 @@ class bs_toast extends \Q {
     public static function filter_acf_extension( $field )
     {
 
-        // h::log( $field['choices'] );
-        // h::log( $field['default_value'] );
-
 		// pop on a new choice ##
 		$field['choices']['bs_toast'] = 'Bootstrap Toast';
-		// $field['choices']['banner'] = '@todo - News Banner';
 
 		// make it selected ##
 		$field['default_value'][0] = 'bs_toast';
 		
-        // h::log( $field['choices'] );
-        // h::log( $field['default_value'] );
-
-         return $field;
+		return $field;
 
 	}
 
 
     
-    
-    /**
-    * Load assets
-    *
-    * @since    2.0.0
-    * @return   Mixed Boolean on error or HTML string
-    */
-    public static function wp_enqueue_scripts()
-    {
-
-		$min = ( true === \Q::$debug ) ? '' : '.min' ;
-
-        // toast JS ##
-        \wp_register_script( 'toast-js', h::get( "asset/js/vendor/toast$min.js", 'return' ), array( 'jquery' ), self::version, true );
-        \wp_enqueue_script( 'toast-js' );
-
-		// toast CSS ##
-        \wp_register_style( 'toast-css', h::get( "asset/css/vendor/toast$min.css", 'return' ), '', self::version, 'all' );
-        \wp_enqueue_style( 'toast-css' );
-
-    }
-
-
-
-    
-    /**
-     * Deal nicely with JS
-     */
-    public static function wp_footer()
-    {
-
-        asset\javascript::ob_get([
-            'view'      => get_class(), 
-            'method'    => 'javascript',
-            'priority'  => 4,
-            'handle'    => 'BS Toast'
-		]);
-
-    }
-
-
-
     
     /**
     * JS for modal
@@ -145,9 +89,187 @@ class bs_toast extends \Q {
 
 ?>
 <script>
+/**
+ * @author Script47 (https://github.com/Script47/Toast)
+ * @description Toast - A Bootstrap 4.2+ jQuery plugin for the toast component
+ * @version 1.1.0
+ **/
+(function ($) {
+    const TOAST_CONTAINER_HTML = `<div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>`;
 
+    $.toastDefaults = {
+        position: 'bottom-right',
+        dismissible: true,
+        stackable: true,
+        pauseDelayOnHover: true,
+        style: {
+            toast: '',
+            info: '',
+            success: '',
+            warning: '',
+            error: '',
+        }
+    };
 
+    $('body').on('hidden.bs.toast', '.toast', function () {
+        $(this).remove();
+    });
 
+    let toastRunningCount = 1;
+
+    function render(opts) {
+        /** No container, create our own **/
+        if (!$('#toast-container').length) {
+            const position = ['top-right', 'top-left', 'top-center', 'bottom-right', 'bottom-left', 'bottom-center'].includes($.toastDefaults.position) ? $.toastDefaults.position : 'top-right';
+
+            $('body').prepend(TOAST_CONTAINER_HTML);
+            $('#toast-container').addClass(position);
+        }
+
+        let toastContainer = $('#toast-container');
+        let html = '';
+        let classes = {
+            header: {
+                fg: '',
+                bg: ''
+            },
+            subtitle: 'text-white',
+            dismiss: 'text-white'
+        };
+        let id = `toast-${toastRunningCount}`;
+        let type = opts.type;
+        let title = opts.title;
+        let subtitle = opts.subtitle;
+        let content = opts.content;
+        let img = opts.img;
+        let delayOrAutohide = opts.delay ? `data-delay="${opts.delay}"` : `data-autohide="false"`;
+        let hideAfter = ``;
+        let dismissible = $.toastDefaults.dismissible;
+        let globalToastStyles = $.toastDefaults.style.toast;
+        let paused = false;
+
+        if (typeof opts.dismissible !== 'undefined') {
+            dismissible = opts.dismissible;
+        }
+
+        switch (type) {
+            case 'info':
+                classes.header.bg = $.toastDefaults.style.info || 'bg-info';
+                classes.header.fg = $.toastDefaults.style.info || 'text-white';
+                break;
+
+            case 'success':
+                classes.header.bg = $.toastDefaults.style.success || 'bg-success';
+                classes.header.fg = $.toastDefaults.style.info || 'text-white';
+                break;
+
+            case 'warning':
+                classes.header.bg = $.toastDefaults.style.warning || 'bg-warning';
+                classes.header.fg = $.toastDefaults.style.warning || 'text-white';
+                break;
+
+            case 'error':
+                classes.header.bg = $.toastDefaults.style.error || 'bg-danger';
+                classes.header.fg = $.toastDefaults.style.error || 'text-white';
+                break;
+        }
+
+        if ($.toastDefaults.pauseDelayOnHover && opts.delay) {
+            delayOrAutohide = `data-autohide="false"`;
+            hideAfter = `data-hide-after="${Math.floor(Date.now() / 1000) + (opts.delay / 1000)}"`;
+        }
+
+        html = `<div id="${id}" class="toast ${globalToastStyles}" role="alert" aria-live="assertive" aria-atomic="true" ${delayOrAutohide} ${hideAfter}>`;
+        html += `<div class="toast-header ${classes.header.bg} ${classes.header.fg}">`;
+
+        if (img) {
+            html += `<img src="${img.src}" class="mr-2 ${img.class || ''}" alt="${img.alt || 'Image'}">`;
+        }
+
+        html += `<strong class="mr-auto">${title}</strong>`;
+
+        if (subtitle) {
+            html += `<small class="${classes.subtitle}">${subtitle}</small>`;
+        }
+
+        if (dismissible) {
+            html += `<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true" class="${classes.dismiss}">&times;</span>
+                    </button>`;
+        }
+
+        html += `</div>`;
+
+        if (content) {
+            html += `<div class="toast-body">
+                        ${content}
+                    </div>`;
+        }
+
+        html += `</div>`;
+
+        if (!$.toastDefaults.stackable) {
+            toastContainer.find('.toast').each(function () {
+                $(this).remove();
+            });
+
+            toastContainer.append(html);
+            toastContainer.find('.toast:last').toast('show');
+        } else {
+            toastContainer.append(html);
+            toastContainer.find('.toast:last').toast('show');
+        }
+
+        if ($.toastDefaults.pauseDelayOnHover) {
+            setTimeout(function () {
+                if (!paused) {
+                    $(`#${id}`).toast('hide');
+                }
+            }, opts.delay);
+
+            $('body').on('mouseover', `#${id}`, function () {
+                paused = true;
+            });
+
+            $(document).on('mouseleave', '#' + id, function () {
+                const current = Math.floor(Date.now() / 1000),
+                    future = parseInt($(this).data('hideAfter'));
+
+                paused = false;
+
+                if (current >= future) {
+                    $(this).toast('hide');
+                }
+            });
+        }
+
+        toastRunningCount++;
+    }
+
+    /**
+     * Show a snack
+     * @param type
+     * @param title
+     * @param delay
+     */
+    $.snack = function (type, title, delay) {
+        return render({
+            type,
+            title,
+            delay
+        });
+    }
+
+    /**
+     * Show a toast
+     * @param opts
+     */
+    $.toast = function (opts) {
+        return render(opts);
+    }
+}(jQuery));
+
+// call a snack ##
 function q_snack( options ){
 
 	// check if the object exists ##
@@ -195,8 +317,7 @@ function q_snack( options ){
 
 }
 
-
-
+// call a toast ##
 function q_toast( options ){
 
 	// check if the object exists ##
@@ -240,13 +361,11 @@ function q_toast( options ){
 	// merge passed options ##
 	jQuery.extend( defaults, options );
 
-	/*
-	@TODO - define global settings ##
-	$.toastDefaults.position = options.position; // 'bottom-right';
-	$.toastDefaults.dismissible = options.dismissible; // true;
-	$.toastDefaults.stackable = options.stackable; // true;
-	$.toastDefaults.pauseDelayOnHover = options.hover; // true;
-	*/
+	// @TODO - define global settings ##
+	// $.toastDefaults.position = options.position; // 'bottom-right';
+	// $.toastDefaults.dismissible = options.dismissible; // true;
+	// $.toastDefaults.stackable = options.stackable; // true;
+	// $.toastDefaults.pauseDelayOnHover = options.hover; // true;
 
 	// console.dir( defaults );
 
@@ -269,32 +388,71 @@ function q_toast( options ){
 
 
 
-    /**
-     * Deal nicely with CSS
-     */
-    public static function wp_head()
-    {
-
-        css::ob_get([
-            'view'      => get_class(), 
-            'method'    => 'css',
-            'priority'  => 40,
-            'handle'    => 'Toast'
-        ]);
-
-    }
-
-
-
-    
     public static function css()
     {
 
 ?>
 <style>
-    .featherlight {
-        background: rgba(0,0,0,.8) !important;
-    }
+/**
+ * @author Script47 (https://github.com/Script47/Toast)
+ * @description Toast - A Bootstrap 4.2+ jQuery plugin for the toast component
+ * @version 1.1.0
+ **/
+.toast-container {
+    position: fixed;
+    z-index: 1055;
+    margin: 5px;
+}
+
+.top-right {
+    top: 0;
+    right: 0;
+}
+
+.top-left {
+    top: 0;
+    left: 0;
+}
+
+.top-center {
+    transform: translateX(-50%);
+    top: 0;
+    left: 50%;
+}
+
+.bottom-right {
+    right: 0;
+    bottom: 0;
+}
+
+.bottom-left {
+    left: 0;
+    bottom: 0;
+}
+
+.bottom-center {
+    transform: translateX(-50%);
+    bottom: 0;
+    left: 50%;
+}
+
+.toast-container > .toast {
+    min-width: 330px;
+    background: transparent;
+    border: none;
+}
+
+.toast-container > .toast > .toast-header {
+    border: none;
+}
+
+.toast-container > .toast > .toast-header strong {
+    padding-right: 20px;
+}
+
+.toast-container > .toast > .toast-body {
+    background: white;
+}
 </style>
 <?php
 

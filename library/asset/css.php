@@ -2,7 +2,7 @@
 
 namespace q\asset;
 
-use q\core\core;
+use q\core;
 use q\core\helper as h;
 use q\asset;
 use q\strings;
@@ -56,11 +56,11 @@ class css extends \Q {
     }
 
 
-    public static function comment( $string = null, $priority = 10 )
+    public static function comment( $hash = null )
     {
 
         // sanity ##
-        if ( is_null( $string ) ) {
+        if ( is_null( $hash ) ) {
 
             return false;
 
@@ -69,8 +69,7 @@ class css extends \Q {
 $return = 
 "
 /**
-$string
-Priority: {$priority}
+{$hash}
 */
 ";
 
@@ -80,8 +79,6 @@ Priority: {$priority}
     }
 
 
-
-    
 
     public static function ob_get( Array $args = null )
     {
@@ -93,7 +90,7 @@ Priority: {$priority}
             || ! isset( $args["method"] )
         ){
 
-            h::log( 'Missing args..' );
+            h::log( 'e:>Missing args..' );
 
             return false;
 
@@ -104,7 +101,7 @@ Priority: {$priority}
             || ! is_callable( array( $args['view'], $args['method'] ) )
         ){
 
-            h::log( 'handler wrong - class: '.$args['view'].' / method: '.$args['method'] );
+            h::log( 'e:>handler wrong - class: '.$args['view'].' / method: '.$args['method'] );
 
             return false;
 
@@ -135,7 +132,7 @@ Priority: {$priority}
         // h::log( $data );
 
         // add script ##
-        self::add( $data, $args["priority"], $args["handle"] ) ;
+        self::add( $data, $args["handle"] ) ;
 
         // ok ##
         return true;
@@ -151,35 +148,41 @@ Priority: {$priority}
     * @since    2.0.0
     * @return   String HTML
     */
-    public static function add( $string = null, $priority = 10, $comment = false )
+    public static function add( $string = null, $handle = null )
     {
 
-        // h::log( 'CSS render called for: '.$comment .' --- length: '. strlen( $string ) );
+		// sanity ##
+		if ( 
+			is_null( $string )
+			|| is_null( $handle ) 
+		) {
 
-        // sanity ##
-        if ( is_null( $string ) ) {
-
-            #h::log( 'nothing passed to renderer...' );
+            h::log( 'e:>nothing passed to renderer...' );
 
             return false;
 
-        }
+		}
+		
+		// create hash ##
+		$hash = 'css_'.\sanitize_key( $handle ).'_'.rand();
+
+		// h::log( 'javascript render called for: '.$hash .' --- length: '. strlen( $string ) );
 
         // we need to strip the <script> tags ##
         $string = self::strip_tag( $string );
 
         // add the passed value to the array ##
-        self::$array[$priority] = 
-            isset( $array[$priority] ) ?
-            $array[$priority].self::comment( $comment, $priority ).$string :
-            self::comment( $comment, $priority ).$string ;
+        self::$array[$hash] = 
+            isset( $array[$hash] ) ?
+            $array[$hash].self::comment( $hash ).$string :
+            self::comment( $hash ).$string ;
 
     }
 
 
 
 
-    public static function header()
+    public static function header( $length = 0 )
     {
 
         // version ##
@@ -189,9 +192,11 @@ Priority: {$priority}
         $date = date( 'd/m/Y h:i:s a' );
 
 // return it ##
-return "/**
+return "
+/**
 Plugin:     Q Theme
 Version:    {$version}
+Length:    	{$length}
 Date:       {$date}
 */
 ";
@@ -241,7 +246,7 @@ Date:       {$date}
                 }
 
                 // prefix header to string ##
-                $string = self::header().$string;
+                $string = self::header( strlen( $string ) ).$string;
 
                 // wrap in tags ##
                 $string = self::add_tag( $string );
@@ -258,7 +263,7 @@ Date:       {$date}
             default:
 
                 //  file ##
-                $file = \q_theme::get_parent_theme_path( '/library/asset/css/module/theme.css' );
+                $file = \q_theme::get_parent_theme_path( '/library/asset/css/module/theme.min.css' );
 
                 // h::log( 'File: '.$file );
                 // h::log( 'Theme File: '.$file );
@@ -278,7 +283,7 @@ Date:       {$date}
                 $string = strings\method::minify( $string, 'css' );
 
                 // add header to empty string ##
-                $string = self::header().$string;
+                $string = self::header( strlen( $string ) ).$string;
 
                 // get the length of the total new string with header ##
                 $length = strlen( $string );
