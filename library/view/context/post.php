@@ -48,7 +48,7 @@ return [ 'post' => [
 								@}
 								Comments: <a href="{{ comment_permalink }}" title="Comments">{{ comment_title }} </a>
 								',
-			'wrap'				=> '<div class="post-meta col-12 mb-3">{{ template }}</div>'
+			'wrap'				=> '<div class="post-meta col-12 mb-3 bg-dark py-2 text-white">{{ template }}</div>'
 		]
 	],
 

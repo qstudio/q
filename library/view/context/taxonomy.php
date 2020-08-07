@@ -14,7 +14,7 @@ return [ 'taxonomy' => [
 		// 
 		
 		'markup'            	=> [
-			'wrap'				=> '<div class="row">
+			'wrap'				=> '<div class="row ml-0">
 										<div class="col-12 list-group list-group-flush list-group navigation navigation-terms">
 											{{ template }}
 										</div>

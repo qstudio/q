@@ -49,7 +49,7 @@ return [ 'ui' => [
 
 	// comments ##
 	'comment'  			=> [
-		'markup' => '{{ comment }}'
+		// 'markup' => '{{ comment }}'
 	],
 
 ]];

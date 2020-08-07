@@ -146,7 +146,7 @@ class callback extends extension\consent {
         // continue ##
         if ( $set_cookie ) {
 
-            h::log( $_POST );
+            // h::log( $_POST );
 
             // format array... ##
             $array = [];

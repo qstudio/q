@@ -26,10 +26,8 @@ class module extends \Q {
 
 		return $array = [
 			'javascript' => h::get( 'module/javascript.php', 'return', 'path' ),
-			// 'comment' => h::get( 'module/comment.php', 'return', 'path' ),
 			'navigation' => h::get( 'module/navigation.php', 'return', 'path' ), 
 			'cookie' => h::get( 'module/cookie.php', 'return', 'path' ),
-			// 'filter' => h::get( 'ui/module/filter.php', 'return', 'path' ),
 			'bs_modal' => h::get( 'module/bs_modal.php', 'return', 'path' ),
 			'bs_toast' => h::get( 'module/bs_toast.php', 'return', 'path' ),
 			'bs_tab' => h::get( 'module/bs_tab.php', 'return', 'path' ),
@@ -37,13 +35,15 @@ class module extends \Q {
 			'bs_toggle' => h::get( 'module/bs_toggle.php', 'return', 'path' ),
 			'no_emoji' => h::get( 'module/no_emoji.php', 'return', 'path' ),
 			'grunt' => h::get( 'module/grunt.php', 'return', 'path' ),
+
+			// 'toggle' => h::get( 'module/toggle.php', 'return', 'path' ), // ?? needed ??
+			// 'filter' => h::get( 'ui/module/filter.php', 'return', 'path' ),
 			// 'modal' => h::get( 'ui/module/modal.php', 'return', 'path' ),
 			// 'tab' => h::get( 'ui/module/tab.php', 'return', 'path' ),
 			// 'select' => h::get( 'ui/module/select.php', 'return', 'path' ),
 			// 'scroll' => h::get( 'ui/module/scroll.php', 'return', 'path' ),
 			// 'push' => h::get( 'ui/module/push.php', 'return', 'path' ),
 			// 'filter' => h::get( 'ui/module/filter.php', 'return', 'path' ),
-			'toggle' => h::get( 'module/toggle.php', 'return', 'path' ),
 			// 'load' => h::get( 'ui/module/load.php', 'return', 'path' ),
 		];
 
