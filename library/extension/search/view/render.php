@@ -12,18 +12,9 @@ use q\extension;
 
 class render extends extension\search {
 
-	public static function __run()
-  	{
-
-		// add assets on get_header --> priorirty 10 ##
-		// \add_action( 'get_header', [ '\\q\\extension\\search\\enqueue', 'wp_enqueue_scripts' ], 10 );
-		
-		// add q_search jS callback ##        
-        // \add_action( 'wp_footer', [ get_class(), 'q_search_callback' ], 10 );
+	public static function __run(){
 
 	}
-
-
 
 
 	
@@ -40,7 +31,7 @@ class render extends extension\search {
 <script>
     function q_search_callback( $args ) {
  
-        // console.log( 'doing q_search_work_callback' );
+        // console.log( 'doing q_search_callback' );
 
         // do lazy loading ##
         if ( typeof q_do_lazy === "function" ) {
@@ -65,13 +56,8 @@ class render extends extension\search {
 	 */
 	public static function ui(){
 
-		// h::log( 'rendering...' );
-
 		// new array ##
 		$array = [];
-
-		// echo self::scripts();
-		// $array['scripts'] = self::scripts();
 
 		// let's check if there are any posts to search, defined on very high, loose terms... ##
 		if ( method::has_posts() ) {
@@ -89,18 +75,39 @@ class render extends extension\search {
 
 		}
 
-		// h::log( $array['results'] );
-
-		// kick back ##
+		// kick back for rendering ##
 		return $array;
 	
 	}
 
 
+	
+
+	/**
+	 * Create HTML area to hold AJAX loaded content
+	 *
+	 * @since    2.0.0
+	 * @return   String
+	 */
+	public static function results()
+	{
+
+		// buffer ##
+		ob_start();
+
+		// run load query ##
+		method::query( method::properties( 'control', 'array' ) );
+		
+		// return data ##
+		return ob_get_clean();
+
+  	}
+
+
 
 
 	/**
-	 * Results Markup
+	 * Result Object
 	 *
 	 * @since    2.0.0
 	 * @return   String
@@ -194,28 +201,6 @@ class render extends extension\search {
 		return true;
 
   	}
-
-
-
-	/**
-	 * Create HTML area to hold AJAX loaded content
-	 *
-	 * @since    2.0.0
-	 * @return   String
-	 */
-	public static function results()
-	{
-
-		// buffer ##
-		ob_start();
-
-		// run load query ##
-		method::query( method::properties( 'control', 'array' ) );
-		
-		// return data ##
-		return ob_get_clean();
-
-  }
 
 
 
@@ -402,7 +387,7 @@ class render extends extension\search {
 			|| ! is_array( $options )
 		) {
 
-			h::log( 'No valid options passed to display' );
+			h::log( 'e:>No valid options passed to display' );
 
 			return false;
 
