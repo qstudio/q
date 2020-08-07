@@ -517,7 +517,8 @@ class method extends extension\search {
                 $user = \get_userdata( $user_row->ID );
 
                 if ( 
-                    class_exists( $args['class'] ) 
+					isset( $args['class'] )
+                    && class_exists( $args['class'] ) 
                     && method_exists( $args['class'], 'q_search' ) 
                 ) {
 
@@ -525,7 +526,7 @@ class method extends extension\search {
 
                     // call class method ##
                     call_user_func_array (
-                        array( $args['class'], "q_search" ), 
+                        array( $args['class'], "search_user_result" ), 
                         array( 
                             $user, // WP_User object ##
                             self::properties(), // internal posted and filtered args ##
@@ -535,7 +536,7 @@ class method extends extension\search {
                 } else {
 
 					// internal result display ##
-                    render::result();
+                    render::user_result( $user, self::properties() );
 
                 } // template ##
 
@@ -548,7 +549,8 @@ class method extends extension\search {
 
             #h::log( 'No results found, we need to show that..' );
 
-            render::no_results();
+			// render::no_results();
+			render::feedback('no_results');
 
         }
 
@@ -622,16 +624,42 @@ class method extends extension\search {
                 }
 
                 // iterate ##
-                $count ++;
+				$count ++;
+				
+				// get post object
+                $post = \get_post( \get_the_ID() );
 
-				render::result();
+				if ( 
+					isset( $args['class'] )
+                    && class_exists( $args['class'] ) 
+                    && method_exists( $args['class'], 'search_post_result' ) 
+                ) {
+
+                    #h::log( "class found.." );
+
+                    // call class method ##
+                    call_user_func_array (
+                        array( $args['class'], "q_search" ), 
+                        array( 
+                            $post, // WP_Post object ##
+                            self::properties(), // internal posted and filtered args ##
+                        )
+                    );
+
+                } else {
+
+					// internal result display ##
+                    render::post_result( $post, self::properties() );
+
+                } // template ##
 
             } // while loop ##
 
         } else {
 
             // h::log( 'No results found, we need to show that..' );
-            render::no_results();
+			// render::no_results();
+			render::feedback('no_results');
 
         }
 
@@ -737,16 +765,17 @@ class method extends extension\search {
             // seems not ##
             // render::no_results(  __( 'Please select a filter.', 'q-search' ) ); // show the sad face :(
 
-			// h::log( '$Filters were empty..' );
+			// h::log( 'e:>$Filters were empty..' );
 
 			if ( 
 				'0' === $control = self::get_control( $load, 'load' )
 			) {
 	
 				// h::log( $control );
-				// h::log( 'Load Blank' );
+				// h::log( 'e:>Load Blank' );
 	
-				return render::load_empty( self::properties( 'load_empty', 'array' ) );
+				// return render::load_empty( self::properties( 'load_empty', 'array' ) );
+				return render::feedback( 'load_empty' );
 	
 				// die();
 	
@@ -768,7 +797,7 @@ class method extends extension\search {
             // get args ##
             $args = self::empty_args( $posted );
 
-			h::log( 'No $_POST object available' );
+			// h::log( 'e:>No $_POST object - load state' );
 			
 			if ( 
 				'0' === $control = self::get_control( self::properties( 'control', 'array' ), 'empty' )
@@ -777,7 +806,8 @@ class method extends extension\search {
 				// h::log( $control );
 				// h::log( 'Empty Blank' );
 	
-				return render::load_empty( self::properties( 'load_empty', 'array' ) );
+				// return render::load_empty( self::properties( 'load_empty', 'array' ) );
+				return render::feedback( 'load_empty' );
 
             	die();
 	
@@ -1172,6 +1202,7 @@ class method extends extension\search {
 		// h::log( self::properties("post_type") );
 		
 		// Get any existing copy of our transient data
+		\delete_site_transient( 'q_search_has_posts' );
 		if ( false === ( $test = \get_site_transient( 'q_search_has_posts' ) ) ) {
 
 			switch ( self::properties( "post_type" ) ) {
@@ -1195,6 +1226,8 @@ class method extends extension\search {
 						'post_type'         => self::properties( "post_type" ),
 						'post_per_page'     => 1
 					);
+
+					// h::log( $args );
 
 					$test = \get_posts( $args );
 

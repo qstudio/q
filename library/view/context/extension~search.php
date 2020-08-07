@@ -41,6 +41,16 @@ return [ 'extension' => [ 'search' => [
 		
 		// markup ##
 		'markup' 			=> [
+			'template'		=> '
+								<div id="q-search" class="mt-3">
+									<div class="row no-results">{{ no_posts }}</div>
+									{{ filters }}
+									<div id="ajax-content" class="col-12">
+										<div id="q-search-results" class="row mb-1">
+											{{ results }}
+										</div>
+    								</div>
+								</div>',
 
 			'result'		=> '
 								<div class="col-12 col-md-6 col-lg-4 ajax-loaded {{ class }}">
@@ -56,29 +66,43 @@ return [ 'extension' => [ 'search' => [
 										</p>
 									</div>
 								</div>',
-			'template'		=> '{{ scripts }}
-								<div id="q-search-content" class="row row mt-3">
-									{{ no_posts }}
-									{{ filters }}
-									{{ results }}
-								</div>'
+
+			'feedback'		=> '<div class="{{ class }} text-center col-12 mt-0 mb-0">
+									<span class="push-20 icon icon-{{ class }}"></span>
+									<h5 class="push-20">{{ title }}</h5>
+									{{ text }}
+								</div>',
+							
+			'count_results'	=> '<h5 class="mb-5 col-12 q-search-count-results text-center" data-count="{{ count }}">{{ count }} {{ text }}</h5>'
+			
 		],
 		
 		// text ##
-		'widget_title'		=> 'Search',
-		'results_class'	 	=> 'row mb-1',
-		'results' 			=> 
-							[ 
+		// 'widget_title'		=> 'Search',
+
+		'results' 			=> [ 
 								'Item Found', 
 								'Items Found' 
 							],
-		'load_empty'		=> 
-							[
-								'title' => 'Search Tool',
-								'body' 	=> 'Use the search option and filters to find results.' 
+
+		'no_posts'			=> [
+								'title'	=> __( "No Results Available", 'q-search' ),
+								'text'	=> __( "<p>Sorry, currently there are no items to search.</p>"),
+								'class'	=> 'no-posts'
 							],
-		// 'no_results' 		=> 'No Items Found',
-		'no_results'		=> __( "No Results Found", 'q-search' ),
+
+		'load_empty'		=> [
+								'title'	=> __( "Search Tool", 'q-search' ),
+								'text'	=> __( "<p>Use the search option and filters to find results</p>."),
+								'class'	=> 'load-empty'
+							],
+
+		'no_results'		=> [
+								'title'	=> __( "No Results Found", 'q-search' ),
+								'text'	=> __( "<p>Sorry, that filter combination returned no results.</p>
+												<p>Please try different criteria or <a href='#' class='qs-reset'>Clear all Filters</a></p>."),
+								'class'	=> 'no-results'
+							],
 
 		// UI ##
 		'src_handle'		=> 'square', // handle for image ##
@@ -91,12 +115,12 @@ return [ 'extension' => [ 'search' => [
 		'pagination_empty' 	=> true,
 		'pagination_load' 	=> true,
 		'show_input_text'  	=> true,
+		'hide_titles' 		=> false,
 
 		 // @needed ?? ##
-		'hide_titles' 		=> 0,
-		'show_count' 		=> false,
-		'ajax_section'		=> true,
-		'taxonomy/parent' 	=> '0',
+		
+		// 'ajax_section'		=> true,
+		// 'taxonomy/parent' 	=> '0',
 
 		// JS ##
 		'js_callback' 		=> 'q_search_callback',
@@ -109,14 +133,20 @@ return [ 'extension' => [ 'search' => [
 		'tag' 				=> \get_query_var( 'tag', '' ),
 		'posts_per_page' 	=> 6,
 		'post_type' 		=> 'post',
+
+		// taxonomies ##
 		'taxonomies' 		=> 
 			[ 
 				'category',
 				'post_tag' 
 			], 
+		'show_count' 		=> false, // # of terms in tax ##
+
+		// user args ##
 		'role__not_in' 		=> [ 'Administrator' ],
 		'meta_key' 			=> false,
 		'args'				=> false,
+
 		'empty_args' 		=> 
 							[
 								'posts_per_page'        => 6,

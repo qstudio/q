@@ -46,6 +46,16 @@ class extension {
      */
     public static function search( $args = null ) {
 
+		// add assets ##
+		\add_action( 'get_header', [ '\\q\\extension\\search\\enqueue', 'wp_enqueue_scripts' ], 10 );
+
+		// JS callback ##
+		\add_action( 'wp_footer', [ '\\q\\extension\\search\\render', 'q_search_callback' ], 10 );
+
+		// JS init ##
+		\add_action( 'wp_footer', [ '\\q\\extension\\search\\render', 'scripts' ], 1 );
+
+		// return search UI ##
 		return extensions\search\render::ui( $args );
 
 	}
