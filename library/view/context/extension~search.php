@@ -78,8 +78,6 @@ return [ 'extension' => [ 'search' => [
 		],
 		
 		// text ##
-		// 'widget_title'		=> 'Search',
-
 		'results' 			=> [ 
 								'Item Found', 
 								'Items Found' 
@@ -116,11 +114,6 @@ return [ 'extension' => [ 'search' => [
 		'pagination_load' 	=> true,
 		'show_input_text'  	=> true,
 		'hide_titles' 		=> false,
-
-		 // @needed ?? ##
-		
-		// 'ajax_section'		=> true,
-		// 'taxonomy/parent' 	=> '0',
 
 		// JS ##
 		'js_callback' 		=> 'q_search_callback',
