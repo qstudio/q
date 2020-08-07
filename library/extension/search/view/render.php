@@ -489,7 +489,19 @@ class render extends extension\search {
 	public static function pagination( $total_posts, $posts_per_page, $posted )
 	{
 
-    	// h::log( 'Loading Pagination..' );
+		// h::log( 'Loading Pagination..' );
+		
+		/*
+		// pass to willow render template method ##
+		echo \q\willow\render\template::partial([
+			'context' 	=> 'extension', 
+			'task' 		=> 'search',
+			'markup'	=> 'pagination', // markup->property ##
+			'return'	=> 'return', // also defined in config ## 
+			// array of data to include in template ##
+			'data'		=> $data
+		]);
+		*/
 
 ?>
 <div class="col-12">

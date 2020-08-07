@@ -73,7 +73,15 @@ return [ 'extension' => [ 'search' => [
 									{{ text }}
 								</div>',
 							
-			'count_results'	=> '<h5 class="mb-5 col-12 q-search-count-results text-center" data-count="{{ count }}">{{ count }} {{ text }}</h5>'
+			'count_results'	=> '<h5 class="mb-5 col-12 q-search-count-results text-center" data-count="{{ count }}">{{ count }} {{ text }}</h5>',
+
+			'pagination'	=> '<div class="col-12">
+									<nav class="row row justify-content-center mt-3 mb-3">
+										<ul class="pagination">
+											{{ pagination }}
+										</ul>
+									</nav>
+								</div>'
 			
 		],
 		

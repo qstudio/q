@@ -97,6 +97,14 @@ if( typeof jQuery !== 'undefined' ) {
 		}
 		*/
 
+		// on load, if no tab active, make first tab-content active/show ##
+		if( ! jQuery( '.bs-tabs > .nav-item' ).hasClass('active') ){
+			// console.log( 'NO active tab...' );
+			$first = jQuery( '.bs-tabs > .nav-item' ).first().addClass('active show');
+			// console.log( $first.attr('aria-controls') )
+			jQuery( '#'+$first.attr('aria-controls') ).addClass('active show');
+		}
+
 		// read hash from page load and change tab
 		var hash = document.location.hash;
 		var prefix = "tab_";
