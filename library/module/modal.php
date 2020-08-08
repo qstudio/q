@@ -87,8 +87,8 @@ class modal extends \Q {
         javascript::ob_get([
             'view'      => get_class(), 
             'method'    => 'javascript',
-            'priority'  => 3,
-            'handle'    => 'Modal'
+            // 'priority'  => 3,
+            // 'handle'    => 'Modal'
         ]);
 
     }
@@ -408,8 +408,8 @@ jQuery(document).ready(function() {
         css::ob_get([
             'view'      => get_class(), 
             'method'    => 'css',
-            'priority'  => 40,
-            'handle'    => 'Modal'
+            // 'priority'  => 40,
+            // 'handle'    => 'Modal'
         ]);
 
     }

@@ -69,8 +69,8 @@ class bs_modal extends \Q {
         \q\asset\javascript::ob_get([
             'view'      => get_class(), 
             'method'    => 'javascript',
-            'priority'  => 3,
-            'handle'    => 'BS Modal'
+            // 'priority'  => 3,
+            // 'handle'    => 'BS Modal'
 		]);
 
 /*

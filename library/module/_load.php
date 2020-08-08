@@ -35,6 +35,7 @@ class module extends \Q {
 			'bs_toggle' => h::get( 'module/bs_toggle.php', 'return', 'path' ),
 			'no_emoji' => h::get( 'module/no_emoji.php', 'return', 'path' ),
 			'grunt' => h::get( 'module/grunt.php', 'return', 'path' ),
+			'load' => h::get( 'module/load.php', 'return', 'path' ),
 
 			// 'toggle' => h::get( 'module/toggle.php', 'return', 'path' ), // ?? needed ??
 			// 'filter' => h::get( 'ui/module/filter.php', 'return', 'path' ),
@@ -44,7 +45,7 @@ class module extends \Q {
 			// 'scroll' => h::get( 'ui/module/scroll.php', 'return', 'path' ),
 			// 'push' => h::get( 'ui/module/push.php', 'return', 'path' ),
 			// 'filter' => h::get( 'ui/module/filter.php', 'return', 'path' ),
-			// 'load' => h::get( 'ui/module/load.php', 'return', 'path' ),
+			//
 		];
 
 

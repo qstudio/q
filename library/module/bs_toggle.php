@@ -37,7 +37,7 @@ class bs_toggle extends \Q {
 			asset\javascript::ob_get([
 				'view'      => get_class(), 
 				'method'    => 'javascript',
-				'handle'    => str_replace( __NAMESPACE__.'\\', '', __CLASS__ )
+				// 'handle'    => str_replace( __NAMESPACE__.'\\', '', __CLASS__ )
 			]);
 		}, 3 );
 
@@ -46,7 +46,7 @@ class bs_toggle extends \Q {
 			asset\css::ob_get([
 				'view'      => get_class(), 
 				'method'    => 'css',
-				'handle'    => str_replace( __NAMESPACE__.'\\', '', __CLASS__ )
+				// 'handle'    => str_replace( __NAMESPACE__.'\\', '', __CLASS__ )
 			]);
 		}, 3 );
 

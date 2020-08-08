@@ -72,8 +72,8 @@ class push extends \Q {
         javascript::ob_get([
             'view'      => get_class(), 
             'method'    => 'javascript',
-            'priority'  => 50,
-            'handle'    => 'Push'
+            // 'priority'  => 50,
+            // 'handle'    => 'Push'
         ]);
 
     }
@@ -203,8 +203,8 @@ if ( typeof jQuery !== 'undefined' ) {
         css::ob_get([
             'view'      => get_class(), 
             'method'    => 'css',
-            'priority'  => 40,
-            'handle'    => 'Push'
+            // 'priority'  => 40,
+            // 'handle'    => 'Push'
         ]);
 
     }

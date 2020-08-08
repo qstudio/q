@@ -227,14 +227,11 @@ if ( ! class_exists( 'Q' ) ) {
 			// string methods ##
 			require_once self::get_plugin_path( 'library/strings/_load.php' );
 
-			// data contexts ##
-			// require_once self::get_plugin_path( 'library/context/_load.php' );
-
-			// willow -- @TODO -- move to seperate plugin ##
-			// require_once self::get_plugin_path( 'library/willow/q-willow.php' );
-			
 			// widgets ##
 			require_once self::get_plugin_path( 'library/widget/_load.php' );
+
+			// willow contexts ##
+			require_once self::get_plugin_path( 'library/context/_load.php' );
 
 			// view ##
 			require_once self::get_plugin_path( 'library/view/_load.php' );

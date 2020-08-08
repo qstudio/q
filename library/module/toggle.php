@@ -40,8 +40,8 @@ class toggle extends \Q {
         javascript::ob_get([
             'view'      => get_class(), 
             'method'    => 'javascript',
-            'priority'  => 30,
-            'handle'    => 'Toggle'
+            // 'priority'  => 30,
+            // 'handle'    => 'Toggle'
         ]);
 
     }
@@ -173,8 +173,8 @@ function q_toggle_hash(){
         css::ob_get([
             'view'      => get_class(), 
             'method'    => 'css',
-            'priority'  => 3,
-            'handle'    => 'Toggle'
+            // 'priority'  => 3,
+            // 'handle'    => 'Toggle'
         ]);
 
     }

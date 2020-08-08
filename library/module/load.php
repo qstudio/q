@@ -1,6 +1,6 @@
 <?php
 
-namespace q\controller;
+namespace q\module;
 
 use q\core\core as core;
 use q\core\helper as helper;
@@ -8,14 +8,33 @@ use q\core\config as config;
 use q\controller\generic as generic;
 
 // load it up ##
-\q\controller\load::hooks();
+// \q\module\load::__run();
 
 class load extends \Q {
     
     static $args = [];
 
-    public static function run( $args = null )
+    public static function __run( $args = null )
     {
+
+		// add extra options in extension select API ##
+		\add_filter( 'acf/load_field/name=q_option_extension', [ get_class(), 'filter_acf_extension' ], 10, 1 );
+
+		// h::log( core\option::get('bs_toggle') );
+		if ( 
+			! isset( core\option::get('extension')->load )
+			|| true !== core\option::get('extension')->load 
+		){
+
+			h::log( 'd:>Load is not enabled.' );
+
+			return false;
+
+		}
+
+		// ajax hooks ##
+		\add_action( 'wp_ajax_q_load', [ get_class(), 'ajax' ] ); // wp_ajax_{action}
+		\add_action( 'wp_ajax_nopriv_q_load', [ get_class(), 'ajax' ] ); // wp_ajax_nopriv_{action}
 
         // merge in defaults ##
         self::$args = array_merge( self::args(), $args );
@@ -26,7 +45,29 @@ class load extends \Q {
         // add scripts ##
         \add_action( 'wp_enqueue_scripts', [ get_class(), 'wp_enqueue_scripts' ] );
 
-    }
+	}
+
+
+	
+
+	/**
+     * Add new libraries to Q Settings via API
+     * 
+     * @since 2.3.0
+     */
+    public static function filter_acf_extension( $field )
+    {
+
+		// pop on a new choice ##
+		$field['choices']['load'] = 'AJAX Loader';
+
+		// make it selected ##
+		$field['default_value'][0] = 'load';
+		
+		return $field;
+
+	}
+
     
 
 

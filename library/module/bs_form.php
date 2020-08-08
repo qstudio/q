@@ -39,7 +39,7 @@ class bs_form extends \Q {
 			asset\javascript::ob_get([
 				'view'      => get_class(), 
 				'method'    => 'javascript',
-				'handle'    => str_replace( __NAMESPACE__.'\\', '', __CLASS__ )
+				// 'handle'    => str_replace( __NAMESPACE__.'\\', '', __CLASS__ )
 			]);
 		}, 3 );
 

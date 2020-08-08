@@ -56,11 +56,11 @@ class javascript extends \Q {
     }
 
 
-    public static function comment( $hash = null )
+    public static function comment( $handle = null )
     {
 
         // sanity ##
-        if ( is_null( $hash ) ) {
+        if ( is_null( $handle ) ) {
 
             return false;
 
@@ -69,7 +69,7 @@ class javascript extends \Q {
 $return = 
 "
 /**
-{$hash}
+{$handle}
 */
 ";
 
@@ -96,7 +96,14 @@ $return =
 
             return false;
 
-        }
+		}
+		
+		$handle = $args['view'].'\\'.$args['method'];
+		$handle = str_replace( '\\', '/', $handle );
+		// h::log( '$handle: '.$handle );
+
+		// allow view/method filtering ##
+		$args = \apply_filters( 'q/filter/'.$handle, $args );
 
         if ( 
             ! method_exists( $args['view'], $args['method'] )
@@ -108,6 +115,10 @@ $return =
             return false;
 
         }
+
+		// h::log( 'e:>class: '.$args['view'].' / method: '.$args['method'] );
+
+		#h::log( $data );
 
         // h::log( self::$args );
         ob_start();
@@ -123,16 +134,14 @@ $return =
 
         if ( ! $data ) {
             
-            h::log( 'e:>Handler method returned bad data..' );
+            h::log( 'e:>'.$args["handle"].' returned bad data to JS collector.' );
 
             return false;
 
         }
 
-        #h::log( $string );
-
         // add script ##
-        self::add( $data, $args["handle"] ) ;
+        self::add( $data, $handle ) ;
 
         // ok ##
         return true;
@@ -166,7 +175,8 @@ $return =
 		// h::log( 'javascript handle called for: '.$hash .' --- length: '. strlen( $string ) );
 		
 		// create hash ##
-		$hash = 'js_'.\sanitize_key( $handle ).'_'.rand();
+		// $hash = 'js_'.\sanitize_key( $handle ).'_'.rand();
+		// $hash
 
 		// h::log( 'javascript render called for: '.$hash .' --- length: '. strlen( $string ) );
 
@@ -174,10 +184,10 @@ $return =
         $string = self::strip_script( $string );
 
         // add the passed value to the array ##
-        self::$array[$hash] = 
-            isset( $array[$hash] ) ?
-            $array[$hash].self::comment( $hash ).$string :
-            self::comment( $hash ).$string ;
+        self::$array[$handle] = 
+            isset( $array[$handle] ) ?
+            $array[$handle].self::comment( $handle ).$string :
+            self::comment( $handle ).$string ;
 
     }
 
@@ -196,7 +206,7 @@ $return =
 // return it ##
 return "
 /**
-Plugin:     Q Theme
+Plugin:     Q Module
 Version:    {$version}
 Length:		{$length}
 Date:       {$date}

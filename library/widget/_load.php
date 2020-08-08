@@ -86,9 +86,9 @@ class widget extends \Q {
 
         $array = [
 
-                // 'instagram'     => 'instagram' // Instagram ##
+             	'instagram'     => 'instagram' // Instagram ##
             // ,   'gooverseaes'   => 'gooverseas' // Instagram ##
-            // ,   'sharelines'    => 'sharelines' // Facebook / Twitter Share ##
+            ,   'sharelines'    => 'sharelines' // Facebook / Twitter Share ##
 
 		];
 
@@ -148,9 +148,9 @@ class widget extends \Q {
         // add each seleted widget to the load list ##
         foreach ( self::$add as $key => $value ) {
 
-			// h::log( "d:>add: ui/widget/{$value}.php" );
-
-            h::get( "widget/{$value}.php", 'require', 'path' );
+			$file = h::get( "widget/{$value}.php", 'require', 'path' );
+			
+			// h::log( "e:>widget file: $file" );
 
         }
 

@@ -111,8 +111,8 @@ class filter extends \Q {
         javascript::ob_get([
             'view'      => get_class(), 
             'method'    => 'javascript',
-            'priority'  => 1,
-            'handle'    => 'Filter'
+            // 'priority'  => 1,
+            // 'handle'    => 'Filter'
         ]);
 
     }

@@ -12,7 +12,7 @@ use q\strings;
 
 class css extends \Q {
     
-    static $args = array();
+    // static $args = array();
     static $array = array();
     static $force = false; // force refresh of CSS file ##
 
@@ -56,11 +56,11 @@ class css extends \Q {
     }
 
 
-    public static function comment( $hash = null )
+    public static function comment( $handle = null )
     {
 
         // sanity ##
-        if ( is_null( $hash ) ) {
+        if ( is_null( $handle ) ) {
 
             return false;
 
@@ -69,7 +69,7 @@ class css extends \Q {
 $return = 
 "
 /**
-{$hash}
+{$handle}
 */
 ";
 
@@ -94,7 +94,14 @@ $return =
 
             return false;
 
-        }
+		}
+		
+		$handle = $args['view'].'\\'.$args['method'];
+		$handle = str_replace( '\\', '/', $handle );
+		// h::log( '$handle: '.$handle );
+
+		// allow view/method filtering ##
+		$args = \apply_filters( 'q/filter/'.$handle, $args );
 
         if ( 
             ! method_exists( $args['view'], $args['method'] )
@@ -132,7 +139,7 @@ $return =
         // h::log( $data );
 
         // add script ##
-        self::add( $data, $args["handle"] ) ;
+        self::add( $data, $handle ) ;
 
         // ok ##
         return true;
@@ -164,18 +171,18 @@ $return =
 		}
 		
 		// create hash ##
-		$hash = 'css_'.\sanitize_key( $handle ).'_'.rand();
+		// $hash = 'css_'.\sanitize_key( $handle ).'_'.rand();
 
-		// h::log( 'javascript render called for: '.$hash .' --- length: '. strlen( $string ) );
+		// h::log( 'javascript render called for: '.$handle .' --- length: '. strlen( $string ) );
 
         // we need to strip the <script> tags ##
         $string = self::strip_tag( $string );
 
         // add the passed value to the array ##
-        self::$array[$hash] = 
-            isset( $array[$hash] ) ?
-            $array[$hash].self::comment( $hash ).$string :
-            self::comment( $hash ).$string ;
+        self::$array[$handle] = 
+            isset( $array[$handle] ) ?
+            $array[$handle].self::comment( $handle ).$string :
+            self::comment( $handle ).$string ;
 
     }
 
@@ -194,9 +201,9 @@ $return =
 // return it ##
 return "
 /**
-Plugin:     Q Theme
+Plugin:     Q Module
 Version:    {$version}
-Length:    	{$length}
+Length:		{$length}
 Date:       {$date}
 */
 ";

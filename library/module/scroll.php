@@ -113,8 +113,8 @@ class scroll extends \Q {
         javascript::ob_get([
             'view'      => get_class(), 
             'method'    => 'javascript',
-            'priority'  => 5,
-            'handle'    => 'Scroll'
+            // 'priority'  => 5,
+            // 'handle'    => 'Scroll'
         ]);
 
     }
@@ -252,8 +252,8 @@ if ( typeof jQuery !== 'undefined' ) {
         css::ob_get([
             'view'      => get_class(), 
             'method'    => 'css',
-            'priority'  => 4,
-            'handle'    => 'Scroll'
+            // 'priority'  => 4,
+            // 'handle'    => 'Scroll'
         ]);
 
     }

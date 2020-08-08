@@ -1082,8 +1082,8 @@ class tab extends \Q {
         javascript::ob_get([
             'view'      => get_class(),
             'method'    => 'javascript',
-            'priority'  => 13,
-            'handle'    => 'Tab'
+            // 'priority'  => 13,
+            // 'handle'    => 'Tab'
         ]);
 
     }
@@ -1268,8 +1268,8 @@ if ( typeof jQuery !== 'undefined' ) {
         css::ob_get([
             'view'      => get_class(),
             'method'    => 'css',
-            'priority'  => 42,
-            'handle'    => 'Tab'
+            // 'priority'  => 42,
+            // 'handle'    => 'Tab'
         ]);
 
     }

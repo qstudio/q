@@ -297,8 +297,8 @@ class select extends \Q {
         javascript::ob_get([
             'view'      => get_class(), 
             'method'    => 'javascript',
-            'priority'  => 4,
-            'handle'    => 'Select'
+            // 'priority'  => 4,
+            // 'handle'    => 'Select'
         ]);
 
     }
@@ -604,8 +604,8 @@ jQuery(document).ready(function() {
         css::ob_get([
             'view'      => get_class(), 
             'method'    => 'css',
-            'priority'  => 4,
-            'handle'    => 'Select'
+            // 'priority'  => 4,
+            // 'handle'    => 'Select'
         ]);
 
     }

@@ -32,8 +32,8 @@ class youtube extends \Q {
         asset\javascript::ob_get([
             'view'      => get_class(), 
             'method'    => 'javascript',
-            'priority'  => 10,
-            'handle'    => 'YouTube'
+            // 'priority'  => 10,
+            // 'handle'    => 'YouTube'
         ]);
 
     }
@@ -151,8 +151,8 @@ function q_get_youtube_id( url ) {
         asset\css::ob_get([
             'view'      => get_class(), 
             'method'    => 'css',
-            'priority'  => 10,
-            'handle'    => 'YouTube'
+            // 'priority'  => 10,
+            // 'handle'    => 'YouTube'
         ]);
 
     }

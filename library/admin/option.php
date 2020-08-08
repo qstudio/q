@@ -512,7 +512,7 @@ class option extends \Q {
 
             'q_option_extension'   => array(
                 'key' => 'group_q_option_extension',
-                'title' => 'Extensions',
+                'title' => 'Modules',
                 'fields' => array(
                     array(
                         'key' => 'field_q_option_extension',
@@ -554,8 +554,8 @@ class option extends \Q {
                 'hide_on_screen' => '',
                 'active' => true,
                 'description' => '',
-            ),
-
+			),
+			
 		);
 		
 
