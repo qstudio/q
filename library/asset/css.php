@@ -103,6 +103,19 @@ $return =
 		// allow view/method filtering ##
 		$args = \apply_filters( 'q/filter/'.$handle, $args );
 
+		// double sanity ##
+        if ( 
+            is_null( $args )
+            || ! isset( $args["view"] )
+            || ! isset( $args["method"] )
+        ){
+
+            h::log( 'e:>Missing args after filter..' );
+
+            return false;
+
+		}
+
         if ( 
             ! method_exists( $args['view'], $args['method'] )
             || ! is_callable( array( $args['view'], $args['method'] ) )
