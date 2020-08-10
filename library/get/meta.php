@@ -161,11 +161,11 @@ class meta extends \q\get {
 
 			if ( \is_single() ) {
 
-				$array['permalink'] = '#comment';
+				$array['permalink'] = \get_the_permalink( $post->ID ).'#/scroll/comments';
 
 			} else {
 
-				$array['permalink'] = \get_the_permalink( $post->ID ).'#comment'; // variable link ##
+				$array['permalink'] = \get_the_permalink( $post->ID ).'#/scroll/comments'; // variable link ##
 
 			}
 

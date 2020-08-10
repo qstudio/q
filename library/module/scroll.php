@@ -1,23 +1,39 @@
 <?php
 
-namespace q\controller;
+namespace q\module;
 
-use q\core\core as core;
-use q\core\helper as helper;
-use q\core\config as config;
-use q\controller\generic as generic;
-use q\controller\javascript as javascript;
-use q\controller\css as css;
+use q\core;
+use q\core\helper as h;
+// use q\core\config as config;
+// use q\controller\generic as generic;
+use q\asset\javascript as javascript;
+use q\asset\css as css;
 
 // load it up ##
-\q\controller\scroll::run();
+\q\module\scroll::__run();
 
 class scroll extends \Q {
     
     public static $args = [];
 
-    public static function run()
+    public static function __run()
     {
+
+		// add extra options in module select API ##
+		\add_filter( 'acf/load_field/name=q_option_module', [ get_class(), 'filter_acf_module' ], 10, 1 );
+
+		// make running dependent on module selection in Q settings ##
+		// h::log( core\option::get('tab') );
+		if ( 
+			! isset( core\option::get('module')->scroll )
+			|| true !== core\option::get('module')->scroll 
+		){
+
+			// h::log( 'd:>scroll is not enabled.' );
+
+			return false;
+
+		}
 
         // add JS to footer if debugging or single q.theme.js script if not ##
         \add_action( 'wp_footer', [ get_class(), 'wp_footer' ], 5 ); 
@@ -26,6 +42,28 @@ class scroll extends \Q {
         \add_action( 'wp_head', [ get_class(), 'wp_head' ], 4 ); 
 
     }
+
+
+	/**
+     * Add new libraries to Q Settings via API
+     * 
+     * @since 2.3.0
+     */
+    public static function filter_acf_module( $field )
+    {
+
+		// pop on a new choice ##
+		$field['choices']['scroll'] = 'Scroll Control';
+
+		// make it selected ##
+		$field['default_value'][0] = 'scroll';
+
+		// kick back ##
+		return $field;
+
+	}
+
+
 
 
     /**

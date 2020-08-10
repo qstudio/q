@@ -31,7 +31,8 @@ class context extends \Q {
 		return $array = [
 
 			// 'post' => h::get( 'render/post.php', 'return', 'path' ),
-			'widget' => h::get( 'context/widget.php', 'return', 'path' )
+			'module' => h::get( 'context/module.php', 'return', 'path' ),
+			// 'widget' => h::get( 'context/widget.php', 'return', 'path' )
 
 		];
 

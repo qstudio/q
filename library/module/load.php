@@ -17,13 +17,13 @@ class load extends \Q {
     public static function __run( $args = null )
     {
 
-		// add extra options in extension select API ##
-		\add_filter( 'acf/load_field/name=q_option_extension', [ get_class(), 'filter_acf_extension' ], 10, 1 );
+		// add extra options in module select API ##
+		\add_filter( 'acf/load_field/name=q_option_module', [ get_class(), 'filter_acf_module' ], 10, 1 );
 
 		// h::log( core\option::get('bs_toggle') );
 		if ( 
-			! isset( core\option::get('extension')->load )
-			|| true !== core\option::get('extension')->load 
+			! isset( core\option::get('module')->load )
+			|| true !== core\option::get('module')->load 
 		){
 
 			h::log( 'd:>Load is not enabled.' );
@@ -55,7 +55,7 @@ class load extends \Q {
      * 
      * @since 2.3.0
      */
-    public static function filter_acf_extension( $field )
+    public static function filter_acf_module( $field )
     {
 
 		// pop on a new choice ##

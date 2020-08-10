@@ -1,6 +1,6 @@
 <?php
 
-namespace q\widget;
+namespace q\module;
 
 use q\core\helper as h;
 use q\core;
@@ -15,7 +15,7 @@ use q\strings;
  */
 
 // load it up ##
-\q\widget\sharelines::__run();
+\q\module\sharelines::__run();
 
 class sharelines extends \Q {
 
@@ -31,8 +31,8 @@ class sharelines extends \Q {
 		// make running dependent on module selection in Q settings ##
 		// h::log( core\option::get('tab') );
 		if ( 
-			! isset( core\option::get('module')->widget_sharelines )
-			|| true !== core\option::get('module')->widget_sharelines 
+			! isset( core\option::get('module')->sharelines )
+			|| true !== core\option::get('module')->sharelines 
 		){
 
 			// h::log( 'd:>Tab is not enabled.' );
@@ -65,7 +65,7 @@ class sharelines extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['widget_sharelines'] = 'Widget :: Sharelines';
+		$field['choices']['sharelines'] = 'Sharelines';
 
 		// make it selected ##
 		// $field['default_value'][0] = 'bs_tab';
@@ -269,9 +269,9 @@ class sharelines extends \Q {
         $config = array();
 
         // values ##
-        // $config['title'] = \apply_filters( 'q/widget/sharelines/title', \__( 'Share', 'q-textdomain' ) );
+        // $config['title'] = \apply_filters( 'q/module/sharelines/title', \__( 'Share', 'q-textdomain' ) );
 
-        $config['facebook'] = \apply_filters( 'q/widget/sharelines/facebook', '137150683665520' );
+        $config['facebook'] = \apply_filters( 'q/module/sharelines/facebook', '137150683665520' );
 
         // check ##
         #h::log( $config );
@@ -518,8 +518,6 @@ class sharelines extends \Q {
     public static function get()
     {
 		
-		h::log( 't:>TODO -- move to modules.. and make a better base model for changes - perhaps add option for fb id etc..' );
-
         global $post;
         #pr( $post );
         

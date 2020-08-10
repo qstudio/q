@@ -17,17 +17,17 @@ class grunt extends \Q {
     public static function __run()
     {
 
-		// add extra options in extension select API ##
-		\add_filter( 'acf/load_field/name=q_option_extension', [ get_class(), 'filter_acf_extension' ], 10, 1 );
+		// add extra options in module select API ##
+		\add_filter( 'acf/load_field/name=q_option_module', [ get_class(), 'filter_acf_module' ], 10, 1 );
 
 		// add fields to Q settings ##
-		\add_filter( 'q/plugin/acf/add_field_groups/q_option_extension', [ get_class(), 'filter_acf_extension_conditional' ], 10, 1 );
+		\add_filter( 'q/plugin/acf/add_field_groups/q_option_module', [ get_class(), 'filter_acf_module_conditional' ], 10, 1 );
 
 		// make running dependent on module selection in Q settings ##
 		// h::log( core\option::get('grunt') );
 		if ( 
-			! isset( core\option::get('extension')->grunt )
-			|| true !== core\option::get('extension')->grunt 
+			! isset( core\option::get('module')->grunt )
+			|| true !== core\option::get('module')->grunt 
 		){
 
 			// h::log( 'd:>Emoji is not enabled.' );
@@ -47,7 +47,7 @@ class grunt extends \Q {
      * 
      * @since 2.3.0
      */
-    public static function filter_acf_extension( $field )
+    public static function filter_acf_module( $field )
     {
 
         // h::log( $field['choices'] );
@@ -69,7 +69,7 @@ class grunt extends \Q {
 
 
 
-	public static function filter_acf_extension_conditional( $array ) 
+	public static function filter_acf_module_conditional( $array ) 
     {
 
         // test ##
@@ -78,16 +78,16 @@ class grunt extends \Q {
         // lets add our fields ##
         array_push( $array['fields'], [
 
-			'key' => 'field_q_option_extension_grunt_port',
+			'key' => 'field_q_option_module_grunt_port',
 			'label' => 'Localhost Port',
-			'name' => 'q_option_extension_grunt_port',
+			'name' => 'q_option_module_grunt_port',
 			'type' => 'text',
 			'instructions' => 'Enter the port number to use.',
 			'required' => 1,
 			'conditional_logic' => array(
 				array(
 					array(
-						'field' => 'field_q_option_extension',
+						'field' => 'field_q_option_module',
 						'operator' => '==',
 						'value' => 'grunt',
 					),
@@ -109,7 +109,7 @@ class grunt extends \Q {
     {
 
 		// h::log( 'e:>GRUNT HIT..' );
-		// h::log( core\option::get('extension_grunt_port') );
+		// h::log( core\option::get('module_grunt_port') );
 
         // only if q_theme is debugging ##
         if ( ! self::$debug ) {
@@ -120,7 +120,7 @@ class grunt extends \Q {
 		
 		// get port, if set ##
 		$port = 
-			core\option::get('extension_grunt_port') ?: 
+			core\option::get('module_grunt_port') ?: 
 			1337 ; 
 
 ?>

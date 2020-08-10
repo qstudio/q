@@ -86,9 +86,9 @@ class widget extends \Q {
 
         $array = [
 
-             	'instagram'     => 'instagram' // Instagram ##
+             	// 'instagram'     => 'instagram' // Instagram ##
             // ,   'gooverseaes'   => 'gooverseas' // Instagram ##
-            ,   'sharelines'    => 'sharelines' // Facebook / Twitter Share ##
+            // ,   'sharelines'    => 'sharelines' // Facebook / Twitter Share ##
 
 		];
 

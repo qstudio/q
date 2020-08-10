@@ -17,14 +17,14 @@ class bs_toast extends \Q {
     public static function __run()
     {
 
-		// add extra options in extension select API ##
-		\add_filter( 'acf/load_field/name=q_option_extension', [ get_class(), 'filter_acf_extension' ], 10, 1 );
+		// add extra options in module select API ##
+		\add_filter( 'acf/load_field/name=q_option_module', [ get_class(), 'filter_acf_module' ], 10, 1 );
 
 		// make running dependent on module selection in Q settings ##
 		// h::log( core\option::get('toast') );
 		if ( 
-			! isset( core\option::get('extension')->bs_toast )
-			|| true !== core\option::get('extension')->bs_toast 
+			! isset( core\option::get('module')->bs_toast )
+			|| true !== core\option::get('module')->bs_toast 
 		){
 
 			// h::log( 'd:>Toast is not enabled.' );
@@ -60,7 +60,7 @@ class bs_toast extends \Q {
      * 
      * @since 2.3.0
      */
-    public static function filter_acf_extension( $field )
+    public static function filter_acf_module( $field )
     {
 
 		// pop on a new choice ##

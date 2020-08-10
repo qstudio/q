@@ -17,14 +17,14 @@ class no_emoji extends \Q {
     public static function __run()
     {
 
-		// add extra options in extension select API ##
-		\add_filter( 'acf/load_field/name=q_option_extension', [ get_class(), 'filter_acf_extension' ], 10, 1 );
+		// add extra options in module select API ##
+		\add_filter( 'acf/load_field/name=q_option_module', [ get_class(), 'filter_acf_module' ], 10, 1 );
 
 		// make running dependent on module selection in Q settings ##
 		// h::log( core\option::get('no_emoji') );
 		if ( 
-			! isset( core\option::get('extension')->no_emoji )
-			|| true !== core\option::get('extension')->no_emoji 
+			! isset( core\option::get('module')->no_emoji )
+			|| true !== core\option::get('module')->no_emoji 
 		){
 
 			// h::log( 'd:>Emoji is not enabled.' );
@@ -56,7 +56,7 @@ class no_emoji extends \Q {
      * 
      * @since 2.3.0
      */
-    public static function filter_acf_extension( $field )
+    public static function filter_acf_module( $field )
     {
 
         // h::log( $field['choices'] );

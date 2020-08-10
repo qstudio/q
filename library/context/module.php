@@ -8,12 +8,12 @@ use q\core\helper as h;
 use q\willow;
 // use q\willow\context;
 // use q\willow\render; 
-use q\widget as widgets;
+use q\module as modules;
 
 // register class to willow ##
-// \q\context\widget::__run();
+\q\context\module::__run();
 
-class widget {
+class module {
 
 	public static function __run( $args = null ) {
 
@@ -38,12 +38,10 @@ class widget {
 	
 
 	/**
-    * Render sharelines
+    * Sharelines
     */
     public static function sharelines( $args = null ){
 
-		// $get = \q\widget\sharelines::get( $args );
-		// h::log( $get );
 		return \q\module\sharelines::get( $args );
 
 	}

@@ -7,7 +7,7 @@ use q\core\helper as h;
 defined( 'ABSPATH' ) OR exit;
 
 // return an array ##
-return [ 'widget' => [ 'sharelines' => [
+return [ 'module' => [ 'sharelines' => [
 
 		'config'			=> [
 		
