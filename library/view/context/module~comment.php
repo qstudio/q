@@ -77,7 +77,6 @@ return [ 'module' => [ 'comment' => [
 					{{ comments }}
 				</div>
 			</div>
-			{{ load }} <!-- REQUIRED JS -->
 			<div class="col-12 mt-4 comment-reply">
 				<div class="row">
 					<div class="col-12">

@@ -709,7 +709,8 @@ if ( typeof jQuery !== 'undefined' ) {
                 FB.init({
                     appId: '<?php echo $facebook; ?>'
                 });     
-            });
+			});
+			
         }
 
         // hover ##

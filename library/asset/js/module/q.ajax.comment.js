@@ -12,20 +12,21 @@ jQuery(function($){
 		var button = $(this);
  
 		// decrease the current comment page value
-		cpage--;
+		// cpage--;
  
 		$.ajax({
 			url : ajaxurl, // AJAX handler, declared before
 			data : {
 				'action'	: 'q_ajax_comment_load', // AJAX action
-				'post_id'	: parent_post_id, // the current post
-				// 'cpage' 	: cpage, // current comment page
-				'nonce'		: q_ajax_comment_params.load_nonce
+				'post_id'	: q_ajax_comment_params.post_id, // the current post
+				'nonce'		: q_ajax_comment_params.load_nonce // nonce validation ##
 			},
 			type : 'POST',
 
 			beforeSend : function ( xhr ) {
-				button.text('Loading...'); // preloader here
+
+				// basic, but contextual preloader ##
+				button.text('Loading...'); 
 
 			},
 
@@ -35,17 +36,23 @@ jQuery(function($){
 
 					$('div.comment-list').empty(); // remove all comments loaded ##
 					$('div.comment-list').append( data );
-					// button.text('Load More Comments'); 
-					 // if the last page, remove the button
-					// if ( cpage == 1 )
+					
+					// remove button ##
 					button.remove();
 
 				} else {
 
-					button.remove();
+					button.text( 'Error! Sorry... :('); 
 
 				}
+			},
+
+			error : function( data ){
+
+				button.text( 'Error! Sorry... :('); 
+
 			}
+
 		});
 
 		return false;
@@ -123,7 +130,7 @@ jQuery(function($){
 	/*
 	 * On comment form submit
 	 */
-	$( '#commentform' ).submit(function(){
+	$( '#commentform' ).submit(function( e ){
 
 		// we need to know what comment we are replying to, to add results in correct place ##
  
@@ -158,21 +165,46 @@ jQuery(function($){
 				url : q_ajax_comment_params.ajaxurl, // admin-ajax.php URL
 				data: $(this).serialize() + '&action=ajaxcomments&nonce='+q_ajax_comment_params.post_nonce, // send form data + action parameter
 				beforeSend: function(xhr){
+
 					// what to do just after the form has been submitted
 					button.addClass('loadingform').val('Loading...');
+
 				},
-				error: function (request, status, error) {
-					if( status == 500 ){
-						alert( 'Error while adding comment' );
-					} else if( status == 'timeout' ){
-						alert('Error: Server doesn\'t respond.');
+				error: function ( request, status, error) {
+
+					e.preventDefault();
+
+					console.log( 'Error: '+request.statusText );
+					// button.removeClass( 'loadingform' ).append( '<p class="error">Error: '+request.statusText+' :(</p>' );
+
+					if( request.status == 500 ){
+
+						// alert( 'Error adding comment :(' );
+						button.removeClass( 'loadingform' ).addClass('disabled').val( 'Error adding comment :(' );
+
+						return false;
+
+					} else if( request.status == 'timeout' ){
+
+						// alert( 'Error: Server didn\'t respond in time :(');
+						button.removeClass( 'loadingform' ).addClass('disabled').val( 'Server Error, loaded too slow.. :(' );
+
+						return false;
+
 					} else {
-						// process WordPress errors
-						var wpErrorHtml = request.responseText.split("<p>"),
-							wpErrorStr = wpErrorHtml[1].split("</p>");
+
+						// console.dir( request );
+						// // process WordPress errors
+						// var wpErrorHtml = request.responseText.split("<p>"),
+						// 	wpErrorStr = wpErrorHtml[1].split("</p>");
  
-						alert( wpErrorStr[0] );
+						// alert( wpErrorStr[0] );
+						button.removeClass( 'loadingform' ).addClass('disabled').val( request.statusText );
+
 					}
+
+					return;
+
 				},
 				success: function ( result ) {
 
@@ -250,11 +282,14 @@ jQuery(function($){
 						scrollTop: targetOffset + "px"
 					}, 500, 'swing'); 
 
+					// what to do after a comment has been added
+					button.removeClass( 'loadingform' ).val( 'Post Comment' );
+
 				},
 				complete: function(){
 
 					// what to do after a comment has been added
-					button.removeClass( 'loadingform' ).val( 'Post Comment' );
+					// button.removeClass( 'loadingform' ).val( 'Post Comment' );
 
 				}
 			});

@@ -147,7 +147,7 @@ class theme extends extension\consent {
 			'data'		=> [
 				'settings' 			=> \esc_html( self::settings() ),
 				'button_class'		=> ' q-consent-set',
-				'privacy_permalink'	=> \get_permalink().'privacy/',
+				'privacy_permalink'	=> self::privacy_permalink(), // \get_permalink().'privacy/',
 				'data'				=> 'data-q-consent-marketing="1" data-q-consent-analytics="1"'
 			],
 		]);
@@ -155,6 +155,30 @@ class theme extends extension\consent {
     }
 
 
+
+	/**
+	 * Get privacy URL
+	 *
+	 * @todo    tie into core method to save cookie
+	 * @since   0.1.0
+	 */
+    public static function privacy_permalink()
+    {
+
+		// h::log( core\option::get('extension_consent') );
+
+		if ( ! core\option::get('extension_consent') ){
+
+			return false;
+
+		}
+
+		return 
+			\get_post( core\option::get('extension_consent') ) ? 
+			\get_permalink( \get_post( core\option::get( 'extension_consent' ) ) ): 
+			false ;
+
+	}
 
 
     /**
