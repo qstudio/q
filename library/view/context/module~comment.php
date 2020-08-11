@@ -16,17 +16,17 @@ return [ 'module' => [ 'comment' => [
 
 		// get comments ##
 		'get'		=> [
-			// 'number'  			=> \get_site_option( 'comments_per_page' ) ?: 0, // just 5 on load
+			'number'  			=> \get_site_option( 'comments_per_page' ) ?: 2, // just 2 on load
 			'status' 			=> 'approve', 
 		],
 
 		// comment list style ##
 		'list'		=> [
 			'style'         	=> 'div',
-			'max_depth'     	=> 4,
+			'max_depth'     	=> 3,
 			'short_ping'    	=> true,
 			'avatar_size'   	=> '42',
-			// 'per_page'			=> \get_site_option( 'comments_per_page' ) ?: 5, 
+			'per_page'			=> \get_site_option( 'comments_per_page' ) ?: 2, 
 			'reverse_top_level'	=> false,
 			'walker'        	=> new \Comment_Walker(),
 			// 'callback'			=> new \Comment_Walker(),
@@ -45,7 +45,7 @@ return [ 'module' => [ 'comment' => [
 	'form' 		=> [
 
 		'title_reply'			=> __( 'Add a Comment', 'q-textdomain' ),
-		'title_reply_before'   	=> '<h3 id="reply-title" class="comment-reply-title mt-3">',
+		'title_reply_before'   	=> '<h3 id="reply-title" class="col-12 comment-reply-title mt-3">',
 		'class_submit' 			=> 'btn btn-primary submit',
 		'comment_field' => '<p class="comment-form-comment"><label for="comment">'._x( 'Comment', 'noun' ).'</label> <textarea id="comment" name="comment" class="form-control" cols="45" rows="8" aria-required="true" required="required" oninvalid="this.setCustomValidity(\'We cannot read you mind, just yet :)\')" oninput="setCustomValidity(\'\')"></textarea></p>',
 
@@ -70,13 +70,14 @@ return [ 'module' => [ 'comment' => [
 			<span class="anchor" data-scroll-slug="comments"></span>
 			<div id="comments" class="col-12 comments-area mt-2">
 				<div class="row mt-2">
-					<h5 class="comments-title col-12">{{ title }}</h5>
+					<h5 class="comments-title col-8">{{ title }}</h5>
+					<span class="col-4 text-right"><div class="btn btn-primary q_comment_loadmore">Load All Comments</div></span>
 				</div>
 				<div class="row py-md-1 my-md-2 px-sm-0 mx-sm-0 comment-list">
 					{{ comments }}
 				</div>
-				{{ pagination }}
 			</div>
+			{{ load }} <!-- REQUIRED JS -->
 			<div class="col-12 mt-4 comment-reply">
 				<div class="row">
 					<div class="col-12">

@@ -41,7 +41,7 @@ class comment extends \Q {
 		// html5 -- https://github.com/bourafai/wp-bootstrap-4-comment-walker ##
 		\add_action( 'after_setup_theme', [ get_class(), 'html5_comment_list' ] );
 
-		\add_filter('comment_reply_link', [ get_class(), 'comment_reply_link' ], 100, 4);
+		\add_filter( 'comment_reply_link', [ get_class(), 'comment_reply_link' ], 100, 4);
 		
 		// remove "url" field from comments ##
 		\add_filter( 'comment_form_default_fields', [ get_class(), 'comment_form_default_fields' ] );
@@ -49,10 +49,118 @@ class comment extends \Q {
 		// assets ##
 		\add_action( 'wp_enqueue_scripts', [ get_class(), 'wp_enqueue_script' ], 100 );
 
-		// ajax comments
-		\add_action( 'wp_ajax_ajaxcomments', [ get_class(), 'ajaxcomments' ] ); // wp_ajax_{action} for registered user
-		\add_action( 'wp_ajax_nopriv_ajaxcomments', [ get_class(), 'ajaxcomments' ] ); // wp_ajax_nopriv_{action} for not registered users
+		// ajax create comments
+		\add_action( 'wp_ajax_ajaxcomments', [ get_class(), 'ajax_post_comment' ] ); // wp_ajax_{action} for registered user
+		\add_action( 'wp_ajax_nopriv_ajaxcomments', [ get_class(), 'ajax_post_comment' ] ); // wp_ajax_nopriv_{action} for not registered users
+
+		\add_action( 'wp_ajax_q_ajax_comment_load', [ get_class(), 'ajax_load_comments' ] ); // wp_ajax_{action}
+		\add_action( 'wp_ajax_nopriv_q_ajax_comment_load', [ get_class(), 'ajax_load_comments' ] ); // wp_ajax_nopriv_{action}
  
+	}
+
+
+	public static function ajax_load_comments(){
+ 
+		if ( ! isset( $_POST['post_id'] ) ){
+
+			h::log( 'No post_id found' );
+
+			return die;
+
+		}
+
+		if ( 
+			! \check_ajax_referer( 'q_comment_load_ajax', 'nonce', false ) 
+		) {
+
+			h::log( 'e:>Load Nonce check failed' );
+
+			return die;
+
+		}
+
+		// maybe it isn't the best way to declare global $post variable, but it is simple and works perfectly!
+		// global $post;
+
+		$post = \get_post( $_POST['post_id'] );
+		
+		\setup_postdata( $post );
+
+		// $cpage = isset( $_POST['cpage'] ) ? $_POST['cpage'] : 1;
+		// h::log( 'e:>AJAX cpage: '.$cpage );
+
+		// load config ##
+		$config = core\config::get([ 'context' => 'module', 'task' => 'comment' ]);
+
+		// h::log( $config );
+
+		// return array ##
+		$array = [];
+
+		// add count ##
+		// $array['count'] = \get_comments_number( $post->ID );
+
+		// build get args - we work from teh current post ##
+		$get_args = [ 'post_id' => $post->ID ];
+
+		// merge args from config ##
+		if( $config['args']['get'] && is_array( $config['args']['get'] ) ){
+
+			$get_args = array_merge( $get_args, $config['args']['get'] );
+
+		}
+
+		$get_args['number'] = 1000000; // all comments ## 
+		// $get_args['offset'] = \get_site_option( 'comments_per_page' ) ?: 1; // skip one latest comment, already shown ##
+
+		// h::log( $get_args );
+
+		// filter ##
+		$get_args = \apply_filters( 'q/module/comment/ajax/get_args', $get_args );
+
+		// Gather comments for a specific page/post 
+		$get_comments = \get_comments( $get_args );
+		// $comments_query = new \WP_Comment_Query;
+		// $get_comments = $comments_query->query($get_args);
+
+		// h::log( $get_comments );
+
+		if ( 
+			\get_comments_number( $post->ID ) > 0
+			&& $get_comments
+			// || \have_comments() 
+		){ 
+
+			// build get args - we work from teh current post ##
+			$list_args = [];
+
+			// merge args from config ##
+			if( $config['args']['list'] && is_array( $config['args']['list'] ) ){
+
+				$list_args = array_merge( $get_args, $config['args']['list'] );
+
+			}
+
+			$list_args['per_page'] = '10000'; // all comments ## 
+
+			// h::log( $list_args );
+
+			// $list_args['per_page'] = \get_option( 'page_comments' ) ?: 5; 
+
+			// h::log( $list_args );
+
+			// h::log( 'e:>comments per page: '.\get_option( 'comments_per_page' ) );
+			// h::log( 'e:>total pages: '.\get_comment_pages_count( $get_comments, $list_args['per_page'] )  );
+
+			// filter ##
+			$list_args = \apply_filters( 'q/module/comment/ajax/list_args', $list_args );
+	 
+			// actually we must copy the params from wp_list_comments() used in our theme
+			\wp_list_comments( $list_args, $get_comments );
+
+		}
+
+		die; // don't forget this thing if you don't want "0" to be displayed
 
 	}
 
@@ -75,6 +183,7 @@ class comment extends \Q {
      */
     protected static function get_comment_author_avatar( $comment, $args )
     {
+
         $avatar_string = \get_avatar( $comment, $args['avatar_size'] );
         $comment_author_url = \get_comment_author_url( $comment );
 
@@ -87,11 +196,23 @@ class comment extends \Q {
             );
         };
 
-        return $avatar_string;
+		return $avatar_string;
+		
     }
 
 
-	public static function ajaxcomments(){
+	public static function ajax_post_comment(){
+
+		if ( 
+			! \check_ajax_referer( 'q_comment_post_ajax', 'nonce', false ) 
+		) {
+
+			h::log( 'e:>Post Nonce check failed' );
+
+			return die;
+
+		}
+
 		/*
 		 * Wow, this cool function appeared in WordPress 4.4.0, before that my code was muuuuch mooore longer
 		 *
@@ -109,12 +230,15 @@ class comment extends \Q {
 				\wp_die( 'Unknown error' );
 			}
 		}
+
+		// notifications ##
+		\wp_notify_postauthor( $comment->comment_ID );
 	 
 		/*
 		 * Set Cookies
 		 */
 		$user = \wp_get_current_user();
-		\do_action('set_comment_cookies', $comment, $user);
+		\do_action( 'set_comment_cookies', $comment, $user );
 	 
 		/*
 		 * If you do not like this loop, pass the comment depth from JavaScript code
@@ -204,7 +328,7 @@ class comment extends \Q {
 
                 <div class="media-body">
 
-                    <footer class="comment-meta">
+                    <footer class="comment-meta p-0">
                         <div class="comment-author vcard">
                             <?php printf( __( '%s <span class="says sr-only">says:</span>' ), sprintf( '<b class="media-heading fn">%s</b>', get_comment_author_link( $comment->comment_ID ) ) ); ?>
                         </div><!-- /.comment-author -->
@@ -237,6 +361,10 @@ class comment extends \Q {
 				'after'     => '</div>'
 			) ) );
 
+			/*
+			<a rel="nofollow" class="comment-reply-link q_comment_reply btn btn-primary text-white " href="http://q.qlocal.com/releases/export-user-data-wordpress-plugin/?replytocom=1559#respond" data-commentid="1559" data-postid="4386" data-belowelement="reply-comment-1559" data-respondelement="respond" aria-label="Reply to Ray Q">Reply</a>
+			*/
+
 			if ( self::has_children( $comment->comment_ID ) ) { 
 				
 ?>
@@ -261,10 +389,12 @@ class comment extends \Q {
 		$comment_html = ob_get_clean();
 
 		// test ##
-		h::log( $comment_html );
+		// h::log( $comment_html );
 
 		// echo ##
-		echo $comment_html;
+		// echo $comment_html;
+
+		echo json_encode([ 'success' => true, 'comment' => $comment->comment_ID, 'result' => $comment_html ]);
 
 		/*
 		$comment_html = '<div ' . \comment_class('', null, null, false ) . ' id="comment-' . \get_comment_ID() . '">
@@ -318,7 +448,9 @@ class comment extends \Q {
 	
 		// let's pass ajaxurl here, you can do it directly in JavaScript but sometimes it can cause problems, so better is PHP
 		\wp_localize_script( 'q_ajax_comment', 'q_ajax_comment_params', array(
-			'ajaxurl' => \site_url() . '/wp-admin/admin-ajax.php'
+			'ajaxurl' 		=> \site_url() . '/wp-admin/admin-ajax.php',
+			'post_nonce'	=> \wp_create_nonce( 'q_comment_post_ajax' ),
+			'load_nonce'    => \wp_create_nonce( 'q_comment_load_ajax' )
 		) );
 	
 		\wp_enqueue_script( 'q_ajax_comment' );
@@ -329,7 +461,7 @@ class comment extends \Q {
 
 	public static function comment_reply_link( $content ){
 
-		$extra_classes = 'btn btn-primary text-white';
+		$extra_classes = 'q_comment_reply btn btn-primary text-white ';
 
     	return preg_replace( '/comment-reply-link/', 'comment-reply-link ' . $extra_classes, $content);
 
@@ -476,6 +608,19 @@ class comment extends \Q {
 
 			// get comments ##
 			$array['comments'] = ob_get_clean();
+
+			// cpage - comment page, perhaps not set here ??
+			$cpage = \get_query_var('cpage') ? \get_query_var('cpage') : 1;
+			h::log( 'e:>cpage: '.$cpage );
+
+			// if( $cpage > 1 ) {
+			$array['load'] = '
+				<script>
+				var ajaxurl = \'' . \site_url('wp-admin/admin-ajax.php') . '\',
+					parent_post_id = ' . \get_the_ID() . ',
+					cpage = ' . $cpage . '
+				</script>';
+			// }
 
 			// Are there comments to navigate through?
 			if ( 
