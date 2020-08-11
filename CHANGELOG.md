@@ -1,3 +1,11 @@
+### 4.5.0 ###
+
+* Major update to all systems, break-up and re-introduction of features
+* Assets moved to theme
+* Willow render engine forked to it's own repo
+* New getters
+* Better markup control 
+
 ### 3.1.4 ###
 
 * Added Brand Bar admin controls
