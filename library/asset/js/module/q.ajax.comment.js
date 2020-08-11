@@ -28,6 +28,12 @@ jQuery(function($){
 				// basic, but contextual preloader ##
 				button.text('Loading...'); 
 
+				q_snack({
+					content:    'We are searching time and space.. just a moment :)', // msg ##
+					timeout:    2000, // never timeout ##
+					style: 		'info'
+				});
+
 			},
 
 			success : function( data ){
@@ -44,12 +50,24 @@ jQuery(function($){
 
 					button.text( 'Error! Sorry... :('); 
 
+					q_snack({
+						content:    'Sorry, something seems to have gone wrong... :(', // msg ##
+						timeout:    2000, // never timeout ##
+						style: 		'error'
+					});
+
 				}
 			},
 
 			error : function( data ){
 
 				button.text( 'Error! Sorry... :('); 
+
+				q_snack({
+					content:    'Sorry, something seems to have gone wrong... :(', // msg ##
+					timeout:    2000, // never timeout ##
+					style: 		'error'
+				});
 
 			}
 
@@ -72,7 +90,22 @@ jQuery(function($){
 	 * check if field value lenth more than 3 symbols ( for name and comment ) 
 	 */
 	validate: function () {
-		if (jQuery(this).val().length < 3) {jQuery(this).addClass('error');return false} else {jQuery(this).removeClass('error');return true}
+		if (jQuery(this).val().length < 3) {
+
+			jQuery(this).addClass('error');
+			q_snack({
+				content:    'Please add a few more precious words :)', // msg ##
+				timeout:    5000, // never timeout ##
+				style: 		'info'
+			});
+			return false
+		
+		} else {
+			
+			jQuery(this).removeClass('error');
+			return true
+		
+		}
 	},
 	/*
 	 * check if email is correct
@@ -80,11 +113,23 @@ jQuery(function($){
 	 */
 	validateEmail: function () {
 		var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/,
-		    emailToValidate = jQuery(this).val();
-		if (!emailReg.test( emailToValidate ) || emailToValidate == "") {
-			jQuery(this).addClass('error');return false
+			emailToValidate = jQuery(this).val();
+			
+		if ( !emailReg.test( emailToValidate ) || emailToValidate == "" ) {
+
+			jQuery(this).addClass('error');
+			q_snack({
+				content:    'Please check the email you entered :(', // msg ##
+				timeout:    5000, // never timeout ##
+				style: 		'error'
+			});
+			return false
+
 		} else {
-			jQuery(this).removeClass('error');return true
+
+			jQuery(this).removeClass('error');
+			return true
+
 		}
 	},
 });
@@ -175,6 +220,12 @@ jQuery(function($){
 					// what to do just after the form has been submitted
 					button.addClass('loadingform').val('Loading...');
 
+					q_snack({
+						content:    'We are digesting those thoughts.. give us a second :)', // msg ##
+						timeout:    2000, // never timeout ##
+						style: 		'info'
+					});
+
 				},
 				error: function ( request, status, error) {
 
@@ -188,12 +239,24 @@ jQuery(function($){
 						// alert( 'Error adding comment :(' );
 						button.removeClass( 'loadingform' ).addClass('disabled').val( 'Error adding comment :(' );
 
+						q_snack({
+							content:    'Sorry, something seems to have gone wrong... :(', // msg ##
+							timeout:    2000, // never timeout ##
+							style: 		'error'
+						});
+
 						return false;
 
 					} else if( request.status == 'timeout' ){
 
 						// alert( 'Error: Server didn\'t respond in time :(');
 						button.removeClass( 'loadingform' ).addClass('disabled').val( 'Server Error, loaded too slow.. :(' );
+
+						q_snack({
+							content:    'Sorry, someone is hogging all the bandwidth... :(', // msg ##
+							timeout:    2000, // never timeout ##
+							style: 		'error'
+						});
 
 						return false;
 
@@ -296,6 +359,12 @@ jQuery(function($){
 
 					// what to do after a comment has been added
 					// button.removeClass( 'loadingform' ).val( 'Post Comment' );
+
+					q_toast({
+						content:    'Success! Your comment will appear soon if we need to moderate it :)', // msg ##
+						timeout:    5000, // never timeout ##
+						style: 		'success'
+					});
 
 				}
 			});

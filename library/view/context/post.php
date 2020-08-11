@@ -46,7 +46,7 @@ return [ 'post' => [
 								Tagged: {@ {+ tags +}
 									<a href="{{ tag_permalink }}" title="See posts in {{ tag_title }}">{{ tag_title }}</a>&nbsp;
 								@}
-								Comments: <a href="{{ comment_permalink }}" title="Comments">{{ comment_title }} </a>
+								Comments: <a href="{{ comment_permalink }}" title="Comments">{{ comment_title }}</a>
 								',
 			'wrap'				=> '<div class="post-meta col-12 mb-3 bg-dark py-2 text-white">{{ template }}</div>'
 		]

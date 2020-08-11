@@ -47,7 +47,7 @@ return [ 'module' => [ 'comment' => [
 		'title_reply'			=> __( 'Add a Comment', 'q-textdomain' ),
 		'title_reply_before'   	=> '<h3 id="reply-title" class="col-12 comment-reply-title mt-3">',
 		'class_submit' 			=> 'btn btn-primary submit',
-		'comment_field' => '<p class="comment-form-comment"><label for="comment">'._x( 'Comment', 'noun' ).'</label> <textarea id="comment" name="comment" class="form-control" cols="45" rows="8" aria-required="true" required="required" oninvalid="this.setCustomValidity(\'We cannot read you mind, just yet :)\')" oninput="setCustomValidity(\'\')"></textarea></p>',
+		'comment_field' => '<p class="comment-form-comment"><label for="comment">'._x( 'Comment', 'noun' ).' *</label> <textarea id="comment" name="comment" class="form-control" cols="45" rows="8" aria-required="true" required="required" oninvalid="this.setCustomValidity(\'We cannot read you mind, just yet :)\')" oninput="setCustomValidity(\'\')"></textarea></p>',
 
 		'fields' 		=> [
 			'author' => '<p class="comment-form-author">' . '<label for="author">' . __( 'Name' ) . ( $req ? ' <span class="required">*</span>' : '' ) . '</label> ' .

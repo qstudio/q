@@ -80,7 +80,7 @@ class comment extends \Q {
 
 	public static function allowed_tags() {
 
-		define('CUSTOM_TAGS', true);
+		// define('CUSTOM_TAGS', true);
 
 		global $allowedtags;
 		
@@ -133,7 +133,7 @@ class comment extends \Q {
 
 		$allowedtags = array_merge( $allowedtags, $newTags );
 
-		h::log( $allowedtags );
+		// h::log( $allowedtags );
 
 	  }
 
@@ -402,7 +402,7 @@ class comment extends \Q {
 		}
 
 		// filter ##
-        $comment_classes = apply_filters( 'comment_walker/comment_class', $comment_classes, $comment, $depth, $args );
+        $comment_classes = apply_filters( 'comment_walker/comment_class', $comment_classes, $comment, $comment_depth, $args );
 
 		// stringify ##
         $class_str = implode(' ', $comment_classes);

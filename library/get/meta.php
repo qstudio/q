@@ -150,9 +150,9 @@ class meta extends \q\get {
 			if ( $comments_number == 0 ) {
 				$comments = __( 'Comment', self::text_domain );
 			} elseif ( $comments_number > 1 ) {
-				$comments = $comments_number.' '.__( ' Comments', self::text_domain );
+				$comments = $comments_number.' '.__( 'Comments', self::text_domain );
 			} else {
-				$comments = '1'.__( 'Comment', self::text_domain );
+				$comments = '1 '.__( 'Comment', self::text_domain );
 			}
 
 			// assign ##
