@@ -71,20 +71,17 @@ return [ 'module' => [ 'comment' => [
 			<div id="comments" class="col-12 comments-area mt-2">
 				<div class="row mt-2">
 					<h5 class="comments-title col-8">{{ title }}</h5>
-					<span class="col-4 text-right"><div class="btn btn-primary q_comment_loadmore">Load All Comments</div></span>
+					{{ load_button }}
 				</div>
 				<div class="row py-md-1 my-md-2 px-sm-0 mx-sm-0 comment-list">
 					{{ comments }}
 				</div>
 			</div>
-			<div class="col-12 mt-4 comment-reply">
-				<div class="row">
-					<div class="col-12">
-						{{ reply }}
-					</div>
-				</div>
+			<div class="col-12 mt-4 pl-0 comment-reply">
+				{{ reply }}
 			</div>
-		'
+		',
+		'load_button'	=> '<span class="col-4 text-right"><div class="btn btn-primary q_comment_loadmore">Load All Comments</div></span>'
 	]
 
 ]]];

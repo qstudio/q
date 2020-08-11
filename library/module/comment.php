@@ -57,9 +57,85 @@ class comment extends \Q {
 		// ajax load comments
 		\add_action( 'wp_ajax_q_ajax_comment_load', [ get_class(), 'ajax_load_comments' ] ); // wp_ajax_{action}
 		\add_action( 'wp_ajax_nopriv_q_ajax_comment_load', [ get_class(), 'ajax_load_comments' ] ); // wp_ajax_nopriv_{action}
+
+		// change allowed tags ##
+		\add_action( 'init', [ get_class(), 'allowed_tags' ], 11 );
+
+		// Add comment HTML tags
+		// Ref - http://codex.wordpress.org/Function_Reference/comment_form
+		\add_filter( 'comment_form_defaults', [ get_class(), 'comment_form_defaults' ] );
  
 	}
 
+
+
+	public static function comment_form_defaults( $defaults ) {
+	
+		$defaults['comment_notes_after'] = '<p class="form-allowed-tags">' . sprintf( __( 'You can use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes: %s' ), ' <code>' . \allowed_tags() . '</code>' ) . '</p>';
+		
+		return $defaults;
+	
+	}
+
+
+	public static function allowed_tags() {
+
+		define('CUSTOM_TAGS', true);
+
+		global $allowedtags;
+		
+		/*
+		$allowedtags = array(
+			'a' => array(
+				 'href' => array (),
+				 'title' => array ()),
+			'code' => array(),
+			// 'em' => array(),
+			'strong' => array(),
+			'pre' => array(),
+		);
+		*/
+
+		// remove unwanted tags
+		$unwanted = array(
+			'abbr',
+			'acronym',
+			'blockquote',
+			'cite',
+			'code',
+			'del',
+			'strike',
+			'strong',
+			's',
+			'em',
+			'i',
+			'b',
+			'q'
+		);
+
+		foreach ( $unwanted as $tag ) {
+
+			unset( $allowedtags[$tag] );
+
+		}
+	
+		// add wanted tags
+		$newTags = array(
+			'a' => array(
+				'href' => array (),
+				// 'title' => array ()
+			),
+		   'code' => array(),
+		   // 'em' => array(),
+		   'strong' => array(),
+		   'pre' => array(),
+		);
+
+		$allowedtags = array_merge( $allowedtags, $newTags );
+
+		h::log( $allowedtags );
+
+	  }
 
 
 	
@@ -552,6 +628,9 @@ class comment extends \Q {
 			// || \have_comments() 
 		){ 
 
+			// use load button ##
+			$array['load_button'] = $config['markup']['load_button'];
+
 			// title ##
 			$array['title'] = 
 				sprintf( 
@@ -584,8 +663,8 @@ class comment extends \Q {
 
 			// h::log( $list_args );
 
-			h::log( 'e:>comments per page: '.\get_option( 'comments_per_page' ) );
-			h::log( 'e:>total pages: '.\get_comment_pages_count( $get_comments, $list_args['per_page'] )  );
+			// h::log( 'e:>comments per page: '.\get_option( 'comments_per_page' ) );
+			// h::log( 'e:>total pages: '.\get_comment_pages_count( $get_comments, $list_args['per_page'] )  );
 
 			// filter ##
 			$list_args = \apply_filters( 'q/module/comment/list_args', $list_args );
@@ -626,6 +705,10 @@ class comment extends \Q {
 <?php 
 	
 		} else {
+
+			$array['title'] = __('Comments');
+
+			$array['load_button'] = false;
 
 			$array['comments'] = 
 				isset( $config['text']['default'] ) ? 

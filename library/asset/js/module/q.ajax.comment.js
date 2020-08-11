@@ -111,8 +111,14 @@ jQuery(function($, undefined){
 		comment_belowelement = $(this).data( 'belowelement' );
 		// console.log( 'comment_reply_id: '+comment_reply_id+ ' - below: '+comment_belowelement );
 
-		// carry on ##
-		// return true;
+		// locate ##
+		var target = jQuery( "#comment-" + comment_reply_id );
+		var targetOffset = ( target.offset().top )-50;
+
+		// scroll ##
+		jQuery('html,body').animate({ 
+			scrollTop: targetOffset + "px"
+		}, 500, 'swing'); 
 
 	});
 
