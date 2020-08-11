@@ -53,7 +53,7 @@ class scroll extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['scroll'] = 'Scroll Control';
+		$field['choices']['scroll'] = 'JS Scroll Control';
 
 		// make it selected ##
 		$field['default_value'][0] = 'scroll';

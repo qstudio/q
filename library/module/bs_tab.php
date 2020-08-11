@@ -97,20 +97,27 @@ if( typeof jQuery !== 'undefined' ) {
 		}
 		*/
 
-		// on load, if no tab active, make first tab-content active/show ##
-		if( ! jQuery( '.bs-tabs > .nav-item' ).hasClass('active') ){
-			// console.log( 'NO active tab...' );
-			$first = jQuery( '.bs-tabs > .nav-item' ).first().addClass('active show');
-			// console.log( $first.attr('aria-controls') )
-			jQuery( '#'+$first.attr('aria-controls') ).addClass('active show');
-		}
-
 		// read hash from page load and change tab
+		// WE NEED A TAB/PREFIX for loading ###
 		var hash = document.location.hash;
 		var prefix = "tab_";
 		if (hash) {
+
+			// console.log( 'Showing tab: '+hash );
 			jQuery('.bs-tabs a[href="'+hash.replace(prefix,"")+'"]').tab('show');
-		} 
+
+		} else {
+
+			// on load, if no tab active, make first tab-content active/show ##
+			if( ! jQuery( '.bs-tabs > .nav-link' ).hasClass('active') ){
+				// console.log( 'NO active tab...' );
+				jQuery( '.bs-tabs .nav-link' ).first().addClass('active show');
+				$first = jQuery( '.bs-tabs .nav-link' );
+				// console.log( $first.attr('aria-controls') )
+				jQuery( '#'+$first.attr('aria-controls') ).addClass('active show');
+			}
+
+		}
 
 		// allow external tab triggers ##
 		jQuery( '[data-trigger="tab"]' ).click( function( e ) {

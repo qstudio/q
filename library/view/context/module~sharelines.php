@@ -27,8 +27,8 @@ return [ 'module' => [ 'sharelines' => [
 
 			// main template ##
 			'template'		=> '
-				<li class="q-sharelines row mt-3">
-					<ul class="col-12 p-0">{@ {: data :} 
+				<li class="q-sharelines col-12 mt-3">
+					<ul class="row p-0">{@ {: data :} 
 						<li class="item" data-shareline="{{ text }}">
 							{{ icons }}
 							<span class="text"><span class="fade"></span>{{ short_text }}</span>

@@ -39,6 +39,7 @@ class module extends \Q {
 			'comment' 		=> h::get( 'module/comment.php', 'return', 'path' ),
 			'scroll' 		=> h::get( 'module/scroll.php', 'return', 'path' ),
 			'sharelines' 	=> h::get( 'module/sharelines.php', 'return', 'path' ),
+			'push' 			=> h::get( 'module/push.php', 'return', 'path' ),
 
 			// 'toggle' => h::get( 'module/toggle.php', 'return', 'path' ), // ?? needed ??
 			// 'filter' => h::get( 'ui/module/filter.php', 'return', 'path' ),
@@ -46,9 +47,7 @@ class module extends \Q {
 			// 'tab' => h::get( 'ui/module/tab.php', 'return', 'path' ),
 			// 'select' => h::get( 'ui/module/select.php', 'return', 'path' ),
 			
-			// 'push' => h::get( 'ui/module/push.php', 'return', 'path' ),
 			// 'filter' => h::get( 'ui/module/filter.php', 'return', 'path' ),
-			//
 		];
 
 

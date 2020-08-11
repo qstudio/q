@@ -604,6 +604,8 @@ class post extends \q\get {
 		// comment will be an array, so create comment_count, link ##
 		$array = render\method::extract( get\meta::comment( $args ), 'comment_', $array );
 
+		// h::log( $array );
+
 		// return
 		return get\method::prepare_return( $args, $array );
 

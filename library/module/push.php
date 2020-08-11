@@ -1,16 +1,12 @@
 <?php
 
-namespace q\controller;
+namespace q\module;
 
-use q\core\core as core;
-use q\core\helper as helper;
-use q\core\config as config;
-use q\controller\generic as generic;
-use q\controller\javascript as javascript;
-use q\controller\css as css;
+use q\core;
+use q\core\helper as h;
 
 // load it up ##
-\q\controller\push::run();
+\q\module\push::run();
 
 class push extends \Q {
     
@@ -19,13 +15,49 @@ class push extends \Q {
     public static function run()
     {
 
+		// add extra options in module select API ##
+		\add_filter( 'acf/load_field/name=q_option_module', [ get_class(), 'filter_acf_module' ], 10, 1 );
+
+		// make running dependent on module selection in Q settings ##
+		// h::log( core\option::get('tab') );
+		if ( 
+			! isset( core\option::get('module')->push )
+			|| true !== core\option::get('module')->scroll 
+		){
+
+			// h::log( 'd:>push is not enabled.' );
+
+			return false;
+
+		}
+
         // add JS to footer if debugging or single q.theme.js script if not ##
         \add_action( 'wp_footer', [ get_class(), 'wp_footer' ], 5 ); 
 
         // add css ##
         \add_action( 'wp_head', [ get_class(), 'wp_head' ], 4 ); 
 
-    }
+	}
+	
+
+	/**
+     * Add new libraries to Q Settings via API
+     * 
+     * @since 2.3.0
+     */
+    public static function filter_acf_module( $field )
+    {
+
+		// pop on a new choice ##
+		$field['choices']['push'] = 'JS Push Control';
+
+		// make it selected ##
+		$field['default_value'][0] = 'push';
+
+		// kick back ##
+		return $field;
+
+	}
 
 
     /**
@@ -54,7 +86,7 @@ class push extends \Q {
         }
 
         // compile markup ##
-        $markup = str_replace( '%target%', $args['target'], $args['markup'] );
+        $markup = str_replace( '{{ target }}', $args['target'], $args['markup'] );
 
         // echo ##
         echo $markup;
@@ -69,7 +101,7 @@ class push extends \Q {
     public static function wp_footer()
     {
 
-        javascript::ob_get([
+        \q\asset\javascript::ob_get([
             'view'      => get_class(), 
             'method'    => 'javascript',
             // 'priority'  => 50,
@@ -200,7 +232,7 @@ if ( typeof jQuery !== 'undefined' ) {
     public static function wp_head()
     {
 
-        css::ob_get([
+        \q\asset\css::ob_get([
             'view'      => get_class(), 
             'method'    => 'css',
             // 'priority'  => 40,
