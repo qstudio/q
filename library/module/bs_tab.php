@@ -128,7 +128,7 @@ if( typeof jQuery !== 'undefined' ) {
 				// console.log( 'NO active tab...' );
 				jQuery( '.bs-tabs .nav-link' ).first().addClass('active show');
 				$first = jQuery( '.bs-tabs .nav-link' );
-				// console.log( $first.attr('aria-controls') )
+				// // console.log( $first.attr('aria-controls') )
 				jQuery( '#'+$first.attr('aria-controls') ).addClass('active show');
 			}
 
@@ -145,6 +145,7 @@ if( typeof jQuery !== 'undefined' ) {
 		// update hash value when bs4 tabs are used ##
 		jQuery('.bs-tabs a').click(function (e) {
 			window.location.hash = this.hash;
+			jQuery( '.bs-tabs .nav-link' ).removeClass('active show');
 		});
 
 	});
