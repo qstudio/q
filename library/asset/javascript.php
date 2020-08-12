@@ -147,7 +147,7 @@ $return =
 
         if ( ! $data ) {
             
-            h::log( 'e:>'.$args["handle"].' returned bad data to JS collector.' );
+            h::log( 'e:>'.$args["view"].'::'.$args['method'].' returned bad data to JS collector.' );
 
             return false;
 

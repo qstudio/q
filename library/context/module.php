@@ -38,6 +38,16 @@ class module {
 	
 
 	/**
+    * lightbox @@TODO - look for gallery images, if found, return gallery markup
+    */
+    public static function lightbox( $args = null ){
+
+		return \q\module\bs_lightbox::get( $args );
+
+	}
+
+
+	/**
     * Sharelines
     */
     public static function sharelines( $args = null ){
@@ -47,7 +57,6 @@ class module {
 	}
 
 
-	// @todo - instagram ##
 
 
 }

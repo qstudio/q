@@ -45,12 +45,15 @@ class sharelines extends \Q {
 		\add_action( 'acf/init', function() { \q\plugin\acf::add_field_groups( self::add_field_groups() ); }, 1 );
 
 		// add js to footer ##
+		/*
 		\add_action( 'wp_footer', function(){
 			\q\asset\javascript::ob_get([
 				'view'      => get_class(), 
 				'method'    => 'javascript',
 			]);
 		}, 3 );
+		*/
+		\add_action( 'wp_footer', [ get_class(), 'javascript' ], 1000, 0 );
 
 	}
 
