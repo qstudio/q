@@ -235,7 +235,7 @@ class render extends extension\search {
 		// $position = $filter_position == 'vertical' ? 'vertical' : 'horizontal' ;
 
 ?>
-		<form id="q-search-form" class="ajax-filters col-12">
+		<form id="q-search-form" class="ajax-filters col-12 p-0">
 			<div class="row">
 <?php
 
