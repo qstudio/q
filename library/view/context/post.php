@@ -15,58 +15,113 @@ return [ 'post' => [
 
 	// post_title ##
 	'title'  				=> [
-		'markup' 				=> '<h1 class="pb-2 col-12 the-title">{{ title }}</h1>',
-	],
-
-	// post_parent ##
-	'parent'  				=> [
-		'markup' 				=> '<h4 class="pb-1 col-12 the-parent"><a href="{{ permalink }}" title="Open {{ title }}">{{ title }}</a></h4>',
+		'markup' 				=> '<h1 class="pb-2 the-title">{{ title }}</h1>',
 	],
 
 	// post_excerpt ##
 	'excerpt'				=> [
-		'markup'  				=> '<div class="px-3 py-4 pt-1 col-12 mt-0 mb-3 the-excerpt text-white bg-dark blockquote">{{ content }}</div>',
+		'markup'  				=> '<div class="px-3 py-4 pt-1 mt-0 mb-3 the-excerpt text-white bg-dark blockquote">{{ content }}</div>',
 		'limit' 				=> 300, // default excerpt length ##
 	],
 
 	// post_content ##
 	'content'  			=> [
-		'markup'                => '<div class="pb-1 col-12 the-content">{{ content }}</div>',
+		'markup'                => '<div class="pb-1 the-content">{{ content }}</div>',
 	],
 
+	/*
 	// post_meta
-	// Tag: <a href="{{ tag_permalink }}" title="See posts in {{ tag_title }}">{{ tag_title }}</a>
-	// by <a href="{{ author_permalink }}" title="See posts by {{ author_title }}">{{ author_title }}</a>
 	'data' 				=> [
-		// 'type' 					=> 'single',
 		'markup'				=> [
 			'template'			=> '
 								Posted {{ post_date_human }} ago 
+								by <a href="{{ author_permalink }}" title="See posts by {{ author_title }}">{{ author_title }}</a>
 								in <a href="{{ category_permalink }}" title="See posts in {{ category_title }}">{{ category_title }}</a>,
 								tagged: {@ {: tags :}
 									<a href="{{ tag_permalink }}" title="See posts in {{ tag_title }}">{{ tag_title }}</a>&nbsp;
 								@}
 								<a href="{{ comment_permalink }}" title="Comments" class="btn btn-primary">{{ comment_title }}</a>
 								',
-			'wrap'				=> '<div class="post-meta col-12 mb-0 py-2 border-top border-bottom border-color-dark">{{ template }}</div>'
+			'wrap'				=> '<div class="post-meta-data col-12">{{ template }}</div>'
+		]
+	],
+
+	// post author ##
+	'author' 				=> [
+		'markup'				=> [
+			'template'			=> '
+								Posted {{ post_date_human }} ago 
+									by <a href="{{ author_permalink }}" title="See posts by {{ author_title }}">{{ author_title }}</a>
+								</div>
+								',
+		]
+	],
+
+	// post date in human format - @ since ##
+	'date_human' 			=> [
+		'markup'				=> [
+			'template'			=> '
+								<span class="post-meta-date-human">
+									Posted {{ post_date_human }} ago 
+								</span>
+								',
+		]
+	],
+
+	// post date in passed format - etc yyyy/mm/dd ##
+	'date' 			=> [
+		'markup'				=> [
+			'template'			=> '
+								<span class="post-meta-date">
+									Posted {{ post_date }} 
+								</span>
+								',
+		]
+	],
+
+	'category' 			=> [
+		'markup'				=> [
+			'template'			=> '
+								<span class="post-meta-category">
+									<a href="{{ category_permalink }}" title="See posts in {{ category_title }}">{{ category_title }}</a>,
+								</span>
+								',
+		]
+	],
+
+	'tag' 				=> [
+		'markup'				=> [
+			'template'			=> '
+								<span class="post-meta-tag">
+									<a class="btn btn-primary" href="{{ tag_permalink }}" title="See posts in {{ tag_title }}">{{ tag_title }}</a>
+								</span>
+								',
+		]
+	],
+
+	'tags' 				=> [
+		'markup'				=> [
+			'template'			=> '
+								<span class="post-meta-tags">
+									{@ {: tags :}
+										<a class="btn btn-primary" href="{{ tag_permalink }}" title="See posts in {{ tag_title }}">{{ tag_title }}</a>&nbsp;
+									@}
+								</span>
+								',
 		]
 	],
 
 	// post_comments
 	'comment' 				=> [
-		// 'markup'				=> [
-		// 	'template'			=> '
-		// 						Posted {{ post_date_human }} ago 
-		// 						by <a href="{{ author_permalink }}" title="See posts by {{ author_title }}">{{ author_title }}</a>
-		// 						in <a href="{{ category_permalink }}" title="See posts in {{ category_title }}">{{ category_title }}</a>
-		// 						Tagged: {{# tags }}
-		// 							<a href="{{ tag_permalink }}" title="See posts in {{ tag_title }}">{{ tag_title }}</a>&nbsp;
-		// 						{{/#}}
-		// 						Comments: <a href="{{ comment_permalink }}" title="Comments">{{ comment_title }} </a>
-		// 						',
-		// 	'wrap'				=> '<div class="post-meta col-12 mb-3">{{ content }}</div>'
-		// ]
+		'markup'				=> [
+			'template'			=> '
+								<span class="post-meta-comment">
+									<a class="btn btn-primary" href="{{ comment_permalink }}" title="{{ comment_title }}">{{ comment_count }}</a>
+								</span>
+								',
+		]
 	],
+	*/
 
 	// get_posts() ##
 	'query'  => [

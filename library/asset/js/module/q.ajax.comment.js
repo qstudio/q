@@ -9,7 +9,7 @@ jQuery(function($){
 	// load more button click event
 	$('.q_comment_loadmore').click( function(){
 
-		var button = $(this);
+		var button = $('.q_comment_loadmore_hide');
  
 		// decrease the current comment page value
 		// cpage--;
@@ -73,7 +73,10 @@ jQuery(function($){
 
 		});
 
-		return false;
+		// remove button ##
+		button.remove();
+
+		return true;
 
 	});
  

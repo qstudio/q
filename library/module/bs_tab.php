@@ -101,12 +101,27 @@ if( typeof jQuery !== 'undefined' ) {
 		// WE NEED A TAB/PREFIX for loading ###
 		var hash = document.location.hash;
 		var prefix = "tab_";
+		// var tab_to_load = false;
+		var tab_loaded = false;
 		if (hash) {
 
-			// console.log( 'Showing tab: '+hash );
-			jQuery('.bs-tabs a[href="'+hash.replace(prefix,"")+'"]').tab('show');
+			if ( jQuery('.bs-tabs a[href="'+hash.replace(prefix,"")+'"]').length ){
+				
+				q_tab = jQuery('.bs-tabs a[href="'+hash.replace(prefix,"")+'"]');
 
-		} else {
+				// console.log( q_tab );
+				
+				tab_loaded = true;
+
+				q_tab.tab('show')
+
+			}
+
+		} 
+
+		if( false === tab_loaded ) {
+
+			// console.log( 'tab_loaded == false' );
 
 			// on load, if no tab active, make first tab-content active/show ##
 			if( ! jQuery( '.bs-tabs > .nav-link' ).hasClass('active') ){

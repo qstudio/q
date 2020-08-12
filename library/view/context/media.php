@@ -73,7 +73,11 @@ return [ 'media' => [
 
 	// post_thumbnail -- ready for lazy loading ##
 	'thumbnail' 					=> [
-		'markup' 					=> '<img class="col-12 fill lazy mt-2 mb-2" src="" data-src="{{ src }}" srcset="{{ src_srcset }}" sizes="{{ src_sizes }}" alt="{{ src_alt }}" data-src-caption="{{ src_caption }}" data-src-title="{{ src_title }}" data-src-content="{{ src_description }}" />',
+		'markup' 					=> '
+									<div class="row my-2 mb-3">
+										<img class="col-12 m-0 p-0 px-sm-3 fill lazy" src="" data-src="{{ src }}" srcset="{{ src_srcset }}" sizes="{{ src_sizes }}" alt="{{ src_alt }}" data-src-caption="{{ src_caption }}" data-src-title="{{ src_title }}" data-src-content="{{ src_description }}" />
+									</div>
+									',
 		'config' 					=> [ 
 			'meta'					=> true, // add meta data ##
 			'srcset'				=> true, // add srcset data #,
@@ -83,7 +87,7 @@ return [ 'media' => [
 
 	// @todo ##
 	'avatar' => [
-		'markup' => '<div class="col-12"><img class="avatar" src="{{ src }}"/></div>'
+		'markup' => '<div class=""><img class="avatar" src="{{ src }}"/></div>'
 	],
 
 ]];

@@ -70,7 +70,7 @@ return [ 'module' => [ 'comment' => [
 			<span class="anchor" data-scroll-slug="comments"></span>
 			<div id="comments" class="col-12 comments-area mt-2">
 				<div class="row mt-2">
-					<h5 class="comments-title col-8">{{ title }}</h5>
+					<h5 class="comments-title col-12 col-sm-8">{{ title }}</h5>
 					{{ load_button }}
 				</div>
 				<div class="row py-md-1 my-md-2 px-sm-0 mx-sm-0 comment-list">
@@ -81,7 +81,7 @@ return [ 'module' => [ 'comment' => [
 				{{ reply }}
 			</div>
 		',
-		'load_button'	=> '<span class="col-4 text-right"><div class="btn btn-primary q_comment_loadmore">Load All Comments</div></span>'
+		'load_button'	=> '<span class="col-12 col-sm-4 text-right"><div class="btn btn-primary q_comment_loadmore q_comment_loadmore_hide">Load All Comments</div></span>'
 	]
 
 ]]];

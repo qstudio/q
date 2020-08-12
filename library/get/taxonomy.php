@@ -15,6 +15,8 @@ use q\theme;
 
 class taxonomy extends \q\get {
 
+
+	
 	/**
 	 * We need a generic get_taxonomy_terms method.. which distributes, based on post type and any passed tax / term ## 
 	 */
