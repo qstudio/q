@@ -33,7 +33,7 @@ class module extends \Q {
 			'bs_tab' 		=> h::get( 'module/bs_tab.php', 'return', 'path' ),
 			'bs_form' 		=> h::get( 'module/bs_form.php', 'return', 'path' ),
 			'bs_toggle' 	=> h::get( 'module/bs_toggle.php', 'return', 'path' ),
-			'bs_lightbox' 	=> h::get( 'module/bs_lightbox.php', 'return', 'path' ),
+			'bs_gallery' 	=> h::get( 'module/bs_gallery.php', 'return', 'path' ),
 			'no_emoji' 		=> h::get( 'module/no_emoji.php', 'return', 'path' ),
 			'grunt' 		=> h::get( 'module/grunt.php', 'return', 'path' ),
 			'load' 			=> h::get( 'module/load.php', 'return', 'path' ),

@@ -79,6 +79,112 @@ class media extends \Q {
 		// return ##
 		return get\method::prepare_return( $args, $array );
 
+	}
+	
+
+
+	/**
+     * Check for a return post thumbnail images and exif-data baed on passed settings ##
+     *
+     */
+    public static function gallery( $args = null )
+    {
+
+		// h::log( $args );
+
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+		){
+
+			h::log( 'e:>Error in passed args' );
+
+			return false;
+
+		}
+
+		// to make this more generic, we will get the current wp_post, if this is not passed ##
+		if (
+			! isset( $args['post'] )
+		){
+
+			$args['post'] = get\post::object();
+
+		}
+
+        // test incoming args ##
+        // h::log( $args );
+
+		// check for post thumbnail ##
+        if ( 
+			! \get_field( 'media_gallery', $args['post']->ID ) 
+			|| ! is_array( \get_field( 'media_gallery', $args['post']->ID ) )
+		) { 
+			
+			h::log( 'd:>Post does not have gallery images' );
+
+			return false; 
+		
+		}
+
+		$get_field = \get_field( 'media_gallery', $args['post']->ID );
+		// h::log( $get_field );
+
+		// gallery returns an array of IDs, so let's loop over each getting src_large and src_small from passed handles
+		$return = []; // new array ##
+		$count = 0;
+
+		foreach( $get_field as $key => $value ){
+
+			if ( 
+				$small = self::src([ 
+					'handle' 		=> isset( $args['config']['handle']['small'] ) ? $args['config']['handle']['small'] : false,
+					'attachment_id'	=> $value,
+					'post'			=> $args['post']
+				]) 
+			){
+
+				$return[$count]['small'] = $small['src'];
+				$return[$count]['small_width'] = $small['src_width'];
+				$return[$count]['small_height'] = $small['src_height'];
+				$return[$count]['small_alt'] = $small['src_alt'];
+				// $return[$count]['small_alt'] = $small['src_alt']; // srcset @todo ##
+				// $return[$count]['small_alt'] = $small['src_alt']; // meta @todo ##
+
+			}
+
+			if ( 
+				$large = self::src([ 
+					'handle' 		=> isset( $args['config']['handle']['large'] ) ? $args['config']['handle']['large'] : false,
+					'attachment_id'	=> $value,
+					'post'			=> $args['post']
+				]) 
+			){
+
+				$return[$count]['large'] = $large['src'];
+				$return[$count]['large_width'] = $large['src_width'];
+				$return[$count]['large_height'] = $large['src_height'];
+				$return[$count]['large_alt'] = $large['src_alt'];
+				// $return[$count]['small_alt'] = $large['src_alt']; // srcset @todo ##
+				// $return[$count]['small_alt'] = $large['src_alt']; // meta @todo ##
+
+			}
+
+			// iterate ##
+			$count ++;
+
+		}
+
+        // if we do not have a src, perhaps we should stop?? ##
+		// if ( ! $array['src'] ) { return false; }
+		
+		// test ##
+		// h::log( $return );
+
+		// return ##
+		return get\method::prepare_return( $args, [ 'gallery' => $return ] );
+
     }
 
 
@@ -127,7 +233,7 @@ class media extends \Q {
 		// filterable default ##
 		} else {
 
-			$args['handle'] = \apply_filters( 'q/willow/render/type/src/handle', 'medium' );
+			$args['handle'] = \apply_filters( 'q/get/media/src/handle', 'medium' );
 
 		}
 
