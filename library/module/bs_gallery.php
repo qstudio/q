@@ -27,7 +27,7 @@ class bs_gallery extends \Q {
 			|| true !== core\option::get('module')->bs_gallery 
 		){
 
-			h::log( 'd:>Gallery is not enabled.' );
+			// h::log( 'd:>Gallery is not enabled.' );
 
 			return false;
 
