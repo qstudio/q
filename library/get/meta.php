@@ -60,7 +60,7 @@ class meta extends \q\get {
 
 			// $args->ID = $the_post->post_parent;
 			if ( 
-				! $terms = self::object_terms([ 
+				! $terms = get\post::object_terms([ 
 					'config' 		=> [ 
 						'post'		=> $args['config']['post']
 					],
