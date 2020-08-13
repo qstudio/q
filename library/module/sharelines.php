@@ -274,7 +274,7 @@ class sharelines extends \Q {
         // values ##
         // $config['title'] = \apply_filters( 'q/module/sharelines/title', \__( 'Share', 'q-textdomain' ) );
 
-        $config['facebook'] = \apply_filters( 'q/module/sharelines/facebook', '137150683665520' );
+        $config['facebook'] = \apply_filters( 'q/module/sharelines/facebook', '1055454871138781' );
 
         // check ##
         #h::log( $config );
