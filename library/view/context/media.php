@@ -97,15 +97,15 @@ return [ 'media' => [
 			// main template ##
 			'template'		=> '
 								{@ {: gallery :}
-								<a href="{{ large }}" data-toggle="lightbox" data-gallery="media-gallery" class="col-sm-4 p-0">
-									<img src="{{ small }}" class="img-fluid p-1 fill">
+								<a href="{{ large }}" data-toggle="lightbox" data-gallery="media-gallery" class="col-4">
+									<img src="{{ small }}" class="img-fluid fill p-2">
 								</a>
 								@}
 								',
 
-			'wrap'			=> '<div class="row justify-content-center">
-									<div class="col-12 my-3 mx-2">
-										<div class="row">
+			'wrap'			=> '<div class="row justify-content-center my-4">
+									<div class="col-12">
+										<div class="row no-gutters">
 											{{ template }}
 										</div>
 									</div>
