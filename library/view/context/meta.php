@@ -15,7 +15,7 @@ return [ 'meta' => [
 
 	// parent ##
 	'parent'  				=> [
-		'markup' 				=> '<h4 class="pb-1 col-12 the-parent"><a href="{{ permalink }}" title="Open {{ title }}">{{ title }}</a></h4>',
+		'markup' 				=> '<h4 class="pb-1 the-parent"><a href="{{ permalink }}" title="Open {{ title }}">{{ title }}</a></h4>',
 	],
 
 	// post_meta
