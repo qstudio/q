@@ -30,20 +30,10 @@ class option extends \Q {
     public static function filter_acf_extension( $field )
     {
 
-        // h::log( $field['choices'] );
-        // h::log( $field['default_value'] );
-
 		// pop on a new choice ##
 		$field['choices']['nprogress'] = 'Progress Bar';
-		// $field['choices']['banner'] = '@todo - News Banner';
 
-		// make it selected ##
-		// $field['default_value'][0] = 'device';
-		
-        // h::log( $field['choices'] );
-        // h::log( $field['default_value'] );
-
-         return $field;
+		return $field;
 
 	}
 	

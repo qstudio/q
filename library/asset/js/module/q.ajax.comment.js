@@ -11,9 +11,6 @@ jQuery(function($){
 
 		var button = $('.q_comment_loadmore_hide');
  
-		// decrease the current comment page value
-		// cpage--;
- 
 		$.ajax({
 			url : ajaxurl, // AJAX handler, declared before
 			data : {
@@ -43,20 +40,21 @@ jQuery(function($){
 					$('div.comment-list').empty(); // remove all comments loaded ##
 					$('div.comment-list').append( data );
 					
-					// remove button ##
-					button.remove();
-
 				} else {
 
-					button.text( 'Error! Sorry... :('); 
+					// button.text( 'Error! Sorry... :('); 
 
 					q_snack({
-						content:    'Sorry, something seems to have gone wrong... :(', // msg ##
+						content:    'There are no comments, yet... :)', // msg ##
 						timeout:    2000, // never timeout ##
-						style: 		'error'
+						style: 		'info'
 					});
 
 				}
+
+				// remove button ##
+				button.remove();
+
 			},
 
 			error : function( data ){
