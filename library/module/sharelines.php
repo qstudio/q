@@ -648,8 +648,8 @@ class sharelines extends \Q {
         $fb_name = \get_the_title( $post->ID );
         $fb_link = \get_permalink( $post->ID );
         $fb_caption = \get_post_meta( \get_post_thumbnail_id( $post->ID ), '_wp_attachment_image_alt', true );
-        $fb_pictures = \wp_get_attachment_image_src( \get_post_thumbnail_id( $post->ID ), 'thumbnail' ); // get post image ##
-        #pr( $fb_pictures );
+        $fb_pictures = \wp_get_attachment_image_src( \get_post_thumbnail_id( $post->ID ), 'medium' ); // get post image ##
+        #h::log( $fb_pictures );
         $fb_picture = $fb_pictures[0];
 		
 		// ob_start();

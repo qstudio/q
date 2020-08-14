@@ -77,7 +77,7 @@ return [ 'module' => [ 'comment' => [
 					{{ comments }}
 				</div>
 			</div>
-			<div class="col-12 mt-4 pl-0 comment-reply">
+			<div class="col-12 mt-4 p-0 comment-reply">
 				{{ reply }}
 			</div>
 		',

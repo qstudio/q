@@ -20,7 +20,7 @@ return [ 'post' => [
 
 	// post_excerpt ##
 	'excerpt'				=> [
-		'markup'  				=> '<div class="px-3 py-4 pt-1 mt-0 mb-3 the-excerpt text-white bg-dark blockquote">{{ content }}</div>',
+		'markup'  				=> '<div class="px-3 py-4 pt-1 mt-0 mb-3 the-excerpt lead">{{ content }}</div>',
 		'limit' 				=> 300, // default excerpt length ##
 	],
 
