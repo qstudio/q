@@ -1,3 +1,7 @@
+### 4.6.1 ###
+
+* Theme Logic Update
+
 ### 4.6.0 ###
 
 * Versioning Release
