@@ -168,7 +168,7 @@ class method extends \Q {
 
 
 	/**
-    * Sanitizes a php function name
+    * Sanitizes a php namespace
     *
     * @since 1.3.0
     * @param string $key String key

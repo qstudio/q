@@ -13,7 +13,7 @@ class is {
 
 
     /**
-     * Get Q template name, if set - else return
+     * Get Q template name, if set - else return WP global
      * 
      * 
      */

@@ -3,17 +3,14 @@
 namespace q\context;
 
 use q\core\helper as h;
-// use q\ui;
-// use q\get;
 use q\willow;
-// use q\willow\context;
-// use q\willow\render; 
-use q\module as modules;
+use q\get;
+// use q\module as modules;
 
 // register class to willow ##
-\q\context\module::__run();
+\q\context\navigation::__run();
 
-class module {
+class navigation {
 
 	public static function __run( $args = null ) {
 
@@ -38,40 +35,50 @@ class module {
 	
 
 	/**
-    * lightbox @@TODO - look for gallery images, if found, return gallery markup
+    * Render nav menu
+    *
+    * @since       4.1.0
     */
-    public static function lightbox( $args = null ){
+    public static function menu( $args = null ){
 
-		return \q\module\bs_lightbox::get( $args );
+		return [ 'menu' => get\navigation::menu( $args ) ];
 
 	}
-
+	
 
 	/**
-    * Sharelines
+    * Render pagination
+    *
+    * @since       4.1.0
     */
-    public static function sharelines( $args = null ){
+    public static function pagination( $args = null ){
 
-		return \q\module\sharelines::get( $args );
+		return [ 'pagination' => get\navigation::pagination( $args ) ];
 
 	}
-
+	
 
 	/**
-     * comment_template
-     *
-	 * @todo 		allow for passing markup
-     * @since       1.0.2
-     * @return      string   HTML
-     */
-    public static function comment( $args = null )
-    {
+    * Render siblings
+    *
+    * @since       4.1.0
+    */
+    public static function siblings( $args = null ){
 
-		return \q\module\comment::get( $args );
+		return [ 'siblings' => get\navigation::siblings( $args ) ];
 
 	}
+	
 
+	/**
+    * Render back_home_next
+    *
+    * @since       4.1.0
+    */
+    public static function relative( $args = null ){
 
+		return [ 'relative'	=> get\navigation::relative( $args ) ];
 
+    }
 
 }

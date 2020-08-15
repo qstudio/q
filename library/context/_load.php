@@ -30,9 +30,10 @@ class context extends \Q {
 
 		return $array = [
 
-			// 'post' => h::get( 'render/post.php', 'return', 'path' ),
+			'post' => h::get( 'context/post.php', 'return', 'path' ),
+			'ui' => h::get( 'context/ui.php', 'return', 'path' ),
 			'module' => h::get( 'context/module.php', 'return', 'path' ),
-			// 'widget' => h::get( 'context/widget.php', 'return', 'path' )
+			'navigation' => h::get( 'context/navigation.php', 'return', 'path' )
 
 		];
 
