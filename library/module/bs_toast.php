@@ -98,12 +98,14 @@ class bs_toast extends \Q {
     const TOAST_CONTAINER_HTML = `<div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>`;
 
     $.toastDefaults = {
-        position: 'bottom-right',
+        position: 'middle-right',
         dismissible: true,
         stackable: true,
         pauseDelayOnHover: true,
         style: {
-            toast: '',
+			toast: '',
+			dark: '',
+			primary: '',
             info: '',
             success: '',
             warning: '',
@@ -120,7 +122,7 @@ class bs_toast extends \Q {
     function render(opts) {
         /** No container, create our own **/
         if (!$('#toast-container').length) {
-            const position = ['top-right', 'top-left', 'top-center', 'bottom-right', 'bottom-left', 'bottom-center'].includes($.toastDefaults.position) ? $.toastDefaults.position : 'top-right';
+            const position = ['top-right', 'top-left', 'top-center', 'middle-right', 'bottom-right', 'bottom-left', 'bottom-center'].includes($.toastDefaults.position) ? $.toastDefaults.position : 'middle-right';
 
             $('body').prepend(TOAST_CONTAINER_HTML);
             $('#toast-container').addClass(position);
@@ -153,6 +155,16 @@ class bs_toast extends \Q {
         }
 
         switch (type) {
+			case 'dark':
+                classes.header.bg = $.toastDefaults.style.dark || 'bg-dark';
+                classes.header.fg = $.toastDefaults.style.dark || 'text-white';
+				break;
+
+			case 'primary':
+                classes.header.bg = $.toastDefaults.style.primary || 'bg-primary';
+                classes.header.fg = $.toastDefaults.style.primary || 'text-white';
+				break;
+				
             case 'info':
                 classes.header.bg = $.toastDefaults.style.info || 'bg-info';
                 classes.header.fg = $.toastDefaults.style.info || 'text-white';
@@ -160,7 +172,7 @@ class bs_toast extends \Q {
 
             case 'success':
                 classes.header.bg = $.toastDefaults.style.success || 'bg-success';
-                classes.header.fg = $.toastDefaults.style.info || 'text-white';
+                classes.header.fg = $.toastDefaults.style.success || 'text-white';
                 break;
 
             case 'warning':
@@ -180,7 +192,7 @@ class bs_toast extends \Q {
         }
 
         html = `<div id="${id}" class="toast ${globalToastStyles}" role="alert" aria-live="assertive" aria-atomic="true" ${delayOrAutohide} ${hideAfter}>`;
-        html += `<div class="toast-header ${classes.header.bg} ${classes.header.fg}">`;
+        html += `<div class="p-4 toast-header ${classes.header.bg} ${classes.header.fg}">`;
 
         if (img) {
             html += `<img src="${img.src}" class="mr-2 ${img.class || ''}" alt="${img.alt || 'Image'}">`;
@@ -293,7 +305,7 @@ function q_snack( options ){
 	// global config ##
 	defaults = { 
 		'content'		: false,
-		'style' 		: 'info',
+		'style' 		: 'primary',
 		'timeout'		: 5000,
 		'position'		: 'bottom-right',
 		'dismissible'	: true,
@@ -406,6 +418,13 @@ function q_toast( options ){
 
 .top-right {
     top: 0;
+    right: 0;
+}
+
+.middle-right {
+	transform: translatey(-50%);
+	top: 50%;
+	bottom: 50%;
     right: 0;
 }
 

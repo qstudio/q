@@ -7,13 +7,14 @@ use q\render;
 use q\core\helper as h;
 
 // run ##
-core\log::run();
+\q\core\log::__run();
 
 class log extends \Q {
 
 	// track who called what ##
 	public static 
-		$file				= \WP_CONTENT_DIR."/q.debug.log",
+		$file				= \WP_CONTENT_DIR."/q.log",
+		$file_wp			= \WP_CONTENT_DIR."/debug.log",
 		$empty 				= false, // track emptied ##
 		$backtrace 			= false,
 		$backtrace_key 		= false,
@@ -36,7 +37,7 @@ class log extends \Q {
 	;
 
 
-	public static function run(){
+	public static function __run(){
 
 		// filter pre-defined actions ##
 		$on_run 			= \apply_filters( 'q/core/log/on_run', self::$on_run );
@@ -715,12 +716,27 @@ class log extends \Q {
 	 * 
 	 * @since 4.1.0
 	 */ 
-	public static function error_log( $log )
+	public static function error_log( $log = null, $file = null )
 	{
+		
+		// sanity ##
+		if(  
+			is_null( $log )
+		){
+
+			return false;
+			// self::error_log( 'EMPTY...' );
+
+		} else {
+
+			// var_dump( $log );
+
+		}
 		
 		// $displayErrors 	= ini_get( 'display_errors' );
 		$log_errors     = ini_get( 'log_errors' );
 		$error_log      = ini_get( 'error_log' );
+		$file 			= ! is_null( $file ) ? $file : self::$file ;
 
 		// if( $displayErrors ) echo $errStr.PHP_EOL;
 
@@ -736,7 +752,7 @@ class log extends \Q {
 				// $errLine 
 			);
 			// file_put_contents( $error_log, $message.PHP_EOL, FILE_APPEND );
-			file_put_contents( self::$file, $message.PHP_EOL, FILE_APPEND );
+			file_put_contents( $file, $message.PHP_EOL, FILE_APPEND );
 		}
 
 		// ok ##
@@ -805,7 +821,7 @@ class log extends \Q {
 			|| \wp_doing_ajax()
 		){ 
 		
-			core\helper::hard_log( 'd:>Attempt to empty log from admin blocked' );
+			// core\helper::hard_log( 'd:>Attempt to empty log from admin blocked' );
 
 			return false; 
 		
@@ -814,8 +830,23 @@ class log extends \Q {
 		// empty once -- commented out.. ##
 		if( self::$empty ) { return false; }
 
-		// $f = @fopen( WP_CONTENT_DIR."/debug.log", "r+" );
+		// empty dedicated log file ##
 		$f = @fopen( self::$file, "r+" );
+		if ( $f !== false ) {
+			
+			ftruncate($f, 0);
+			fclose($f);
+
+			// log to log ##
+			// core\helper::hard_log( 'Log Emptied: '.date('l jS \of F Y h:i:s A') );
+
+			// track ##
+			self::$empty == true;
+
+		}
+
+		// empty WP log also ##
+		$f = @fopen( self::$file_wp, "r+" );
 		if ( $f !== false ) {
 			
 			ftruncate($f, 0);

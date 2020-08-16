@@ -27,8 +27,8 @@ jQuery(function($){
 
 				q_snack({
 					content:    'We are searching time and space.. just a moment :)', // msg ##
-					timeout:    2000, // never timeout ##
-					style: 		'info'
+					timeout:    3000, // never timeout ##
+					style: 		'dark'
 				});
 
 			},
@@ -46,8 +46,8 @@ jQuery(function($){
 
 					q_snack({
 						content:    'There are no comments, yet... :)', // msg ##
-						timeout:    2000, // never timeout ##
-						style: 		'info'
+						timeout:    3000, // never timeout ##
+						style: 		'dark'
 					});
 
 				}
@@ -63,7 +63,7 @@ jQuery(function($){
 
 				q_snack({
 					content:    'Sorry, something seems to have gone wrong... :(', // msg ##
-					timeout:    2000, // never timeout ##
+					timeout:    3000, // never timeout ##
 					style: 		'error'
 				});
 
@@ -361,10 +361,10 @@ jQuery(function($){
 					// what to do after a comment has been added
 					// button.removeClass( 'loadingform' ).val( 'Post Comment' );
 
-					q_toast({
+					q_snack({
 						content:    'Success! Your comment will appear soon if we need to moderate it :)', // msg ##
-						timeout:    5000, // never timeout ##
-						style: 		'success'
+						timeout:    3000, // never timeout ##
+						style: 		'dark'
 					});
 
 				}

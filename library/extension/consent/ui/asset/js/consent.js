@@ -28,10 +28,10 @@ if ( typeof jQuery !== 'undefined' ) {
 
         $( document.body ).on( "click", ".toggle.disabled", function(e){
 			// console.log( 'Clicked DISABLED consent input' );
-			q_toast({
+			q_snack({
 				content:    q_consent.disabled, // msg ##
-				timeout:    5000, // 5 ##
-				style: 		'info'
+				timeout:    3000, // 5 ##
+				style: 		'dark'
 			});
 
 			return false;
@@ -90,10 +90,10 @@ if ( typeof jQuery !== 'undefined' ) {
 
 					if ( '200' == response.status ) {
 
-						q_toast({
+						q_snack({
 							content:    response.message, // msg ##
-							timeout:    5000, // never timeout ##
-							style: 		'success'
+							timeout:    3000, // never timeout ##
+							style: 		'dark'
 						});
 
 						if ( typeof NProgress !== 'undefined' ) { NProgress.done(); }
@@ -105,9 +105,9 @@ if ( typeof jQuery !== 'undefined' ) {
 
 						if ( typeof NProgress !== 'undefined' ) { NProgress.done(); }
 
-						q_toast({
+						q_snack({
 							content:    response.message, // msg ##
-							timeout:    5000, // never timeout ##
+							timeout:    3000, // never timeout ##
 							style: 		'error'
 						});
 
@@ -154,19 +154,19 @@ if ( typeof jQuery !== 'undefined' ) {
 						// set inputs to default ##
 					    self.closest('#q_modal').find('.settings input[type=checkbox]').attr('checked', 'checked');
 
-						q_toast({
+						q_snack({
 							content:    response.message, // msg ##
-							timeout:    5000, // never timeout ##
-							style: 		'success'
+							timeout:    3000, // never timeout ##
+							style: 		'dark'
 						});
 
 						if ( typeof NProgress !== 'undefined' ) { NProgress.done(); }
 
 					} else {
 
-						q_toast({
+						q_snack({
 							content:    q_consent.error, // msg ##
-							timeout:    5000, // never timeout ##
+							timeout:    3000, // never timeout ##
 							style: 		'error'
 						});
 
