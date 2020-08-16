@@ -1,3 +1,7 @@
+### 4.6.3 ###
+
+* Update: changes to log system, seperation from Willow
+
 ### 4.6.2 ###
 
 * Staged Version Update
