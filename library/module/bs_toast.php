@@ -33,7 +33,7 @@ class bs_toast extends \Q {
 
 		}
 		
-        // add html to footer ##
+        // add js to footer ##
         \add_action( 'wp_footer', function(){
 			asset\javascript::ob_get([
 				'view'      => get_class(), 
@@ -287,7 +287,7 @@ function q_snack( options ){
 	// check if the object exists ##
 	if ( typeof jQuery.snack === 'undefined' ) {
 
-		// console.log( 'No snacks available...');
+		console.log( 'No snacks available...');
 
 		return false;
 
@@ -296,7 +296,7 @@ function q_snack( options ){
 	// no content, no snack ##
 	if( ! options.content ){
 
-		// console.log( 'No snack content' );
+		console.log( 'No snack content' );
 
 		return false;
 
@@ -316,14 +316,6 @@ function q_snack( options ){
 	// merge passed options ##
 	jQuery.extend( defaults, options );
 
-	/*
-	@TODO - define global settings ##
-	$.toastDefaults.position = options.position; // 'bottom-right';
-	$.toastDefaults.dismissible = options.dismissible; // true;
-	$.toastDefaults.stackable = options.stackable; // true;
-	$.toastDefaults.pauseDelayOnHover = options.hover; // true;
-	*/
-
 	// snack time ##
 	jQuery.snack( defaults.style, defaults.content, defaults.timeout );
 
@@ -335,7 +327,7 @@ function q_toast( options ){
 	// check if the object exists ##
 	if ( typeof jQuery.toast === 'undefined' ) {
 
-		// console.log( 'No toast available...');
+		console.log( 'No toast available...');
 
 		return false;
 
@@ -344,7 +336,7 @@ function q_toast( options ){
 	// no content, no snack ##
 	if( ! options.content ){
 
-		// console.log( 'No toast content' );
+		console.log( 'No toast content' );
 
 		return false;
 
@@ -372,12 +364,6 @@ function q_toast( options ){
 
 	// merge passed options ##
 	jQuery.extend( defaults, options );
-
-	// @TODO - define global settings ##
-	// $.toastDefaults.position = options.position; // 'bottom-right';
-	// $.toastDefaults.dismissible = options.dismissible; // true;
-	// $.toastDefaults.stackable = options.stackable; // true;
-	// $.toastDefaults.pauseDelayOnHover = options.hover; // true;
 
 	// console.dir( defaults );
 

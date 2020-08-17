@@ -243,7 +243,7 @@ class test extends \Q {
         require_once self::get_plugin_path( 'library/test/log.php' );
 
         // Asana controller ##
-        require_once self::get_plugin_path( 'library/plugin/asana.php' );
+        require_once self::get_plugin_path( 'library/extension/service/asana.php' );
 
         // h::log( options::get( 'test' ) );
 

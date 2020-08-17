@@ -30,12 +30,13 @@ if ( typeof jQuery !== 'undefined' ) {
                     if ( typeof NProgress !== 'undefined' ) { NProgress.start(); }
                     $(t).attr('disabled','disabled');
 
+					t.html( 'Emptying Log...' );
                     // open snackbar ##
-                    q_snackbar({
-                        content:    'Emptying Log...', // msg ##
-                        timeout:    0, // never timeout ##
-                        style:      'dialogue'
-                    });
+                    // q_snack({
+                    //     content:    'Emptying Log...', // msg ##
+                    //     timeout:    0, // never timeout ##
+                    //     style:      'dark'
+                    // });
 
                 },
                 success: function( response ) {
@@ -48,10 +49,13 @@ if ( typeof jQuery !== 'undefined' ) {
                         $('p.q_support_log_format').remove();
 
                         // open snackbar ##
-                        q_snackbar({
-                            content:    response.text, // msg ##
-                            timeout:    0 // timeout ##
-                        });
+                        // q_snack({
+                        //     content:    response.text, // msg ##
+						// 	timeout:    0, // timeout ##
+						// 	style:      'dark'
+						// });
+						
+						t.html( response.text );
 
                     } else {
 

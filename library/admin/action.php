@@ -6,17 +6,17 @@ use q\core;
 use q\core\helper as h;
 
 // load it up ##
-\q\admin\action::run();
+\q\admin\action::__run();
 
 class action extends \Q {
 
-    public static function run()
+    public static function __run()
     {
 
         if ( \is_admin() ) {
 
             // admin js ##
-            \add_action( 'admin_enqueue_scripts', array( get_class(), 'admin_enqueue_scripts' ), 1 );
+            // \add_action( 'admin_enqueue_scripts', array( get_class(), 'admin_enqueue_scripts' ), 1 );
 
             // set-up admin image sizes ##
             \add_action( "admin_init", array( get_class(), 'admin_setup_images' ) );
@@ -47,7 +47,7 @@ class action extends \Q {
     public static function admin_enqueue_scripts() {
 
         // add JS ## -- after all dependencies ##
-        \wp_enqueue_script( 'q-admin-js', h::get( "ui/javascript/admin/global.js", 'return' ), array( 'jquery' ), self::version );
+        \wp_enqueue_script( 'q-admin-js', h::get( "asset/js/module/theme.min.js", 'return' ), array( 'jquery' ), self::version, true );
 
         // nonce ##
         $nonce = \wp_create_nonce( 'q-admin-nonce' );
@@ -60,12 +60,12 @@ class action extends \Q {
         ));
 
         // add snackbar CSS ##
-        \wp_register_style( 'q-snackbar-admin', h::get( "ui/css/vendor/snackbar.min.css", 'return' ), '', self::version, 'all' );
-        \wp_enqueue_style( 'q-snackbar-admin' );
+        // \wp_register_style( 'q-snackbar-admin', h::get( "ui/css/vendor/snackbar.min.css", 'return' ), '', self::version, 'all' );
+        // \wp_enqueue_style( 'q-snackbar-admin' );
 
         // add snackbar JS ##
-        \wp_register_script( 'q-snackbar-admin', h::get( "ui/javascript/vendor/snackbar.min.js", 'return' ), array( 'jquery' ), self::version );
-        \wp_enqueue_script( 'q-snackbar-admin' );
+        // \wp_register_script( 'q-snackbar-admin', h::get( "ui/javascript/vendor/snackbar.min.js", 'return' ), array( 'jquery' ), self::version );
+        // \wp_enqueue_script( 'q-snackbar-admin' );
 
     }
 

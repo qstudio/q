@@ -40,7 +40,7 @@ return [ 'taxonomy' => [
 	'category' 			=> [
 		'markup'				=> [
 			'template'			=> '
-								<span class="post-meta-category mx-2">
+								<span class="post-meta-category mx-1">
 									<a class="p-1 p-sm-2 btn btn-primary" href="{{ permalink }}" title="See posts in {{ title }}">{{ title }}</a>
 								</span>
 								',
