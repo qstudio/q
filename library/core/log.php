@@ -818,7 +818,7 @@ class log extends \Q {
 		// do not save file from admin, as it will be incomplete ##
 		if( 
 			\is_admin() 
-			|| \wp_doing_ajax()
+			&& \wp_doing_ajax()
 		){ 
 		
 			// core\helper::hard_log( 'd:>Attempt to empty log from admin blocked' );

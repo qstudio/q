@@ -71,8 +71,8 @@ return [ 'meta' => [
 	'comment' 				=> [
 		'markup'				=> [
 			'template'			=> '
-								<span class="post-meta-comment mx-1">
-									<a class="p-1 p-sm-2 btn btn-primary q_comment_loadmore" href="{{ permalink }}" title="{{ title }}">{{ title }}</a>
+								<span class="post-meta-comment mx-0">
+									<a class="p-1 p-sm-1 btn btn-primary q_comment_loadmore" href="{{ permalink }}" title="{{ title }}">{{ title }}</a>
 								</span>
 								',
 		]

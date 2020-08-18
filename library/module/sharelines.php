@@ -473,10 +473,10 @@ class sharelines extends \Q {
         // array to test against ##
         $networks = array(
             'facebook'      => array (
-                'class'     => 'facebook-share-button'
+                'class'     => 'facebook-share-button greyscale'
             ),
             'twitter'       => array (
-                'class'     => 'twitter-share-button',
+                'class'     => 'twitter-share-button greyscale',
                 'data-text' => $shareline,
                 'via'       => '_qstudio', // @TODO -- make filterable ##
                 'href'      => 'https://twitter.com/share',
@@ -716,15 +716,24 @@ if ( typeof jQuery !== 'undefined' ) {
 			
         }
 
+		// hover ##
+        $("body").on("mouseenter", "li.q-sharelines li.item a", function(){
+			$(this).removeClass("greyscale");
+		}).on("mouseleave", "li.q-sharelines li.item a", function(){
+			$(this).addClass("greyscale");
+		});
+
         // hover ##
-        $(document).on({
+		/*
+        $("body").on({
             mouseenter: function(){
-                $("li.q-sharelines li.item a").not(this).addClass("greyscale");
+                $("li.q-sharelines li.item a").not(this).removeClass("greyscale");
             },
             mouseleave: function(){
-                $("li.q-sharelines li.item a").removeClass("greyscale");
+                $("li.q-sharelines li.item a").addClass("greyscale");
             }
         }, 'li.q-sharelines li.item a');
+		*/
 
     });
 }
