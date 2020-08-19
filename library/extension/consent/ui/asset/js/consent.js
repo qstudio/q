@@ -13,10 +13,12 @@ if ( typeof jQuery !== 'undefined' ) {
 		// 	$('.q-tab-current').addClass('active');
         // });
         //
-        // $(document).on('click', '.q-tab-trigger', function() {
-         //    $('.q-tab-trigger').removeClass('active');
-         //    $('.q-tab-current').addClass('active');
-		// });
+        $( document ).on( 'click', '[data-trigger="consent"]', function() {
+
+			// console.log( 'Clicked Consent Trigger' );
+			$('.q-consent-open').trigger( 'click' );
+			
+		});
 
 		// $( document.body).on( "click", ".q-consent-open", function(e){
 		$('#q_modal').on('show.bs.modal', function (event) {
