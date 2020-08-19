@@ -80,6 +80,17 @@ class javascript extends \Q {
 
 ?>
 <script>
+
+// https://medium.com/hackernoon/removing-that-ugly-focus-ring-and-keeping-it-too-6c8727fefcd2
+function q_handle_first_tab(e) {
+    if (e.keyCode === 9) { // the "I am a keyboard user" key
+        document.body.classList.add('user-is-tabbing');
+        window.removeEventListener('keydown', q_handle_first_tab);
+    }
+}
+
+window.addEventListener('keydown', q_handle_first_tab);
+
 // Avoid `console` errors in browsers that lack a console.
 (function(){for(var a,e=function(){},b="assert clear count debug dir dirxml error exception group groupCollapsed groupEnd info log markTimeline profile profileEnd table time timeEnd timeStamp trace warn".split(" "),c=b.length,d=window.console=window.console||{};c--;)a=b[c],d[a]||(d[a]=e)})();
 

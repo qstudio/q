@@ -83,22 +83,9 @@ if( typeof jQuery !== 'undefined' ) {
 
 	jQuery(window).load(function(){
 
-		/*
-		// store open tab in localstorage ## 
-		jQuery('a[data-accordion="tab"]').on('shown.bs.tab', function (e) {
-			localStorage.setItem('activeTab', jQuery(e.target).attr('href'));
-			console.log( 'Store tab: '+jQuery(e.target).attr('href') );
-		});
-
-		var activeTab = localStorage.getItem('activeTab');
-		if(activeTab){
-			jQuery('.nav-accordion a[href="' + activeTab + '"]').tab('show');
-		}
-		*/
-
 		// check for accordion hash ##
 		accordion_hash = q_get_hash_value_from_key( 'accordion' );
-		console.log( 'accordion hash: '+accordion_hash );
+		// console.log( 'accordion hash: '+accordion_hash );
 		var accordion_loaded = false;
 		
 		if ( accordion_hash ) {
@@ -144,8 +131,8 @@ if( typeof jQuery !== 'undefined' ) {
 		// update hash value when bs4 accordions are used ##
 		jQuery('.bs-accordion button').click(function (e) {
 			window.location.hash = jQuery(this).data('hash');
-			console.log( 'Clicked here..'+jQuery(this).data('hash') );
-			jQuery( '.bs-accordion .nav-link' ).removeClass('active show');
+			// console.log( 'Clicked here..'+jQuery(this).data('hash') );
+			// jQuery( '.bs-accordion .nav-link' ).removeClass('active show');
 		});
 		
 
