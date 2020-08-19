@@ -1,4 +1,8 @@
-### 4.6.3 ###
+### 4.6.5 ###
+
+* Update: tweaks to getter logic
+
+### 4.6.4 ###
 
 * Update: changes to log system, seperation from Willow
 
