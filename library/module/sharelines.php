@@ -472,9 +472,6 @@ class sharelines extends \Q {
         
         // array to test against ##
         $networks = array(
-            'facebook'      => array (
-                'class'     => 'facebook-share-button greyscale'
-            ),
             'twitter'       => array (
                 'class'     => 'twitter-share-button greyscale',
                 'data-text' => $shareline,
@@ -482,6 +479,9 @@ class sharelines extends \Q {
                 'href'      => 'https://twitter.com/share',
                 'url'       => \wp_get_shortlink(),
                 'counturl'  => \get_permalink()
+			),
+			'facebook'      => array (
+                'class'     => 'facebook-share-button greyscale'
             )
 		);
 		

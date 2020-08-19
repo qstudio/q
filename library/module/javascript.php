@@ -180,6 +180,7 @@ function q_get_hash_value_from_key( $key ){
 
         // get next $key value ##
         if ( $hash = q_get_next_key( $bits, $filter_key ) ) {
+			
 			// console.log( 'Next $key: '+$hash );
 
 			// console.log( 'hash contains '+ $key +' command: '+$hash );

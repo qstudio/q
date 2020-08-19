@@ -8,9 +8,9 @@ use q\core\helper as h;
 use q\asset;
 
 // load it up ##
-\q\module\bs_tab::__run();
+\q\module\bs_accordion::__run();
 
-class bs_tab extends \Q {
+class bs_accordion extends \Q {
     
     static $args = array();
 
@@ -23,11 +23,11 @@ class bs_tab extends \Q {
 		// make running dependent on module selection in Q settings ##
 		// h::log( core\option::get('tab') );
 		if ( 
-			! isset( core\option::get('module')->bs_tab )
-			|| true !== core\option::get('module')->bs_tab 
+			! isset( core\option::get('module')->bs_accordion )
+			|| true !== core\option::get('module')->bs_accordion 
 		){
 
-			// h::log( 'd:>Tab is not enabled.' );
+			// h::log( 'd:>accordion is not enabled.' );
 
 			return false;
 
@@ -38,7 +38,6 @@ class bs_tab extends \Q {
 			asset\javascript::ob_get([
 				'view'      => get_class(), 
 				'method'    => 'javascript',
-				// 'handle'    => str_replace( __NAMESPACE__.'\\', '', __CLASS__ )
 			]);
 		}, 3 );
 
@@ -54,10 +53,10 @@ class bs_tab extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['bs_tab'] = 'Bootstrap Tab';
+		$field['choices']['bs_accordion'] = 'Bootstrap Accordion / Collapse';
 
 		// make it selected ##
-		$field['default_value'][0] = 'bs_tab';
+		// $field['default_value'][0] = 'bs_accordion';
 
 		// kick back ##
 		return $field;
@@ -86,67 +85,69 @@ if( typeof jQuery !== 'undefined' ) {
 
 		/*
 		// store open tab in localstorage ## 
-		jQuery('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		jQuery('a[data-accordion="tab"]').on('shown.bs.tab', function (e) {
 			localStorage.setItem('activeTab', jQuery(e.target).attr('href'));
 			console.log( 'Store tab: '+jQuery(e.target).attr('href') );
 		});
 
 		var activeTab = localStorage.getItem('activeTab');
 		if(activeTab){
-			jQuery('.nav-tabs a[href="' + activeTab + '"]').tab('show');
+			jQuery('.nav-accordion a[href="' + activeTab + '"]').tab('show');
 		}
 		*/
 
-		// read hash from page load and change tab
-		// WE NEED A TAB/PREFIX for loading ###
-		var tab_hash = document.location.hash;
-		var prefix = "tab_";
-		// var tab_to_load = false;
-		var tab_loaded = false;
-		if (tab_hash) {
+		// check for accordion hash ##
+		accordion_hash = q_get_hash_value_from_key( 'accordion' );
+		console.log( 'accordion hash: '+accordion_hash );
+		var accordion_loaded = false;
+		
+		if ( accordion_hash ) {
 
-			if ( jQuery('.bs-tabs a[href="'+tab_hash.replace(prefix,"")+'"]').length ){
+			if ( jQuery('.bs-accordion').find('[data-hash="accordion/'+accordion_hash+'"]').length ){
+
+				// console.log( 'accordion found: '+accordion_hash );
+
+				jQuery('.bs-accordion').find('[data-hash="accordion/'+accordion_hash+'"]').trigger( 'click' );
 				
-				q_tab = jQuery('.bs-tabs a[href="'+tab_hash.replace(prefix,"")+'"]');
-
-				// console.log( q_tab );
-				
-				tab_loaded = true;
-
-				q_tab.tab('show')
+				accordion_loaded = true;
 
 			}
 
 		} 
 
-		if( false === tab_loaded ) {
+		/*
+		if( false === accordion_loaded ) {
 
-			// console.log( 'tab_loaded == false' );
+			// console.log( 'accordion_loaded == false' );
 
 			// on load, if no tab active, make first tab-content active/show ##
-			if( ! jQuery( '.bs-tabs > .nav-link' ).hasClass('active') ){
+			if( ! jQuery( '.bs-accordion > .nav-link' ).hasClass('active') ){
 				// console.log( 'NO active tab...' );
-				jQuery( '.bs-tabs .nav-link' ).first().addClass('active show');
-				$first = jQuery( '.bs-tabs .nav-link' );
+				jQuery( '.bs-accordion .nav-link' ).first().addClass('active show');
+				$first = jQuery( '.bs-accordion .nav-link' );
 				// // console.log( $first.attr('aria-controls') )
 				jQuery( '#'+$first.attr('aria-controls') ).addClass('active show');
 			}
 
 		}
 
-		// allow external tab triggers ##
-		jQuery( '[data-trigger="tab"]' ).click( function( e ) {
+		// allow external accordion triggers ##
+		jQuery( '[data-trigger="accordion"]' ).click( function( e ) {
 			var href = jQuery( this ).attr( 'href' );
 			e.preventDefault();
 			window.location.hash = href;
-			jQuery( '[data-toggle="tab"][href="' + href + '"]' ).trigger( 'click' );
+			jQuery( '[data-accordion="accordion"][href="' + href + '"]' ).trigger( 'click' );
 		} );
 
-		// update hash value when bs4 tabs are used ##
-		jQuery('.bs-tabs a').click(function (e) {
-			window.location.hash = this.hash;
-			jQuery( '.bs-tabs .nav-link' ).removeClass('active show');
+		*/
+
+		// update hash value when bs4 accordions are used ##
+		jQuery('.bs-accordion button').click(function (e) {
+			window.location.hash = jQuery(this).data('hash');
+			console.log( 'Clicked here..'+jQuery(this).data('hash') );
+			jQuery( '.bs-accordion .nav-link' ).removeClass('active show');
 		});
+		
 
 	});
 
