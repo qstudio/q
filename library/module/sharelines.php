@@ -473,6 +473,7 @@ class sharelines extends \Q {
         // array to test against ##
         $networks = array(
             'twitter'       => array (
+				'fontawsome'=> '<i class="fab fa-twitter"></i>',
                 'class'     => 'twitter-share-button greyscale',
                 'data-text' => $shareline,
                 'via'       => '_qstudio', // @TODO -- make filterable ##
@@ -481,6 +482,7 @@ class sharelines extends \Q {
                 'counturl'  => \get_permalink()
 			),
 			'facebook'      => array (
+				'fontawsome'=> '<i class="fab fa-facebook-f"></i>',
                 'class'     => 'facebook-share-button greyscale'
             )
 		);
