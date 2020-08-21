@@ -8,7 +8,36 @@ use q\ui;
 use q\render;
 use q\get;
 
+// let'#'s go ##
+\q\module\navigation::__run();
+
 class navigation extends \Q {
+
+	public static function __run(){
+
+		\add_filter( 'nav_menu_css_class', [ get_class(), 'nav_menu_css_class_li' ], 1, 3 );
+
+	}
+
+
+	/**
+	 * Filter nav_menu LI
+	 * 
+	 * @link	https://stackoverflow.com/questions/14464505/how-to-add-class-in-li-using-wp-nav-menu-in-wordpress
+	*/
+	public static function nav_menu_css_class_li($classes, $item, $args) {
+
+		if( isset( $args->li_class ) ) {
+
+			$classes[] = $args->li_class;
+
+		}
+
+		return $classes;
+
+	}
+
+
 
     /**
     * Build Sub Navigation
