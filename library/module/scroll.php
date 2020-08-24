@@ -207,6 +207,8 @@ if ( typeof jQuery !== 'undefined' ) {
         });
 
         jQuery('a[href^="#"]').on('click', function(e) {
+			// reset hash ##
+			window.location.hash = '';
             $the_hash = q_push_hash();
             if($the_hash) q_scroll( $the_hash );
         });
@@ -221,10 +223,10 @@ if ( typeof jQuery !== 'undefined' ) {
 
         // try to locate data element matching retreived hash value ##
         if ( jQuery( "[data-scroll-slug='" + data_id + "']" ).length ) {
-            
+
             // locate ##
             var target = jQuery( "[data-scroll-slug='" + data_id + "']" );
-            var targetOffset = ( target.offset().top );
+            var targetOffset = ( target.offset().top ) - 40;
 
             // scroll ##
             jQuery('html,body').animate({ 
@@ -233,6 +235,9 @@ if ( typeof jQuery !== 'undefined' ) {
 
             // highlight ##
             jQuery( "#scroll-nav-"+data_id ).parent('span').addClass( 'current' );
+
+			// // reset hash ##
+			// window.location.hash = '';
 
         }
 
@@ -290,8 +295,6 @@ if ( typeof jQuery !== 'undefined' ) {
         css::ob_get([
             'view'      => get_class(), 
             'method'    => 'css',
-            // 'priority'  => 4,
-            // 'handle'    => 'Scroll'
         ]);
 
     }

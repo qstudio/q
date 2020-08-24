@@ -96,6 +96,17 @@ if( typeof jQuery !== 'undefined' ) {
 			jQuery('.nav-tabs a[href="' + activeTab + '"]').tab('show');
 		}
 		*/
+		
+		/*
+		// buffer the last scroll position
+		var lastScrollPosition = jQuery(window).scrollTop();
+
+		jQuery('.bs-tabs').on('shown.bs.tab', function (e) {
+			location.replace(jQuery(e.target).attr("href"));
+			// revert back to last scroll position
+			jQuery(window).scrollTop(lastScrollPosition);
+		});
+		*/
 
 		// read hash from page load and change tab
 		// WE NEED A TAB/PREFIX for loading ###
@@ -137,13 +148,16 @@ if( typeof jQuery !== 'undefined' ) {
 		// allow external tab triggers ##
 		jQuery( '[data-trigger="tab"]' ).click( function( e ) {
 			var href = jQuery( this ).attr( 'href' );
-			e.preventDefault();
+			// e.preventDefault();
+  			// e.stopImmediatePropagation();
 			window.location.hash = href;
 			jQuery( '[data-toggle="tab"][href="' + href + '"]' ).trigger( 'click' );
 		} );
 
 		// update hash value when bs4 tabs are used ##
 		jQuery('.bs-tabs a').click(function (e) {
+			// e.preventDefault();
+ 			// e.stopImmediatePropagation();
 			window.location.hash = this.hash;
 			jQuery( '.bs-tabs .nav-link' ).removeClass('active show');
 		});

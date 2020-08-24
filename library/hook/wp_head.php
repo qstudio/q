@@ -513,7 +513,7 @@ class wp_head extends \Q {
         $page_title = \apply_filters( 'q/hook/wp_head/wp_title', $page_title );
 
         // return title ##
-        return $page_title;
+        return strip_tags( $page_title );
 
     }
 
