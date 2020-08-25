@@ -199,7 +199,7 @@ class post extends \q\get {
             $type = 'is_404';
 
             // h::log('Loading archive title');
-			$array['title'] = \__('Oops! It looks like you\'re lost');
+			$array['title'] = \__('404 ~ Oops! It looks like you\'re lost');
 			// $array['permalink'] = \get_permalink( \get_site_option( 'page_on_front' ) );
 
         } else if (

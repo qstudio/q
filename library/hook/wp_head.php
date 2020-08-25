@@ -406,7 +406,7 @@ class wp_head extends \Q {
     public static function pre_get_document_title() {
 
 		// define seperator ##
-		$sep = ' | ';
+		$sep = ' ~ ';
 
 		global $page, $paged, $post;
 		
@@ -415,7 +415,10 @@ class wp_head extends \Q {
 
 		if ( \is_front_page() ) {
 
-			$title = '';
+			// $title = '';
+
+			// add site description if not empty and on front page ##
+			$title = \get_bloginfo( 'description' ).$sep ;
 
 		} else {
 		
@@ -429,10 +432,9 @@ class wp_head extends \Q {
 
 		// h::log( 'e:>'.$title );
 		
-        // get site desription ##
-        $site_description = \get_bloginfo( 'description' );
-
         if ( $post ) {
+
+			// h::log( 'Adding $post data..' );
 
             // allow for custom title - via post meta "metatitle" ##
             $page_title = \get_post_meta( $post->ID, "metatitle", true ) ? \get_post_meta( $post->ID, "metatitle", true ).' '.$sep. ' ' : $title;
@@ -495,14 +497,16 @@ class wp_head extends \Q {
 
             }
 
-        }
+		}
 
+		// go back to basics ##
+		if ( ! $page_title ) { $page_title = $title.$sep; }
+
+		// h::log( 'e:>'.$page_title );
+		
         // compile ##
         $page_title = $page_title . \get_option( 'blogname' ); // with site name ##
         #$filtered_title = $page_title; // without site name ##
-
-        // add site description if not empty and on front page ##
-        $page_title .= ( ! empty( $site_description ) && ( \is_front_page() ) ) ? $sep . $site_description : '' ;
 
         // add paging number, if paged ##
         $page_title .= ( 2 <= $paged || 2 <= $page ) ? $sep . sprintf( __( 'Page %s' ), max( $paged, $page ) ) : '' ;
@@ -512,7 +516,7 @@ class wp_head extends \Q {
         // filter ##
         $page_title = \apply_filters( 'q/hook/wp_head/wp_title', $page_title );
 
-        // return title ##
+        // return title with tags stripped ( which are added by get_the_archive_title ) ##
         return strip_tags( $page_title );
 
     }

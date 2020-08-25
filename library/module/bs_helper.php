@@ -32,7 +32,7 @@ class bs_helper extends \Q {
 
 		}
 
-        // add html to footer ##
+        // add <script> block to global js asset ##
         \add_action( 'wp_footer', function(){
 			asset\javascript::ob_get([
 				'view'      => get_class(), 
@@ -40,7 +40,8 @@ class bs_helper extends \Q {
 			]);
 		}, 3 );
 
-		\add_action( 'wp_footer', [ get_class(), 'html' ], 10 );
+		// add html ##
+		\add_action( 'wp_footer', [ get_class(), 'html' ], 100000 );
 
     }
 
@@ -85,7 +86,114 @@ class bs_helper extends \Q {
 		}
 
 ?>
-	<span id="breakpoint" class="badge badge-warning" style="position: fixed; right: 0; bottom: 0; padding: 20px; ">-x-</span>
+<script>
+if( typeof jQuery !== 'undefined' ) {
+
+	jQuery(window).load(function(){
+
+		// enable tooltips ##
+		// jQuery('[data-toggle="tooltip"]').tooltip();
+
+		q_bootstrap_tooltip( true, false );
+
+		// hide on load ##
+		// $output.tooltip('hide');
+
+		// on resize ##
+		// jQuery(window).on( "resize", q_update_breakpoint );
+
+	});
+
+	// resizing ##
+	jQuery(window).on('resize', function(){
+
+		q_bootstrap_tooltip( false, true );
+
+	});
+
+	// BS breakpoint ##
+	function q_bootstrap_tooltip( load, resize ) {
+
+		// assign target ##
+		output = jQuery("#breakpoint");
+
+		// console.log( 'here..' );
+
+		// sizes ##
+		vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+		vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+		// vw = jQuery(window).width();
+		// vh = jQuery(window).height();
+
+		// resize ##
+		resize = resize || false;
+		load = load || false;
+
+		// update attrs ##
+		output.attr('title', 'Width: '+ vw +'px<br />Height: '+ vh +'px' );
+		output.html( q_bootstrap_breakpoint().name );
+
+		if ( load ) {
+
+			// trigger tooltip ##
+			output.tooltip('show');
+
+			setTimeout(function(){
+				output.tooltip('hide');
+			}, 3000);
+
+		}
+
+		// possible delay, for resizing ##
+		if ( resize ) {	
+
+			// trigger tooltip ##
+			output.tooltip('show');
+
+			// console.log( 'Set timeount in 2 secs..' );
+
+			setInterval(function(){
+				var vw = jQuery(window).width();
+				var vh = jQuery(window).height();
+				jQuery('.tooltip-inner').html( 'Width: '+ vw +'px<br />Height: '+ vh +'px' );
+			}, 30);
+
+			window.addEventListener("resize",q_bootstrap_debounce(function(e){
+				
+				// console.log("end of resizing");
+
+				setTimeout(function(){
+					output.tooltip('hide');
+				}, 3000 );
+
+			}));
+
+		}
+
+	}
+
+	function q_bootstrap_debounce( func ){
+		  
+		var timer;
+		return function(event){
+			if(timer) clearTimeout(timer);
+			timer = setTimeout(func,100,event);
+		};
+
+	}
+
+};
+</script>
+<span 
+	id="breakpoint" 
+	class="badge badge-warning" 
+	data-toggle="tooltip" 
+	data-placement="top"
+	data-html="true"
+	title="Tooltip on top"
+	style="position: fixed; left: 0; bottom: 0; padding: 20px;"
+	>~@~
+</span>
 <?php
 			
 	}
@@ -129,34 +237,16 @@ function q_bootstrap_breakpoint() {
     for (const breakpointName of breakpointNames) {
         i--
         if (window.matchMedia("(min-width: " + breakpointValues[breakpointName] + ")").matches) {
-            return {name: breakpointName, index: i}
+            return {
+				name: breakpointName, 
+				height: vh,
+				width: vw,
+				index: i
+			}
         }
     }
     return null
 }
-
-
-if( typeof jQuery !== 'undefined' ) {
-
-	jQuery(window).ready(function(){
-
-		// assign target ##
-		var $output = jQuery("#breakpoint")
-
-		// BS breakpoint ##
-		function q_update_breakpoint() {
-
-			$output.html( q_bootstrap_breakpoint().name )
-			
-		}
-	
-		q_update_breakpoint();
-
-		jQuery(window).on( "resize", q_update_breakpoint );
-
-	});
-
-};
 </script>
 <?php
 

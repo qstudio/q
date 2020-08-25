@@ -44,6 +44,7 @@ class module extends \Q {
 			'sharelines' 	=> h::get( 'module/sharelines.php', 'return', 'path' ),
 			'push' 			=> h::get( 'module/push.php', 'return', 'path' ),
 			'anspress' 		=> h::get( 'module/anspress.php', 'return', 'path' ),
+			// 'popper' 		=> h::get( 'module/popper.php', 'return', 'path' ),
 			// 'toggle' => h::get( 'module/toggle.php', 'return', 'path' ), // ?? needed ??
 			// 'filter' => h::get( 'ui/module/filter.php', 'return', 'path' ),
 			// 'modal' => h::get( 'ui/module/modal.php', 'return', 'path' ),

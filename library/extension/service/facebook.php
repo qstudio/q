@@ -148,16 +148,25 @@ class facebook extends \Q {
         $array['description'] = $string;
         $array['image'] = 
             \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), 'large' ) ?
-            \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), 'large' )[0] :
+            \wp_get_attachment_image_src( \get_post_thumbnail_id( $the_post->ID ), 'large' ) :
             false ;
         // h::log( $array['image'] );
-        $array['url'] = \get_the_permalink( $the_post->ID );
+		$array['url'] = \get_the_permalink( $the_post->ID );
+		
+		// mime-type ##
+		$array['mime'] = \get_post_mime_type( \get_post_thumbnail_id( $the_post->ID ) ); 
 
 ?>
-        <meta name="og:title" content="<?php echo $array['title']; ?>">
-        <meta name="og:description" content="<?php echo $array['description']; ?>">
-        <meta name="og:image" content="<?php echo $array['image']; ?>">
-        <meta name="og:url" content="<?php echo $array['url']; ?>">
+		<meta property="fb:app_id" content="<?php echo \apply_filters( 'q/module/sharelines/facebook', '1055454871138781' ); ?>"/>
+        <meta property="og:title" content="<?php echo ( \esc_html( $array['title'] ) ); ?>" />
+        <meta property="og:description" content="<?php echo ( \esc_html( $array['description'] ) ); ?>" />
+        <meta property="og:image" content="<?php echo ( \esc_html( $array['image'][0] ) ); ?>" />
+		<meta property="og:image:secure_url" content="<?php echo ( \esc_html( $array['image'][0] ) ); ?>" /> 
+		<meta property="og:image:type" content="<?php echo ( \esc_html( $array['mime'] ) ); ?>" /> 
+		<meta property="og:image:width" content="<?php echo ( \esc_html( $array['image'][1] ) ); ?>" /> 
+		<meta property="og:image:height" content="<?php echo ( \esc_html( $array['image'][2] ) ); ?>" />
+        <meta property="og:url" content="<?php echo ( \esc_html( $array['url'] ) ); ?>" />
+		<meta property="og:type" content="article"/>
 <?php
 
     }
