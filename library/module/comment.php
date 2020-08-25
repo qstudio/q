@@ -71,7 +71,7 @@ class comment extends \Q {
 
 	public static function comment_form_defaults( $defaults ) {
 	
-		$defaults['comment_notes_after'] = '<p class="form-allowed-tags">' . sprintf( __( 'You can use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes: %s' ), ' <code>' . \allowed_tags() . '</code>' ) . '</p>';
+		$defaults['comment_notes_after'] = '<p class="form-allowed-tags">' . sprintf( __( 'These <abbr title="HyperText Markup Language">HTML</abbr> tags are accepted: %s' ), ' <code>' . \allowed_tags() . '</code>' ) . '</p>';
 		
 		return $defaults;
 	
@@ -123,7 +123,7 @@ class comment extends \Q {
 		$newTags = array(
 			'a' => array(
 				'href' => array (),
-				// 'title' => array ()
+				// 'target' => array ()
 			),
 		   'code' => array(),
 		   // 'em' => array(),

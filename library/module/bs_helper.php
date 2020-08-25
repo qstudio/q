@@ -144,14 +144,19 @@ if( typeof jQuery !== 'undefined' ) {
 			}, 30);
 
 			// add an event listener to check for an end to the resize action ##
-			window.addEventListener("resize",q_bootstrap_debounce(function(e){
+			window.addEventListener(
+				"resize",
+				q_bootstrap_debounce(
+					function(e){
 				
-				// when resizing is done, set a timeout for 3 secs, then close the tooltip ##
-				setTimeout(function(){
-					output.tooltip('hide');
-				}, 3000 );
+						// when resizing is done, set a timeout for 3 secs, then close the tooltip ##
+						setTimeout(function(){
+							output.tooltip('hide');
+						}, 3000 );
 
-			}));
+					}
+				), { passive: true } // Passive Event Listener ##
+			);
 
 		}
 
