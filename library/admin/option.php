@@ -35,11 +35,28 @@ class option extends \Q {
 
         // add link to view library from
 		\add_filter( 'acf/load_field/name=q_option_library', [ get_class(), 'filter_acf_library' ], 100, 1 );
+
+		// add direct link to Q settings to admin bar ##
+		\add_action( 'admin_bar_menu', [ get_class(), 'admin_bar_menu' ], 999, 1 );
 		
 		// run action on acf options save ##
 		// \add_action( 'acf/save_post', [ get_class(), 'save' ], 20 );
         
-    }
+	}
+	
+
+	public static function admin_bar_menu($admin_bar) {       
+
+		$args = array(
+			'parent' => 'site-name',
+			'id'     => 'q',
+			'title'  => 'Q ~ Settings',
+			'href'   => \esc_url( \admin_url( 'options-general.php?page=q' ) ),
+			'meta'   => false
+		);
+		$admin_bar->add_node( $args );       
+
+	}
 
 
 
@@ -218,7 +235,7 @@ class option extends \Q {
         // h::log( 'Adding ACF settings page...' );
 
         \acf_add_options_page( array(
-            'page_title' 	=> 'Q Settings',
+            'page_title' 	=> 'Q ~ Settings',
             'menu_title'	=> 'Q',
             'menu_slug' 	=> 'q',
             'capability'	=> 'manage_options',

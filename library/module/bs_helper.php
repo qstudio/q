@@ -89,41 +89,29 @@ class bs_helper extends \Q {
 <script>
 if( typeof jQuery !== 'undefined' ) {
 
+	// show breakpoint on load, tooltip will be updated to show actual document dimentions ## 
 	jQuery(window).load(function(){
-
-		// enable tooltips ##
-		// jQuery('[data-toggle="tooltip"]').tooltip();
 
 		q_bootstrap_tooltip( true, false );
 
-		// hide on load ##
-		// $output.tooltip('hide');
-
-		// on resize ##
-		// jQuery(window).on( "resize", q_update_breakpoint );
-
 	});
 
-	// resizing ##
+	// resizing, open tooltip and update document dimensions as they change ##
 	jQuery(window).on('resize', function(){
 
 		q_bootstrap_tooltip( false, true );
 
 	});
 
-	// BS breakpoint ##
+	// Tooltip with BS breakpoint info ##
 	function q_bootstrap_tooltip( load, resize ) {
 
 		// assign target ##
 		output = jQuery("#breakpoint");
 
-		// console.log( 'here..' );
-
 		// sizes ##
 		vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
 		vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-		// vw = jQuery(window).width();
-		// vh = jQuery(window).height();
 
 		// resize ##
 		resize = resize || false;
@@ -150,18 +138,15 @@ if( typeof jQuery !== 'undefined' ) {
 			// trigger tooltip ##
 			output.tooltip('show');
 
-			// console.log( 'Set timeount in 2 secs..' );
-
+			// set short timeout to update document dimensions, as they change ##
 			setInterval(function(){
-				var vw = jQuery(window).width();
-				var vh = jQuery(window).height();
 				jQuery('.tooltip-inner').html( 'Width: '+ vw +'px<br />Height: '+ vh +'px' );
 			}, 30);
 
+			// add an event listener to check for an end to the resize action ##
 			window.addEventListener("resize",q_bootstrap_debounce(function(e){
 				
-				// console.log("end of resizing");
-
+				// when resizing is done, set a timeout for 3 secs, then close the tooltip ##
 				setTimeout(function(){
 					output.tooltip('hide');
 				}, 3000 );
@@ -172,6 +157,7 @@ if( typeof jQuery !== 'undefined' ) {
 
 	}
 
+	// resize debouncer, set form eventlistener ##
 	function q_bootstrap_debounce( func ){
 		  
 		var timer;
