@@ -1202,7 +1202,7 @@ class method extends extension\search {
 		// h::log( self::properties("post_type") );
 		
 		// Get any existing copy of our transient data
-		\delete_site_transient( 'q_search_has_posts' );
+		// \delete_site_transient( 'q_search_has_posts' );
 		if ( false === ( $test = \get_site_transient( 'q_search_has_posts' ) ) ) {
 
 			switch ( self::properties( "post_type" ) ) {
