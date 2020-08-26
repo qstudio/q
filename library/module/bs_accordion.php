@@ -85,16 +85,16 @@ if( typeof jQuery !== 'undefined' ) {
 
 		// check for accordion hash ##
 		accordion_hash = q_get_hash_value_from_key( 'accordion' );
-		// console.log( 'accordion hash: '+accordion_hash );
+		console.log( 'accordion hash: '+accordion_hash );
 		var accordion_loaded = false;
 		
 		if ( accordion_hash ) {
 
-			if ( jQuery('.bs-accordion').find('[data-hash="accordion/'+accordion_hash+'"]').length ){
+			if ( jQuery('.bs-accordion').find('[data-hash="accordion/'+accordion_hash+'/scroll/'+accordion_hash+'"]').length ){
 
 				// console.log( 'accordion found: '+accordion_hash );
 
-				jQuery('.bs-accordion').find('[data-hash="accordion/'+accordion_hash+'"]').trigger( 'click' );
+				jQuery('.bs-accordion').find('[data-hash="accordion/'+accordion_hash+'/scroll/'+accordion_hash+'"]').trigger( 'click' );
 				
 				accordion_loaded = true;
 

@@ -143,6 +143,7 @@ jQuery(function($, undefined){
 
 	// wp does not provide a filter to affect html here, so hack-away ##
 	$('#commentform').addClass('col-12');
+	$('#cancel-comment-reply-link').addClass('mt-n2 ml-2 btn btn-secondary');
 
 	// track reply to iD ##
 	$( document ).on( 'click', '.q_comment_reply', function(e) {

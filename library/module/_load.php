@@ -6,11 +6,11 @@ use q\core;
 use q\core\helper as h;
 
 // load it up ##
-\q\module::run();
+\q\module::__run();
 
 class module extends \Q {
 
-	public static function run(){
+	public static function __run(){
 
 		core\load::libraries( self::load() );
 
@@ -44,6 +44,7 @@ class module extends \Q {
 			'sharelines' 	=> h::get( 'module/sharelines.php', 'return', 'path' ),
 			'push' 			=> h::get( 'module/push.php', 'return', 'path' ),
 			'anspress' 		=> h::get( 'module/anspress.php', 'return', 'path' ),
+			'acf_form' 		=> h::get( 'module/acf_form.php', 'return', 'path' ),
 			// 'popper' 		=> h::get( 'module/popper.php', 'return', 'path' ),
 			// 'toggle' => h::get( 'module/toggle.php', 'return', 'path' ), // ?? needed ??
 			// 'filter' => h::get( 'ui/module/filter.php', 'return', 'path' ),
