@@ -85,7 +85,7 @@ if( typeof jQuery !== 'undefined' ) {
 
 		// check for accordion hash ##
 		accordion_hash = q_get_hash_value_from_key( 'accordion' );
-		console.log( 'accordion hash: '+accordion_hash );
+		// console.log( 'accordion hash: '+accordion_hash );
 		var accordion_loaded = false;
 		
 		if ( accordion_hash ) {

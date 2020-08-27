@@ -1,3 +1,7 @@
+### 4.6.7 ###
+
+* Fixes: to Bootstrap Helper module to include deubbing tool
+
 ### 4.6.6 ###
 
 * Update: anspress logic

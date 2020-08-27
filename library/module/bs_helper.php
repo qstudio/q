@@ -89,10 +89,20 @@ class bs_helper extends \Q {
 <script>
 if( typeof jQuery !== 'undefined' ) {
 
+	// assign target ##
+	var $bs_element = "#bs_helper";
+	var $bs_helper;
+
 	// show breakpoint on load, tooltip will be updated to show actual document dimentions ## 
 	jQuery(window).load(function(){
 
+		// assign target ##
+		$bs_helper = jQuery($bs_element);
+
 		q_bootstrap_tooltip( true, false );
+
+		// click to add debug borders ##
+		$bs_helper.click(() => jQuery("body").toggleClass("debug"));
 
 	});
 
@@ -106,9 +116,6 @@ if( typeof jQuery !== 'undefined' ) {
 	// Tooltip with BS breakpoint info ##
 	function q_bootstrap_tooltip( load, resize ) {
 
-		// assign target ##
-		output = jQuery("#breakpoint");
-
 		// sizes ##
 		vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
 		vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
@@ -118,16 +125,16 @@ if( typeof jQuery !== 'undefined' ) {
 		load = load || false;
 
 		// update attrs ##
-		output.attr('title', 'Width: '+ vw +'px<br />Height: '+ vh +'px' );
-		output.html( q_bootstrap_breakpoint().name );
+		$bs_helper.attr('title', 'Width: '+ vw +'px<br />Height: '+ vh +'px' );
+		$bs_helper.html( q_bootstrap_breakpoint().name );
 
 		if ( load ) {
 
 			// trigger tooltip ##
-			output.tooltip('show');
+			$bs_helper.tooltip('show');
 
 			setTimeout(function(){
-				output.tooltip('hide');
+				$bs_helper.tooltip('hide');
 			}, 3000);
 
 		}
@@ -136,7 +143,7 @@ if( typeof jQuery !== 'undefined' ) {
 		if ( resize ) {	
 
 			// trigger tooltip ##
-			output.tooltip('show');
+			$bs_helper.tooltip('show');
 
 			// set short timeout to update document dimensions, as they change ##
 			setInterval(function(){
@@ -151,7 +158,7 @@ if( typeof jQuery !== 'undefined' ) {
 				
 						// when resizing is done, set a timeout for 3 secs, then close the tooltip ##
 						setTimeout(function(){
-							output.tooltip('hide');
+							$bs_helper.tooltip('hide');
 						}, 3000 );
 
 					}
@@ -176,8 +183,8 @@ if( typeof jQuery !== 'undefined' ) {
 };
 </script>
 <span 
-	id="breakpoint" 
-	class="badge badge-warning" 
+	id="bs_helper" 
+	class="nodebug badge badge-warning" 
 	data-toggle="tooltip" 
 	data-placement="top"
 	data-html="true"
