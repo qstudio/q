@@ -1,3 +1,7 @@
+### 4.6.8 ###
+
+* Fixes: get logic for thumbnail media queries
+
 ### 4.6.7 ###
 
 * Fixes: to Bootstrap Helper module to include deubbing tool

@@ -35,34 +35,50 @@ class media extends \Q {
 
 		// to make this more generic, we will get the current wp_post, if this is not passed ##
 		if (
-			! isset( $args['post'] )
+			! isset( $args['config']['post'] )
 		){
 
-			$args['post'] = get\post::object();
+			$args['config']['post'] = get\post::object();
+
+		} else {
+
+			$args['post'] = $args['config']['post'];
+
+		}
+
+		// let's also pass the handle, if set ##
+		if (
+			isset( $args['config']['handle'] )
+		){
+
+			$args['handle'] = $args['config']['handle'];
 
 		}
 
         // test incoming args ##
-        // self::log( $args );
+        // h::log( $args );
 
 		// check for post thumbnail ##
         if ( ! \has_post_thumbnail( $args['post']->ID ) ) { 
 			
-			h::log( 'd:>Post does not have a thumbnail' );
+			h::log( 'd:>Post: "'.$args['post']->post_title.'" does not have a thumbnail' );
 
 			return false; 
 		
 		}
 
-		// show small image, linking to larger image ##
-		if ( ! $args['attachment_id'] = \get_post_thumbnail_id( $args['post']->ID ) 
+		// get thumbnail ID ##
+		if ( 
+			! $args['attachment_id'] = \get_post_thumbnail_id( $args['config']['post']->ID ) 
 		){
 
-			h::log('d:>get_post_thumbnail_id returned false' );
+			h::log('d:>get_post_thumbnail_id() for Post: "'.$args['config']['post']->post_title.'" returned false' );
 
 			return false;
 
 		}
+
+		// h::log( $args );
 		
 		// bounce on to get src attrs ##
 		$array = self::src( $args );
@@ -219,6 +235,7 @@ class media extends \Q {
 		){
 
 			// nothing to do ##
+			// h::log( 'e:> Handle passed $args->handle: '.$args['handle'] );
 
 		// handle filtered into config by markup pre-processor ##
 		} else if ( 
@@ -230,10 +247,14 @@ class media extends \Q {
 
 			$args['handle'] = \q_willow::$args[ $args['field'] ]['config']['handle'];
 
+			// h::log( 'e:> Handle grabbed from willow config->handle: '.$args['handle'] );
+
 		// filterable default ##
 		} else {
 
 			$args['handle'] = \apply_filters( 'q/get/media/src/handle', 'medium' );
+
+			// h::log( 'e:> Handle set by filterable default: '.$args['handle'] );
 
 		}
 
@@ -242,7 +263,15 @@ class media extends \Q {
         //     self::$args['field']['src']['handle'] : // get handle defined in calling args ##
         //     \apply_filters( 'q/render/type/src/handle', 'medium' ); // filterable default ##
 
-        // h::log( 'Handle: '.$args['handle'] );
+		/*
+		// Testing feedback ##
+		h::log( 'e:>Handle: '.$args['handle'] );
+		h::log( \get_intermediate_image_sizes() );
+		global $_wp_additional_image_sizes;
+		if ( isset( $_wp_additional_image_sizes[ $args['handle'] ] ) ) {
+			h::log( $_wp_additional_image_sizes[ $args['handle'] ] ); 
+		}
+		*/
 
         // test incoming args ##
         // h::log( \q_willow::$args[ $args['field'] ] );

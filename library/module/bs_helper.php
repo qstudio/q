@@ -102,7 +102,9 @@ if( typeof jQuery !== 'undefined' ) {
 		q_bootstrap_tooltip( true, false );
 
 		// click to add debug borders ##
-		$bs_helper.click(() => jQuery("body").toggleClass("debug"));
+		$bs_helper.click( function() { 
+			jQuery("body").toggleClass("debug"); 
+		});
 
 	});
 
