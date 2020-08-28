@@ -252,7 +252,10 @@ Date:       {$date}
 
             return false;
 
-        }
+		}
+		
+		// prepare array for inclusion - @todo, add back ordering, if required ##
+		// self::prepare();
 
         // empty string ##
         $string = '';
@@ -283,7 +286,7 @@ Date:       {$date}
 
             break ;        
 
-            // if we are not debugging, then we generate a file "q.theme.js" and dump the scripts in order - stripping the <script> tag wrappers ##
+            // if we are not debugging, then we generate a file "/module/theme.min.js" and dump the scripts in order - stripping the <script> tag wrappers ##
             case ( false ):
             default:
 
@@ -299,8 +302,8 @@ Date:       {$date}
 
                     touch( $file ) ;
 
-                }
-
+				}
+				
                 // flatten ##
                 $string .= implode( "", self::$array );
 
@@ -337,7 +340,33 @@ Date:       {$date}
 
         }
 
-    }
+	}
+	
+
+
+	/**
+	 * Prepare array
+	*/
+	public static function prepare(){
+
+		// get stored options, for theme javascript inclusion ##
+		$option = core\option::get();
+
+		h::log( self::$array );
+
+		// module JS - @todo.. this will get moved into _source/js ##
+        if ( 
+			isset( $option->module_asset->js ) 
+			&& 1 == $option->module_asset->js
+		){
+
+			// get the stored theme JS
+
+			// self::$array
+
+		}
+
+	}
 
 
 

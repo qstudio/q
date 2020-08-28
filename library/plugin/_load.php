@@ -31,6 +31,9 @@ class plugin extends \Q {
 			// acf ##
 			'acf' => h::get( 'plugin/acf.php', 'return', 'path' ),
 
+			// advanced forms ##
+			// 'advanced_forms' => h::get( 'plugin/advanced_forms.php', 'return', 'path' ),
+
 			// gravityforms ##
 			// 'gravityforms' => h::get( 'plugin/gravityforms.php', 'return', 'path' ),
 

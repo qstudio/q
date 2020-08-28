@@ -70,7 +70,11 @@ class acf_form extends \Q {
 		\add_filter( 'af/form/button_attributes', [ get_class(), '__af_form_button_attributes' ], 10, 3 );
 
 		// reduce loaded assets ##
-		\add_action( 'af/form/enqueue/key=form_5f464607465e8', [ get_class(), '__form_remove_enqueues' ] );
+		if ( ! \is_admin() ) {
+			
+			// \add_action( 'wp_enqueue_script', [ get_class(), '__form_remove_enqueues' ], 1000 );
+
+		}
 
 	}
 
@@ -96,6 +100,8 @@ class acf_form extends \Q {
 
 
 	public static function __form_remove_enqueues() {
+
+		// h::log( 'e:>HERE..' );
 
 		// Stylized select (including user and post fields)
 		wp_dequeue_script( 'select2' );

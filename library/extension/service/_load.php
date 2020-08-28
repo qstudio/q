@@ -31,6 +31,9 @@ class service extends \Q {
 			// asana ## @todo.. I like asana .. #
 			'asana' => h::get( 'extension/service/asana.php', 'return', 'path' ),
 
+			// codepen ##
+			// 'codepen' => h::get( 'extension/service/codepen.php', 'return', 'path' ),
+
 			// github ##
 			'github' => h::get( 'extension/service/github.php', 'return', 'path' ),
 

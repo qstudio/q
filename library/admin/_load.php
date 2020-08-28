@@ -38,6 +38,9 @@ class admin extends \Q {
 			// options ##
 			'option' => h::get( 'admin/option.php', 'return', 'path' ),
 
+			// tinymce ##
+			'tinymce' => h::get( 'admin/tinymce.php', 'return', 'path' ),
+
 		];
 
     }
