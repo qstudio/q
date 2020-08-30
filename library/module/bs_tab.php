@@ -4,8 +4,9 @@ namespace q\module;
 
 use q\core;
 use q\core\helper as h;
-// use q\core\config as config;
 use q\asset;
+
+// @TODO - do we make this a module with markup and different layouts? to standerdize the usage of tabs we have already and allow for wiki style sidebar tabs?
 
 // load it up ##
 \q\module\bs_tab::__run();
