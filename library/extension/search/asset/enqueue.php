@@ -21,47 +21,28 @@ class enqueue extends extension\search {
 
 		// h::log( 'ADDING Q Search assets...' );
 
-		// get Q stored option ##
-		// $option = config::get();
-		// // h::log( $option );
-		// // h::log( 'd:>adding q search assets..' );
-		// // h::log( 'd:>'.h::get( "ui/asset/css/q.search.css", 'return' ) );
+		// minified - .min - version used based on debugging setting - local OR global ##
+		$min = ( true === ( \Q::$debug ?: \Q::$debug ) ) ? '' : '.min' ;
+		// $min = '' ; // temp over-rule ##
 
-		// // Load CSS
-        // if ( 
-        //     isset( $option->q_search->css ) 
-        //     && true == $option->q_search->css    
-        // ) {
+		// add JS ## -- after all dependencies ##
+		\wp_enqueue_script( 
+			'q-search-js', 
+			h::get( "extension/search/asset/javascript/q.search$min.js", 'return' ), // overrideable ##
+			array( 'jquery' ), 
+			self::version, 
+			true // in footer ##
+		);
 
-			// h::log( 'd:>adding q search CSS assets..' );
-
-			// \wp_register_style( 'q-search-css', h::get( "extension/search/asset/css/index.css", 'return' ), '', self::version, 'all' );
-			// \wp_enqueue_style( 'q-search-css' );
-
-		// }
-
-		// // Load JS
-        // if ( 
-        //     isset( $option->q_search->js ) 
-        //     && true == $option->q_search->js    
-        // ) {
-
-			// h::log( 'd:>adding q search JS assets..' );
-
-			// add JS ## -- after all dependencies ##
-			\wp_enqueue_script( 'q-search-js', h::get( "extension/search/asset/javascript/q.search.js", 'return' ), array( 'jquery' ), self::version, true );
-
-			// pass variable values defined in parent class ##
-			\wp_localize_script( 'q-search-js', 'q_search', array(
-					'ajaxurl'           => \admin_url( 'admin-ajax.php', \is_ssl() ? 'https' : 'http' ), 
-					'debug'             => self::$debug,
-					'site_name'         => \get_bloginfo("sitename")
-				,   'search'            => __( 'Search', 'q-search' )
-				,   'search_results_for'=> __( 'Results', 'q-search' )
-				//,   'on_load_text' => __( 'Search & filter to see results', 'q-search' )
-			));
-
-		// }
+		// pass variable values defined in parent class ##
+		\wp_localize_script( 'q-search-js', 'q_search', array(
+				'ajaxurl'           => \admin_url( 'admin-ajax.php', \is_ssl() ? 'https' : 'http' ), 
+				'debug'             => self::$debug,
+				'site_name'         => \get_bloginfo("sitename")
+			,   'search'            => __( 'Search', 'q-search' )
+			,   'search_results_for'=> __( 'Results', 'q-search' )
+			//,   'on_load_text' => __( 'Search & filter to see results', 'q-search' )
+		));
 
 	  }
 

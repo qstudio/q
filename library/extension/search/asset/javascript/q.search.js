@@ -99,9 +99,10 @@
 
         },
 
-        filter: function (arr) {
+        filter: function ( arr ) {
 
-            // console.log("running filter");
+			// console.log("running filter");
+			// console.dir( arr );
 
             var self = this;
 
@@ -266,14 +267,7 @@
             if ( window[ref] ) {
 
                 // console.log( 'calling callback with delay from q_search: '+ref );
-
-                // setTimeout(
-                    // function()
-                    // {
-                      //do something special
-                    //   console.log( 'Now....' );
-                      window[ref]();
-                    // }, 1000);
+				window[ref]();
 
             } else {
 
@@ -377,24 +371,24 @@
 			
 			// reset from class callback ##
 			$("#q-search").on('click', '.qs-reset', function(e) {
-				// console.log( 'RESET...' );
+				// console.log( 'RESET from class callback...' );
 				$("#q-search-form").trigger("reset");
             });
-
 
             $("#q-search-form").on("change submit reset", function(e) {
 				
 				if ( self.running == false ) {
 
-                    if (e.type == 'reset') {
+                    if ( e.type == 'reset' ) {
 
-                        formData = '';
+                        formData = 'empty=true';
 						
 						// hide reset ##
 						$("#q-search-form input[type='reset']").hide();
 
 						// empty searcher ##
-						$('#searcher').removeAttr('value');
+						// $('#searcher').removeAttr('value');
+						$('#searcher').val('');
 
 						// reset selects ##
 						$('.q-search-select').prop('selectedIndex',0);
@@ -406,7 +400,7 @@
 						
                     }
 
-					// console.log( 'Are we here>..?' );
+					// console.log( 'Are we here..?' );
 
                     //self.first = false; // load normally from now ##
 

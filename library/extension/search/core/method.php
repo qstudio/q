@@ -397,27 +397,34 @@ class method extends extension\search {
 
         }
 
-
         // h::log( $posted['_POST_filters'] );
 
         // blank ##
         // $filters = '';
         $filters = 
-            isset( $posted['_POST_filters'] ) ? 
-            array_filter( $posted['_POST_filters'] ) : 
-            false ;
+            isset( $posted['_POST_filters'] ) ?
+            $posted['_POST_filters'] : 
+			false ;
+			
+		// if $filters is an array, check if it's empty ##
+		if( is_array( $filters ) ){
 
-        // if $filters is an rmpty array, let's kick back false  #
-        if ( empty( $filters ) ) {
+			$filters = array_filter( $filters );
 
-            // h::log( 'Nothing interesting in filters..' );
+			// if $filters is an rmpty array, let's kick back false  #
+			if ( empty( $filters ) ) {
 
-            $filters = false;
+				h::log( 'Nothing interesting in filters..' );
+	
+				$filters = false;
+	
+			} 
 
-        } 
+		// } else {
 
-        // counter ##
-        // $c = 0;
+		// 	if ( 'empty' )
+
+		}
 
         // switch over user cases ##
         switch ( self::properties( 'table' ) ) {
@@ -437,7 +444,9 @@ class method extends extension\search {
 
             break ;
 
-        }
+		}
+		
+		// h::log( $filters );
 
         // return filterable values ##
         return \apply_filters( 'q/search/get_filters/', $filters );
@@ -740,7 +749,7 @@ class method extends extension\search {
 
             // secure with a nonce ##
             $nonce = \check_ajax_referer( 'q-search-nonce', false, false );
-            #h::log( 'nonce: '.$nonce );
+            // h::log( 'nonce: '.$nonce );
 
         }
 
@@ -750,7 +759,7 @@ class method extends extension\search {
 
         // get posted filters ##
         $filters = self::get_filters( $posted );
-        // h::log( $filters );
+        h::log( $filters );
 
         // build args list ##
         $args = self::default_args( $posted );
@@ -758,25 +767,68 @@ class method extends extension\search {
 
         // check if we should progress ##
         if ( 
-            empty( $filters ) 
+			empty( $filters ) 
+			// || 'empty' == $filters
             #&& ! $args['load'] // not first load ##
         ) {
 
             // seems not ##
             // render::no_results(  __( 'Please select a filter.', 'q-search' ) ); // show the sad face :(
 
-			// h::log( 'e:>$Filters were empty..' );
+			h::log( 'e:>$Filters were empty..' );
 
 			if ( 
 				'0' === $control = self::get_control( $load, 'load' )
 			) {
 	
 				// h::log( $control );
-				// h::log( 'e:>Load Blank' );
+				h::log( 'e:>Load Blank' );
 	
 				// return render::load_empty( self::properties( 'load_empty', 'array' ) );
 				return render::feedback( 'load_empty' );
+				
+				// die not ##
+				die();
 	
+			}
+			
+            // get args ##
+            $args = self::empty_args( $posted );
+            
+            // nope ##
+            $pagination = \apply_filters( 'q/search/pagination/load/', false );
+
+            // h::log( 'Pagination: '.$pagination );
+
+		}
+		
+		// check if we should progress ##
+        if ( 
+			// empty( $filters ) 
+			$filters
+			&& array_key_exists( 'empty', $filters )
+			&& true == $filters['empty'] 
+        ) {
+
+            // seems not ##
+            // render::no_results(  __( 'Please select a filter.', 'q-search' ) ); // show the sad face :(
+
+			h::log( 'e:>reset runm check empty state...' );
+
+			if ( 
+				'0' === $control = self::get_control( self::properties( 'control', 'array' ), 'empty' )
+			) {
+	
+				// h::log( $control );
+				h::log( 'e:>Empty on reset' );
+	
+				// return render::load_empty( self::properties( 'load_empty', 'array' ) );
+				return render::feedback( 'load_empty', 'echo', 'die' );
+
+				// nope ##
+				// $pagination = \apply_filters( 'q/search/pagination/load/', false );
+				
+				// die not ##
 				// die();
 	
 			}
@@ -797,18 +849,19 @@ class method extends extension\search {
             // get args ##
             $args = self::empty_args( $posted );
 
-			// h::log( 'e:>No $_POST object - load state' );
+			h::log( 'e:>No $_POST object - load state' );
 			
 			if ( 
 				'0' === $control = self::get_control( self::properties( 'control', 'array' ), 'empty' )
 			) {
 	
-				// h::log( $control );
-				// h::log( 'Empty Blank' );
+				h::log( $control );
+				h::log( 'Empty Blank' );
 	
 				// return render::load_empty( self::properties( 'load_empty', 'array' ) );
 				return render::feedback( 'load_empty' );
 
+				// die not ##
             	die();
 	
 			}
@@ -818,7 +871,7 @@ class method extends extension\search {
 
             // h::log( 'Pagination: '.$pagination );
 
-            #h::log('Running load state query');
+            h::log('Running load state query');
             // h::log( $args );
 
         } else {

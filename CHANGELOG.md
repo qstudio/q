@@ -1,3 +1,7 @@
+### 4.6.9 ###
+
+* Fixes: Search Extension empty logic
+
 ### 4.6.8 ###
 
 * Fixes: get logic for thumbnail media queries

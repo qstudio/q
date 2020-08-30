@@ -728,7 +728,7 @@ class render extends extension\search {
 	 * @since       1.4.0
 	 * @return      String      
 	 */
-	public static function feedback( $use = 'no_posts', $return = 'echo' )
+	public static function feedback( $use = 'no_posts', $return = 'echo', $die = false )
 	{
 
 		// sanity ##
@@ -761,6 +761,9 @@ class render extends extension\search {
 		if( 'echo' == $return ){
 
 			echo $string;
+
+			// from AJAX ##
+			if( $die ) die();
 
 		} else {
 
