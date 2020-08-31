@@ -110,10 +110,8 @@ if( typeof jQuery !== 'undefined' ) {
 		*/
 
 		// read hash from page load and change tab
-		// WE NEED A TAB/PREFIX for loading ###
 		var tab_hash = document.location.hash;
 		var prefix = "tab_";
-		// var tab_to_load = false;
 		var tab_loaded = false;
 		if (tab_hash) {
 
@@ -140,7 +138,7 @@ if( typeof jQuery !== 'undefined' ) {
 				// console.log( 'NO active tab...' );
 				jQuery( '.bs-tabs .nav-link' ).first().addClass('active show');
 				$first = jQuery( '.bs-tabs .nav-link' );
-				// // console.log( $first.attr('aria-controls') )
+				// console.log( $first.attr('aria-controls') )
 				jQuery( '#'+$first.attr('aria-controls') ).addClass('active show');
 			}
 
@@ -149,16 +147,12 @@ if( typeof jQuery !== 'undefined' ) {
 		// allow external tab triggers ##
 		jQuery( '[data-trigger="tab"]' ).click( function( e ) {
 			var href = jQuery( this ).attr( 'href' );
-			// e.preventDefault();
-  			// e.stopImmediatePropagation();
 			window.location.hash = href;
 			jQuery( '[data-toggle="tab"][href="' + href + '"]' ).trigger( 'click' );
 		} );
 
 		// update hash value when bs4 tabs are used ##
 		jQuery('.bs-tabs a').click(function (e) {
-			// e.preventDefault();
- 			// e.stopImmediatePropagation();
 			window.location.hash = this.hash;
 			jQuery( '.bs-tabs .nav-link' ).removeClass('active show');
 		});
