@@ -43,15 +43,16 @@ class meta extends \q\get {
 		
 		// pages might have a parent
 		if ( 
-			'page' === $args['config']['post']->post_type
+			'page' == $args['config']['post']->post_type
 			&& $args['config']['post']->post_parent
+			&& \get_post( $args['config']['post']->post_parent )
 		) {
 
-			// h::log( 'Here..' );
+			$parent = \get_post( $args['config']['post']->post_parent );
 
-            $array['permalink'] = \get_permalink( $args['config']['post']->ID );
-            $array['slug'] = $args['config']['post']->post_name;
-            $array['title'] = $args['config']['post']->post_title;
+            $array['permalink'] = \get_permalink( $parent->ID );
+            $array['slug'] = $parent->post_name;
+            $array['title'] = $parent->post_title;
 
 		// is singular post ##
 		} elseif ( \is_single( $args['config']['post'] ) ) {

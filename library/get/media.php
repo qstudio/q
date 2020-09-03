@@ -61,7 +61,7 @@ class media extends \Q {
 		// check for post thumbnail ##
         if ( ! \has_post_thumbnail( $args['post']->ID ) ) { 
 			
-			h::log( 'd:>Post: "'.$args['post']->post_title.'" does not have a thumbnail' );
+			h::log( 'd:>'.$args['post']->post_type.': "'.$args['post']->post_title.'" does not have a thumbnail' );
 
 			return false; 
 		

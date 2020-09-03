@@ -414,7 +414,7 @@ class method extends extension\search {
 			// if $filters is an rmpty array, let's kick back false  #
 			if ( empty( $filters ) ) {
 
-				h::log( 'Nothing interesting in filters..' );
+				// h::log( 'Nothing interesting in filters..' );
 	
 				$filters = false;
 	
@@ -759,7 +759,7 @@ class method extends extension\search {
 
         // get posted filters ##
         $filters = self::get_filters( $posted );
-        h::log( $filters );
+        // h::log( $filters );
 
         // build args list ##
         $args = self::default_args( $posted );
@@ -775,14 +775,14 @@ class method extends extension\search {
             // seems not ##
             // render::no_results(  __( 'Please select a filter.', 'q-search' ) ); // show the sad face :(
 
-			h::log( 'e:>$Filters were empty..' );
+			// h::log( 'e:>$Filters were empty..' );
 
 			if ( 
 				'0' === $control = self::get_control( $load, 'load' )
 			) {
 	
 				// h::log( $control );
-				h::log( 'e:>Load Blank' );
+				// h::log( 'e:>Load Blank' );
 	
 				// return render::load_empty( self::properties( 'load_empty', 'array' ) );
 				return render::feedback( 'load_empty' );
@@ -820,7 +820,7 @@ class method extends extension\search {
 			) {
 	
 				// h::log( $control );
-				h::log( 'e:>Empty on reset' );
+				// h::log( 'e:>Empty on reset' );
 	
 				// return render::load_empty( self::properties( 'load_empty', 'array' ) );
 				return render::feedback( 'load_empty', 'echo', 'die' );
