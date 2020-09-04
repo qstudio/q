@@ -36,7 +36,7 @@ class bs_gallery extends \Q {
 		// add acf fields ##
 		\add_action( 'acf/init', function() { \q\plugin\acf::add_field_groups( self::add_field_groups() ); }, 1 );
 		
-		// add JS to theme ##
+		// add css to theme ##
         \add_action( 'wp_head', function(){
 			asset\css::ob_get([
 				'view'      => get_class(), 
