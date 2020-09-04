@@ -68,7 +68,20 @@ class navigation {
 		return [ 'siblings' => get\navigation::siblings( $args ) ];
 
 	}
-	
+
+
+	/**
+    * Render children
+    *
+    * @since       4.1.0
+    */
+    public static function children( $args = null ){
+
+		return [ 'children' => get\navigation::children( $args ) ];
+
+	}
+
+
 
 	/**
     * Render back_home_next

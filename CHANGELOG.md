@@ -1,3 +1,9 @@
+### 4.7.0 ###
+
+* Update: navigation::siblings + navigation::children have Willow controllers
+* Update: wp_post head hook update for wp_title
+* Added: module/docs for table of contents / anchor control of wiki / docs content
+
 ### 4.6.9 ###
 
 * Fixes: Search Extension empty logic

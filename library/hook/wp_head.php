@@ -408,6 +408,7 @@ class wp_head extends \Q {
 		// define seperator ##
 		$sep = ' ~ ';
 
+		// pull in some global goodies.. ## 
 		global $page, $paged, $post;
 		
 		// start empty ##
@@ -423,9 +424,11 @@ class wp_head extends \Q {
 		} else {
 		
 			$get_title = \q\get\post::title([ 'filter' => true ]);
+
 			// h::log( $get_title );
 			$title = $get_title['title'];
 
+			// add sep ##
 			$title = $title.$sep;
 
 		}
@@ -437,7 +440,10 @@ class wp_head extends \Q {
 			// h::log( 'Adding $post data..' );
 
             // allow for custom title - via post meta "metatitle" ##
-            $page_title = \get_post_meta( $post->ID, "metatitle", true ) ? \get_post_meta( $post->ID, "metatitle", true ).' '.$sep. ' ' : $title;
+			$page_title = 
+				\get_post_meta( $post->ID, "metatitle", true ) ? 
+				\get_post_meta( $post->ID, "metatitle", true ).' '.$sep. ' ' : 
+				$title ;
 
             // if this is a singular post - but not of type page or post add post type name as parent ##
             if (

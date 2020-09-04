@@ -47,7 +47,7 @@ class module extends \Q {
 			'scroll' 		=> h::get( 'module/scroll.php', 'return', 'path' ),
 			'sharelines' 	=> h::get( 'module/sharelines.php', 'return', 'path' ),
 			'push' 			=> h::get( 'module/push.php', 'return', 'path' ),
-			'table_of_contents' => h::get( 'module/table_of_contents.php', 'return', 'path' ),
+			'docs' 			=> h::get( 'module/docs.php', 'return', 'path' ),
 
 			// plugins ##
 			'anspress' 		=> h::get( 'module/anspress.php', 'return', 'path' ),

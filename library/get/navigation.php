@@ -201,187 +201,50 @@ class navigation extends \q\get {
 
 
 	
-    // /**
-    //  * Get Pagination links
-    //  *
-    //  * @since       1.0.2
-    //  * @return      String      HTML
-    //  */
-    // public static function pagination_OLD( $args = array() )
-    // {
-
-	// 	// global arg validator ##
-	// 	if ( ! $args = render\args::prepare( $args ) ){ 
-		
-	// 		help::log( 'Bailing..' ); 
-		
-	// 		return false; 
-		
-	// 	}
-
-	// 	// h::log( $args );
-
-	// 	if ( 
-	// 		isset( $args['query'] )
-	// 	) {
-
-	// 		$query = $args['query'];
-
-	// 	// grab some global variables ##
-	// 	} else {
-			
-	// 		// h::log( 'Grabbing global query..' );
-	// 		global $wp_query;
-	// 		$query = $wp_query;
-
-	// 	}
-
-	// 	// no query, no pagination ##
-	// 	if ( ! $query ) {
-
-	// 		h::log( 'Nada to query...' );
-
-	// 		return false;
-
-	// 	}
-
-	// 	// get config setting ##
-	// 	$config = core\config::get([ 'context' => 'navigation', 'task' => 'pagination' ]);
-	// 	// h::log( $config );
-
-    //     // work out total ##
-	// 	$total = $query->max_num_pages;
-	// 	// h::log( 'Total: '.$total );
-
-	// 	// append query to pagination links, if set ##
-	// 	$fragement = '';
-
-	// 	// args to query WP ##
-	// 	$paginate_args = [
-	// 		// 'base'         			=> str_replace( 999999999, '%#%', \esc_url( \get_pagenum_link( 999999999 ) ) ),
-	// 		'base'                  => @\add_query_arg('paged','%#%'),
-	// 		'format'       			=> '?paged=%#%',
-	// 		'total'        			=> $total,
-	// 		'current'      			=> max( 1, \get_query_var( 'paged' ) ),
-	// 		'type'         			=> 'array',
-    //         'show_all'              => false,
-    //         'end_size'		        => $config['end_size'], 
-    //         'mid_size'		        => $config['mid_size'],
-    //         'prev_text'             => $config['prev_text'],
-    //         'next_text'             => $config['next_text'],                   
-	// 	];
-
-	// 	// optionally add search query var ##
-	// 	if( ! empty( $query->query_vars['s'] ) ) {
-
-	// 		$paginate_args['add_args'] = array( 's' => \get_query_var( 's' ) );
-	// 		// $query_args['s'] = \get_query_var( 's' );
-	// 		$fragement .= '&s='.\get_query_var( 's' );
-			
-	// 	}
-
-	// 	// h::log( $query_args );
-
-	// 	// filter args ##
-	// 	$paginate_args = \apply_filters( 'q/get/navigation/pagination/args', $paginate_args );
-
-	// 	// get links from WP ##
-	// 	$paginate_links = \paginate_links( $paginate_args );
-
-	// 	// check if we got any links ##
-	// 	if ( 
-	// 		! $paginate_links
-	// 		|| 0 == count( $paginate_links )
-	// 	) {
-
-	// 		h::log( '$paginate_links empty.. bailing' );
-
-	// 		return false;
-
-	// 	}
-
-	// 	// test ##
-	// 	// h::log( $pages );
-	// 	// h::log( 'd:>paged: '.\get_query_var( 'paged' ) );
-
-	// 	// empty array ##
-	// 	$array = [];
-
-	// 	// prepare first item -- unless on first page ##
-	// 	if ( 0 != \get_query_var( 'paged' ) ) {
-	// 		$link_first = '?paged=1'.$fragement;
-	// 		$array[] = '<li class="'.$config['li_class'].'"><a class="'.$config['class_link_first'].'" rel="1" href="'.\esc_url( $link_first ).'">'.$config['first_text'].'</a></li>';
-	// 	}
-
-	// 	// merge pagination into links ##
-	// 	$array = array_merge( $array, $paginate_links ) ;
-
-	// 	// prepare last item ##
-	// 	if ( $total != \get_query_var( 'paged' ) ) {
-	// 		$link_last = '?paged='.$total.$fragement;
-	// 		$array[] = '<li class="'.$config['li_class'].'"><a class="'.$config['class_link_last'].'" rel="'.$total.'" href="'.\esc_url( $link_last ).'">'.$config['last_text'].'</a></li>';
-	// 	}
-
-	// 	// test ##
-    //     // h::log( $array );
-
-    //     // kick back array ##
-    //     return $array;
-
-	// }
-	
-
-
-	
     /**
      * Get Sibling pages
      *
      * @since       1.0.1
      * @return      string       HTML Menu
      */
-    public static function siblings( $args = array() )
+    public static function siblings( $args = null )
     {
 
-        // get the_post ##
-        if ( ! $the_post = self::the_post() ) { return false; }
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+		){
 
-        // Parse incoming $args into an array and merge it with $defaults - caste to object ##
-        $args = ( object ) \wp_parse_args( $args, \q_theme::$the_navigation );
+			h::log( 'e:>Error in pased args' );
 
-        #// find out "depth" of current page ##
-        #$depth = count( get_post_ancestors( $global_post->ID ) );
-        #pr( $depth );
+			return false;
 
-        // work out who to list pages from ##
-        #$post_parent = $depth == 0 ? $global_post : get_post( $global_post->post_parent );
-        #pr( $post_parent->ID );
+		}
 
-        $post_parent = array_reverse( \get_post_ancestors( $global_post->ID ) );
-        #$first_parent = get_page($parent[0]);
-        #pr( $post_parent[0] );
+		// to make this more generic, we will get the current wp_post, if this is not passed ##
+		if (
+			! isset( $args['config']['post'] )
+		){
+
+			$args['config']['post'] = get\post::object();
+
+		}
+
+		// h::log( $args );
 
         // meta_query to exclude certain sub pages from desktop on screen sub navigation ##
-        $meta_query = array(); // nada ##
-        if ( 'desktop' == h::device() ) {
+        $meta_query = []; // nada ##
 
-            $meta_query =
-                array(
-                    array(
-                        'key'       => 'the_navigation_exclude',
-                        'compare'   => 'NOT EXISTS',
-                    )
-                );
-
-        }
-
-        // query for child or sibling's post ##
+		// query for child or sibling's post ##
+		// @todo - pass arguments from context/navigation
         $wp_args = array(
-            'post_type'         => $args->post_type,
-            'post_parent'       => $post_parent[0],
+            'post_type'         => 'page', //$args->post_type,
+            'post_parent'       => $args['config']['post']->post_parent,
             'orderby'           => 'menu_order',
             'order'             => 'ASC',
-            'posts_per_page'    => $args->posts_per_page,
-            'meta_query'        => $meta_query
+            'posts_per_page'    => -1,//$args->posts_per_page,
+            // 'meta_query'        => $meta_query
         );
 
         #pr( $wp_args );
@@ -389,67 +252,158 @@ class navigation extends \q\get {
         $object = new \WP_Query( $wp_args );
 
         // test returned array ##
-        #self::log( $object->posts );
-
-        // prepend parent post, useful when creating navigation menu. Remove if not needed ##
-        if ( $args->add_parent && $object->posts ) { array_unshift( $object->posts, $post_parent ); }
+        // h::log( $object->posts );
 
         // nothing cooking ##
         if ( ! $object->have_posts() ) { return false; }
 
         // $posts array ##
-        $posts = array();
+		$array = [];
+		
+		// iterate ##
+		$count = 0;
 
         // loop over all posts ##
         foreach ( $object->posts as $post ) {
 
-            $item = new \stdClass();
-
             // make WP functions available ##
-            #setup_postdata( $post );
+			setup_postdata( $post );
+			
+			// id ##
+			$array[$count]['post_id'] = $post->ID ;
 
             // title ##
-            $item->title = 
-                \get_post_meta( $post->ID, 'template_navigation_title' ) ? 
-                \get_post_meta( $post->ID, 'template_navigation_title', true ) : 
-                $post->post_title ;
+            $array[$count]['post_title'] = $post->post_title ;
 
             // permalink ##
-            $item->permalink = \get_permalink( $post->ID );
+            $array[$count]['post_permalink'] = \get_permalink( $post->ID );
 
             // class & highlight ##
-            $item->class = 'post';
-
-            // class & highlight ##
-            $item->li_class = 
-                $post->ID === $global_post->ID ? 
-                'current_page_item page-'.\sanitize_key( $post->post_name ).' post-'.$post->ID : 
-                'post-'.$post->ID.' page-'.\sanitize_key( $post->post_name ) ;
-
-            // class ##
-            $item->data = false;
-
-            // slim post object to fields we need ##
-            #$item = q_trim_post( $item );
+            $array[$count]['highlight'] = 
+                $post->ID === $args['config']['post']->ID ? 
+                'active current' : 
+                '' ;
 
             // sort out global $post after WP_Query loop ##
             \wp_reset_postdata();
 
-            #self::log( $item );
-
-            // add to array ##
-            $posts[] = $item;
+			// iterate ##
+			$count ++;
 
         }
 
         // test posts #
-        #pr( $object->posts );
+        // h::log( $array );
 
-        // allow posts to be filtered ##
-        // $posts = \apply_filters( 'q/get/wp/the_navigation', $posts );
+		// return ##
+		return get\method::prepare_return( $args, $array );
 
-        // return object ##
-        return $posts;
+	}
+	
+
+
+	/**
+     * Get children pages
+     *
+     * @since       1.0.1
+     * @return      string       HTML Menu
+     */
+    public static function children( $args = null )
+    {
+
+		// sanity ##
+		if (
+			is_null( $args )
+			|| ! is_array( $args )
+		){
+
+			h::log( 'e:>Error in pased args' );
+
+			return false;
+
+		}
+
+		// to make this more generic, we will get the current wp_post, if this is not passed ##
+		if (
+			! isset( $args['config']['post'] )
+		){
+
+			$args['config']['post'] = get\post::object();
+
+		}
+
+		// h::log( $args );
+
+        // meta_query to exclude certain sub pages from desktop on screen sub navigation ##
+        $meta_query = []; // nada ##
+
+		// query for child or sibling's post ##
+		// @todo - pass arguments from context/navigation
+        $wp_args = array(
+            'post_type'         => 'page', //$args->post_type,
+            'post_parent'       => $args['config']['post']->ID,
+            'orderby'           => 'menu_order',
+            'order'             => 'ASC',
+            'posts_per_page'    => -1,//$args->posts_per_page,
+            // 'meta_query'        => $meta_query
+        );
+
+        #pr( $wp_args );
+
+        $object = new \WP_Query( $wp_args );
+
+        // test returned array ##
+        // h::log( $object->posts );
+
+        // nothing cooking ##
+        if ( ! $object->have_posts() ) { return false; }
+
+        // $posts array ##
+		$array = [];
+		
+		// iterate ##
+		$count = 0;
+
+        // loop over all posts ##
+        foreach ( $object->posts as $post ) {
+
+            // make WP functions available ##
+			setup_postdata( $post );
+			
+			// id ##
+			$array[$count]['post_id'] = $post->ID ;
+
+            // title ##
+			$array[$count]['post_title'] = $post->post_title ;
+
+			// modified ##
+			$array[$count]['post_modified_date'] = \get_the_modified_date( '', $post->ID ) ;
+			
+			// title ##
+            $array[$count]['post_excerpt'] = get\post::excerpt_from_id( $post->ID, 200 );
+
+            // permalink ##
+            $array[$count]['post_permalink'] = \get_permalink( $post->ID );
+
+            // class & highlight ##
+            $array[$count]['highlight'] = 
+                $post->ID === $args['config']['post']->ID ? 
+                'active current' : 
+                '' ;
+
+            // sort out global $post after WP_Query loop ##
+            \wp_reset_postdata();
+
+			// iterate ##
+			$count ++;
+
+        }
+
+        // test posts #
+        // h::log( $array );
+
+		// return ##
+		return get\method::prepare_return( $args, $array );
 
     }
 	

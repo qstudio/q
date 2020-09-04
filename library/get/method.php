@@ -63,6 +63,8 @@ class method extends \q\get {
 
 		}
 
+		// h::log( $array );
+
 		// return all arrays ##
 		return $array ;
 

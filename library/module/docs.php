@@ -8,9 +8,9 @@ use q\core\helper as h;
 use q\asset;
 
 // load it up ##
-\q\module\table_of_contents::__run();
+\q\module\docs::__run();
 
-class table_of_contents extends \Q {
+class docs extends \Q {
     
     static $args = array();
 
@@ -22,18 +22,18 @@ class table_of_contents extends \Q {
 
 		// make running dependent on module selection in Q settings ##
 		if ( 
-			! isset( core\option::get('module')->table_of_contents )
-			|| true !== core\option::get('module')->table_of_contents 
+			! isset( core\option::get('module')->docs )
+			|| true !== core\option::get('module')->docs 
 		){
 
-			// h::log( 'd:>table_of_contents is not enabled.' );
+			// h::log( 'd:>docs is not enabled.' );
 
 			return false;
 
 		}
 
 		// add acf fields ##
-		\add_action( 'acf/init', function() { \q\plugin\acf::add_field_groups( self::add_field_groups() ); }, 1 );
+		// \add_action( 'acf/init', function() { \q\plugin\acf::add_field_groups( self::add_field_groups() ); }, 1 );
 		
         // add JS to footer/script ##
         \add_action( 'wp_footer', function(){
@@ -56,10 +56,10 @@ class table_of_contents extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['table_of_contents'] = 'Table of Contents';
+		$field['choices']['docs'] = 'Documents';
 
 		// make it selected ##
-		$field['default_value'][0] = 'table_of_contents';
+		$field['default_value'][0] = 'docs';
 
 		// kick back ##
 		return $field;
@@ -67,168 +67,6 @@ class table_of_contents extends \Q {
 	}
 
 	
-
-    /**
-    * Load up ACF fields
-    * 
-    * @since       1.0.0
-    */
-    public static function add_field_groups()
-    {
-
-		// define field groups - exported from ACF ##
-        $groups = array (
-
-            'table_of_contents' => array(
-                'key' => 'table_of_contents',
-				'title' => 'Table of Contents',
-				'fields' => array(
-					array(
-						'key' => 'field_table_of_contents_related',
-						'label' => 'Related',
-						'name' => 'table_of_contents_related',
-						'type' => 'post_object',
-						'instructions' => '',
-						'required' => 1,
-						'conditional_logic' => 0,
-						'wrapper' => array(
-							'width' => '',
-							'class' => '',
-							'id' => '',
-						),
-						'hide_admin' => 0,
-						'post_type' => array(
-							0 => 'post',
-						),
-						'taxonomy' => '',
-						'allow_null' => 0,
-						'multiple' => 0,
-						'return_format' => 'object',
-						'ui' => 1,
-					),
-					array(
-						'key' => 'field_table_of_contents_repeater',
-						'label' => 'Content',
-						'name' => 'table_of_contents_repeater',
-						'type' => 'repeater',
-						'instructions' => '',
-						'required' => 0,
-						'conditional_logic' => 0,
-						'wrapper' => array(
-							'width' => '',
-							'class' => '',
-							'id' => '',
-						),
-						'hide_admin' => 0,
-						'collapsed' => 'field_table_of_contents_row_title',
-						'min' => 0,
-						'max' => 20,
-						'layout' => 'row',
-						'button_label' => '',
-						'sub_fields' => array(
-							array(
-								'key' => 'field_table_of_contents_row_title',
-								'label' => 'Title',
-								'name' => 'row_title',
-								'type' => 'text',
-								'instructions' => '',
-								'required' => 1,
-								'conditional_logic' => 0,
-								'wrapper' => array(
-									'width' => '',
-									'class' => '',
-									'id' => '',
-								),
-								'hide_admin' => 0,
-								'default_value' => '',
-								'placeholder' => '',
-								'prepend' => '',
-								'append' => '',
-								'maxlength' => '',
-							),
-							array(
-								'key' => 'field_table_of_contents_row_header',
-								'label' => 'Heading',
-								'name' => 'row_header',
-								'type' => 'select',
-								'instructions' => '',
-								'required' => 1,
-								'conditional_logic' => 0,
-								'wrapper' => array(
-									'width' => '',
-									'class' => '',
-									'id' => '',
-								),
-								'hide_admin' => 0,
-								'choices' => array(
-									// 'h1' => 'H1',
-									'h2' => 'H2',
-									'h3' => 'H4',
-									'h4' => 'H4',
-									'h5' => 'H5',
-									// 'h6' => 'H6',
-								),
-								'default_value' => 'h4',
-								'allow_null' => 0,
-								'multiple' => 0,
-								'ui' => 0,
-								'return_format' => 'value',
-								'ajax' => 0,
-								'placeholder' => '',
-							),
-							array(
-								'key' => 'field_table_of_contents_row_content',
-								'label' => 'Content',
-								'name' => 'row_content',
-								'type' => 'wysiwyg',
-								'instructions' => '',
-								'required' => 1,
-								'conditional_logic' => 0,
-								'wrapper' => array(
-									'width' => '',
-									'class' => '',
-									'id' => '',
-								),
-								'hide_admin' => 0,
-								'default_value' => '',
-								'tabs' => 'all',
-								'toolbar' => 'full',
-								'media_upload' => 1,
-								'delay' => 1,
-							),
-						),
-					),
-				),
-				'location' => array(
-					array(
-						array(
-							'param' => 'page_template',
-							'operator' => '==',
-							'value' => 'docs.willow',
-						),
-					),
-				),
-				'menu_order' => 0,
-				'position' => 'normal',
-				'style' => 'default',
-				'label_placement' => 'top',
-				'instruction_placement' => 'label',
-				'hide_on_screen' => '',
-				'active' => true,
-				'description' => '',
-			)
-
-		);
-		
-		// direct filter ##
-		$groups = \apply_filters( 'q/module/table_of_contents/acf', $groups );
-
-		// h::log( $groups );
-		return $groups;
-
-    }
-
-
     
     
     /**
@@ -248,8 +86,37 @@ if( typeof jQuery !== 'undefined' ) {
 
 	jQuery(window).load(function(){
 
+		// move .scrollspy-item links below active page in navigation
+		jQuery('.scrollspy-item').insertAfter('.current');
+
+		// reset scroll watcher ##
+		clearTimeout( jQuery.data(this, 'scrollTimer'));
+
+		jQuery(window).on('activate.bs.scrollspy', function ( e,obj ) {
+			
+			// console.log(obj.relatedTarget);
+			
+			jQuery.data( this, 'scrollTimer', setTimeout(function() {
+				
+				// do something
+				// console.log("Didn't scroll in 1/4 sec..");
+
+				// no scroll items are marked as active ##
+				if ( ! jQuery(".scrollspy-item.active")[0]){ 
+
+					// console.log("Can't fund any active scrollspy items..");
+
+					// add class to parent again ##
+					jQuery(".list-group-item.current").addClass( 'active' );
+
+				}
+
+			}, 1500 ) );
+
+        });
+
 		// offset ##
-		var navOffset = 0 || jQuery('#wpadminbar').height()+15;
+		var navOffset = 0 || jQuery('#wpadminbar').height();
 
 		// console.log( 'navOffset: '+navOffset );
 
