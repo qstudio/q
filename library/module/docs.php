@@ -82,9 +82,46 @@ class docs extends \Q {
 	
 ?>
 <script>
+// Should be executed BEFORE any hash change has occurred.
+(function(namespace) { // Closure to protect local variable "var hash"
+    if ('replaceState' in history) { // Yay, supported!
+        namespace.replaceHash = function(newhash) {
+            if ((''+newhash).charAt(0) !== '#') newhash = '#' + newhash;
+            history.replaceState('', '', newhash);
+        }
+    } else {
+        var hash = location.hash;
+        namespace.replaceHash = function(newhash) {
+            if (location.hash !== hash) history.back();
+            location.hash = newhash;
+        };
+    }
+})(window);
 if( typeof jQuery !== 'undefined' ) {
 
 	jQuery(window).load(function(){
+
+		// offset ##
+		var navOffset = 0 || jQuery('#wpadminbar').height();
+
+		// check for accordion hash ##
+		docs_hash = q_get_hash_value_from_key( 'doc' );
+		// console.log( 'docs hash: '+docs_hash );
+		var docs_loaded = false;
+
+		// Do scrollto ##
+		if ( docs_hash && ! docs_loaded ) {
+
+			// console.log( 'scroll to doc: '+docs_hash );
+
+			jQuery('html,body').animate({ 
+				scrollTop: jQuery( '#'+docs_hash ).offset().top - navOffset
+			}, 100 );
+
+			// just once ##
+			docs_loaded = true;
+
+		}
 
 		// move .scrollspy-item links below active page in navigation
 		jQuery('.scrollspy-item').insertAfter('.current');
@@ -95,6 +132,18 @@ if( typeof jQuery !== 'undefined' ) {
 		jQuery(window).on('activate.bs.scrollspy', function ( e,obj ) {
 			
 			// console.log(obj.relatedTarget);
+
+			// drop the hash #
+			// scroll_hash = obj.relatedTarget.replace( '#', '' ); 
+
+			// Don't let the browser scroll ##
+			// event.preventDefault();
+			// window.location.hash = '#/doc/'+scroll_hash;
+
+			// This function can be namespaced. In this example, we define it on window:
+			// window.replaceHash( '#/doc/'+scroll_hash );
+
+			// window.history.replaceState()
 			
 			jQuery.data( this, 'scrollTimer', setTimeout(function() {
 				
@@ -115,9 +164,6 @@ if( typeof jQuery !== 'undefined' ) {
 
         });
 
-		// offset ##
-		var navOffset = 0 || jQuery('#wpadminbar').height();
-
 		// console.log( 'navOffset: '+navOffset );
 
 		// Setup Scrollspy ##
@@ -125,19 +171,24 @@ if( typeof jQuery !== 'undefined' ) {
 			.attr('data-spy', 'scroll')
 			.attr('data-target', '#docs')
 			.css({ 'position': 'relative' })
-			.scrollspy({ target: '#docs', offset: navOffset+5 });
+			.scrollspy({ target: '#docs', offset: navOffset });
 
 		// Sort out scrolling ##
 		jQuery('.scrollspy-item').click(function(event) {
 			
 			var href = jQuery(this).attr('href');
+			var anchor = jQuery(this).data('anchor');
+
+			// drop the hash #
+			// href.replace( '#', '' ); 
 
 			// Don't let the browser scroll ##
 			event.preventDefault();
-			window.location.hash = href;
+			// window.location.hash = '#/doc/'+anchor;
+			window.replaceHash( '#/doc/'+anchor );
 
-			// drop the hash #
-			href.replace( '#', '' ); 
+			// check ##
+			// console.log( 'Spy anchor: '+href );
 
 			// Do scrollto ##
 			jQuery('html,body').animate({ 
