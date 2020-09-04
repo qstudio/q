@@ -588,11 +588,11 @@
 
     function q_get_from_top() {
 
-        var adminbarheight = ( typeof adminBarHeight === 'function' ) ? adminBarHeight() : 0 ;
-        var fromTop = $("#q-search-form").length ? $("#q-search-form").offset().top - adminbarheight : 0 ;
+        var adminbarheight = $('#wpadminbar').height() || 0 ;
+        var fromTop = $("#search_content").length ? $("#search_content").offset().top - adminbarheight : 0 ;
         // console.log( 'From Top: '+fromTop );
 
-		return 0;
+		// return 0;
 
         return fromTop;
 
