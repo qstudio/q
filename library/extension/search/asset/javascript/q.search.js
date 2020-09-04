@@ -547,15 +547,31 @@
         'selects': 			'.q-search-select',
         'progbar': 			'#progbar',
         'selected_filters': 'filter-selected'
-    });
+	});
+	
+	$('#search_content').on('shown.bs.collapse', function () {
+
+		// console.log( 'Search UI shown...' );
+
+		$('html, body').animate({ scrollTop: q_get_from_top() }, 300 );
+
+	});
 
     // pagination clicks scroll the viewer back to the top of the page ##
-    $("body").on( 'click', 'nav.pagination a, .q-scroll-top', function(e) {
+    $("body").on( 'click', 'nav.pagination a', function(e) {
+
+		console.log( 'Clicked Q search scroll trigger...' );
 
         // stop default action ##
         e.preventDefault();
 
-        $('html, body').animate({scrollTop: q_get_from_top() }, 300 );
+		$('html, body').animate({ scrollTop: q_get_from_top() }, 300 );
+		
+		/*
+		$('html, body').animate({
+			scrollTop: $("#search_content").offset().top
+		}, 2000);
+		*/
 
     });
 

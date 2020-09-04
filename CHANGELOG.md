@@ -1,3 +1,7 @@
+### 4.7.1 ###
+
+* Fix: to module/search JS logic event listener, moved to bootstrap shown.bs.collapse
+
 ### 4.7.0 ###
 
 * Update: navigation::siblings + navigation::children have Willow controllers
