@@ -59,7 +59,7 @@ class load extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['load'] = 'AJAX Loader';
+		$field['choices']['load'] = 'Q ~ AJAX Post Loader';
 
 		// make it selected ##
 		$field['default_value'][0] = 'load';

@@ -54,7 +54,7 @@ class javascript extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['javascript'] = 'Global Javascript';
+		$field['choices']['javascript'] = 'Q ~ Javascript';
 
 		// make it selected ##
 		$field['default_value'][0] = 'javascript';

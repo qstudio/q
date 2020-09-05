@@ -56,7 +56,7 @@ class bs_scrollspy extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['bs_scrollspy'] = 'Bootstrap Scrollspy';
+		$field['choices']['bs_scrollspy'] = 'Bootstrap ~ Scrollspy';
 
 		// make it selected ##
 		$field['default_value'][0] = 'bs_scrollspy';

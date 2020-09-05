@@ -64,7 +64,7 @@ class bs_toast extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['bs_toast'] = 'Bootstrap Toast';
+		$field['choices']['bs_toast'] = 'Bootstrap ~ Toast';
 
 		// make it selected ##
 		$field['default_value'][0] = 'bs_toast';

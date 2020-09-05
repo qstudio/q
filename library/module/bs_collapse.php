@@ -8,9 +8,9 @@ use q\core\helper as h;
 use q\asset;
 
 // load it up ##
-\q\module\bs_accordion::__run();
+\q\module\bs_collapse::__run();
 
-class bs_accordion extends \Q {
+class bs_collapse extends \Q {
     
     static $args = array();
 
@@ -23,11 +23,11 @@ class bs_accordion extends \Q {
 		// make running dependent on module selection in Q settings ##
 		// h::log( core\option::get('tab') );
 		if ( 
-			! isset( core\option::get('module')->bs_accordion )
-			|| true !== core\option::get('module')->bs_accordion 
+			! isset( core\option::get('module')->bs_collapse )
+			|| true !== core\option::get('module')->bs_collapse 
 		){
 
-			// h::log( 'd:>accordion is not enabled.' );
+			// h::log( 'd:>collapse is not enabled.' );
 
 			return false;
 
@@ -53,10 +53,10 @@ class bs_accordion extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['bs_accordion'] = 'Bootstrap Accordion / Collapse';
+		$field['choices']['bs_collapse'] = 'Bootstrap ~ Collapse';
 
 		// make it selected ##
-		// $field['default_value'][0] = 'bs_accordion';
+		// $field['default_value'][0] = 'bs_collapse';
 
 		// kick back ##
 		return $field;
@@ -83,56 +83,56 @@ if( typeof jQuery !== 'undefined' ) {
 
 	jQuery(window).load(function(){
 
-		// check for accordion hash ##
-		accordion_hash = q_get_hash_value_from_key( 'accordion' );
-		// console.log( 'accordion hash: '+accordion_hash );
-		var accordion_loaded = false;
+		// check for collapse hash ##
+		collapse_hash = q_get_hash_value_from_key( 'collapse' );
+		// console.log( 'collapse hash: '+collapse_hash );
+		var collapse_loaded = false;
 		
-		if ( accordion_hash ) {
+		if ( collapse_hash ) {
 
-			if ( jQuery('.bs-accordion').find('[data-hash="accordion/'+accordion_hash+'/scroll/'+accordion_hash+'"]').length ){
+			if ( jQuery('.bs-collapse').find('[data-hash="collapse/'+collapse_hash+'/scroll/'+collapse_hash+'"]').length ){
 
-				// console.log( 'accordion found: '+accordion_hash );
+				// console.log( 'collapse found: '+collapse_hash );
 
-				jQuery('.bs-accordion').find('[data-hash="accordion/'+accordion_hash+'/scroll/'+accordion_hash+'"]').trigger( 'click' );
+				jQuery('.bs-collapse').find('[data-hash="collapse/'+collapse_hash+'/scroll/'+collapse_hash+'"]').trigger( 'click' );
 				
-				accordion_loaded = true;
+				collapse_loaded = true;
 
 			}
 
 		} 
 
 		/*
-		if( false === accordion_loaded ) {
+		if( false === collapse_loaded ) {
 
-			// console.log( 'accordion_loaded == false' );
+			// console.log( 'collapse_loaded == false' );
 
 			// on load, if no tab active, make first tab-content active/show ##
-			if( ! jQuery( '.bs-accordion > .nav-link' ).hasClass('active') ){
+			if( ! jQuery( '.bs-collapse > .nav-link' ).hasClass('active') ){
 				// console.log( 'NO active tab...' );
-				jQuery( '.bs-accordion .nav-link' ).first().addClass('active show');
-				$first = jQuery( '.bs-accordion .nav-link' );
+				jQuery( '.bs-collapse .nav-link' ).first().addClass('active show');
+				$first = jQuery( '.bs-collapse .nav-link' );
 				// // console.log( $first.attr('aria-controls') )
 				jQuery( '#'+$first.attr('aria-controls') ).addClass('active show');
 			}
 
 		}
 
-		// allow external accordion triggers ##
-		jQuery( '[data-trigger="accordion"]' ).click( function( e ) {
+		// allow external collapse triggers ##
+		jQuery( '[data-trigger="collapse"]' ).click( function( e ) {
 			var href = jQuery( this ).attr( 'href' );
 			e.preventDefault();
 			window.location.hash = href;
-			jQuery( '[data-accordion="accordion"][href="' + href + '"]' ).trigger( 'click' );
+			jQuery( '[data-collapse="collapse"][href="' + href + '"]' ).trigger( 'click' );
 		} );
 
 		*/
 
-		// update hash value when bs4 accordions are used ##
-		jQuery('.bs-accordion button').click(function (e) {
+		// update hash value when bs4 collapses are used ##
+		jQuery('.bs-collapse button').click(function (e) {
 			window.location.hash = jQuery(this).data('hash');
 			// console.log( 'Clicked here..'+jQuery(this).data('hash') );
-			// jQuery( '.bs-accordion .nav-link' ).removeClass('active show');
+			// jQuery( '.bs-collapse .nav-link' ).removeClass('active show');
 		});
 		
 

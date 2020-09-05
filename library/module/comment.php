@@ -148,7 +148,7 @@ class comment extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['comment'] = 'Comment';
+		$field['choices']['comment'] = 'Q ~ Comment';
 
 		// make it selected ##
 		$field['default_value'][0] = 'comment';

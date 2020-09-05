@@ -54,7 +54,7 @@ class anspress extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['anspress'] = 'Plugin : Anspress';
+		$field['choices']['anspress'] = 'Plugin ~ Anspress';
 
 		// make it selected ##
 		// $field['default_value'][0] = 'anspress';

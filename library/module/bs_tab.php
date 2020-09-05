@@ -55,7 +55,7 @@ class bs_tab extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['bs_tab'] = 'Bootstrap Tab';
+		$field['choices']['bs_tab'] = 'Bootstrap ~ Tab';
 
 		// make it selected ##
 		$field['default_value'][0] = 'bs_tab';

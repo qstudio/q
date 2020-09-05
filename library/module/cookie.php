@@ -9,7 +9,7 @@ use q\core\helper as h;
 */
 
 // load it up ##
-\q\module\cookie::run();
+\q\module\cookie::__run();
 
 class cookie extends \Q {
     
@@ -17,7 +17,7 @@ class cookie extends \Q {
     static $slug = false;
     static $value = false;
 
-    public static function run( $args = false )
+    public static function __run( $args = false )
     {
 
         // update passed args ##

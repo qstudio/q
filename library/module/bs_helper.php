@@ -55,7 +55,7 @@ class bs_helper extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['bs_helper'] = 'Bootstrap Helper';
+		$field['choices']['bs_helper'] = 'Bootstrap ~ Helper';
 
 		// make it selected ##
 		$field['default_value'][0] = 'bs_helper';

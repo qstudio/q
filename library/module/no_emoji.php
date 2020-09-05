@@ -63,7 +63,7 @@ class no_emoji extends \Q {
         // h::log( $field['default_value'] );
 
 		// pop on a new choice ##
-		$field['choices']['no_emoji'] = 'No Emoji';
+		$field['choices']['no_emoji'] = 'Q ~ No Emoji';
 		// $field['choices']['banner'] = '@todo - News Banner';
 
 		// make it selected ##

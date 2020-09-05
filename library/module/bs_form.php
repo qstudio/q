@@ -56,7 +56,7 @@ class bs_form extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['bs_form'] = 'Bootstrap Form';
+		$field['choices']['bs_form'] = 'Bootstrap ~ Form';
 
 		// make it selected ##
 		$field['default_value'][0] = 'bs_form';

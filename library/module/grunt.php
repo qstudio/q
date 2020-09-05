@@ -54,7 +54,7 @@ class grunt extends \Q {
         // h::log( $field['default_value'] );
 
 		// pop on a new choice ##
-		$field['choices']['grunt'] = 'Grunt LiveReload JS';
+		$field['choices']['grunt'] = 'Q ~ Grunt LiveReload@1337';
 		// $field['choices']['banner'] = '@todo - News Banner';
 
 		// make it selected ##

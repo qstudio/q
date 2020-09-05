@@ -48,7 +48,7 @@ class bs_modal extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['bs_modal'] = 'Bootstrap Modal';
+		$field['choices']['bs_modal'] = 'Bootstrap ~ Modal';
 
 		// make it selected ##
 		$field['default_value'][0] = 'bs_modal';

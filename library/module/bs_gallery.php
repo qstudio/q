@@ -73,7 +73,7 @@ class bs_gallery extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['bs_gallery'] = 'Bootstrap Gallery';
+		$field['choices']['bs_gallery'] = 'Bootstrap ~ Gallery';
 
 		// make it selected ##
 		$field['default_value'][0] = 'bs_gallery';

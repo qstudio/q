@@ -49,7 +49,7 @@ class push extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['push'] = 'JS Push Control';
+		$field['choices']['push'] = 'Q ~ JS Push Control';
 
 		// make it selected ##
 		$field['default_value'][0] = 'push';

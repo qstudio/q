@@ -88,7 +88,7 @@ class acf_form extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['acf_form'] = 'ACF Form';
+		$field['choices']['acf_form'] = 'Plugin ~ Advanced Forms';
 
 		// make it selected ##
 		$field['default_value'][0] = 'acf_form';

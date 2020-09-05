@@ -64,7 +64,7 @@ class bs_toggle extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['bs_toggle'] = 'Bootstrap Toggle';
+		$field['choices']['bs_toggle'] = 'Bootstrap ~ Toggle';
 
 		// make it selected ##
 		// $field['default_value'][0] = 'bs_toggle';
