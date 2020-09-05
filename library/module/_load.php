@@ -35,6 +35,7 @@ class module extends \Q {
 			'bs_toggle' 	=> h::get( 'module/bs_toggle.php', 'return', 'path' ),
 			'bs_gallery' 	=> h::get( 'module/bs_gallery.php', 'return', 'path' ),
 			'bs_helper' 	=> h::get( 'module/bs_helper.php', 'return', 'path' ),
+			'bs_scrollspy' 	=> h::get( 'module/bs_scrollspy.php', 'return', 'path' ),
 			
 			// Q ##
 			'javascript' 	=> h::get( 'module/javascript.php', 'return', 'path' ),
@@ -47,7 +48,6 @@ class module extends \Q {
 			'scroll' 		=> h::get( 'module/scroll.php', 'return', 'path' ),
 			'sharelines' 	=> h::get( 'module/sharelines.php', 'return', 'path' ),
 			'push' 			=> h::get( 'module/push.php', 'return', 'path' ),
-			'docs' 			=> h::get( 'module/docs.php', 'return', 'path' ),
 			'prism' 		=> h::get( 'module/prism.php', 'return', 'path' ),
 
 			// plugins ##

@@ -8,9 +8,9 @@ use q\core\helper as h;
 use q\asset;
 
 // load it up ##
-\q\module\docs::__run();
+\q\module\bs_scrollspy::__run();
 
-class docs extends \Q {
+class bs_scrollspy extends \Q {
     
     static $args = array();
 
@@ -22,11 +22,11 @@ class docs extends \Q {
 
 		// make running dependent on module selection in Q settings ##
 		if ( 
-			! isset( core\option::get('module')->docs )
-			|| true !== core\option::get('module')->docs 
+			! isset( core\option::get('module')->bs_scrollspy )
+			|| true !== core\option::get('module')->bs_scrollspy 
 		){
 
-			// h::log( 'd:>docs is not enabled.' );
+			// h::log( 'd:>bs_scrollspy is not enabled.' );
 
 			return false;
 
@@ -56,10 +56,10 @@ class docs extends \Q {
     {
 
 		// pop on a new choice ##
-		$field['choices']['docs'] = 'Documents';
+		$field['choices']['bs_scrollspy'] = 'Bootstrap Scrollspy';
 
 		// make it selected ##
-		$field['default_value'][0] = 'docs';
+		$field['default_value'][0] = 'bs_scrollspy';
 
 		// kick back ##
 		return $field;
@@ -105,21 +105,21 @@ if( typeof jQuery !== 'undefined' ) {
 		var navOffset = 0 || jQuery('#wpadminbar').height();
 
 		// check for accordion hash ##
-		docs_hash = q_get_hash_value_from_key( 'doc' );
-		// console.log( 'docs hash: '+docs_hash );
-		var docs_loaded = false;
+		anchor_hash = q_get_hash_value_from_key( 'anchor' );
+		// console.log( 'anchor hash: '+anchor_hash );
+		var anchor_loaded = false;
 
 		// Do scrollto ##
-		if ( docs_hash && ! docs_loaded ) {
+		if ( anchor_hash && ! anchor_loaded ) {
 
-			// console.log( 'scroll to doc: '+docs_hash );
+			// console.log( 'scroll to anchor: '+anchor_hash );
 
 			jQuery('html,body').animate({ 
-				scrollTop: jQuery( '#'+docs_hash ).offset().top - navOffset
+				scrollTop: jQuery( '#'+anchor_hash ).offset().top - navOffset
 			}, 100 );
 
 			// just once ##
-			docs_loaded = true;
+			anchor_loaded = true;
 
 		}
 
@@ -138,10 +138,10 @@ if( typeof jQuery !== 'undefined' ) {
 
 			// Don't let the browser scroll ##
 			// event.preventDefault();
-			// window.location.hash = '#/doc/'+scroll_hash;
+			// window.location.hash = '#/anchor/'+scroll_hash;
 
 			// This function can be namespaced. In this example, we define it on window:
-			// window.replaceHash( '#/doc/'+scroll_hash );
+			// window.replaceHash( '#/anchor/'+scroll_hash );
 
 			// window.history.replaceState()
 			
@@ -169,9 +169,9 @@ if( typeof jQuery !== 'undefined' ) {
 		// Setup Scrollspy ##
 		jQuery('body')
 			.attr('data-spy', 'scroll')
-			.attr('data-target', '#docs')
+			.attr('data-target', '#bs_scrollspy')
 			.css({ 'position': 'relative' })
-			.scrollspy({ target: '#docs', offset: navOffset });
+			.scrollspy({ target: '#bs_scrollspy', offset: navOffset });
 
 		// Sort out scrolling ##
 		jQuery('.scrollspy-item').click(function(event) {
@@ -184,8 +184,8 @@ if( typeof jQuery !== 'undefined' ) {
 
 			// Don't let the browser scroll ##
 			event.preventDefault();
-			// window.location.hash = '#/doc/'+anchor;
-			window.replaceHash( '#/doc/'+anchor );
+			// window.location.hash = '#/anchor/'+anchor;
+			window.replaceHash( '#/anchor/'+anchor );
 
 			// check ##
 			// console.log( 'Spy anchor: '+href );
