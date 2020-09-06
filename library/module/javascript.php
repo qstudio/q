@@ -91,6 +91,23 @@ function q_handle_first_tab(e) {
 
 window.addEventListener('keydown', q_handle_first_tab);
 
+// namespaced client replacestate 
+// Should be executed BEFORE any hash change has occurred.
+(function(namespace) { // Closure to protect local variable "var hash"
+    if ('replaceState' in history) { // Yay, supported!
+        namespace.replaceHash = function(newhash) {
+            if ((''+newhash).charAt(0) !== '#') newhash = '#' + newhash;
+            history.replaceState('', '', newhash);
+        }
+    } else {
+        var hash = location.hash;
+        namespace.replaceHash = function(newhash) {
+            if (location.hash !== hash) history.back();
+            location.hash = newhash;
+        };
+    }
+})(window);
+
 // Avoid `console` errors in browsers that lack a console.
 (function(){for(var a,e=function(){},b="assert clear count debug dir dirxml error exception group groupCollapsed groupEnd info log markTimeline profile profileEnd table time timeEnd timeStamp trace warn".split(" "),c=b.length,d=window.console=window.console||{};c--;)a=b[c],d[a]||(d[a]=e)})();
 

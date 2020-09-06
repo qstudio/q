@@ -82,21 +82,6 @@ class bs_scrollspy extends \Q {
 	
 ?>
 <script>
-// Should be executed BEFORE any hash change has occurred.
-(function(namespace) { // Closure to protect local variable "var hash"
-    if ('replaceState' in history) { // Yay, supported!
-        namespace.replaceHash = function(newhash) {
-            if ((''+newhash).charAt(0) !== '#') newhash = '#' + newhash;
-            history.replaceState('', '', newhash);
-        }
-    } else {
-        var hash = location.hash;
-        namespace.replaceHash = function(newhash) {
-            if (location.hash !== hash) history.back();
-            location.hash = newhash;
-        };
-    }
-})(window);
 if( typeof jQuery !== 'undefined' ) {
 
 	jQuery(window).load(function(){
@@ -123,79 +108,83 @@ if( typeof jQuery !== 'undefined' ) {
 
 		}
 
-		// move .scrollspy-item links below active page in navigation
-		jQuery('.scrollspy-item').insertAfter('.current');
-
-		// reset scroll watcher ##
-		clearTimeout( jQuery.data(this, 'scrollTimer'));
-
-		jQuery(window).on('activate.bs.scrollspy', function ( e,obj ) {
-			
-			// console.log(obj.relatedTarget);
-
-			// drop the hash #
-			// scroll_hash = obj.relatedTarget.replace( '#', '' ); 
-
-			// Don't let the browser scroll ##
-			// event.preventDefault();
-			// window.location.hash = '#/anchor/'+scroll_hash;
-
-			// This function can be namespaced. In this example, we define it on window:
-			// window.replaceHash( '#/anchor/'+scroll_hash );
-
-			// window.history.replaceState()
-			
-			jQuery.data( this, 'scrollTimer', setTimeout(function() {
-				
-				// do something
-				// console.log("Didn't scroll in 1/4 sec..");
-
-				// no scroll items are marked as active ##
-				if ( ! jQuery(".scrollspy-item.active")[0]){ 
-
-					// console.log("Can't fund any active scrollspy items..");
-
-					// add class to parent again ##
-					jQuery(".list-group-item.current").addClass( 'active' );
-
-				}
-
-			}, 1500 ) );
-
-        });
-
 		// console.log( 'navOffset: '+navOffset );
 
-		// Setup Scrollspy ##
-		jQuery('body')
-			.attr('data-spy', 'scroll')
-			.attr('data-target', '#bs_scrollspy')
-			.css({ 'position': 'relative' })
-			.scrollspy({ target: '#bs_scrollspy', offset: navOffset });
+		if( jQuery( '#bs_scrollspy' ).length ) {
 
-		// Sort out scrolling ##
-		jQuery('.scrollspy-item').click(function(event) {
-			
-			var href = jQuery(this).attr('href');
-			var anchor = jQuery(this).data('anchor');
+			// move .scrollspy-item links below active page in navigation
+			jQuery('.scrollspy-item').insertAfter('.current');
 
-			// drop the hash #
-			// href.replace( '#', '' ); 
+			// reset scroll watcher ##
+			clearTimeout( jQuery.data(this, 'scrollTimer'));
 
-			// Don't let the browser scroll ##
-			event.preventDefault();
-			// window.location.hash = '#/anchor/'+anchor;
-			window.replaceHash( '#/anchor/'+anchor );
+			jQuery(window).on('activate.bs.scrollspy', function ( e,obj ) {
+				
+				// console.log(obj.relatedTarget);
 
-			// check ##
-			// console.log( 'Spy anchor: '+href );
+				// drop the hash #
+				// scroll_hash = obj.relatedTarget.replace( '#', '' ); 
 
-			// Do scrollto ##
-			jQuery('html,body').animate({ 
-				scrollTop: jQuery( href ).offset().top - navOffset
-			}, 100 );
+				// Don't let the browser scroll ##
+				// event.preventDefault();
+				// window.location.hash = '#/anchor/'+scroll_hash;
 
-		});
+				// This function can be namespaced. In this example, we define it on window:
+				// window.replaceHash( '#/anchor/'+scroll_hash );
+
+				// window.history.replaceState()
+				
+				jQuery.data( this, 'scrollTimer', setTimeout(function() {
+					
+					// do something
+					// console.log("Didn't scroll in 1/4 sec..");
+
+					// no scroll items are marked as active ##
+					if ( ! jQuery(".scrollspy-item.active")[0]){ 
+
+						// console.log("Can't fund any active scrollspy items..");
+
+						// add class to parent again ##
+						jQuery(".list-group-item.current").addClass( 'active' );
+
+					}
+
+				}, 1500 ) );
+
+			});
+
+			// Setup Scrollspy ##
+			jQuery('body')
+				.attr('data-spy', 'scroll')
+				.attr('data-target', '#bs_scrollspy')
+				.css({ 'position': 'relative' })
+				.scrollspy({ target: '#bs_scrollspy', offset: navOffset });
+
+			// Sort out scrolling ##
+			jQuery('.scrollspy-item').click(function(event) {
+				
+				var href = jQuery(this).attr('href');
+				var anchor = jQuery(this).data('anchor');
+
+				// drop the hash #
+				// href.replace( '#', '' ); 
+
+				// Don't let the browser scroll ##
+				event.preventDefault();
+				// window.location.hash = '#/anchor/'+anchor;
+				window.replaceHash( '#/anchor/'+anchor );
+
+				// check ##
+				// console.log( 'Spy anchor: '+href );
+
+				// Do scrollto ##
+				jQuery('html,body').animate({ 
+					scrollTop: jQuery( href ).offset().top - navOffset
+				}, 100 );
+
+			});
+
+		}
 
 		// anchors ##
 		anchors.add('.anchored');

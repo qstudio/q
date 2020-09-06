@@ -54,7 +54,7 @@ class load extends \Q {
 				|| is_null( $value )
 			) {
 
-				h::log( 'e:>Error loading library: '.$key.' from: "'.core\method::backtrace([ 'return' => 'class_function', 'level' => 2 ]).'"' );
+				h::log( 'e:>Error loading library "'.$key.'" from: "'.core\method::backtrace([ 'return' => 'class_function', 'level' => 2 ]).'"' );
 
 				continue;
 
