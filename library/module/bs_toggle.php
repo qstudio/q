@@ -5,7 +5,7 @@ namespace q\module;
 use q\core;
 use q\core\helper as h;
 // use q\core\config as config;
-use q\asset;
+// use q\asset;
 
 // load it up ##
 \q\module\bs_toggle::__run();
@@ -34,7 +34,7 @@ class bs_toggle extends \Q {
 
 		// add html to footer ##
 		\add_action( 'wp_footer', function(){
-			asset\javascript::ob_get([
+			\q\asset\javascript::ob_get([
 				'view'      => get_class(), 
 				'method'    => 'javascript',
 				// 'handle'    => str_replace( __NAMESPACE__.'\\', '', __CLASS__ )
@@ -42,11 +42,19 @@ class bs_toggle extends \Q {
 		}, 3 );
 
 		// add CSS to header ##
+		// \add_action( 'wp_head', function(){
+		// 	asset\css::ob_get([
+		// 		'view'      => get_class(), 
+		// 		'method'    => 'css',
+		// 		// 'handle'    => str_replace( __NAMESPACE__.'\\', '', __CLASS__ )
+		// 	]);
+		// }, 3 );
+
+		// add reference to _source/scss/module/index.scss
 		\add_action( 'wp_head', function(){
-			asset\css::ob_get([
-				'view'      => get_class(), 
-				'method'    => 'css',
-				// 'handle'    => str_replace( __NAMESPACE__.'\\', '', __CLASS__ )
+			\q\asset\scss::add([
+		 		'class'     => get_class(), 
+		 		'type'    	=> 'module', // add modules to scss list ##
 			]);
 		}, 3 );
 

@@ -38,6 +38,14 @@ class comment extends \Q {
 		}
 
 
+		// add reference to _source/scss/module/index.scss
+		\add_action( 'wp_head', function(){
+			\q\asset\scss::add([
+				'class'     => get_class(), 
+				'type'    	=> 'module', // add modules to scss list ##
+		   ]);
+		}, 3 );
+
 		// html5 -- https://github.com/bourafai/wp-bootstrap-4-comment-walker ##
 		\add_action( 'after_setup_theme', [ get_class(), 'html5_comment_list' ] );
 

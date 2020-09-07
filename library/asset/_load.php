@@ -35,6 +35,9 @@ class asset extends \Q {
 			// css renderer ##
 			'css' => self::get_plugin_path( 'library/asset/css.php' ),
 
+			// scss compiler ##
+			'scss' => self::get_plugin_path( 'library/asset/scss.php' ),
+
 			// js renderer ##
 			'javascript' => self::get_plugin_path( 'library/asset/javascript.php' )
 

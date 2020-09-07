@@ -37,11 +37,21 @@ class bs_scrollspy extends \Q {
 		
         // add JS to footer/script ##
         \add_action( 'wp_footer', function(){
-			asset\javascript::ob_get([
+			\q\asset\javascript::ob_get([
 				'view'      => get_class(), 
 				'method'    => 'javascript',
 			]);
 		}, 3 );
+
+		/*
+		// add reference to _source/scss/module/index.scss
+		\add_action( 'wp_head', function(){
+			\q\asset\scss::add([
+				'class'     => get_class(), 
+				'type'    	=> 'module', // add modules to scss list ##
+		   ]);
+	   }, 3 );
+	   */
 
     }
 

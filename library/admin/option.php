@@ -7,6 +7,9 @@ use q\core\helper as h;
 use q\plugin; 
 use q\get;
 
+// date ##
+use \Datetime;
+
 // load it up ##
 \q\admin\option::run();
 
@@ -40,7 +43,7 @@ class option extends \Q {
 		\add_action( 'admin_bar_menu', [ get_class(), 'admin_bar_menu' ], 999, 1 );
 		
 		// run action on acf options save ##
-		// \add_action( 'acf/save_post', [ get_class(), 'save' ], 20 );
+		\add_action( 'acf/save_post', [ get_class(), 'save' ], 20 );
         
 	}
 	
@@ -65,7 +68,7 @@ class option extends \Q {
      * 
      * @since 2.3.0
      */
-    public static function save()
+    public static function save( $post_id )
     {
 
 		$screen = \get_current_screen();
@@ -74,6 +77,104 @@ class option extends \Q {
 		if ( false !== strpos( $screen->id, "settings_page_q")  ) {
 
 			h::log( 'e:>Saving Q options' );
+
+			// Get newly saved values.
+			$values = \get_fields( $post_id );
+
+			if( 
+				$values 
+				&& is_array( $values )
+				&& array_key_exists( 'q_option_module', $values )
+			){
+
+				// h::log( $values['q_option_module'] );
+
+				// list of parent and child theme requirements for check ##
+				$check = [
+					'child' => [
+						'class'		=> 'q_theme',
+						'method' 	=> 'get_child_theme_path',
+						'path'		=> '/library/_source/scss/module/',
+						'file'		=> 'index.scss',
+					],
+					'parent' => [
+						'class'		=> 'q_theme',
+						'method' 	=> 'get_parent_theme_path',
+						'path'		=> '/library/_source/scss/module/',
+						'file'		=> 'index.scss',
+					],
+				];
+
+				$now = new \DateTime();
+
+				foreach( $check as $key => $value ) {
+
+					// h::log( $value );
+
+					// list to write to file ##
+					$list = "/* Q Studio ~ Modules --> ".$now->format('Y-m-d H:i:s')." */\r\n";
+
+					// check theme get method ##
+					if( 
+						! class_exists( $value['class'] )
+						|| ! method_exists( $value['class'], $value['method'] )
+						|| ! is_callable( [ $value['class'], $value['method'] ]  )  
+					){
+
+						h::log( $value['class'] .'::'.$value['method'].' is not available ' );
+
+						continue;
+
+					}
+
+					// check for theme/xx/modules/index.scss
+					$file = call_user_func( [ $value['class'], $value['method'] ], $value['path'].$value['file'] );
+					if( 
+						! $file
+						|| ! file_exists( $file ) 
+					){
+
+						h::log( $key.' -> '.$value['path'].$value['file'].' file does not exist' );
+
+						continue;
+
+					}
+
+					// loop over active modules ##
+					foreach( $values['q_option_module'] as $module ){
+
+						// check for each module file in theme/xx/_source/scss/modules/_$module.scss
+						// h::log( 'Checking module: '.$module );
+
+						// check for theme/xx/modules/index.scss
+						$file_module = call_user_func( [ $value['class'], $value['method'] ], $value['path'].'_'.$module.'.scss' );
+						if( 
+							! $file_module
+							|| ! file_exists( $file_module ) 
+						){
+
+							// h::log( $value['path'].'_'.$module.'.scss ~ file does not exist' );
+
+							continue;
+
+						}
+
+						// if module found, add name to list to write to index.scss
+						$list .= "@forward '".$module."';\r\n";
+
+					}
+
+					// test what we have ##
+					h::log( $list );
+
+					// write to file ##
+					file_put_contents( $file, $list );
+
+					// loop back again ##
+
+				}
+
+			}
 
 		}
 
