@@ -43,7 +43,7 @@ class option extends \Q {
 		\add_action( 'admin_bar_menu', [ get_class(), 'admin_bar_menu' ], 999, 1 );
 		
 		// run action on acf options save ##
-		\add_action( 'acf/save_post', [ get_class(), 'save' ], 20 );
+		\add_action( 'acf/save_post', [ get_class(), '_save_modules' ], 20 );
         
 	}
 	
@@ -68,7 +68,7 @@ class option extends \Q {
      * 
      * @since 2.3.0
      */
-    public static function save( $post_id )
+    public static function _save_modules( $post_id )
     {
 
 		$screen = \get_current_screen();
