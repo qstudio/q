@@ -1,0 +1,26 @@
+// Config files are includes using @use in each module to limit scope from */q + */bootstrap ##
+
+@use 'bootstrap' as bs; // bootstrap included first, for resets and overwrites... ##
+
+// Global UI ##
+@use 'ui';
+
+// optional plugin css - which can be used to override and locally include ##
+// @use 'plugin';
+
+// extensions -- add from Q Parent ##
+@use 'extension';
+
+// modules
+@use 'module';
+
+// plugins
+@use 'plugin';
+
+// Templates ##
+@use 'view';
+// @import 'view/anspress';
+// @import 'view/404';
+// @import 'view/posts';
+// @import 'view/post';
+// @import 'view/page';

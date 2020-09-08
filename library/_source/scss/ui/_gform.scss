@@ -1,0 +1,90 @@
+@import "variables";
+
+.gfield_visibility_hidden {
+	display: none;
+}
+
+.gfield_description {
+	margin: 7px 0;
+}
+
+.gfield_label {
+	font-size: 12px;
+}
+
+.gform_wrapper li {
+	margin-bottom: 5px;
+}
+
+.validation_error {
+	background-color: $c-pink;
+	color: white;
+	display: block !important;
+	font-size: 16px;
+	padding: 10px;
+}
+
+.validation_message {
+	color: $c-pink;
+	display: block !important;
+	font-size: 12px;
+	margin-top: 5px;
+	position: relative;
+
+	&:before {
+		color: $c-pink;
+		content: "\f06a";
+		font-family: 'Font Awesome 5 Free';
+		font-weight: 900;
+		margin: 5px;
+	}
+}
+
+.gform_wrapper .gfield_error input, .gform_wrapper .gfield_error select, .gform_wrapper .gfield_error textarea {
+	background-color: inherit;
+	border-color: $c-pink;
+	color: inherit;
+}
+
+.ginput_container textarea {
+	height: 120px;
+}
+
+
+.gform_wrapper .gfield_error .gfield_label {
+	color: inherit;
+}
+
+.gform_footer {
+	text-align: right;
+
+
+	.privacy {
+		font-size: 14px;
+		display: inline-block;
+		margin-top: 25px;
+
+		a {
+			font-size: 14px;
+		}
+	}
+}
+
+.gform_footer {
+	float: right;
+	text-align: center;
+	width: 57%;
+}
+
+.gform_wrapper .button, .gform_button {
+	@extend .btn;
+	border: none;
+	display: block;
+	width: 100%;
+}
+
+@media (max-width: 991px) {
+	.gform_footer {
+		width: 100%;
+	}
+}

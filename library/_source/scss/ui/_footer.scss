@@ -1,0 +1,19 @@
+/* Footer */
+
+// pull modules into local scope ##
+// @use 'q'; // config ##
+@use 'bootstrap' as bs; // bootstrap ##
+
+// 991 and below ##
+@include bs.media-breakpoint-down(md) {
+	footer {
+		padding-top: 20px;
+	}
+}
+
+// 767 and below ##
+@include bs.media-breakpoint-down(sm) {
+	footer {
+		padding: 30px 0;
+	}
+}

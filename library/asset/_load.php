@@ -32,14 +32,14 @@ class asset extends \Q {
 			// minification ##
 			'minifier' => self::get_plugin_path( 'library/asset/minifier.php' ),
 
-			// css renderer ##
-			'css' => self::get_plugin_path( 'library/asset/css.php' ),
+			// js loaded ##
+			'js' => self::get_plugin_path( 'library/asset/js.php' ),
 
-			// scss compiler ##
-			'scss' => self::get_plugin_path( 'library/asset/scss.php' ),
+			// css loader ## -- @todo _deprecate, all assets should be loaded as scss modules ##
+			// 'css' => self::get_plugin_path( 'library/asset/css.php' ),
 
-			// js renderer ##
-			'javascript' => self::get_plugin_path( 'library/asset/javascript.php' )
+			// js renderer -- @TODO, _deprecate ##
+			// 'javascript' => self::get_plugin_path( 'library/asset/javascript.php' )
 
 		];
 

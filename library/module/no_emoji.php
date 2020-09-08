@@ -12,13 +12,15 @@ use q\asset;
 
 class no_emoji extends \Q {
     
-    static $args = array();
-
     public static function __run()
     {
 
 		// add extra options in module select API ##
-		\add_filter( 'acf/load_field/name=q_option_module', [ get_class(), 'filter_acf_module' ], 10, 1 );
+		\q\module::filter([
+			'module'	=> str_replace( __NAMESPACE__.'\\', '', static::class ),
+			'name'		=> 'Q ~ No Emoji',
+			'selected'	=> true,
+		]);
 
 		// make running dependent on module selection in Q settings ##
 		// h::log( core\option::get('no_emoji') );
@@ -38,46 +40,7 @@ class no_emoji extends \Q {
     }
 
 
-
-    public static function args( $args = false )
-    {
-
-        #helper::log( 'passed args to modal' );
-        // helper::log( $args );
-
-        // update passed args ##
-        self::$args = \wp_parse_args( $args, self::$args );
-
-	}
-	
-
 	/**
-     * Add new libraries to Q Settings via API
-     * 
-     * @since 2.3.0
-     */
-    public static function filter_acf_module( $field )
-    {
-
-        // h::log( $field['choices'] );
-        // h::log( $field['default_value'] );
-
-		// pop on a new choice ##
-		$field['choices']['no_emoji'] = 'Q ~ No Emoji';
-		// $field['choices']['banner'] = '@todo - News Banner';
-
-		// make it selected ##
-		$field['default_value'][0] = 'no_emoji';
-		
-        // h::log( $field['choices'] );
-        // h::log( $field['default_value'] );
-
-         return $field;
-
-	}
-
-
-    /**
 	 * Disable the emoji's
 	 */
 	public static function disable_emojis() {
@@ -96,7 +59,7 @@ class no_emoji extends \Q {
 	}
   
    
-   /**
+   	/**
 	* Filter function used to remove the tinymce emoji plugin.
 	* 
 	* @param array $plugins 
@@ -115,7 +78,9 @@ class no_emoji extends \Q {
 		}
 	}
    
-   /**
+	   
+	
+	/**
 	* Remove emoji CDN hostname from DNS prefetching hints.
 	*
 	* @param array $urls URLs to print for resource hints.

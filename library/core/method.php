@@ -525,16 +525,16 @@ class method extends \Q {
      * @since       2.0.0
      * @return      Void
      */
-    public static function add_update_option( $option_name, $new_value, $deprecated = ' ', $autoload = 'no' ) 
+    public static function add_update_option( $option_name, $new_value, $deprecated = '', $autoload = 'no' ) 
     {
     
-        if ( \get_site_option( $option_name ) != $new_value ) {
+        if ( \get_option( $option_name ) != $new_value ) {
 
-            \update_site_option( $option_name, $new_value );
+            \update_option( $option_name, $new_value );
 
         } else {
 
-            \add_site_option( $option_name, $new_value, $deprecated, $autoload );
+            \add_option( $option_name, $new_value, $deprecated, $autoload );
 
         }
     

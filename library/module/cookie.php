@@ -21,7 +21,27 @@ class cookie extends \Q {
     {
 
         // update passed args ##
-        self::$args = \wp_parse_args( $args, self::defaults() );
+		self::$args = \wp_parse_args( $args, self::defaults() );
+		
+		// add extra options in module select API ##
+		\q\module::filter([
+			'module'	=> str_replace( __NAMESPACE__.'\\', '', static::class ),
+			'name'		=> 'Q ~ Cookie',
+			'selected'	=> false,
+		]);
+
+		// make running dependent on module selection in Q settings ##
+		// h::log( core\option::get('tab') );
+		if ( 
+			! isset( core\option::get('module')->cookie )
+			|| true !== core\option::get('module')->cookie 
+		){
+
+			// h::log( 'd:>Module->Comment is not enabled.' );
+
+			return false;
+
+		}
 
         // check if we have a cookie ##
         #\add_action( 'plugins_loaded', [ get_class(), 'check' ], 6 );
@@ -153,7 +173,7 @@ class cookie extends \Q {
 
         // }
 
-        h::log( $_COOKIE );
+        // h::log( $_COOKIE );
 
         if ( ! isset( $_COOKIE[self::$slug] ) ) {
 

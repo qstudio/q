@@ -1,0 +1,14 @@
+// Plugin
+
+// pull modules into local scope ##
+// @use 'q'; // config ##
+// @use 'bootstrap' as bs; // bootstrap ##
+
+// Consent System ##
+@use 'consent';
+
+// Nprogress ##
+@use 'nprogress';
+
+// Search ##
+@use 'search';

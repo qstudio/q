@@ -1,0 +1,21 @@
+// Placeholder ##
+// These selectors are never eemitted, just @extended - https://sass-lang.com/documentation/style-rules/placeholder-selectors
+
+// @use 'variable';
+@use 'bootstrap';
+
+%border {
+	border: {
+		radius: 1px;
+		color: bootstrap.$table-border-color;
+		style: solid;
+	}
+	// hover ##
+	&:hover { border: 2px rgba(#000, .5) solid; }
+}
+
+// primary and secondary element padding - could be extended to space
+%q-section {
+	padding-top: 10px;	
+	padding-bottom: 10px;
+}

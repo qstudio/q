@@ -1,0 +1,39 @@
+.q-bsg .wysiwyg {
+	.iwrapper {
+		position: relative;
+		width: 100%;
+		height: 0;
+		padding-bottom: 56.25%;
+
+		iframe {
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			position: absolute;
+		}
+	}
+
+	span {
+		//display: inline-block;
+	}
+
+	ul, ol {
+		margin-bottom: 20px;
+		padding-left: 35px;
+
+		li {
+			list-style-type: disc;
+			margin-bottom: 5px;
+			padding-left: 10px;
+
+			ul li {
+				list-style-type: circle;
+			}
+		}
+	}
+
+	ol > li {
+		list-style: decimal;
+	}
+}

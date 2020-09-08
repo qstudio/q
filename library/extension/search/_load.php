@@ -43,7 +43,7 @@ class search extends \Q {
                 ! class_exists( 'q_willow' )
             ) {
 
-                helper::log( 'e:>This extension requires Q Willow to run correctly..' );
+                h::log( 'e:>This extension requires Q Willow to run correctly..' );
 
                 return false;
 

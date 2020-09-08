@@ -10,13 +10,18 @@ use q\core\helper as h;
 
 class module extends \Q {
 
+	// properties ##
+	public static $count = 0; // count modules added ##
+
 	public static function __run(){
 
 		core\load::libraries( self::load() );
 
 	}
 
-    /**
+	
+	
+	/**
     * Load Libraries
     *
     * @since        2.0.0
@@ -43,17 +48,16 @@ class module extends \Q {
 			'cookie' 		=> h::get( 'module/cookie.php', 'return', 'path' ),
 			'no_emoji' 		=> h::get( 'module/no_emoji.php', 'return', 'path' ),
 			'grunt' 		=> h::get( 'module/grunt.php', 'return', 'path' ),
-			'load' 			=> h::get( 'module/load.php', 'return', 'path' ),
+			// 'load' 			=> h::get( 'module/load.php', 'return', 'path' ),
 			'comment' 		=> h::get( 'module/comment.php', 'return', 'path' ),
 			'scroll' 		=> h::get( 'module/scroll.php', 'return', 'path' ),
-			'sharelines' 	=> h::get( 'module/sharelines.php', 'return', 'path' ),
 			'push' 			=> h::get( 'module/push.php', 'return', 'path' ),
-			// 'prism' 		=> h::get( 'module/prism.php', 'return', 'path' ),
 
 			// plugins ##
-			'anspress' 		=> h::get( 'module/anspress.php', 'return', 'path' ),
-			'acf_form' 		=> h::get( 'module/acf_form.php', 'return', 'path' ),
+			'plugin_anspress' 	=> h::get( 'module/plugin_anspress.php', 'return', 'path' ),
+			'plugin_fa_form' 	=> h::get( 'module/plugin_fa_form.php', 'return', 'path' ),
 			
+			// 'sharelines' 	=> h::get( 'module/sharelines.php', 'return', 'path' ),
 			// 'popper' 		=> h::get( 'module/popper.php', 'return', 'path' ),
 			// 'toggle' => h::get( 'module/toggle.php', 'return', 'path' ), // ?? needed ??
 			// 'filter' => h::get( 'ui/module/filter.php', 'return', 'path' ),
@@ -65,6 +69,78 @@ class module extends \Q {
 		];
 
 
-    }
+	}
+	
+
+	/**
+    * Filter modules via ACF options page
+    *
+    * @since        2.0.0
+    */
+    public static function filter( $args = null ){
+
+		// sanity ##
+		if( 
+			is_null( $args ) 
+			|| ! is_array( $args )	
+			|| ! isset( $args['module'] )
+			|| ! isset( $args['name'] )	
+		){
+
+			return false;
+
+		}
+
+		// should this item be pre-selected on the Options page ? ##
+		if ( $args['selected'] ) {
+			
+			$args['default'] = true;
+
+			$args['count'] = self::$count;
+
+			// iterate ##
+			self::$count ++;
+
+		}
+		
+		// look for module assets ( scss / js ) with matching name, to indicate which files will be included ##
+		$scss = self::get_plugin_path( 'library/_source/scss/module/_'.$args['module'].'.scss' );
+		if(
+			file_exists( $scss )
+		){
+
+			$scss = self::get_plugin_url( 'library/_source/scss/module/_'.$args['module'].'.scss' );
+
+			$args['name'] .= ' + SCSS: <a href="'.$scss.'" target="_blank">_'.$args['module'].'.scss</a>';
+
+		}
+
+		$js = self::get_plugin_path( 'library/_source/js/module/'.$args['module'].'.js' );
+		if(
+			file_exists( $js )
+		){
+
+			$js = self::get_plugin_url( 'library/_source/js/module/'.$args['module'].'.js' );
+
+			$args['name'] .= ' + JS: <a href="'.$js.'" target="_blank">'.$args['module'].'.js</a>';
+
+		}
+
+		// add option, via filter ##
+		\add_filter( 'acf/load_field/name=q_option_module', function( $field ) use( $args ) {
+
+			// pop on a new choice ##
+			$field['choices'][$args['module']] = $args['name'];
+
+			// make it selected ##
+			if( isset( $args['default'] ) ) $field['default_value'][$args['count']] = $args['module'];
+
+			// kick back ##
+			return $field;
+
+		}, 10, 1 );
+
+	}
+
 
 }

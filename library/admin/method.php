@@ -5,10 +5,122 @@ namespace q\admin;
 use q\core;
 use q\core\helper as h;
 
-// load it up ##
-// \q\admin\controller::run();
-
 class method extends \Q {
+
+	public static function empty_directory( $path = null, $pattern = '*' ){
+
+		// sanity ##
+		if( is_null( $path ) ){
+
+			// nothing possible ##
+			h::log( 'e:>Error, no path sent to function' );
+
+			return false;
+
+		}
+
+		// check if path exists ##
+		if( ! is_dir( $path ) ) {
+
+			// nothing possible ##
+			h::log( 'e:>Error, "'.$path.'" does not exist' );
+
+			return false;
+
+		}
+
+		// h::log( $path );
+		$files = glob( $path.$pattern ); // get all file names
+		// h::log( $files );
+		$log = [];
+
+		foreach( $files as $file ) { // iterate files
+
+			if( is_file( $file ) ) {
+
+				$log[] = $file;
+				unlink( $file ); // delete file
+		
+			}
+
+		}
+
+		// h::log( $log );
+
+		return true;
+
+	}
+
+
+	public static function copy_files( $args = null ){
+
+		// sanity ##
+		if( 
+			is_null( $args['source'] ) 
+			|| is_null( $args['destination'] ) 
+			|| is_null( $args['files'] )
+			|| ! is_array( $args['files'] )
+		){
+
+			// h::log( 'e:>source: '.$args['source'] );
+			// h::log( 'e:>destination: '.$args['destination'] );
+			// h::log( $args['files'] );
+
+			// nothing possible ##
+			h::log( 'e:>Error in arguments sent to function' );
+
+			return false;
+
+		}
+
+		// check if source path exists ##
+		if( ! is_dir( $args['source'] ) ) {
+
+			// nothing possible ##
+			h::log( 'e:>Error, source: "'.$path.'" does not exist' );
+
+			return false;
+
+		}
+
+		// check if destination path exists ##
+		if( ! is_dir( $args['destination'] ) ) {
+
+			// nothing possible ##
+			h::log( 'e:>Error, destination: "'.$args['destination'].'" does not exist' );
+
+			return false;
+
+		}	
+
+		// h::log( 'e:>source: '.$args['source'] );
+		// h::log( 'e:>destination: '.$args['destination'] );
+		// h::log( $args['files'] );
+		$log = [];
+
+		// iterate files ##
+		foreach( $args['files'] as $file ) { 
+
+			// chcek if file exists ##
+			if( ! file_exists( $args['source'].$file ) ) {
+
+				$log[] = '404: '.$args['source'].$file;
+
+			}
+
+			if( copy( $args['source'].$file, $args['destination'].$file ) ) {
+
+				$log[] = 'Copied: "'.$args['destination'].$file.'"';
+		
+			}
+
+		}
+
+		// h::log( $log );
+
+		return true;
+
+	}
 
 
 	

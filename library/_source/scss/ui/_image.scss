@@ -1,0 +1,34 @@
+/* Image */
+
+// pull modules into local scope ##
+@use 'q'; // placeholder ##
+@use 'bootstrap' as bs; // bootstrap ##
+
+// https://css-tricks.com/almanac/properties/o/object-position/
+img.fit {
+	object-fit: cover;
+  	object-position: top center; /* default value: image is centered*/
+  	// object-position: 0 0; 
+}
+
+// empty image src ##
+// https://www.iconfinder.com/icons/5378817/camera_games_image_photo_screenshot_icon
+img[src=""]
+// , div[src=""] 
+{
+	background-image: url( q.$src_holder );
+	background-size: cover;
+	background-position: top center;
+	color: transparent;
+}
+
+[alt]:-moz-broken {
+	display: none;
+}
+
+// img.lazied
+// // , div.lazied 
+// {
+// 	background-size: cover;
+// 	background-position: 50% 50%;
+// }

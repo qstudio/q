@@ -17,7 +17,11 @@ class bs_helper extends \Q {
     {
 
 		// add extra options in module select API ##
-		\add_filter( 'acf/load_field/name=q_option_module', [ get_class(), 'filter_acf_module' ], 10, 1 );
+		\q\module::filter([
+			'module'	=> str_replace( __NAMESPACE__.'\\', '', static::class ),
+			'name'		=> 'Bootstrap ~ Helper',
+			'selected'	=> true,
+		]);
 
 		// make running dependent on module selection in Q settings ##
 		// h::log( core\option::get('tab') );
@@ -32,38 +36,10 @@ class bs_helper extends \Q {
 
 		}
 
-        // add <script> block to global js asset ##
-        \add_action( 'wp_footer', function(){
-			asset\javascript::ob_get([
-				'view'      => get_class(), 
-				'method'    => 'javascript',
-			]);
-		}, 3 );
-
 		// add html ##
 		\add_action( 'wp_footer', [ get_class(), 'html' ], 100000 );
 
     }
-
-
-	/**
-     * Add new libraries to Q Settings via API
-     * 
-     * @since 2.3.0
-     */
-    public static function filter_acf_module( $field )
-    {
-
-		// pop on a new choice ##
-		$field['choices']['bs_helper'] = 'Bootstrap ~ Helper';
-
-		// make it selected ##
-		$field['default_value'][0] = 'bs_helper';
-
-		// kick back ##
-		return $field;
-
-	}
 
 
 
@@ -86,104 +62,6 @@ class bs_helper extends \Q {
 		}
 
 ?>
-<script>
-if( typeof jQuery !== 'undefined' ) {
-
-	// assign target ##
-	var $bs_element = "#bs_helper";
-	var $bs_helper;
-
-	// show breakpoint on load, tooltip will be updated to show actual document dimentions ## 
-	jQuery(window).load(function(){
-
-		// assign target ##
-		$bs_helper = jQuery($bs_element);
-
-		q_bootstrap_tooltip( true, false );
-
-		// click to add debug borders ##
-		$bs_helper.click( function() { 
-			jQuery("body").toggleClass("debug"); 
-		});
-
-	});
-
-	// resizing, open tooltip and update document dimensions as they change ##
-	jQuery(window).on('resize', function(){
-
-		q_bootstrap_tooltip( false, true );
-
-	});
-
-	// Tooltip with BS breakpoint info ##
-	function q_bootstrap_tooltip( load, resize ) {
-
-		// sizes ##
-		vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-		vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-
-		// resize ##
-		resize = resize || false;
-		load = load || false;
-
-		// update attrs ##
-		$bs_helper.attr('title', 'Width: '+ vw +'px<br />Height: '+ vh +'px' );
-		$bs_helper.html( q_bootstrap_breakpoint().name );
-
-		if ( load ) {
-
-			// trigger tooltip ##
-			$bs_helper.tooltip('show');
-
-			setTimeout(function(){
-				$bs_helper.tooltip('hide');
-			}, 3000);
-
-		}
-
-		// possible delay, for resizing ##
-		if ( resize ) {	
-
-			// trigger tooltip ##
-			$bs_helper.tooltip('show');
-
-			// set short timeout to update document dimensions, as they change ##
-			setInterval(function(){
-				jQuery('.tooltip-inner').html( 'Width: '+ vw +'px<br />Height: '+ vh +'px' );
-			}, 30);
-
-			// add an event listener to check for an end to the resize action ##
-			window.addEventListener(
-				"resize",
-				q_bootstrap_debounce(
-					function(e){
-				
-						// when resizing is done, set a timeout for 3 secs, then close the tooltip ##
-						setTimeout(function(){
-							$bs_helper.tooltip('hide');
-						}, 3000 );
-
-					}
-				), { passive: true } // Passive Event Listener ##
-			);
-
-		}
-
-	}
-
-	// resize debouncer, set form eventlistener ##
-	function q_bootstrap_debounce( func ){
-		  
-		var timer;
-		return function(event){
-			if(timer) clearTimeout(timer);
-			timer = setTimeout(func,100,event);
-		};
-
-	}
-
-};
-</script>
 <span 
 	id="bs_helper" 
 	class="nodebug badge badge-warning" 
@@ -197,60 +75,5 @@ if( typeof jQuery !== 'undefined' ) {
 <?php
 			
 	}
-
-    
-    
-    /**
-    * JS for modal
-    *
-    * @since    2.0.0
-    * @return   String HTML
-    */
-    public static function javascript( $args = null )
-    {
-
-		// we should never run this module if debugging is off ##
-		if( 
-			// false === self::$debug 
-			false === \Q::$debug
-		){
-
-			h::log( 'BootStrap Helper is disabled when debugging is disabled...' );
-
-			return false;
-
-		}
-
-?>
-<script>
-
-/*
-https://cdn.jsdelivr.net/npm/bootstrap-detect-breakpoint/src/bootstrap-detect-breakpoint.js
-*/
-function q_bootstrap_breakpoint() {
-    const breakpointNames = ["xl", "lg", "md", "sm", "xs"]
-    let breakpointValues = []
-    for (const breakpointName of breakpointNames) {
-        breakpointValues[breakpointName] = window.getComputedStyle(document.documentElement).getPropertyValue('--breakpoint-' + breakpointName)
-    }
-    let i = breakpointNames.length
-    for (const breakpointName of breakpointNames) {
-        i--
-        if (window.matchMedia("(min-width: " + breakpointValues[breakpointName] + ")").matches) {
-            return {
-				name: breakpointName, 
-				height: vh,
-				width: vw,
-				index: i
-			}
-        }
-    }
-    return null
-}
-</script>
-<?php
-
-    }
-
 
 }

@@ -4,8 +4,6 @@ namespace q\module;
 
 use q\core;
 use q\core\helper as h;
-// use q\core\config as config;
-use q\asset;
 
 // load it up ##
 \q\module\bs_modal::__run();
@@ -18,7 +16,11 @@ class bs_modal extends \Q {
     {
 
 		// add extra options in module select API ##
-		\add_filter( 'acf/load_field/name=q_option_module', [ get_class(), 'filter_acf_module' ], 10, 1 );
+		\q\module::filter([
+			'module'	=> str_replace( __NAMESPACE__.'\\', '', static::class ),
+			'name'		=> 'Bootstrap ~ Modal',
+			'selected'	=> true,
+		]);
 
 		// h::log( core\option::get('modal') );
 		if ( 
@@ -38,40 +40,14 @@ class bs_modal extends \Q {
     }
 
 
-
-	/**
-     * Add new libraries to Q Settings via API
-     * 
-     * @since 2.3.0
-     */
-    public static function filter_acf_module( $field )
-    {
-
-		// pop on a new choice ##
-		$field['choices']['bs_modal'] = 'Bootstrap ~ Modal';
-
-		// make it selected ##
-		$field['default_value'][0] = 'bs_modal';
-
-         return $field;
-
-	}
-
-
-
     
     /**
-     * Deal nicely with JS
+     * Add HTML to footer on all templates
+	 * 
+	 * @since 4.x.x
      */
     public static function wp_footer()
     {
-
-        \q\asset\javascript::ob_get([
-            'view'      => get_class(), 
-            'method'    => 'javascript',
-            // 'priority'  => 3,
-            // 'handle'    => 'BS Modal'
-		]);
 
 /*
 <!-- Button trigger modal -->
@@ -80,7 +56,7 @@ class bs_modal extends \Q {
 </button>
 */
 
-// @todo - MAKE HTML filterable ##
+// @todo - MAKE HTML filterable via Willow ##
 		
 ?>
 <!-- Modal -->
@@ -106,61 +82,4 @@ class bs_modal extends \Q {
 
     }
 
-
-
-    
-    /**
-    * JS for modal
-    *
-    * @since    2.0.0
-    * @return   String HTML
-    */
-    public static function javascript( $args = null )
-    {
-
-	// helper::log( self::$args );
-	
-	// @TODO - re-add hash controls - perhaps not back and forwards, but loading modal from fragement - perhaps like tabs.. 
-
-?>
-<script>
-
-// open modal with dynamic data ##
-jQuery(document).on("click","[data-modal-target]", function (e) {
-
-	// stop ##
-	e.preventDefault();
-
-	// get target ##
-	var target = jQuery(this).attr('data-modal-target');
-	// console.log('modal target: ' + target);
-
-	var title = jQuery(this).attr('data-modal-title');
-	var body = jQuery(this).attr('data-modal-body');
-	var size = jQuery(this).attr('data-modal-size') ? jQuery(this).attr('data-modal-size') : 'modal-normal' ;
-
-	// sanity ##
-	if( ! title || ! body || ! size ){
-		console.log( 'Error in passed params' );
-		// jQuery(target).modal('dispose');
-		// return false;
-	}
-
-	// console.log( 'size: '+size );
-
-	// add data ##
-	jQuery(target).find('.modal-title').html(title);
-	jQuery(target).find('.modal-body').html(body);
-	jQuery(target).find('.modal-dialog').addClass(size);
-
-	// open modal ##
-	jQuery(target).modal("show");
-
-});
-</script>
-<?php
-
-    }
-
-    
 }

@@ -22,7 +22,7 @@ class javascript extends \Q {
         #h::log( 'scripts file loaded...' );
 
         // add JS to footer if debugging or script if not ##
-        \add_action( 'wp_footer', [ get_class(), 'wp_footer' ], 10000000000 );
+        // \add_action( 'wp_footer', [ get_class(), 'wp_footer' ], 10000000000 );
 
     }
 

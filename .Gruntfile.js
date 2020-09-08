@@ -4,7 +4,6 @@ module.exports = function(grunt) {
 
 	// root - crude ##
 	var $root_path = '../../../';
-	// var live_reload = 1337; // port for live reload ##
 
 	// Load Tasks ##
 	grunt.loadTasks( $root_path+'node_modules/grunt-contrib-clean/tasks' ); // Clean ##
@@ -27,9 +26,9 @@ module.exports = function(grunt) {
 
 		'copy': {
 			'files': {
-			  'cwd': 'library/_source/js/',  // set working folder / root to copy
+			  'cwd': 'library/_source/js/module',  // set working folder / root to copy
 			  'src': '*.js',           // copy all files and subfolders
-			  'dest': 'library/asset/js',    // destination folder
+			  'dest': 'library/asset/js/module',    // destination folder
 			  'expand': true,           // required when using cwd
 			  'filter': 'isFile'
 			}
@@ -146,9 +145,7 @@ module.exports = function(grunt) {
 
 	// Development Tasks ##
 	grunt.registerTask( 'default', [
-		// 'clean', // clean up old compilled files ##
-		'dart-sass', // Dart SASS ##
-		// 'postcss', // post processing formating ## ##
+		'clean', // clean up old compilled files ##
 		'uglify:min', // minify js /_source/js to /assets/js
 		'copy', // copy _source/js/*.js -> /asset/js/*.js
 	]);

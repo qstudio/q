@@ -22,7 +22,12 @@ class comment extends \Q {
     {
 
 		// add extra options in module select API ##
-		\add_filter( 'acf/load_field/name=q_option_module', [ get_class(), 'filter_acf_module' ], 10, 1 );
+		\q\module::filter([
+			'module'	=> str_replace( __NAMESPACE__.'\\', '', static::class ),
+			'name'		=> 'Q ~ Comment',
+			'selected'	=> true,
+		]);
+		// \add_filter( 'acf/load_field/name=q_option_module', [ get_class(), 'filter_acf_module' ], 10, 1 );
 
 		// make running dependent on module selection in Q settings ##
 		// h::log( core\option::get('tab') );
@@ -37,14 +42,10 @@ class comment extends \Q {
 
 		}
 
-
+		/*
 		// add reference to _source/scss/module/index.scss
-		\add_action( 'wp_head', function(){
-			\q\asset\scss::add([
-				'class'     => get_class(), 
-				'type'    	=> 'module', // add modules to scss list ##
-		   ]);
-		}, 3 );
+		
+		*/
 
 		// html5 -- https://github.com/bourafai/wp-bootstrap-4-comment-walker ##
 		\add_action( 'after_setup_theme', [ get_class(), 'html5_comment_list' ] );
@@ -57,6 +58,17 @@ class comment extends \Q {
 		
 		// assets ##
 		\add_action( 'wp_enqueue_scripts', [ get_class(), 'wp_enqueue_script' ], 100 );
+
+		// add module assets -- needs to be hooked before "wp_enqueue_scripts" ##
+		\add_action( 'wp', function(){
+			\q\asset\js::set([
+				'module'     	=> str_replace( __NAMESPACE__.'\\', '', static::class ), // take clean class name ##
+				'localize'  	=> [
+					'post_id' 	=> \get_the_ID() // available @ q_module.comment_post_id ##
+				],
+				// 'debug'			=> true, // directly include JS file ##
+		   ]);
+		}, 10 );
 
 		// ajax post comment
 		\add_action( 'wp_ajax_ajaxcomments', [ get_class(), 'ajax_post_comment' ] ); // wp_ajax_{action} for registered user
@@ -75,6 +87,28 @@ class comment extends \Q {
  
 	}
 
+
+	
+	/**
+     * Add new libraries to Q Settings via API
+     * 
+     * @since 2.3.0
+     */
+	/*
+    public static function filter_acf_module( $field )
+    {
+
+		// pop on a new choice ##
+		$field['choices']['comment'] = 'Q ~ Comment';
+
+		// make it selected ##
+		$field['default_value'][0] = 'comment';
+
+		// kick back ##
+		return $field;
+
+	}
+	*/
 
 
 	public static function comment_form_defaults( $defaults ) {
@@ -143,29 +177,9 @@ class comment extends \Q {
 
 		// h::log( $allowedtags );
 
-	  }
-
-
-	
-	/**
-     * Add new libraries to Q Settings via API
-     * 
-     * @since 2.3.0
-     */
-    public static function filter_acf_module( $field )
-    {
-
-		// pop on a new choice ##
-		$field['choices']['comment'] = 'Q ~ Comment';
-
-		// make it selected ##
-		$field['default_value'][0] = 'comment';
-
-		// kick back ##
-		return $field;
-
 	}
-	
+
+
 
 
 	/**
@@ -184,7 +198,7 @@ class comment extends \Q {
 		}
 
 		if ( 
-			! \check_ajax_referer( 'q_comment_load_ajax', 'nonce', false ) 
+			! \check_ajax_referer( 'q_module_nonce', 'nonce', false ) 
 		) {
 
 			h::log( 'e:>Load Nonce check failed' );
@@ -320,7 +334,7 @@ class comment extends \Q {
 	public static function ajax_post_comment(){
 
 		if ( 
-			! \check_ajax_referer( 'q_comment_post_ajax', 'nonce', false ) 
+			! \check_ajax_referer( 'q_module_nonce', 'nonce', false ) 
 		) {
 
 			h::log( 'e:>Post Nonce check failed' );
@@ -520,9 +534,11 @@ class comment extends \Q {
 		
 		}
 
+		// this was merged into single asset/js/module/module(.min).js ##
+		/*
 		// register script ##
 		\wp_register_script( 'q_ajax_comment', h::get( 'asset/js/module/q.ajax.comment.js', 'return' ), array('jquery') );
-	
+		
 		// localize php data to js via handle ##
 		\wp_localize_script( 'q_ajax_comment', 'q_ajax_comment_params', array(
 			'ajaxurl' 		=> \site_url() . '/wp-admin/admin-ajax.php',
@@ -533,6 +549,7 @@ class comment extends \Q {
 	
 		// enqueue script on frontend ##
 		\wp_enqueue_script( 'q_ajax_comment' );
+		*/
 
 	}
 

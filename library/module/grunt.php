@@ -18,7 +18,11 @@ class grunt extends \Q {
     {
 
 		// add extra options in module select API ##
-		\add_filter( 'acf/load_field/name=q_option_module', [ get_class(), 'filter_acf_module' ], 10, 1 );
+		\q\module::filter([
+			'module'	=> str_replace( __NAMESPACE__.'\\', '', static::class ),
+			'name'		=> 'Q ~ Grunt LiveReload',
+			'selected'	=> true,
+		]);
 
 		// add fields to Q settings ##
 		\add_filter( 'q/plugin/acf/add_field_groups/q_option_module', [ get_class(), 'filter_acf_module_conditional' ], 10, 1 );
@@ -35,37 +39,11 @@ class grunt extends \Q {
 			return false;
 
 		}
-		
+
+		// add direct to html, late ##
 		\add_action( 'wp_footer', [ get_class(), 'grunt'] );
 
     }
-
-
-
-	/**
-     * Add new libraries to Q Settings via API
-     * 
-     * @since 2.3.0
-     */
-    public static function filter_acf_module( $field )
-    {
-
-        // h::log( $field['choices'] );
-        // h::log( $field['default_value'] );
-
-		// pop on a new choice ##
-		$field['choices']['grunt'] = 'Q ~ Grunt LiveReload@1337';
-		// $field['choices']['banner'] = '@todo - News Banner';
-
-		// make it selected ##
-		$field['default_value'][0] = 'grunt';
-		
-        // h::log( $field['choices'] );
-        // h::log( $field['default_value'] );
-
-         return $field;
-
-	}
 
 
 
