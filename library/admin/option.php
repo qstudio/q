@@ -80,6 +80,17 @@ class option extends \Q {
     public static function _save_modules( $post_id )
     {
 
+		// admin only ##
+		if( 
+			! \is_admin() 
+			|| ! function_exists( 'get_current_screen' )
+		){
+			
+			return false;
+
+		}
+
+		// get current screen ##
 		$screen = \get_current_screen();
 		
 		// h::log( $screen );
@@ -124,9 +135,9 @@ class option extends \Q {
 					// css / scss ##
 					'scss'				=> in_array( 'css', $values['q_option_module_asset'] ), // get from passed values ##
 					'source_scss'		=> self::get_plugin_path( 'library/_source/scss/module/' ),
-					'source_img'		=> self::get_plugin_path( 'library/_source/scss/module/images' ),
+					'source_img'		=> self::get_plugin_path( 'library/_source/images/module' ),
 					'destination_img' 	=> [ 
-											// \q_theme::get_parent_theme_path( '/library/_source/scss/module/images/' ),
+											// \q_theme::get_parent_theme_path( '/library/_source/images/module' ),
 											\q_theme::get_parent_theme_path( '/library/asset/css/images/module' )
 										],
 					'destination_scss'	=> \q_theme::get_parent_theme_path( '/library/_source/scss/module/' ),
@@ -157,7 +168,7 @@ class option extends \Q {
 				if ( ! $options['scss'] ) {
 					
 					// empty scss destination folder ##
-					\q\admin\method::empty_directory( $options['destination_scss'] );
+					$log = \q\admin\method::empty_directory( $options['destination_scss'] );
 
 					// datestamp the index.scss file ##
 					$list = "/* Q Studio ~ SCSS Modules : EMPTIED --> ".$now->format('Y-m-d H:i:s')." */\r\n";
@@ -171,9 +182,17 @@ class option extends \Q {
 					// copy over images -- note this copies to both _source and asset directories on the destination ##
 					foreach( $options['destination_img'] as $destination ){
 
+						// empty first ##
+						$log = \q\admin\method::empty_directory( $destination );
+
+						// check out what happened ##
+						// h::log( $log );
+
+						// then copy from Q to parent theme ##
 						$log = \q\admin\method::copy_recursive( $options['source_img'], $destination );
 
-						h::log( $log );
+						// check out what happened ##
+						// h::log( $log );
 
 					}
 
@@ -243,7 +262,10 @@ class option extends \Q {
 					// h::log('e:>JS disabled, so empty _source');
 					
 					// empty destination folder ##
-					\q\admin\method::empty_directory( $options['destination_js'] );
+					$log = \q\admin\method::empty_directory( $options['destination_js'] );
+
+					// check out what happened ##
+					// h::log( $log );
 
 					// datestamp the index.scss file ##
 					$list = "### Q Studio ~ JS Modules\r\n";
@@ -309,7 +331,7 @@ class option extends \Q {
 
 				}
 
-				h::log( $q_modules );
+				// h::log( $q_modules );
 
 				// store active modules list ##
 				core\method::add_update_option( 'q_modules', $q_modules, '', 'yes' );

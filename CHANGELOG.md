@@ -1,3 +1,7 @@
+### 4.7.3 ###
+
+* Fix: Added admin checks for ACF filters which were running on profile updates
+
 ### 4.7.2 ###
 
 * New: Grunt Task Runners to propagate module assets to theme

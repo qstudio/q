@@ -29,6 +29,32 @@ class method extends \Q {
 
 		}
 
+		// log ##
+		$log = [];
+
+		// Standard PHP Library (SPL)
+		$di = new \RecursiveDirectoryIterator( $path, \FilesystemIterator::SKIP_DOTS );
+		$ri = new \RecursiveIteratorIterator( $di, \RecursiveIteratorIterator::CHILD_FIRST );
+
+		foreach ( $ri as $file ) {
+
+			if ( $file->isDir() ) {
+				
+				$log[$file] = 'Directory Deleted';
+
+				rmdir($file);
+				
+			} else {
+
+				$log[$file] = 'File Deleted';
+
+				unlink($file);
+
+			}
+
+		}
+
+		/*
 		// h::log( $path );
 		$files = glob( $path.$pattern ); // get all file names
 		// h::log( $files );
@@ -44,10 +70,11 @@ class method extends \Q {
 			}
 
 		}
+		*/
 
 		// h::log( $log );
 
-		return true;
+		return $log;
 
 	}
 
