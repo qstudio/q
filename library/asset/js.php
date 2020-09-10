@@ -23,6 +23,9 @@ class js extends \Q {
 		// load early ##
 		\add_action( 'init', [ get_class(), 'load' ], 10 );
 
+		// delete ##
+		// \add_action( 'init', [ get_class(), 'delete' ], 9 );
+
 		// save late ##
 		\add_action( 'shutdown', [ get_class(), 'save' ], 1000 );
 
@@ -47,6 +50,13 @@ class js extends \Q {
 			self::$q_modules = $q_modules;
 
 		}
+
+	}
+
+
+	public static function delete(){
+
+		\delete_option( "q_modules" );
 
 	}
 
@@ -105,16 +115,21 @@ class js extends \Q {
 			&& is_array( $args['localize'] )
 		){
 
+			// append module name to each passed key=>value, so "module->post_id = 123" becomes module_post_id = 123  ##
+			$args['localize'] = array_combine(
+				array_map(function($k) use( $args ){ return $args['module'].'_'.$k; }, array_keys($args['localize'])),
+				$args['localize']
+			);
 			// h::log( $args['localize'] );
 
 			// $q_modules['']
 			foreach( $args['localize'] as $key => $value ){
 
 				// check if localize key already exists, else add it ##
-				if( ! array_key_exists( $args['module'].'_'.$key, self::$q_modules['localize'] ) ){
+				if( ! array_key_exists( $key, self::$q_modules['localize'] ) ){
 
 					// note that localized keys are "namespaced" from the sending module ##
-					self::$q_modules['localize'][$args['module'].'_'.$key] = $value;
+					self::$q_modules['localize'][$key] = $value;
 
 				}
 
@@ -159,6 +174,7 @@ class js extends \Q {
 
 		}
 
+		// h::log( self::$q_modules );
 		return self::$q_modules['localize'];
 
 	}

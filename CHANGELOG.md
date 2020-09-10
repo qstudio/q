@@ -1,3 +1,8 @@
+### 4.7.2 ###
+
+* New: Grunt Task Runners to propogate module assets to theme
+* New: Admin file and directory methods
+
 ### 4.7.1 ###
 
 * Fix: to module/search JS logic event listener, moved to bootstrap shown.bs.collapse

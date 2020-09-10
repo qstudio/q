@@ -102,13 +102,13 @@ class method extends \Q {
 		foreach( $args['files'] as $file ) { 
 
 			// chcek if file exists ##
-			if( ! file_exists( $args['source'].$file ) ) {
+			if( 
+				! file_exists( $args['source'].$file ) ) {
 
 				$log[] = '404: '.$args['source'].$file;
 
-			}
-
-			if( copy( $args['source'].$file, $args['destination'].$file ) ) {
+			} else if( 
+				copy( $args['source'].$file, $args['destination'].$file ) ) {
 
 				$log[] = 'Copied: "'.$args['destination'].$file.'"';
 		
@@ -119,6 +119,82 @@ class method extends \Q {
 		// h::log( $log );
 
 		return true;
+
+	}
+
+
+
+	/**
+	 * Recursive copy directories and content
+	 * 
+	 * @link		https://stackoverflow.com/a/2050909/591486
+	 * @since		4.7.2
+	*/
+	public static function copy_recursive( $source = null, $destination = null, &$log = [] ) {
+
+		// is directory ##
+		if ( is_dir( $source ) ) {
+
+			$log[] = 'is_dir: '.$source;
+
+			// log results of mkdir call ##
+			$log[] = '@mkdir( "'.$destination.'" ): '.@mkdir( $destination );
+
+			// get source directory contents ##
+			$source_directory = dir( $source );
+
+			// loop over items in source directory ##
+			while ( FALSE !== ( $entry = $source_directory->read() ) ) {
+				
+				// skip hidden ##
+				if ( $entry == '.' || $entry == '..' ) {
+
+					$log[] = 'skip hidden entry: '.$entry;
+
+					continue;
+
+				}
+
+				// get full source "entry" path ##
+				$source_entry = $source . '/' . $entry; 
+
+				// recurse for directories ##
+				if ( is_dir( $source_entry ) ) {
+
+					$log[] = 'is_dir: '.$source_entry;
+
+					// return to self, with new arguments ##
+					self::copy_recursive( $source_entry, $destination.'/'.$entry, $log );
+
+					// break out of loop, to stop processing ##
+					continue;
+
+				}
+
+				$log[] = 'copy: "'.$source_entry.'" --> "'.$destination.'/'.$entry.'"';
+
+				// copy single files ##
+				copy( $source_entry, $destination.'/'.$entry );
+
+			}
+
+			// close connection ##
+			$source_directory->close();
+
+		} else {
+
+			$log[] = 'copy: "'.$source.'" --> "'.$destination.'"';
+
+			// plain copy, as $destination is a file ##
+			copy( $source, $destination );
+
+		}
+
+		// clean up log ##
+		$log = array_unique( $log );
+
+		// kick back log for debugging ##
+		return $log;
 
 	}
 

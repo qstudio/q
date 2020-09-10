@@ -1,0 +1,12 @@
+// pull modules into local scope ##
+@use 'q'; // placeholder ##
+@use 'bootstrap' as bs; // bootstrap ##
+
+.q-consent {
+	
+	.q-consent-bar {
+		background-color: #333;
+		color: white;
+	}
+
+}

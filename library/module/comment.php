@@ -113,7 +113,7 @@ class comment extends \Q {
 
 	public static function comment_form_defaults( $defaults ) {
 	
-		$defaults['comment_notes_after'] = '<p class="form-allowed-tags">' . sprintf( __( 'These <abbr title="HyperText Markup Language">HTML</abbr> tags are accepted: %s' ), ' <code>' . \allowed_tags() . '</code>' ) . '</p>';
+		$defaults['comment_notes_after'] = '<p class="form-allowed-tags">' . sprintf( __( 'These <abbr title="HyperText Markup Language">HTML</abbr> tags work: %s' ), ' <code>' . \allowed_tags() . '</code>' ) . '</p>';
 		
 		return $defaults;
 	
@@ -191,7 +191,7 @@ class comment extends \Q {
  
 		if ( ! isset( $_POST['post_id'] ) ){
 
-			h::log( 'No post_id found' );
+			h::log( 'e:>No post_id found' );
 
 			return die;
 

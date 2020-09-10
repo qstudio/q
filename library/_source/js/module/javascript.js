@@ -1,4 +1,9 @@
 
+// check for mobile ##
+function q_is_mobile() {
+	return window.matchMedia("only screen and (max-width: 760px)").matches;
+}
+
 // https://medium.com/hackernoon/removing-that-ugly-focus-ring-and-keeping-it-too-6c8727fefcd2
 function q_handle_first_tab(e) {
     if (e.keyCode === 9) { // the "I am a keyboard user" key

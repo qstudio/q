@@ -44,7 +44,16 @@ class option extends \Q {
 		
 		// run action on acf options save ##
 		\add_action( 'acf/save_post', [ get_class(), '_save_modules' ], 20 );
+
+		// Apply to all fields.
+		// \add_action( 'acf/render_field/key=group_q_option_module', [ get_class(), '_filter_modules' ], 10, 1 );
         
+	}
+
+
+	// https://www.advancedcustomfields.com/resources/acf-render_field/
+	public static function _filter_modules( $field ) {
+		echo '<p>Some extra HTML.</p>';
 	}
 	
 
@@ -115,6 +124,11 @@ class option extends \Q {
 					// css / scss ##
 					'scss'				=> in_array( 'css', $values['q_option_module_asset'] ), // get from passed values ##
 					'source_scss'		=> self::get_plugin_path( 'library/_source/scss/module/' ),
+					'source_img'		=> self::get_plugin_path( 'library/_source/scss/module/images' ),
+					'destination_img' 	=> [ 
+											// \q_theme::get_parent_theme_path( '/library/_source/scss/module/images/' ),
+											\q_theme::get_parent_theme_path( '/library/asset/css/images/module' )
+										],
 					'destination_scss'	=> \q_theme::get_parent_theme_path( '/library/_source/scss/module/' ),
 					'file_scss'			=> 'index.scss',
 
@@ -153,6 +167,15 @@ class option extends \Q {
 
 				// user has activated scss modules ##
 				} else {
+
+					// copy over images -- note this copies to both _source and asset directories on the destination ##
+					foreach( $options['destination_img'] as $destination ){
+
+						$log = \q\admin\method::copy_recursive( $options['source_img'], $destination );
+
+						h::log( $log );
+
+					}
 
 					// check for theme/xx/modules/index.scss
 					if( 
@@ -564,7 +587,7 @@ class option extends \Q {
                         'label' => 'Child Theme -> '.\wp_get_theme(),
                         'name' => 'q_option_theme_child',
                         'type' => 'checkbox',
-                        'instructions' => 'Valid, if using a <a href="https://developer.wordpress.org/themes/advanced-topics/child-themes/" target="_blank">child theme</a>',
+                        'instructions' => 'Valid when using a <a href="https://developer.wordpress.org/themes/advanced-topics/child-themes/" target="_blank">child theme</a>',
                         'required' => 0,
                         'conditional_logic' => 0,
                         'wrapper' => array(
@@ -851,7 +874,7 @@ class option extends \Q {
 						),
 					),
 				),
-				'menu_order' => 2,
+				'menu_order' => 1,
 				'position' => 'normal',
 				'style' => 'default',
 				'label_placement' => 'top',

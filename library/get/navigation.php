@@ -124,7 +124,7 @@ class navigation extends \q\get {
 			|| 0 == count( $paginate_links )
 		) {
 
-			h::log( 'd:>$paginate_links empty.. bailing' );
+			// h::log( 'd:>$paginate_links empty.. bailing' );
 
 			return false;
 
