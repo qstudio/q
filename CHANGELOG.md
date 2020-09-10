@@ -1,7 +1,8 @@
 ### 4.7.2 ###
 
-* New: Grunt Task Runners to propogate module assets to theme
+* New: Grunt Task Runners to propagate module assets to theme
 * New: Admin file and directory methods
+* Update: Total overhaul of the module and extension systems 
 
 ### 4.7.1 ###
 
