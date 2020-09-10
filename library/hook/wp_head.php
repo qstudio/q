@@ -469,7 +469,9 @@ class wp_head extends \Q {
 
                 if ( $get_post_ancestor = \get_post_ancestors( $post->ID ) ) {
 
-                    $page_title = $page_title.' '.\get_the_title( array_pop( $get_post_ancestor ) ).' '.$sep.' ';
+					// h::log( $get_post_ancestor );
+
+                    $page_title = $page_title.' '.\get_the_title( $get_post_ancestor[0] ).' '.$sep.' ';
 
                 }
 
