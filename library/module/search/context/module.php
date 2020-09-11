@@ -6,7 +6,7 @@ namespace q\module\search;
 use q\core\helper as h;
 
 // willow ##
-use q\willow; // to extend ##
+use willow; // to extend ##
 // use q\module;
 
 // register class to render ##

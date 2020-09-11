@@ -222,28 +222,27 @@ if ( ! class_exists( 'Q' ) ) {
 			require_once self::get_plugin_path( 'library/core/_load.php' );
 
 			// getter ##
+			// @todo - _deprecate and move all to willow ##
 			require_once self::get_plugin_path( 'library/get/_load.php' );
 
 			// string methods ##
 			require_once self::get_plugin_path( 'library/strings/_load.php' );
 
-			// widgets ##
-			require_once self::get_plugin_path( 'library/widget/_load.php' );
-
 			// willow contexts ##
+			// @todo - _deprecate and move all to q_theme_parent ##
 			require_once self::get_plugin_path( 'library/context/_load.php' );
 
 			// view ##
+			// @todo - move all context to q_theme_parent ##
 			require_once self::get_plugin_path( 'library/view/_load.php' );
 
 			// assets ##
+			// @todo - move all assets to q_theme_parent ##
 			require_once self::get_plugin_path( 'library/asset/_load.php' );
 
 			// ui modules ##
+			// @todo - move all modules to q_theme_parent ##
 			require_once self::get_plugin_path( 'library/module/_load.php' );
-
-			// extensions ##
-			// require_once self::get_plugin_path( 'library/extension/_load.php' );
 
             // admin ##
 			require_once self::get_plugin_path( 'library/admin/_load.php' );
@@ -261,7 +260,8 @@ if ( ! class_exists( 'Q' ) ) {
 
             }
 
-            // plugins ##
+			// plugins ##
+			// @todo - move all plugins to q_theme_parent ##
             require_once self::get_plugin_path( 'library/plugin/_load.php' );
 
         }

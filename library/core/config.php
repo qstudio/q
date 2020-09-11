@@ -27,7 +27,7 @@ class config extends \Q {
 		}
 
 		// return via Willow ##
-		return \q\willow\core\config::get( $args );
+		return \willow\core\config::get( $args );
 
 	}
 

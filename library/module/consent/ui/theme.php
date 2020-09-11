@@ -161,7 +161,7 @@ class theme extends module\consent {
 		} 
 		
 		// pass to willow render template method ##
-		\q\willow\render\template::partial([
+		\willow\render\template::partial([
 			'context' 	=> 'module', 
 			'task' 		=> 'consent',
 			'markup'	=> 'bar', // markup->property ##
@@ -217,7 +217,7 @@ class theme extends module\consent {
     {
 
 		// pass to willow render template method ##
-		return \q\willow\render\template::partial([
+		return \willow\render\template::partial([
 			'context' 	=> 'module', 
 			'task' 		=> 'consent',
 			'markup'	=> 'settings', // markup->property ##

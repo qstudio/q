@@ -13,7 +13,7 @@ use q\strings;
 use q\theme;
 
 // Willow ##
-// use q\willow;
+// use willow;
 
 class navigation extends \q\get {
 

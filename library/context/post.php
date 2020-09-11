@@ -4,10 +4,10 @@ namespace q\context;
 
 use q\core\helper as h;
 use q\get;
-use q\willow;
+use willow;
 
 // register class to willow ##
-\q\context\post::__run();
+// \q\context\post::__run();
 
 class post {
 
@@ -111,103 +111,6 @@ class post {
 		return $return;
 
     }
-
-	
-
-	/// --- DEPRECATED by get()
-
-
-
-	
-
-	/**
-     * Generic H1 title tag
-     *
-     * @param       Array       $args
-     * @since       1.3.0
-     * @return      String
-     */
-	/*
-    public static function title( $args = null ) {
-
-		return \q\get\post::title( $args );
-
-	}
-	*/
-
-
-
-	/**
-     * Post Meta details.. 
-     *
-     * @param       Array       $args
-     * @since       1.4.1
-     * @return      String
-     */
-	/*
-    public static function meta_data( $args = null ) {
-
-		return get\post::meta_data( $args );
-
-	}
-	*/
-
-
-
-	/**
-     * Post Meta comments 
-     *
-     * @param       Array       $args
-     * @since       1.4.1
-     * @return      String
-     */
-	/*
-    public static function meta_comment( $args = null ) {
-
-		return get\post::meta_comment( $args );
-
-	}
-	*/
-
-
-
-	/**
-	 * Helper Method to get_the_date
-	 */
-	/*
-	public static function meta_date( $args = null ){
-
-		return get\post::date( $args );
-
-	}
-	*/
-
-
-	/**
-	 * Helper Method to get the_excerpt
-	 */
-	/*
-	public static function excerpt( $args = null ){
-
-		return get\post::excerpt( $args );
-
-	}
-	*/
-
-
-
-
-	/**
-	 * Helper Method to get the_content
-	 */
-	/*
-	public static function content( $args = null ){
-
-		// get content - returns array with key 'content' ##
-		return get\post::content( $args );
-
-	}
-	*/
 
 
 }

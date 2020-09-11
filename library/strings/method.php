@@ -302,8 +302,8 @@ class method extends \q\strings {
 		){
 
 			// variable replacement -- regex way ##
-			$open = \q\willow\tags::g( 'var_o' );
-			$close = \q\willow\tags::g( 'var_c' );
+			$open = \willow\tags::g( 'var_o' );
+			$close = \willow\tags::g( 'var_c' );
 
 		} else {
 

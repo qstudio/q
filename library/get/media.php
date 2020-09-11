@@ -323,8 +323,8 @@ class media extends \Q {
 			// OR, set globally ##
 			(
 				class_exists( 'willow' )
-				&& isset( \q\willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta'] )
-				&& true == \q\willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta']
+				&& isset( \willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta'] )
+				&& true == \willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['meta']
 			)
 			*/
 		) {
@@ -353,8 +353,8 @@ class media extends \Q {
 			// OR, set globally ##
 			(
 				class_exists( 'willow' )
-				&& isset( \q\willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset'] )
-				&& true == \q\willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset']
+				&& isset( \willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset'] )
+				&& true == \willow\core\config::get([ 'context' => 'media', 'task' => 'config' ])['srcset']
 			)
 			*/
         ) {

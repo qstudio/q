@@ -4,7 +4,7 @@ namespace q\context;
 
 use q\core\helper as h;
 use q\get;
-use q\willow;
+use willow;
 
 // register class to willow ##
 \q\context\ui::__run();
@@ -67,7 +67,7 @@ class ui {
 		\do_action( 'get_header', $name );
 
 		// look for config ##
-		$config = \q\willow\core\config::get([ 'context' => $args['context'], 'task' => $args['task'] ]);
+		$config = \willow\core\config::get([ 'context' => $args['context'], 'task' => $args['task'] ]);
 		// $config = false;
 
 		// look for property "args->task" in config ##
@@ -121,7 +121,7 @@ class ui {
 		// required hook included in ui_footer ##
 		// \wp_footer();
 
-		$config = \q\willow\core\config::get([ 'context' => $args['context'], 'task' => $args['task'] ]);
+		$config = \willow\core\config::get([ 'context' => $args['context'], 'task' => $args['task'] ]);
 		// h::log( $config );
 
 		// return core\config::get([ 'context' => $args['context'], 'task' => $args['task'] ]);
@@ -182,7 +182,7 @@ class ui {
     public static function close( $args = null )
     {
 
-		return \q\willow\core\config::get([ 'context' => $args['context'], 'task' => $args['task'] ]);
+		return \willow\core\config::get([ 'context' => $args['context'], 'task' => $args['task'] ]);
 
 	}
 

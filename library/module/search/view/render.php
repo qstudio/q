@@ -179,7 +179,7 @@ class render extends module\search {
 		$data = \apply_filters( 'q/search/result/post/data', $data, $properties );
 
 		// pass to willow render template method ##
-		echo \q\willow\render\template::partial([
+		echo \willow\render\template::partial([
 			'context' 	=> 'module', 
 			'task' 		=> 'search',
 			'markup'	=> 'result', // markup->property ##
@@ -484,7 +484,7 @@ class render extends module\search {
 		
 		/*
 		// pass to willow render template method ##
-		echo \q\willow\render\template::partial([
+		echo \willow\render\template::partial([
 			'context' 	=> 'module', 
 			'task' 		=> 'search',
 			'markup'	=> 'pagination', // markup->property ##
@@ -689,7 +689,7 @@ class render extends module\search {
 	{	
 
 		// pass to willow render template method ##
-		echo \q\willow\render\template::partial([
+		echo \willow\render\template::partial([
 			'context' 	=> 'module', 
 			'task' 		=> 'search',
 			'markup'	=> 'count_results', // markup->property ##
@@ -732,7 +732,7 @@ class render extends module\search {
 		// we need 3 element, class ( for icon ), title, message
 
 		// pass to willow render template method ##
-		$string = \q\willow\render\template::partial([
+		$string = \willow\render\template::partial([
 			'context' 	=> 'module', 
 			'task' 		=> 'search',
 			'markup'	=> 'feedback', // markup->property ##

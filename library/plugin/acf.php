@@ -1,25 +1,11 @@
 <?php
 
-namespace q\plugin;
+namespace willow\plugin;
 
-use q\core;
-use q\core\helper as h;
-// use q\wordpress as wordpress;
+use willow\core;
+use willow\core\helper as h;
 
-// load it up ##
-\q\plugin\acf::run();
-
-class acf extends \Q {
-
-    public static function run()
-    {
-
-        // // filter q/tab/special/script ##
-        // \add_filter( 'q/tab/special/script', [ get_class(), 'tab_special_script' ], 10, 2 );
-
-    }
-
-
+class acf extends \willow {
 
     /**
     * Add ACF Fields
@@ -34,7 +20,7 @@ class acf extends \Q {
 		
 		if ( ! function_exists( 'acf_add_local_field_group' ) ) {
 
-            h::log( 'ACF Missing, please install or activate: "https://www.advancedcustomfields.com/"' );
+            h::log( 'e:>ACF Missing, please install or activate: "https://www.advancedcustomfields.com/"' );
 
             return false;
 
@@ -45,7 +31,7 @@ class acf extends \Q {
             || ! is_array( $groups )
         ) {
 
-            h::log( 'No groups to load.' );
+            h::log( 'd:>No groups to load.' );
 
             return false;
 
@@ -57,7 +43,7 @@ class acf extends \Q {
 			// h::log( 'Filter: '.'q/plugin/acf/add_field_groups/'.$key );
 
             // filter groups -- NEW ##
-			$value = \apply_filters( 'q/plugin/acf/add_field_groups/'.$key, $value );
+			$value = \apply_filters( 'willow/plugin/acf/add_field_groups/'.$key, $value );
 			
             // h::log( $value );
 
@@ -69,31 +55,6 @@ class acf extends \Q {
     }
 
 
-
-    // /**
-    //  * Get field group
-    //  */
-    // public static function get_field_group( String $group = null ) {
-
-    //     // @todo -- sanity ##
-    //     if ( ! \function_exists('acf_get_field_group') ) {
-
-    //         h::log( 'function "acf_get_field_group" not found' );
-
-    //         return false;
-
-    //     }
-
-    //     // @todo -- check if string passed ##
-
-    //     // @todo -- look for field group and return boolen if fails ##
-
-    //     return \acf_get_field_group( $group );
-
-    // }   
-
-
-
     /**
      * Get field group
      */
@@ -102,7 +63,7 @@ class acf extends \Q {
         // sanity ##
         if ( ! \function_exists('acf_get_field_group') ) {
 
-            h::log( 'Error -> function "acf_get_field_group" not found' );
+            h::log( 'q:>function "acf_get_field_group" not found' );
 
             return false;
 
@@ -111,32 +72,23 @@ class acf extends \Q {
         // check if string passed ##
         if ( is_null( $group ) ) {
 
-            h::log( 'Error -> No "group" string passed to method.' );
+            h::log( 'e:> No "group" string passed to method.' );
 
             return false;
-
-        }
-
-        // the $group string might be passed without the prefix "group_" - if it's missing, add it ##
-        if ( 'group_' !== substr( $group, 0, 6 ) ) {
-
-            // h::log( 'e:>Notice -> "group" "group_" prefix REMOVED...' );
-
-            // $group = "group_".$group;
 
         }
 
         // look for field group and return boolen if fails ##
         if ( ! $array = \acf_get_fields( $group ) ) {
 
-            h::log( 'Notice -> Group: "'.$group.'" not found.' );
+            h::log( 'd:>Group: "'.$group.'" not found.' );
 
             return false;
 
         }
 
         // filter ##
-        $array = \apply_filters( 'q/plugin/acf/get_field_group/'.$group, $array );
+        $array = \apply_filters( 'willow/plugin/acf/get_field_group/'.$group, $array );
 
         // return ##
         return $array;

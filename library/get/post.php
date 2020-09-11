@@ -7,7 +7,7 @@ use q\core;
 use q\core\helper as h;
 use q\ui;
 use q\get;
-use q\willow\render;
+use willow\render;
 use q\strings;
 
 // Q Theme ##

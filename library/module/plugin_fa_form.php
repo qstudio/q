@@ -48,7 +48,7 @@ class plugin_fa_form extends \Q {
 
 		// register new class methods ##
 		\add_action( 'after_setup_theme', function() use ( $public_methods ) {
-			\q\willow\context\extend::register([ 
+			\willow\context\extend::register([ 
 				'context' 	=> 'module',#str_replace( __NAMESPACE__.'\\', '', __CLASS__ ), 
 				// 'lookup'	=> \q_user::get_plugin_path( 'library/view/context/' ), // allow for extended .willow lookups ##
 				'class' 	=> __CLASS__,
