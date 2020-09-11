@@ -40,7 +40,7 @@ class plugin_fa_form extends \Q {
 		}
 
 		// check for willow ##
-		if( ! class_exists( 'q_willow' ) ){ return false; }
+		if( ! class_exists( 'willow' ) ){ return false; }
 
 		$class = new \ReflectionClass( __CLASS__ );
 		$methods = $class->getMethods( \ReflectionMethod::IS_PUBLIC );

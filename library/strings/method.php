@@ -298,7 +298,7 @@ class method extends \q\strings {
 		}
 
 		if (
-			class_exists( 'q_willow' )
+			class_exists( 'willow' )
 		){
 
 			// variable replacement -- regex way ##

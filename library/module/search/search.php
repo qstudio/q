@@ -40,7 +40,7 @@ class search extends \Q {
 
 		// check for what's needed ##
 		if (
-			! class_exists( 'q_willow' )
+			! class_exists( 'willow' )
 		) {
 
 			h::log( 'e:>This module requires Q Willow to run correctly..' );

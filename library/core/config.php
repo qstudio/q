@@ -18,7 +18,7 @@ class config extends \Q {
 	public static function get( $args = null ) {
 
 		// check for Willow ##
-		if( ! class_exists( 'q_willow' ) ){
+		if( ! class_exists( 'willow' ) ){
 
 			h::log( 'e:>Config loading requires Q Willow plugins, please install of activate' );
 

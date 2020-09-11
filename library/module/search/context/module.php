@@ -17,7 +17,7 @@ class module {
 	public static function __run( $args = null ) {
 
 		// check for willow ##
-		if( ! class_exists( 'q_willow' ) ){ return false; }
+		if( ! class_exists( 'willow' ) ){ return false; }
 
 		$class = new \ReflectionClass( __CLASS__ );
 		$methods = $class->getMethods( \ReflectionMethod::IS_PUBLIC );
