@@ -178,7 +178,7 @@ class navigation extends \q\get {
 		// h::log( $items );
 
 		// markup array ##
-		$string = strings\method::markup( $config['markup']['template'], $items, $config['markup'] );
+		$string = \willow\strings\method::markup( $config['markup']['template'], $items, $config['markup'] );
 
 		// h::log( $string );
 

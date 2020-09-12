@@ -222,26 +222,22 @@ if ( ! class_exists( 'Q' ) ) {
 			require_once self::get_plugin_path( 'library/core/_load.php' );
 
 			// getter ##
-			// @todo - _deprecate and move all to willow ##
+			// most moved to willow - basic post items remain ##
 			require_once self::get_plugin_path( 'library/get/_load.php' );
 
-			// string methods ##
-			require_once self::get_plugin_path( 'library/strings/_load.php' );
+			// string methods -- moved to Willow ##
+			// require_once self::get_plugin_path( 'library/strings/_load.php' );
 
-			// willow contexts ##
-			// @todo - _deprecate and move all to q_theme_parent ##
-			require_once self::get_plugin_path( 'library/context/_load.php' );
+			// willow contexts -- moved to parent +|| child theme ##
+			// require_once self::get_plugin_path( 'library/context/_load.php' );
 
 			// view ##
-			// @todo - move all context to q_theme_parent ##
 			require_once self::get_plugin_path( 'library/view/_load.php' );
 
 			// assets ##
-			// @todo - move all assets to q_theme_parent ##
 			require_once self::get_plugin_path( 'library/asset/_load.php' );
 
 			// ui modules ##
-			// @todo - move all modules to q_theme_parent ##
 			require_once self::get_plugin_path( 'library/module/_load.php' );
 
             // admin ##
@@ -260,8 +256,7 @@ if ( ! class_exists( 'Q' ) ) {
 
             }
 
-			// plugins ##
-			// @todo - move all plugins to q_theme_parent ##
+			// plugins required to run other plugins... ##
             require_once self::get_plugin_path( 'library/plugin/_load.php' );
 
         }

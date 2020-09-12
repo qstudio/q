@@ -300,7 +300,7 @@ Date:       {$date}
                 $string .= implode( "", self::$array );
 
                 // mimnify ##
-                $string = strings\method::minify( $string, 'css' );
+                $string = \willow\strings\method::minify( $string, 'css' );
 
                 // add header to empty string ##
                 $string = self::header( strlen( $string ) ).$string;

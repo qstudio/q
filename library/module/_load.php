@@ -32,40 +32,40 @@ class module extends \Q {
 		return $array = [
 
 			// Bootstrap ##
-			'bootstrap_modal' 		=> h::get( 'module/bootstrap_modal.php', 'return', 'path' ),
-			'bootstrap_toast' 		=> h::get( 'module/bootstrap_toast.php', 'return', 'path' ),
-			'bootstrap_tab' 		=> h::get( 'module/bootstrap_tab.php', 'return', 'path' ),
-			'bootstrap_collapse' 	=> h::get( 'module/bootstrap_collapse.php', 'return', 'path' ),
-			'bootstrap_form' 		=> h::get( 'module/bootstrap_form.php', 'return', 'path' ),
-			'bootstrap_toggle' 		=> h::get( 'module/bootstrap_toggle.php', 'return', 'path' ),
-			'bootstrap_gallery' 	=> h::get( 'module/bootstrap_gallery.php', 'return', 'path' ),
-			'bootstrap_helper' 		=> h::get( 'module/bootstrap_helper.php', 'return', 'path' ),
-			'bootstrap_scrollspy' 	=> h::get( 'module/bootstrap_scrollspy.php', 'return', 'path' ),
+			// 'bootstrap_modal' 		=> h::get( 'module/bootstrap_modal.php', 'return', 'path' ),
+			// 'bootstrap_toast' 		=> h::get( 'module/bootstrap_toast.php', 'return', 'path' ),
+			// 'bootstrap_tab' 		=> h::get( 'module/bootstrap_tab.php', 'return', 'path' ),
+			// 'bootstrap_collapse' 	=> h::get( 'module/bootstrap_collapse.php', 'return', 'path' ),
+			// 'bootstrap_form' 		=> h::get( 'module/bootstrap_form.php', 'return', 'path' ),
+			// 'bootstrap_toggle' 		=> h::get( 'module/bootstrap_toggle.php', 'return', 'path' ),
+			// 'bootstrap_gallery' 	=> h::get( 'module/bootstrap_gallery.php', 'return', 'path' ),
+			// 'bootstrap_helper' 		=> h::get( 'module/bootstrap_helper.php', 'return', 'path' ),
+			// 'bootstrap_scrollspy' 	=> h::get( 'module/bootstrap_scrollspy.php', 'return', 'path' ),
 			
 			// Q ##
-			'javascript' 			=> h::get( 'module/javascript.php', 'return', 'path' ),
-			'navigation' 			=> h::get( 'module/navigation.php', 'return', 'path' ), 
-			'cookie' 				=> h::get( 'module/cookie.php', 'return', 'path' ),
-			'no_emoji' 				=> h::get( 'module/no_emoji.php', 'return', 'path' ),
-			'grunt' 				=> h::get( 'module/grunt.php', 'return', 'path' ),
-			'gist' 					=> h::get( 'module/gist.php', 'return', 'path' ),
-			'google' 				=> h::get( 'module/google.php', 'return', 'path' ),
-			'facebook' 				=> h::get( 'module/facebook.php', 'return', 'path' ),
-			'linkedin' 				=> h::get( 'module/linkedin.php', 'return', 'path' ),
-			'comment' 				=> h::get( 'module/comment.php', 'return', 'path' ),
-			'scroll' 				=> h::get( 'module/scroll.php', 'return', 'path' ),
-			'push' 					=> h::get( 'module/push.php', 'return', 'path' ),
-			'twitter' 				=> h::get( 'module/twitter.php', 'return', 'path' ),
-			'asana' 				=> h::get( 'module/asana.php', 'return', 'path' ),
-			'nprogress' 			=> h::get( 'module/nprogress.php', 'return', 'path' ),
-			'device' 				=> h::get( 'module/device/device.php', 'return', 'path' ),
-			'consent' 				=> h::get( 'module/consent/consent.php', 'return', 'path' ),
-			'search' 				=> h::get( 'module/search/search.php', 'return', 'path' ),
+			// 'javascript' 			=> h::get( 'module/javascript.php', 'return', 'path' ),
+			// 'navigation' 			=> h::get( 'module/navigation.php', 'return', 'path' ), 
+			// 'cookie' 				=> h::get( 'module/cookie.php', 'return', 'path' ),
+			// 'no_emoji' 				=> h::get( 'module/no_emoji.php', 'return', 'path' ),
+			// 'grunt' 				=> h::get( 'module/grunt.php', 'return', 'path' ),
+			// 'gist' 					=> h::get( 'module/gist.php', 'return', 'path' ),
+			// 'google' 				=> h::get( 'module/google.php', 'return', 'path' ),
+			// 'facebook' 				=> h::get( 'module/facebook.php', 'return', 'path' ),
+			// 'linkedin' 				=> h::get( 'module/linkedin.php', 'return', 'path' ),
+			// 'comment' 				=> h::get( 'module/comment.php', 'return', 'path' ),
+			// 'scroll' 				=> h::get( 'module/scroll.php', 'return', 'path' ),
+			// 'push' 					=> h::get( 'module/push.php', 'return', 'path' ),
+			// 'twitter' 				=> h::get( 'module/twitter.php', 'return', 'path' ),
+			// 'asana' 				=> h::get( 'module/asana.php', 'return', 'path' ),
+			// 'nprogress' 			=> h::get( 'module/nprogress.php', 'return', 'path' ),
+			// 'device' 				=> h::get( 'module/device/device.php', 'return', 'path' ),
+			// 'consent' 				=> h::get( 'module/consent/consent.php', 'return', 'path' ),
+			// 'search' 				=> h::get( 'module/search/search.php', 'return', 'path' ),
 
 			// plugins ##
-			'plugin_anspress' 		=> h::get( 'module/plugin_anspress.php', 'return', 'path' ),
-			'plugin_fa_form' 		=> h::get( 'module/plugin_fa_form.php', 'return', 'path' ),
-			'plugin_github' 		=> h::get( 'module/plugin_github.php', 'return', 'path' ),
+			// 'plugin_anspress' 		=> h::get( 'module/plugin_anspress.php', 'return', 'path' ),
+			// 'plugin_fa_form' 		=> h::get( 'module/plugin_fa_form.php', 'return', 'path' ),
+			// 'plugin_github' 		=> h::get( 'module/plugin_github.php', 'return', 'path' ),
 
 			// admin ##
 			'sticky' 				=> h::get( 'module/sticky/sticky.php', 'return', 'path' ),
@@ -76,6 +76,7 @@ class module extends \Q {
 	}
 	
 
+	
 	/**
     * Filter modules via ACF options page
     *

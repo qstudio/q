@@ -51,12 +51,10 @@ class option extends \Q {
 	}
 
 
-	// https://www.advancedcustomfields.com/resources/acf-render_field/
-	public static function _filter_modules( $field ) {
-		echo '<p>Some extra HTML.</p>';
-	}
-	
-
+	/**
+	 * Add Q Settings to main WP admin bar menu
+	 * 
+	*/
 	public static function admin_bar_menu($admin_bar) {       
 
 		$args = array(
@@ -73,7 +71,7 @@ class option extends \Q {
 
 
     /**
-     * API to add fields to Q settings
+     * API run when Q settings options are saved
      * 
      * @since 2.3.0
      */
@@ -86,6 +84,15 @@ class option extends \Q {
 			|| ! function_exists( 'get_current_screen' )
 		){
 			
+			return false;
+
+		}
+
+		// file management should only happen if the site is debugging - as it requires a deployment to compile ##
+		if( ! self::$debug ){
+
+			h::log( 'e:>Module Save is only run while debugging, as required re-compile.' );
+
 			return false;
 
 		}
@@ -134,19 +141,16 @@ class option extends \Q {
 
 					// css / scss ##
 					'scss'				=> in_array( 'css', $values['q_option_module_asset'] ), // get from passed values ##
-					'source_scss'		=> self::get_plugin_path( 'library/_source/scss/module/' ),
-					'source_img'		=> self::get_plugin_path( 'library/_source/images/module' ),
-					'destination_img' 	=> [ 
-											// \q_theme::get_parent_theme_path( '/library/_source/images/module' ),
-											\q_theme::get_parent_theme_path( '/library/asset/css/images/module' )
-										],
-					'destination_scss'	=> \q_theme::get_parent_theme_path( '/library/_source/scss/module/' ),
+					'source_scss'		=> \q_theme::get_parent_theme_path( 'library/_source/scss/module/' ),
+					// 'asset_scss'	=> \q_theme::get_parent_theme_path( '/library/asset/css/module/' ),
+					'source_img'		=> \q_theme::get_parent_theme_path( 'library/_source/images/module' ),
+					'asset_img' 		=> \q_theme::get_parent_theme_path( '/library/asset/css/images/module' ),
 					'file_scss'			=> 'index.scss',
 
-					// js ##
+					// js -- rename modules which are inactive to "_FILENAME" ##
 					'js'				=> in_array( 'js', $values['q_option_module_asset'] ), // get from passed values ##
-					'source_js'			=> self::get_plugin_path( 'library/_source/js/module/' ),
-					'destination_js'	=> \q_theme::get_parent_theme_path( '/library/_source/js/module/' ),
+					'source_js'			=> \q_theme::get_parent_theme_path( 'library/_source/js/module/' ),
+					'asset_js'			=> \q_theme::get_parent_theme_path( '/library/_source/js/module/' ),
 					'file_js'			=> 'readme.md',
 					
 				];
@@ -161,14 +165,14 @@ class option extends \Q {
 
 				// ---- CSS first ## 
 
-				// destination index.scss ##
-				$file_scss = $options['destination_scss'].$options['file_scss'];
+				// source_scss index.scss ##
+				$file_scss = $options['source_scss'].$options['file_scss'];
 
 				// if user has disabled css - we need to delete all scss modules ##
 				if ( ! $options['scss'] ) {
 					
 					// empty scss destination folder ##
-					$log = \q\admin\method::empty_directory( $options['destination_scss'] );
+					// $log = \q\admin\method::empty_directory( $options['source_scss'] );
 
 					// datestamp the index.scss file ##
 					$list = "/* Q Studio ~ SCSS Modules : EMPTIED --> ".$now->format('Y-m-d H:i:s')." */\r\n";
@@ -179,29 +183,26 @@ class option extends \Q {
 				// user has activated scss modules ##
 				} else {
 
-					// copy over images -- note this copies to both _source and asset directories on the destination ##
-					foreach( $options['destination_img'] as $destination ){
+					// copy over _source/images ##
 
-						// empty first ##
-						$log = \q\admin\method::empty_directory( $destination );
+					// empty first ##
+					$log = \q\admin\method::empty_directory( $options['asset_img'] );
 
-						// check out what happened ##
-						// h::log( $log );
+					// check out what happened ##
+					// h::log( $log );
 
-						// then copy from Q to parent theme ##
-						$log = \q\admin\method::copy_recursive( $options['source_img'], $destination );
+					// then copy from Q to parent theme ##
+					$log = \q\admin\method::copy_recursive( $options['source_img'], $options['asset_img'] );
 
-						// check out what happened ##
-						// h::log( $log );
+					// check out what happened ##
+					// h::log( $log );
 
-					}
-
-					// check for theme/xx/modules/index.scss
+					// check for theme/xx/_source/scss/module/index.scss
 					if( 
 						! file_exists( $file_scss ) 
 					){
 
-						h::log( 'd:>'.$options['destination_scss'].$options['file_scss'].' file NOT found - it will be created' );
+						h::log( 'd:>'.$options['source_scss'].$options['file_scss'].' file NOT found - it will be created' );
 
 					}
 
@@ -210,16 +211,18 @@ class option extends \Q {
 
 					// copy scss files from q/_source/scss/module/ -> q_theme/_source/scss/modules/ ##
 					// note, only copies over files which exist from active module list ##
-				
+					
+					/*
 					// add "_$FILE.js" to each module ##
 					$scss_modules = array_map( function ($module) { return "_$module.scss"; }, $values['q_option_module'] );
 				
 					// h::log( $scss_modules );
 					\q\admin\method::copy_files([
 						'source' 		=> $options['source_scss'],
-						'destination' 	=> $options['destination_scss'],
+						'destination' 	=> $options['asset_scss'],
 						'files'			=> $scss_modules
 					]);
+					*/
 
 					// loop over active modules ##
 					foreach( $values['q_option_module'] as $module ){
@@ -227,14 +230,14 @@ class option extends \Q {
 						// check for each module file in theme/xx/_source/scss/modules/_$module.scss
 						// h::log( 'Checking module: '.$module );
 
-						// check for theme/xx/modules/index.scss
-						$scss_module = $options['destination_scss'].'_'.$module.'.scss';
+						// check for theme/xx/_source/scss/module/_MODULE.scss
+						$scss_module = $options['source_scss'].'_'.$module.'.scss';
 						if( 
 							$scss_module
 							&& file_exists( $scss_module ) 
 						){
 
-							// h::log( $options['destination_scss'].'_'.$module.'.scss ~ file exists' );
+							// h::log( $options['source_scss'].'_'.$module.'.scss ~ file exists' );
 
 							// store ##
 							$q_modules['scss'][] = $module;
@@ -246,7 +249,7 @@ class option extends \Q {
 
 					}
 
-					// write to file ##
+					// write to index.scss ##
 					file_put_contents( $file_scss, $list );
 
 				}
@@ -254,7 +257,7 @@ class option extends \Q {
 				// --- now JS ##
 
 				// destination index.scss ##
-				$file_js = $options['destination_js'].$options['file_js'];
+				$file_js = $options['asset_js'].$options['file_js'];
 
 				// if user has disabled css - we need to delete all scss modules ##
 				if ( ! $options['js'] ) {
@@ -262,7 +265,7 @@ class option extends \Q {
 					// h::log('e:>JS disabled, so empty _source');
 					
 					// empty destination folder ##
-					$log = \q\admin\method::empty_directory( $options['destination_js'] );
+					$log = \q\admin\method::empty_directory( $options['asset_js'] );
 
 					// check out what happened ##
 					// h::log( $log );
@@ -282,7 +285,7 @@ class option extends \Q {
 						! file_exists( $file_js ) 
 					){
 
-						h::log( 'd:>'.$options['destination_js'].$options['file_js'].' file NOT found - it will be created' );
+						h::log( 'd:>'.$options['asset_js'].$options['file_js'].' file NOT found - it will be created' );
 
 					}
 
@@ -300,7 +303,7 @@ class option extends \Q {
 					// h::log( $scss_modules );
 					\q\admin\method::copy_files([
 						'source' 		=> $options['source_js'],
-						'destination' 	=> $options['destination_js'],
+						'destination' 	=> $options['asset_js'],
 						'files'			=> $js_modules
 					]);
 
@@ -311,13 +314,13 @@ class option extends \Q {
 						// h::log( 'Checking module: '.$module );
 
 						// check for theme/xx/modules/index.scss
-						$js_module = $options['destination_js'].$module.'.js';
+						$js_module = $options['asset_js'].$module.'.js';
 						if( 
 							$js_module
 							&& file_exists( $js_module ) 
 						){
 
-							// h::log( $options['destination_js'].$module.'.js ~ file exists' );
+							// h::log( $options['asset_js'].$module.'.js ~ file exists' );
 
 							// store ##
 							$q_modules['js'][] = $module;
@@ -816,7 +819,7 @@ class option extends \Q {
 
 			'q_option_module'   => array(
 				'key' => 'group_q_option_module',
-				'title' => 'Modules',
+				'title' => 'Modules & Plugins',
 				'fields' => array(
 					array(
 						'key' => 'field_q_option_module',
@@ -857,7 +860,7 @@ class option extends \Q {
 				'instruction_placement' => 'label',
 				'hide_on_screen' => '',
 				'active' => true,
-				'description' => '',
+				'description' => 'Extend applications with modules and plugins, integrated into Willow',
 			)
 			
 		);

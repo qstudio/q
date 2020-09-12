@@ -308,7 +308,7 @@ Date:       {$date}
                 $string .= implode( "", self::$array );
 
                 // mimnify ##
-                $string = strings\method::minify( $string, 'js' );
+                $string = \willow\strings\method::minify( $string, 'js' );
 
                 // add header to empty string ##
                 $string = self::header( strlen( $string ) ).$string;
