@@ -145,7 +145,7 @@ class method extends \Q {
 
 		// h::log( $log );
 
-		return true;
+		return $log;
 
 	}
 

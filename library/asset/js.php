@@ -27,12 +27,14 @@ class js extends \Q {
 		// \add_action( 'init', [ get_class(), 'delete' ], 9 );
 
 		// save late ##
-		\add_action( 'shutdown', [ get_class(), 'save' ], 1000 );
+		// \add_action( 'shutdown', [ get_class(), 'save' ], 1000 );
 
 	}
 	
 	
 	public static function load(){
+
+		// h::log( \q\core\option::get('module') );
 
 		// load list of modules, stored in site_option "q_modules" - includes list of parameters to localize ##
 		// h::log( \get_option( "q_modules" ) );
@@ -50,6 +52,8 @@ class js extends \Q {
 			self::$q_modules = $q_modules;
 
 		}
+
+		// h::log( self::$q_modules );
 
 	}
 
@@ -156,7 +160,7 @@ class js extends \Q {
 
 	public static function get(){
 
-		return self::$q_module;
+		return self::$q_modules;
 
 	}
 
