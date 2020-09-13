@@ -31,7 +31,7 @@ class option extends \Q {
         self::acf_add_options_page();
         
 		// add ACF fields
-        \add_action( 'acf/init', function() { plugin\acf::add_field_groups( self::add_field_groups() ); }, 1 );
+        \add_action( 'acf/init', function() { \q\plugin\acf::add_field_groups( self::add_field_groups() ); }, 1 );
 
         // example how to inject extra options in libraries select API ##
         // \add_filter( 'acf/load_field/name=q_option_library', [ get_class(), 'filter_acf_library' ], 10, 1 );

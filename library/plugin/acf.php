@@ -1,11 +1,11 @@
 <?php
 
-namespace willow\plugin;
+namespace q\plugin;
 
-use willow\core;
-use willow\core\helper as h;
+use q\core;
+use q\core\helper as h;
 
-class acf extends \willow {
+class acf extends \Q {
 
     /**
     * Add ACF Fields
@@ -43,7 +43,7 @@ class acf extends \willow {
 			// h::log( 'Filter: '.'q/plugin/acf/add_field_groups/'.$key );
 
             // filter groups -- NEW ##
-			$value = \apply_filters( 'willow/plugin/acf/add_field_groups/'.$key, $value );
+			$value = \apply_filters( 'q/plugin/acf/add_field_groups/'.$key, $value );
 			
             // h::log( $value );
 
@@ -88,7 +88,7 @@ class acf extends \willow {
         }
 
         // filter ##
-        $array = \apply_filters( 'willow/plugin/acf/get_field_group/'.$group, $array );
+        $array = \apply_filters( 'q/plugin/acf/get_field_group/'.$group, $array );
 
         // return ##
         return $array;
