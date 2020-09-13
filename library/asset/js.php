@@ -126,6 +126,8 @@ class js extends \Q {
 			);
 			// h::log( $args['localize'] );
 
+			if ( ! isset( self::$q_modules['localize'] ) ){ self::$q_modules['localize'] = []; }
+
 			// $q_modules['']
 			foreach( $args['localize'] as $key => $value ){
 
