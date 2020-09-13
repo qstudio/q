@@ -1,3 +1,9 @@
+### 4.9.0 ###
+
+* Update: Removed all assets, js, css to parent theme
+* New: tinymce fixes for WP Editor
+* New: Purge and reduction of code base
+
 ### 4.7.3 ###
 
 * Fix: Added admin checks for ACF filters which were running on profile updates
