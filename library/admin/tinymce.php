@@ -6,7 +6,7 @@ use q\core;
 use q\core\helper as h;
 
 // load it up ##
-// \q\admin\tinymce::__run();
+\q\admin\tinymce::__run();
 
 class tinymce extends \Q {
 
@@ -15,9 +15,9 @@ class tinymce extends \Q {
 
         if ( \is_admin() ) {
 
-			\add_filter( 'tiny_mce_before_init', [ get_class(), 'tiny_mce_before_init' ] );
+			\add_filter( 'tiny_mce_before_init', [ get_class(), 'style_formats' ] );
 			
-			\add_filter( 'mce_buttons_2', [ get_class(), 'mce_buttons_2' ], 10, 1 );
+			\add_filter( 'mce_buttons_2', [ get_class(), 'buttons' ], 10, 1 );
 
 			\add_filter( 'mce_external_plugins', [ get_class(), 'code_plugin' ], 10, 1 );
 
@@ -35,7 +35,7 @@ class tinymce extends \Q {
 	}
 
 
-	public static function mce_buttons_2( $buttons ) {   
+	public static function buttons( $buttons ) {   
 		
 		/**
 		 * Add in a core button that's disabled by default
@@ -48,7 +48,7 @@ class tinymce extends \Q {
 	}
 
 
-    public static function tiny_mce_before_init( $init_array ){
+    public static function style_formats( $init_array ){
 
 		// Define the style_formats array
 		$style_formats = array(
@@ -63,8 +63,10 @@ class tinymce extends \Q {
 			// https://codex.wordpress.org/TinyMCE_Custom_Styles
 	
 		);
+		
 		// Insert the array, JSON ENCODED, into 'style_formats'
 		$init_array['style_formats'] = json_encode($style_formats);
+
 		return $init_array;
 
 	}	
