@@ -40,13 +40,13 @@ class method extends \Q {
 
 			if ( $file->isDir() ) {
 				
-				$log[$file] = 'Directory Deleted';
+				$log[] = $file.' -> Directory Deleted';
 
 				rmdir($file);
 				
 			} else {
 
-				$log[$file] = 'File Deleted';
+				$log[] = $file.' -> File Deleted';
 
 				unlink($file);
 

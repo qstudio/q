@@ -109,23 +109,23 @@ class module extends \Q {
 		}
 		
 		// look for module assets ( scss / js ) with matching name, to indicate which files will be included ##
-		$scss = self::get_plugin_path( 'library/_source/scss/module/_'.$args['module'].'.scss' );
+		$scss = \q_theme::get_parent_theme_path( '/library/_source/scss/module/_'.$args['module'].'.scss' );
 		if(
 			file_exists( $scss )
 		){
 
-			$scss = self::get_plugin_url( 'library/_source/scss/module/_'.$args['module'].'.scss' );
+			$scss = \q_theme::get_parent_theme_url( '/library/_source/scss/module/_'.$args['module'].'.scss' );
 
 			$args['name'] .= ' ~~ <strong>SCSS</strong>: <a href="'.$scss.'" target="_blank">_'.$args['module'].'.scss</a>';
 
 		}
 
-		$js = self::get_plugin_path( 'library/_source/js/module/'.$args['module'].'.js' );
+		$js = \q_theme::get_parent_theme_path( '/library/_source/js/module/'.$args['module'].'.js' );
 		if(
 			file_exists( $js )
 		){
 
-			$js = self::get_plugin_url( 'library/_source/js/module/'.$args['module'].'.js' );
+			$js = \q_theme::get_parent_theme_url( '/library/_source/js/module/'.$args['module'].'.js' );
 
 			$args['name'] .= ' ~~ <strong>JS</strong>: <a href="'.$js.'" target="_blank">'.$args['module'].'.js</a>';
 
