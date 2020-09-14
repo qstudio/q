@@ -1,3 +1,7 @@
+### 4.9.1 ###
+
+* FIX: Bad namespace in plugin/acf
+
 ### 4.9.0 ###
 
 * Update: Removed all assets, js, css to parent theme
