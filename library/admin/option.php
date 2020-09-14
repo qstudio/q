@@ -88,14 +88,18 @@ class option extends \Q {
 
 		}
 
+		// h::log( 'debug: '.( self::$debug == true ? 'true' : 'false' ) );
+
 		// file management should only happen if the site is debugging - as it requires a deployment to compile ##
 		if( ! self::$debug ){
 
-			h::log( 'e:>Module Save is only run while debugging, as required re-compile.' );
+			h::log( 'e:>Module Save is only run while debugging, as requires re-compile.' );
 
 			return false;
 
 		}
+
+		return false;
 
 		// get current screen ##
 		$screen = \get_current_screen();
