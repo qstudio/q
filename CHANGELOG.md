@@ -1,3 +1,7 @@
+### 4.9.2 ###
+
+* Assets and Task Runners
+
 ### 4.9.1 ###
 
 * FIX: Bad namespace in plugin/acf

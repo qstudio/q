@@ -91,13 +91,13 @@ class option extends \Q {
 		// h::log( 'debug: '.( self::$debug == true ? 'true' : 'false' ) );
 
 		// file management should only happen if the site is debugging - as it requires a deployment to compile ##
-		if( ! self::$debug ){
+		// if( ! self::$debug ){
 
-			h::log( 'e:>Module Save is only run while debugging, as requires re-compile.' );
+			// h::log( 'e:>Module Save is only run while debugging, as requires re-compile.' );
 
-			return false;
+			// return false;
 
-		}
+		// }
 
 		// get current screen ##
 		$screen = \get_current_screen();
@@ -114,7 +114,9 @@ class option extends \Q {
 			// store modules ##
 			$q_module = [];
 			$q_modules['scss'] = [];
-			$q_modules['js'] = [];
+			$q_modules['scss_path'] = [];
+			$q_modules['javascript'] = [];
+			$q_modules['javascript_path'] = [];
 
 			if( 
 				$values 
@@ -145,8 +147,8 @@ class option extends \Q {
 					'scss'				=> in_array( 'css', $values['q_option_module_asset'] ), // get from passed values ##
 					'source_scss'		=> \q_theme::get_parent_theme_path( '/library/_source/scss/module/' ),
 					// 'asset_scss'		=> \q_theme::get_parent_theme_path( 'library/asset/css/module' ),
-					'source_img'		=> \q_theme::get_parent_theme_path( '/library/_source/images/module/' ),
-					'asset_img' 		=> \q_theme::get_parent_theme_path( '/library/asset/css/images/module' ),
+					// 'source_img'		=> \q_theme::get_parent_theme_path( '/library/_source/images/module/' ),
+					// 'asset_img' 		=> \q_theme::get_parent_theme_path( '/library/asset/css/images/module' ),
 					'file_scss'			=> 'index.scss',
 
 					// js -- rename modules which are inactive to "_FILENAME" ##
@@ -190,13 +192,13 @@ class option extends \Q {
 					// copy over _source/images ##
 
 					// empty first ##
-					$log = \q\admin\method::empty_directory( $options['asset_img'] );
+					// $log = \q\admin\method::empty_directory( $options['asset_img'] );
 
 					// check out what happened ##
 					// h::log( $log );
 
 					// then copy from _source to asset directory ##
-					$log = \q\admin\method::copy_recursive( $options['source_img'], $options['asset_img'] );
+					// $log = \q\admin\method::copy_recursive( $options['source_img'], $options['asset_img'] );
 
 					// check out what happened ##
 					// h::log( $log );
@@ -369,6 +371,10 @@ class option extends \Q {
 
 					// h::log( $copy_log );
 
+					// push in localize script ##
+					$q_modules['javascript'][] = '__q';
+					$q_modules['javascript_path'][] = \esc_html( $options['source_js'] ).'__q.js';
+
 					// loop over active modules ##
 					// $rename_log = [];
 					foreach( $values['q_option_module'] as $module ){
@@ -410,9 +416,6 @@ class option extends \Q {
 
 				// module list in MD format "* module.js"
 				$q_modules_json = $q_modules;
-
-				// push in localize script ##
-				// $q_modules_json['js'][] = 'localize';
 
 				// format js ##
 				// $q_modules_json['js'] = array_map( function ($module) { return "$module.js"; }, $q_modules_json['js'] );

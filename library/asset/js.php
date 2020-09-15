@@ -99,9 +99,9 @@ class js extends \Q {
 		}
 
 		// check if module in array, if not add ##
-		if( ! in_array( $args['module'], self::$q_modules['js'] ) ){
+		if( ! in_array( $args['module'], self::$q_modules['javascript'] ) ){
 
-			self::$q_modules['js'][] = $args['module'];
+			self::$q_modules['javascript'][] = $args['module'];
 
 		}
 
