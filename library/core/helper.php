@@ -153,6 +153,8 @@ class helper extends \Q {
             && file_exists( \get_stylesheet_directory().'/'.$path.$include )
         ) {
 
+			// h::log( 'CHILD: '.$path.$include );
+
             $template = \get_stylesheet_directory_uri().'/'.$path.$include; // template URL ##
             
             if ( 'path' === $type ) { 

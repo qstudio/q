@@ -674,6 +674,10 @@ class log extends \Q {
 		// clean up ##
 		// $return = self::array_unique_multidimensional( $return );
 
+		// take first key, skip one level ##
+		$first_key = array_key_first( $return );
+		$return = $return[ $first_key ];
+
 		// debugging is on in WP, so write to error_log ##
         if ( true === WP_DEBUG ) {
 
