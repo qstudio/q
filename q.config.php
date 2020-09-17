@@ -1,10 +1,5 @@
 <?php
  
-//  namespace q\core;
-
-//  use q\core as core;
-//  use q\core\helper as h;
-
 /* 
  * Configuration File, loaded by q\core\config::get()
 */

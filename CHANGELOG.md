@@ -1,3 +1,9 @@
+### 4.9.5 ###
+
+* Update: Moved to singular log file for simplicity sake
+* Update: Willow and Parent / Child theme reorganization
+* Update: Gruntfile task runners removed from Q - nothing to build :)
+
 ### 4.9.2 ###
 
 * Assets and Task Runners
