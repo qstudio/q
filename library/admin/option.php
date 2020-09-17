@@ -252,12 +252,12 @@ class option extends \Q {
 								&& file_exists( $scss_module ) 
 							){
 
-								h::log( $path.'_'.$module.'.scss ~ file exists' );
+								// h::log( $path.'_'.$module.'.scss ~ file exists' );
 
 								// avoid duplicate values in child / parent keys ##
 								if( in_array( $module, $modules_scss_added ) ){
 
-									h::log( $path.'_'.$module.'.scss ~ already added, skipping' );
+									// h::log( $path.'_'.$module.'.scss ~ already added, skipping' );
 
 									continue;
 
@@ -409,7 +409,7 @@ class option extends \Q {
 						foreach( $values['q_option_module'] as $module ){
 
 							// check for each module file in theme/xx/_source/scss/modules/_$module.scss
-							h::log( 'Checking module: '.$path.$module.'.js' );
+							// h::log( 'Checking module: '.$path.$module.'.js' );
 
 							// check for theme/xx/asset/js/module/_MODULE.js
 							$js_module = $path.$module.'.js';
@@ -418,12 +418,12 @@ class option extends \Q {
 								&& file_exists( $js_module ) 
 							){
 
-								h::log( $path.$module.'.js ~ file exists' );
+								// h::log( $path.$module.'.js ~ file exists' );
 
 								// avoid duplicate values in child / parent keys ##
 								if( in_array( $module, $modules_js_added ) ){
 
-									h::log( $path.$module.'.js ~ already added, skipping' );
+									// h::log( $path.$module.'.js ~ already added, skipping' );
 
 									continue;
 
@@ -519,12 +519,12 @@ class option extends \Q {
 		}
 
 		// check if there is a child theme active ##
-		if ( get\theme::is_child() ){
+		// if ( get\theme::is_child() ){
 
 			// all assets are loading from parent
 			// h::log( 'e:>current theme is child.' );
 
-		}
+		// }
 
         // empty array ##
         $array = [];

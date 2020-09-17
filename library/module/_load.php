@@ -71,6 +71,9 @@ class module extends \Q {
 			self::$count ++;
 
 		}
+
+		// style --crude ##
+		$style = 'style="background: #ddd; padding: 2px 6px; font-weight: strong;" class=""';
 		
 		// look for module assets ( scss / js ) with matching name, to indicate which files will be included ##
 		// $scss = \q_theme::get_parent_theme_path( '/library/_source/scss/module/_'.$args['module'].'.scss' );
@@ -79,10 +82,13 @@ class module extends \Q {
 			file_exists( $scss )
 		){
 
+			// find location ##
+			$location = ( false !== strpos( $scss, 'q-theme-parent' ) ) ? "[ Parent ]" : '[ Child ]' ; 
+
 			// $scss = \q_theme::get_parent_theme_url( '/library/_source/scss/module/_'.$args['module'].'.scss' );
 			$scss = h::get( '_source/scss/module/_'.$args['module'].'.scss', 'return', 'url' );
 
-			$args['name'] .= ' ~ <a style="background: #ddd; padding: 2px 6px; font-weight: strong;" class="" href="'.$scss.'" target="_blank">_'.$args['module'].'.scss</a>';
+			$args['name'] .= ' ~ <a '.$style.' href="'.$scss.'" target="_blank">_'.$args['module'].'.scss</a> '.$location;
 
 		}
 
@@ -92,10 +98,13 @@ class module extends \Q {
 			file_exists( $js )
 		){
 
+			// find location ##
+			$location = ( false !== strpos( $js, 'q-theme-parent' ) ) ? "[ Parent ]" : '[ Child ]' ; 
+
 			// $js = \q_theme::get_parent_theme_url( '/library/_source/js/module/'.$args['module'].'.js' );
 			$js = h::get( '_source/js/module/'.$args['module'].'.js', 'return', 'url' );
 
-			$args['name'] .= ' ~ <a style="background: #ddd; padding: 2px 6px; font-weight: strong;" class="" href="'.$js.'" target="_blank">'.$args['module'].'.js</a>';
+			$args['name'] .= ' ~ <a '.$style.' href="'.$js.'" target="_blank">'.$args['module'].'.js</a> '.$location;
 
 		}
 

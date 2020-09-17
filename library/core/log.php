@@ -13,8 +13,8 @@ class log extends \Q {
 
 	// track who called what ##
 	public static 
-		$file				= \WP_CONTENT_DIR."/q.log",
-		$file_wp			= \WP_CONTENT_DIR."/debug.log",
+		$file				= \WP_CONTENT_DIR."/debug.log",
+		// $file_wp			= \WP_CONTENT_DIR."/debug.log",
 		$empty 				= false, // track emptied ##
 		$backtrace 			= false,
 		$backtrace_key 		= false,
@@ -647,6 +647,19 @@ class log extends \Q {
 
 		}
 
+		// if key set, check if exists, else bale ##
+		if ( 
+			// array_filter( self::$log[$key] )
+			// || 
+			empty( self::$log[$key] )
+		) {
+
+			// self::set( '"'.$key.'" Log is empty.' );
+
+			return false;
+
+		}
+
 		// option to debug only specific key ##
 		if ( isset( $key ) ) {
 			
@@ -675,8 +688,8 @@ class log extends \Q {
 		// $return = self::array_unique_multidimensional( $return );
 
 		// take first key, skip one level ##
-		$first_key = array_key_first( $return );
-		$return = $return[ $first_key ];
+		// $first_key = array_key_first( $return );
+		// $return = $return[ $first_key ];
 
 		// debugging is on in WP, so write to error_log ##
         if ( true === WP_DEBUG ) {
@@ -849,6 +862,7 @@ class log extends \Q {
 
 		}
 
+		/*
 		// empty WP log also ##
 		$f = @fopen( self::$file_wp, "r+" );
 		if ( $f !== false ) {
@@ -863,6 +877,7 @@ class log extends \Q {
 			self::$empty == true;
 
 		}
+		*/
 
 	}
 	
@@ -1045,10 +1060,10 @@ class log extends \Q {
 		}
 
 		// assign to new key ##
-		self::$log['shutdown'] = $log;
+		self::$log['q'] = $log;
 
 		// write new key to log ##
-		self::write( 'shutdown' );
+		self::write( 'q' );
 
 		// done ##
 		return true;
