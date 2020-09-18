@@ -150,14 +150,14 @@ class enqueue extends \Q {
 
                     case "css" :
 
-                        \wp_register_style( $handle, $url, '', $version, 'all' );
+                        \wp_register_style( $handle, $url.'?__preload', '', $version, 'all' );
                         \wp_enqueue_style( $handle );
 
                     break ;
 
                     case "js" :
 
-                        \wp_register_script( $handle, $url, array(), $version, 'all' );
+                        \wp_register_script( $handle, $url.'?__js_defer', array(), $version, 'all' );
                         \wp_enqueue_script( $handle );
 
                     break ;
@@ -226,7 +226,7 @@ class enqueue extends \Q {
 			){
 
 				// cache-buster hash used based on debugging setting - local OR global ##
-				$hash = rand() ;
+				$hash = 'hash='.rand() ;
 
 				// get all "active" modules ##
 				$modules = \q\asset\js::get();
@@ -271,15 +271,18 @@ class enqueue extends \Q {
 					// dependency ##
 					$dependecy = ( '__q' == $module ) ? [ 'jquery' ] : [ 'jquery', 'q-module' ] ;
 
+					// defer rule ##
+					$defer = in_array( $module, [  ] ) ? '?__no_defer&' : '?__js_defer&' ; // js_async
+
 					// h::log( 'd:>Load JS modules: '.'library/asset/js/module/'.$module.'.js' );
 
 					// include single file with cache-busting hash ##
 					\wp_enqueue_script( 
 						$handle, 
-						// \q_theme::get_parent_theme_url( "/library/_source/js/module/$module.js?$hash" ),
-						$file_url.'?'.$hash, 
+						$file_url.$defer.$hash, 
 						$dependecy, 
-						self::version 
+						self::version,
+						// true
 					);
 
 				}
@@ -289,9 +292,10 @@ class enqueue extends \Q {
 				// add single module.min.js ##
 				\wp_enqueue_script( 
 					'q-module', 
-					\q_theme::get_child_theme_url( "/library/asset/js/module.min.js" ), 
+					\q_theme::get_child_theme_url( "/library/asset/js/module.min.js?__js_defer" ), 
 					array( 'jquery' ), 
-					self::version 
+					self::version,
+					// true
 				);
 
 			}
@@ -327,7 +331,7 @@ class enqueue extends \Q {
     public static function wp_enqueue_scripts_general() {
 
         // Loads HTML5 JavaScript file to add support for HTML5 elements in older IE versions ##
-		\wp_register_script( 'q-html5', h::get( "vendor/js/html5.js", 'return' ), array(), self::version, 'all' );
+		\wp_register_script( 'q-html5', h::get( "vendor/js/html5.js?__js_defer", 'return' ), array(), self::version, 'all' );
 		\wp_enqueue_script( 'q-html5' );
 		wp_style_add_data( 'q-html5', 'conditional', 'lt IE 9' );
 
@@ -434,14 +438,14 @@ class enqueue extends \Q {
 
 						case "css" :
 		
-							\wp_register_style( $handle, $load, '', self::version, 'all' );
+							\wp_register_style( $handle, $load.'?__preload', '', self::version, 'all' );
 							\wp_enqueue_style( $handle );
 		
 						break ;
 		
 						case "js" :
 		
-							\wp_register_script( $handle, $load, array(), self::version, 'all' );
+							\wp_register_script( $handle, $load.'?__js_defer', array(), self::version, 'all' );
 							\wp_enqueue_script( $handle );
 		
 						break ;
@@ -600,7 +604,7 @@ class enqueue extends \Q {
 
 				$file_uri_ie = \q_theme::get_child_theme_url( '/library/asset/css/ie.css' );
          
-                \wp_enqueue_style( 'q-child-ie-css', $file_uri_ie, '', \q_theme::version );
+                \wp_enqueue_style( 'q-child-ie-css?__preload', $file_uri_ie, '', \q_theme::version );
                 \wp_style_add_data( 'q-child-ie-css', 'conditional', 'IE' );
 
             }
@@ -652,7 +656,7 @@ class enqueue extends \Q {
 
                     // h::log( 'd:>Loading up file: '.$file_uri );
 
-					\wp_register_style( $handle, $file_uri, '', \q_theme::version );
+					\wp_register_style( $handle, $file_uri.'?__preload', '', \q_theme::version );
                     \wp_enqueue_style( $handle );
 
                     // update tracker ##
@@ -826,7 +830,13 @@ class enqueue extends \Q {
 
                     // h::log( 'd:>Loading up file: '.$file_uri );
 
-					\wp_register_script( $handle, $file_uri, array( 'jquery' ), \q_theme::version, true );
+					\wp_register_script( 
+						$handle, 
+						$file_uri.'?__js_defer', 
+						array( 'jquery', 'q-module' ), 
+						\q_theme::version, 
+						// true 
+					);
                     \wp_enqueue_script( $handle );
 
                     // update tracker ##

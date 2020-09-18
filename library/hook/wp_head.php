@@ -87,8 +87,8 @@ class wp_head extends \Q {
 		\add_filter( 'pre_get_document_title', array ( get_class(), 'pre_get_document_title' ), 10, 11 );
 
         // add body classes ##
-        \add_filter( 'body_class', array ( get_class(), 'body_class' ), 15, 1 );
-
+		\add_filter( 'body_class', array ( get_class(), 'body_class' ), 15, 1 );
+		
     }
 
 

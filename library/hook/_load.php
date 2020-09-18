@@ -35,6 +35,8 @@ class hook extends \Q {
 			'save_post' => h::get( 'hook/save_post.php', 'return', 'path' ),
 
 			// front-end hooks ##
+			'wp_enqueue_script' => h::get( 'hook/wp_enqueue_script.php', 'return', 'path' ),
+			'wp_enqueue_style' => h::get( 'hook/wp_enqueue_style.php', 'return', 'path' ),
 			'wp_head' => h::get( 'hook/wp_head.php', 'return', 'path' ),
 			'wp_footer' => h::get( 'hook/wp_footer.php', 'return', 'path' ),
 
