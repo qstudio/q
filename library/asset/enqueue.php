@@ -445,7 +445,7 @@ class enqueue extends \Q {
 		
 						case "js" :
 		
-							\wp_register_script( $handle, $load.'?__js_defer', array(), self::version, 'all' );
+							\wp_register_script( $handle, $load.'?__js_defer', [ 'jquery' ], self::version, 'all' );
 							\wp_enqueue_script( $handle );
 		
 						break ;
