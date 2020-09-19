@@ -43,7 +43,7 @@ class wp_enqueue_style extends \Q {
 		// h::log( $html );
 
 		// h::log( $tag );
-		h::log( $handle );
+		// h::log( $handle );
 		
 		// route two - exclude files based on handle match ##
 		$avoid = [

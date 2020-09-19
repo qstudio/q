@@ -41,16 +41,19 @@ class wp_enqueue_script extends \Q {
 	public static function script_loader_tag( $tag, $handle, $src ) {
 
 		// h::log( $tag );
-		h::log( $handle );
+		// h::log( $handle );
 		
 		// route two - exclude files based on handle match ##
 		$avoid = [
 			'jquery-core', // main js ##
 			'jquery-migrate', // migrate ##
 			'wp-i18n', // internationalizations ##
+			'wp-tinymce-root', // tinymce root ##
+			'wp-tinymce', // tinymce ##
+			'editor', // wp editor ##
 			'acf', // main acf file ##
 			'acf-input',
-			'acf-input-pro'
+			'acf-pro-input'
 		];
 
 		if (
@@ -58,7 +61,7 @@ class wp_enqueue_script extends \Q {
 			|| strpos( $tag, '__no_defer' ) !== false
 		){
 
-			h::log( 'Not deferring load of script: '.$handle );
+			// h::log( 'Not deferring load of script: '.$handle );
 
 			return $tag;
 
