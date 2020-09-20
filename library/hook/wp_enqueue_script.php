@@ -52,9 +52,12 @@ class wp_enqueue_script extends \Q {
 			'wp-tinymce', // tinymce ##
 			'editor', // wp editor ##
 			'acf', // main acf file ##
-			'acf-input',
-			'acf-pro-input'
+			'acf-input', // acf input ##
+			'acf-pro-input' // acf input pro ##
 		];
+
+		// filter $avoid ##
+		$avoid = \apply_filters( 'q/hook/wp_enqueue_script/script_loader_tag/avoid', $avoid );
 
 		if (
 			in_array( $handle, $avoid )
