@@ -5,7 +5,32 @@ namespace q\plugin;
 use q\core;
 use q\core\helper as h;
 
+\q\plugin\acf::__run();
+
 class acf extends \Q {
+
+	public static function __run(){
+
+		\add_filter( 'q/hook/wp_enqueue_script/script_loader_tag/avoid', function( $array ){
+
+			// add files to skip ##
+			$skip = [
+				'acf', // main acf file ##
+				'acf-input', // acf input ##
+				'acf-pro-input' // acf input pro ##
+			];
+
+			$return = array_merge( $skip, $array );
+
+			// check ##
+			// h::log( $return );
+
+			// kick back to filter ##
+			return $return;
+
+		});
+
+	}
 
     /**
     * Add ACF Fields

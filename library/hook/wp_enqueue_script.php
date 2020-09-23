@@ -40,24 +40,30 @@ class wp_enqueue_script extends \Q {
 	// only on the front-end
 	public static function script_loader_tag( $tag, $handle, $src ) {
 
-		// h::log( $tag );
-		// h::log( $handle );
-		
 		// route two - exclude files based on handle match ##
 		$avoid = [
+			'underscore', // _underscore ##
+			'backbone', // backbone ##
 			'jquery-core', // main js ##
-			'jquery-migrate', // migrate ##
+			// 'jquery-ui-core',
+			// 'jquery-migrate', // migrate ##
+			// 'wp-dom-ready', // obvious..
 			'wp-i18n', // internationalizations ##
 			'wp-tinymce-root', // tinymce root ##
 			'wp-tinymce', // tinymce ##
 			'editor', // wp editor ##
-			'acf', // main acf file ##
-			'acf-input', // acf input ##
-			'acf-pro-input' // acf input pro ##
+			// 'wp-embed', // embed
+			// 'wp-a11y',
+			// 'wplink'
 		];
 
 		// filter $avoid ##
 		$avoid = \apply_filters( 'q/hook/wp_enqueue_script/script_loader_tag/avoid', $avoid );
+
+		// h::log( $avoid );
+
+		// h::log( $tag );
+		// h::log( $handle );
 
 		if (
 			in_array( $handle, $avoid )

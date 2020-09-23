@@ -1,3 +1,7 @@
+### 4.9.6 ###
+
+* NEW: Script and Style hooks to defer loading of assets with filters for skipping handles
+
 ### 4.9.5 ###
 
 * Update: Moved to singular log file for simplicity sake

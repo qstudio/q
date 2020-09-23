@@ -41,20 +41,23 @@ class wp_enqueue_style extends \Q {
 	public static function style_loader_tag( $html, $handle, $href, $media ) {
 
 		// h::log( $html );
-
 		// h::log( $tag );
-		// h::log( $handle );
 		
 		// route two - exclude files based on handle match ##
-		$avoid = [
-			// 'jquery-core', // main js ##
-		];
+		$avoid = [];
+
+		// filter $avoid ##
+		$avoid = \apply_filters( 'q/hook/wp_enqueue_style/style_loader_tag/avoid', $avoid );
+
+		// h::log( $avoid );
+
+		// h::log( $handle );
 
 		if (
 			in_array( $handle, $avoid )
 		){
 
-			h::log( 'Not deferring load of style: '.$handle );
+			// h::log( 'Not deferring load of style: '.$handle );
 
 			return $html;
 
