@@ -1,3 +1,7 @@
+### 4.9.7 ###
+
+* FIX: FireFox updates for deferred style loading issue.
+
 ### 4.9.6 ###
 
 * NEW: Script and Style hooks to defer loading of assets with filters for skipping handles

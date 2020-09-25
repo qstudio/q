@@ -32,16 +32,18 @@ class wp_enqueue_style extends \Q {
 
     /**
 	* Add async or defer attributes to script enqueues
+	* 
 	* @author Mike Kormendy
-	* @param  String  $tag     The original enqueued <script src="...> tag
+	* @param  String  $tag     The original enqueued <link rel="...> tag
 	* @param  String  $handle  The registered unique name of the script
-	* @return String  $tag     The modified <script async|defer src="...> tag
+	* @return String  $tag     The modified <link rel="...> tag
 	*/
 	// only on the front-end
 	public static function style_loader_tag( $html, $handle, $href, $media ) {
 
 		// h::log( $html );
 		// h::log( $tag );
+		// h::log( $href );
 		
 		// route two - exclude files based on handle match ##
 		$avoid = [];
@@ -50,7 +52,6 @@ class wp_enqueue_style extends \Q {
 		$avoid = \apply_filters( 'q/hook/wp_enqueue_style/style_loader_tag/avoid', $avoid );
 
 		// h::log( $avoid );
-
 		// h::log( $handle );
 
 		if (
@@ -64,22 +65,30 @@ class wp_enqueue_style extends \Q {
 		}
 
 		// check for passed query vars ##
-		$parts = parse_url($href);
+		$parts = parse_url(		$href);
 		parse_str( $parts['query'], $query );
+
+		// get version fragment ##
 		$version = isset( $query['ver'] ) ? '?ver='.$query['ver'] : '' ;
 
 		// route one - include all files based on explicit usage of "__preload" in $html - normally appended to src url ##
 		// if ( strpos( $html, '__preload') !== false ) {
 
-			$html = '<link rel="preload"  media="'.$media.'" id="'.$handle.'" href="'.$href.$version.'" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">
-			<noscript><link rel="stylesheet" id="'.$handle.'" href="'.$href.$version.'" type="text/css" media="'.$media.'" /></noscript>
+			// link to "media = 'null'" '.$media.'
+			$html = '<link rel="stylesheet" id="'.$handle.'" href="'.$href.$version.'" media="null" onload=\'if( media == "null" ) media="'.$media.'"\'>';
+
+			// preload method with stylesheet fallback ##
+			// $html = '<link rel="stylesheet preload"  media="'.$media.'" id="'.$handle.'" href="'.$href.$version.'" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
+
+			// add no JS backup ##
+			$html .= '<noscript><link rel="stylesheet" id="'.$handle.'" href="'.$href.$version.'" type="text/css" media="'.$media.'" /></noscript>
 			';
 
 			// h::log( $html );
 
 		// }
 
-		// no change ##
+		// return html ##
 		return $html;
 
 	}
