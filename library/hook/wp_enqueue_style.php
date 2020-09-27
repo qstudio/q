@@ -45,6 +45,8 @@ class wp_enqueue_style extends \Q {
 		// h::log( $href );
 		// h::log( $handle );
 
+		$avoid = [];
+
 		// exclude files based on handle match -- controlled by passed filter ##
 		$avoid = \apply_filters( 'q/hook/wp_enqueue_style/style_loader_tag/avoid', $avoid );
 
