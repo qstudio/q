@@ -150,7 +150,7 @@ class enqueue extends \Q {
 
                     case "css" :
 
-                        \wp_register_style( $handle, $url.'?__preload', '', $version, 'all' );
+                        \wp_register_style( $handle, $url.'?__nodefer', '', $version, 'all' );
                         \wp_enqueue_style( $handle );
 
                     break ;
@@ -272,7 +272,7 @@ class enqueue extends \Q {
 					$dependecy = ( '__q' == $module ) ? [ 'jquery' ] : [ 'jquery', 'q-module' ] ;
 
 					// defer rule ##
-					$defer = in_array( $module, [  ] ) ? '?__no_defer&' : '?__js_defer&' ; // js_async
+					$defer = in_array( $module, [  ] ) ? '?__nodefer&' : '?__js_defer&' ; // js_async
 
 					// h::log( 'd:>Load JS modules: '.'library/asset/js/module/'.$module.'.js' );
 
@@ -443,7 +443,7 @@ class enqueue extends \Q {
 
 						case "css" :
 		
-							\wp_register_style( $handle, $load.'?__preload', '', self::version, 'all' );
+							\wp_register_style( $handle, $load, '', self::version, 'all' );
 							\wp_enqueue_style( $handle );
 		
 						break ;
@@ -609,7 +609,7 @@ class enqueue extends \Q {
 
 				$file_uri_ie = \q_theme::get_child_theme_url( '/library/asset/css/ie.css' );
          
-                \wp_enqueue_style( 'q-child-ie-css?__preload', $file_uri_ie, '', \q_theme::version );
+                \wp_enqueue_style( 'q-child-ie-css', $file_uri_ie, '', \q_theme::version );
                 \wp_style_add_data( 'q-child-ie-css', 'conditional', 'IE' );
 
             }

@@ -31,9 +31,8 @@ class wp_enqueue_style extends \Q {
 
 
     /**
-	* Add async or defer attributes to script enqueues
+	* Defer style asset enqueuing
 	* 
-	* @author Mike Kormendy
 	* @param  String  $tag     The original enqueued <link rel="...> tag
 	* @param  String  $handle  The registered unique name of the script
 	* @return String  $tag     The modified <link rel="...> tag
@@ -44,49 +43,44 @@ class wp_enqueue_style extends \Q {
 		// h::log( $html );
 		// h::log( $tag );
 		// h::log( $href );
-		
-		// route two - exclude files based on handle match ##
-		$avoid = [];
+		// h::log( $handle );
 
-		// filter $avoid ##
+		// exclude files based on handle match -- controlled by passed filter ##
 		$avoid = \apply_filters( 'q/hook/wp_enqueue_style/style_loader_tag/avoid', $avoid );
 
 		// h::log( $avoid );
-		// h::log( $handle );
 
 		if (
 			in_array( $handle, $avoid )
 		){
 
-			// h::log( 'Not deferring load of style: '.$handle );
+			h::log( 'Not deferring load of style: '.$handle );
+
+			return $html;
+
+		}
+
+		// skip asset via "__nodefer" in $html - normally appended to src url i.e. 'src.css?__nodefer' ##
+		if ( strpos( $html, '__nodefer') !== false ) {
+
+			h::log( 'Not deferring load of style: '.$handle );
 
 			return $html;
 
 		}
 
 		// check for passed query vars ##
-		$parts = parse_url(		$href);
+		$parts = parse_url(	$href );
 		parse_str( $parts['query'], $query );
 
 		// get version fragment ##
 		$version = isset( $query['ver'] ) ? '?ver='.$query['ver'] : '' ;
 
-		// route one - include all files based on explicit usage of "__preload" in $html - normally appended to src url ##
-		// if ( strpos( $html, '__preload') !== false ) {
+		// link to "media = 'null'" '.$media.' - onload swap to defined media type ##
+		$html = '<link rel="stylesheet" id="'.$handle.'" href="'.$href.$version.'" media="null" onload=\'if( media == "null" ) media="'.$media.'"\'>';
 
-			// link to "media = 'null'" '.$media.'
-			$html = '<link rel="stylesheet" id="'.$handle.'" href="'.$href.$version.'" media="null" onload=\'if( media == "null" ) media="'.$media.'"\'>';
-
-			// preload method with stylesheet fallback ##
-			// $html = '<link rel="stylesheet preload"  media="'.$media.'" id="'.$handle.'" href="'.$href.$version.'" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
-
-			// add no JS backup ##
-			$html .= '<noscript><link rel="stylesheet" id="'.$handle.'" href="'.$href.$version.'" type="text/css" media="'.$media.'" /></noscript>
-			';
-
-			// h::log( $html );
-
-		// }
+		// add no JS backup ##
+		$html .= '<noscript><link rel="stylesheet" id="'.$handle.'" href="'.$href.$version.'" type="text/css" media="'.$media.'" /></noscript>';
 
 		// return html ##
 		return $html;

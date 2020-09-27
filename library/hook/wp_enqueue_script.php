@@ -32,7 +32,6 @@ class wp_enqueue_script extends \Q {
 
     /**
 	* Add async or defer attributes to script enqueues
-	* @author Mike Kormendy
 	* @param  String  $tag     The original enqueued <script src="...> tag
 	* @param  String  $handle  The registered unique name of the script
 	* @return String  $tag     The modified <script async|defer src="...> tag
@@ -67,7 +66,7 @@ class wp_enqueue_script extends \Q {
 
 		if (
 			in_array( $handle, $avoid )
-			|| strpos( $tag, '__no_defer' ) !== false
+			|| strpos( $tag, '__nodefer' ) !== false
 		){
 
 			// h::log( 'Not deferring load of script: '.$handle );
@@ -87,21 +86,10 @@ class wp_enqueue_script extends \Q {
 			// return the tag with the async attribute
 			$param = 'async ';
 
-			// remove param from $tag ##
-			// $tag = str_replace( 'js_async', '', $tag );
-
 		}
 
-		// if the unique handle/name of the registered script has 'defer' in it
-		// if ( strpos( $tag, '__js_defer') !== false ) {
-
-			// return the tag with the defer attribute
-			$param .= 'defer ';
-
-			// remove param from $tag ##
-			// $tag = str_replace( 'js_defer', '', $tag );
-
-		// }
+		// return the tag with the defer attribute
+		$param .= 'defer ';
 
 		if ( $param ) {
 
