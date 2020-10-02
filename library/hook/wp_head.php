@@ -40,7 +40,7 @@ class wp_head extends \Q {
         \add_action( 'wp_head', array ( get_class(), 'remove_recent_comments_style' ), 0 );
 
         // simple SEO stuff #
-        \add_action( 'wp_head', array ( get_class(), 'simple_seo' ) );
+        \add_action( 'wp_head', array ( get_class(), 'simple_seo' ), 1 );
 
         // simple SEO stuff #
         // \add_action( 'wp_head', array ( get_class(), 'webmasters' ), 3 );
@@ -252,7 +252,7 @@ class wp_head extends \Q {
         $meta_desc = \apply_filters( 'q/simple_seo/meta_description', $meta_desc );
 
         // add required tag ##
-        $meta_desc = '<meta name="description" content="'.$meta_desc.'" />' . "\n"; // this clears a line to make it neat in the html :) ##
+        $meta_desc = '<meta name="description" content="'.$meta_desc.'">' . "\n"; // this clears a line to make it neat in the html :) ##
 
         // apply filters ##
         $meta_robots = \apply_filters( 'q/simple_seo/meta_robots', $meta_robots );

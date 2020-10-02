@@ -1,3 +1,7 @@
+### 4.9.8 ###
+
+* New: SEO and asset loading optimizations
+
 ### 4.9.7 ###
 
 * FIX: FireFox updates for deferred style loading issue.
