@@ -29,6 +29,9 @@ class js extends \Q {
 		// save late ##
 		// \add_action( 'shutdown', [ get_class(), 'save' ], 1000 );
 
+		// add values to js localize ##
+		\add_filter( 'q/asset/localize', [ get_class(), 'localize' ], 10, 1 );
+
 	}
 	
 	
@@ -81,7 +84,7 @@ class js extends \Q {
 	 * - on Deploy, files will be compilled from themes/q_parent/../_source/js/module/*.js to asset/js/module/module.min.js
 	 * 
 	 * This method allows modules to register scripts to enqueue
-	 * also, pass params to make available to JS, via wp_localize_script - they would be available at "q_module.MODULENAME__PARAM"
+	 * also, pass params to make available to JS, via wp_localize_script - they would be available at "q_data.MODULENAME__PARAM"
 	 */
 	public static function set( $args = null ){
 
@@ -167,7 +170,10 @@ class js extends \Q {
 	}
 
 
-	public static function localize(){
+	/**
+	 * Merge generated localize values into array passed to wp_enqueue_script
+	*/
+	public static function localize( $array ){
 
 		if ( 
 			! self::$q_modules['localize']
@@ -176,12 +182,12 @@ class js extends \Q {
 
 			h::log( 'e:>No modules provided arguments to localize.' );
 
-			return []; // return empty array, for merging ##
+			return $array; // return passed array ##
 
 		}
 
 		// h::log( self::$q_modules );
-		return self::$q_modules['localize'];
+		return array_merge( $array, self::$q_modules['localize'] );
 
 	}
 

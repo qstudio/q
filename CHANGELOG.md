@@ -1,3 +1,7 @@
+### 5.0.0 ###
+
+* New: Universal form validation
+
 ### 4.9.8 ###
 
 * New: SEO and asset loading optimizations

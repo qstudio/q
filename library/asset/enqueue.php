@@ -300,23 +300,23 @@ class enqueue extends \Q {
 
 			}
 
+			// default localize values ##
+			$localize = [
+				'ajaxurl'           => \admin_url( 'admin-ajax.php' ), // q_data.ajaxurl
+				'debug'             => self::$debug, // q_data.debug
+				'nonce'             => \wp_create_nonce( 'q_data_nonce' ), // q_data.nonce
+			];
+
+			// filter localize array from plugins ##
+			$localize = \apply_filters( 'q/asset/localize', $localize );
+
+			// h::log( $localize );
+
             // pass variable values defined in parent class ##
 			\wp_localize_script( 
 				'q-module', 
-				'q_module', 
-				array_merge( array(
-				'ajaxurl'           => \admin_url( 'admin-ajax.php' ), // q_module.ajaxurl
-				'debug'             => self::$debug, // q_module.debug
-				'nonce'             => \wp_create_nonce( 'q_module_nonce' ), // q_module.nonce
-				'modal_target'		=> '#q_modal', // default modal selector ##
-				'modal_size'		=> 'modal-lg', // default modal size ##
-				'ajax_preload'      => \__( \esc_js ( 'Rummaging in the cupboards for that last crumb..', 'q-textdomain' ) ), // q_module.ajac_preload
-				'ajax_loading'      => \__( \esc_js ( 'Just a minute, we know it is somewhere here...', 'q-textdomain' ) ), // q_module.ajax_loading
-				'ajax_failed'       => \__( \esc_js( 'Opps! Something is not right...', 'q-textdomain' ) ), // q_module.ajax_failed
-				'ajax_success'      => \__( \esc_js( 'Here is your freshly squeezed data :)', 'q-textdomain' ) ), // q_module.ajax_success
-				), 
-				\q\asset\js::localize() // merge in args passed from modules ##
-				)
+				'q_data', 
+				$localize
 			);
 
         }
