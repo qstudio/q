@@ -11,14 +11,12 @@ use q\core\helper as h;
 
 class is {
 
-
     /**
      * Get Q template name, if set - else return WP global
      * 
      * 
      */
-    public static function get() 
-    {
+    public static function get(){
 
         if( ! isset( $GLOBALS['q_template'] ) ) {
 
