@@ -1,3 +1,7 @@
+### 5.0.1 ###
+
+* New: View filters to add templates from plugins
+
 ### 5.0.0 ###
 
 * New: Universal form validation
