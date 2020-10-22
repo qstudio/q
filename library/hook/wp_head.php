@@ -173,8 +173,7 @@ class wp_head extends \Q {
      * @subpackage Q
      * @since 0.1
      */
-    public static function simple_seo( $length = 155, $echo = true )
-    {
+    public static function simple_seo( $length = 155, $echo = true ){
 
         $length = 155;
         global $post;
@@ -254,7 +253,7 @@ class wp_head extends \Q {
         // add required tag ##
         $meta_desc = '<meta name="description" content="'.$meta_desc.'">' . "\n"; // this clears a line to make it neat in the html :) ##
 
-        // apply filters ##
+		// apply filters ##
         $meta_robots = \apply_filters( 'q/simple_seo/meta_robots', $meta_robots );
 
         // robots meta ##
@@ -264,8 +263,8 @@ class wp_head extends \Q {
             }
         } else { // site private, so meta robots added already by WP ( general-template.php ) ##
             $meta_robots = '';
-        }
-
+		}
+		
         // compile ##
         $simple_seo = $meta_desc.$meta_robots;
 
