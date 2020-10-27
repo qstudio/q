@@ -1,3 +1,7 @@
+### 5.0.2 ###
+
+* Update: Change to Grunt build steps to move all SCSS config to child theme
+
 ### 5.0.1 ###
 
 * New: View filters to add templates from plugins
