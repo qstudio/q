@@ -6,8 +6,6 @@ use q\core;
 use q\core\helper as h;
 use q\view;
 
-// \q\core\config::run();
-
 class config extends \Q {
 
 	/**
