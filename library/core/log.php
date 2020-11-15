@@ -188,17 +188,22 @@ class log extends \Q {
 			
 		}
 
-		// arrays and objects are dumped directly ##
+		// arrays are dumped directly ##
 		if ( 
 			is_array( $args )
-			|| is_object( $args )
-			// || is_int( $args )
-			// || is_numeric( $args )
 		){
 
-			// core\helper::hard_log( 'is_array OR is_object or is_int' );
-			// return self::$log['log'][] = var_export( $args, true ).self::$backtrace;
-			self::push( 'debug', 'Array or Object below from -> '.self::$backtrace, self::$backtrace_key );
+			self::push( 'debug', 'Array below from -> '.self::$backtrace, self::$backtrace_key );
+			return self::push( 'debug', print_r( $args, true ), self::$backtrace_key );
+			
+		}
+
+		// objects are dumped directly ##
+		if ( 
+			is_object( $args )
+		){
+
+			self::push( 'debug', 'Object below from -> '.self::$backtrace, self::$backtrace_key );
 			return self::push( 'debug', print_r( $args, true ), self::$backtrace_key );
 			
 		}
