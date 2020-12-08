@@ -1,3 +1,7 @@
+### 5.0.3 ###
+
+* Update: pre-branch for Q 6.0 - prepared and tested against willow 2.0
+
 ### 5.0.2 ###
 
 * Update: Change to Grunt build steps to move all SCSS config to child theme
