@@ -5,14 +5,14 @@
  *
  * @package         q
  * @author          Q Studio <social@qstudio.us>
- * @license         GPL-2.0+
+ * @license         GPL-3.0+
  * @link            http://qstudio.us/
- * @copyright       2019 Q Studio
+ * @copyright       2020 Q Studio
  *
  * @wordpress-plugin
  * Plugin Name:     Q
  * Plugin URI:      https://www.qstudio.us
- * Description:     Q is a Development Framework that provides an API to manage libraries, themes, plugins and widgets.
+ * Description:     Q is a Development Framework that provides an API to manage libraries, themes, plugins and modules.
  * Version:         6.0.0
  * Author:          Q Studio
  * Author URI:      https://www.qstudio.us
@@ -54,7 +54,7 @@ $q = plugin::get_instance();
 // validate instance ##
 if( ! ( $q instanceof q\plugin ) ) {
 
-	error_log( 'Error in Willow plugin instance' );
+	error_log( 'Error in Q plugin instance' );
 
 	// nothing else to do here ##
 	return;
