@@ -2,10 +2,11 @@
 
 namespace q\core;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
-class filter extends \Q {
+class filter {
 
     /**
      * Filter items at set points to allow for manipulation

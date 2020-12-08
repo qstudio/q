@@ -9,16 +9,16 @@
 
 namespace q\hook;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
 // load it up ##
-\q\hook\wp_footer::run();
+// \q\hook\wp_footer::run();
 
-class wp_footer extends \Q {
+class wp_footer {
 
-    public static function run()
-    {
+    public static function run(){
 
         if ( is_admin() ) { // make sure this is only loaded up in the admin ##
 

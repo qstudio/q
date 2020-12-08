@@ -2,32 +2,19 @@
 
 namespace q\core;
 
+use q\plugin as q;
 use q\core;
 use q\extension;
 use q\core\helper as h;
-// use q\theme\template as template;
 
-// Q Device ##
-// use q\device\core\core as device;
-
-// load it up ##
-#\q\core\h::run();
-
-class helper extends \Q {
-
-    public static function run()
-    {
-
-
-    }
-
+class helper {
 
     /**
 	 * Detect if this is a development site running on a private/loopback IP
 	 *
 	 * @return bool
 	 */
-	public static function is_localhost() {
+	public static function is_localhost(){
         
         $loopbacks = array( '127.0.0.1', '::1' );
         
@@ -46,10 +33,6 @@ class helper extends \Q {
         return false;
 
     }
-    
-
-
-    
 
     /**
 	 * Detect if this is a development site running on a staging URL ".staging" 
@@ -57,7 +40,7 @@ class helper extends \Q {
      * @todo        move to Q
 	 * @return      Boolean
 	 */
-	public static function is_staging() {
+	public static function is_staging(){
 
         $needle = '.staging'; # '.qlocal.com';
         
@@ -83,16 +66,13 @@ class helper extends \Q {
         
 	}
 
-
-
     /**
      * Check for a connection to the intraweb
      * 
      * @since   2.0.1
      * @return  Boolean
      */
-    public static function is_connected()
-    {
+    public static function is_connected(){
         
         // connect to Google ##
         $connected = @fsockopen( "www.google.com", "80" ); // domain and port
@@ -124,8 +104,7 @@ class helper extends \Q {
     *
     * @since 0.1
     */
-    public static function get( $include = null, $return = 'echo', $type = 'url', $path = "library/", $class = null )
-    {
+    public static function get( $include = null, $return = 'echo', $type = 'url', $path = "library/", $class = null ){
 
         // nothing passed ##
         if ( is_null( $include ) ) { 
@@ -178,7 +157,7 @@ class helper extends \Q {
 
             }
 
-            #if ( self::$debug ) self::log( 'parent theme: '.$template );
+            // if ( self::$debug ) self::log( 'parent theme: '.$template );
 
         // load from extended Plugin ##
         } elseif ( 
@@ -206,14 +185,14 @@ class helper extends \Q {
 
         // load from Plugin ##
         elseif ( 
-            file_exists( self::get_plugin_path( $path.$include ) )
+            file_exists( q::get_plugin_path( $path.$include ) )
         ) {
 
-            $template = self::get_plugin_url( $path.$include ); // plugin URL ##
+            $template = q::get_plugin_url( $path.$include ); // plugin URL ##
 
             if ( 'path' === $type ) {
                 
-                $template = self::get_plugin_path( $path.$include ); // plugin path ##
+                $template = q::get_plugin_path( $path.$include ); // plugin path ##
                 
             } 
 
@@ -254,16 +233,13 @@ class helper extends \Q {
 
     }
 
-
-
     /**
      * Write to WP Error Log
      *
      * @since       1.5.0
      * @return      void
      */
-    public static function log( $args = null )
-    {
+    public static function log( $args = null ){
 		
 		// shift callback level, as we added another level.. ##
 		\add_filter( 
@@ -280,16 +256,13 @@ class helper extends \Q {
 
 	}
 	
-
-
 	/**
      * Write to WP Error Log directly, not via core\log
      *
      * @since       4.1.0
      * @return      void
      */
-    public static function hard_log( $args = null )
-    {
+    public static function hard_log( $args = null ){
 		
 		// error_log( $args );
 
@@ -385,19 +358,18 @@ class helper extends \Q {
     * @since       0.1
 	* @return      string      Device slug
     */
-    public static function device()
-    {
+    public static function device(){
 
         // property already loaded ##
-        if ( self::$device ) { 
+        if ( q::$_device ) { 
         
-            // h::log( '$device set to: '.self::$device );
+            // h::log( '$device set to: '.q::$_device );
             
             // filter ##
-            $string = \apply_filters( 'q/device/handle', self::$device );
+            $string = \apply_filters( 'q/device/handle', q::$_device );
 
             // log ##
-            // h::log( '$device filtered to: '.self::$device );
+            // h::log( '$device filtered to: '.q::$_device );
 
             // kick it back ##
             return $string; 
@@ -427,7 +399,7 @@ class helper extends \Q {
         // self::log( 'd:>handle: '.$handle );
 
         // set and return the property value ##
-        // return self::$device = $handle;
+        // return q::$_device = $handle;
 
         // filter ##
         $string = \apply_filters( 'q/device/handle', $handle );
@@ -436,7 +408,7 @@ class helper extends \Q {
         // h::log( '$device filtered to: '.$string );
 
         // kick it back, setting property ##
-        return self::$device = $string;
+        return q::$_device = $string;
 
     }
 

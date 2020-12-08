@@ -14,15 +14,15 @@
 
 namespace q\hook;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
-use q\strings;
 use q\get;
 
 // load it up ##
 \q\hook\wp_head::run();
 
-class wp_head extends \Q {
+class wp_head {
 
     public static function run(){
 

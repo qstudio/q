@@ -2,13 +2,14 @@
 
 namespace q;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
 // load it up ##
 \q\get::run();
 
-class get extends \Q {
+class get {
 
 	public static function run(){
 
@@ -21,8 +22,7 @@ class get extends \Q {
     *
     * @since        2.0.0
     */
-    public static function load()
-    {
+    public static function load(){
 
 		return $array = [
 

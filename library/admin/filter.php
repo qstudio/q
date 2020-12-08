@@ -2,13 +2,14 @@
 
 namespace q\admin;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
 // load it up ##
 \q\admin\filter::run();
 
-class filter extends \Q {
+class filter {
 
     public static function run()
     {

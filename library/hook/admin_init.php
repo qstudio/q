@@ -14,16 +14,16 @@
 
 namespace q\hook;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
 // load it up ##
 \q\hook\admin_init::run();
 
-class admin_init extends \Q {
+class admin_init {
 
-    public static function run()
-    {
+    public static function run(){
 
         // h::log( 'Admin...' );
 

@@ -2,6 +2,7 @@
 
 namespace q;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 use q\plugin; 
@@ -9,15 +10,14 @@ use q\plugin;
 // load it up ##
 \q\test::run();
 
-class test extends \Q {
+class test {
 
     // public static $output = false;
 
-    public static function run()
-    {
+    public static function run()    {
 
         // add ACF fields ##
-        \add_action( 'acf/init', function() { plugin\acf::add_field_groups( self::add_field_groups() ); }, 1 );
+        \add_action( 'acf/init', function() { plugins\acf::add_field_groups( self::add_field_groups() ); }, 1 );
 
         // check if the test suite is activated via Q settings ##
         if ( ! self::check() ) {

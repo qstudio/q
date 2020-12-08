@@ -8,10 +8,9 @@ use q\core\helper as h;
 // load it up ##
 \q\admin\action::__run();
 
-class action extends \Q {
+class action {
 
-    public static function __run()
-    {
+    public static function __run(){
 
         if ( \is_admin() ) {
 
@@ -33,10 +32,6 @@ class action extends \Q {
         \remove_action( 'admin_color_scheme_picker', 'admin_color_scheme_picker' );
 
 	}
-
-
-
-	
 
     /**
     * include plugin admin assets

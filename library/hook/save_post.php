@@ -8,16 +8,16 @@
  */
 namespace q\hook;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
 // load it up ##
 \q\hook\save_post::run();
 
-class save_post extends \Q {
+class save_post {
 
-    public static function run()
-    {
+    public static function run(){
 
         if ( \is_admin() ) { // make sure this is only loaded up in the admin ##
 

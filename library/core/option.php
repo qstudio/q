@@ -4,13 +4,12 @@ namespace q\core;
 
 use q\core;
 use q\core\helper as h;
-use q\plugin; 
-// use q\core\wordpress as wordpress;
+use q\plugin as q; 
 
 // load it up ##
 \q\core\option::run();
 
-class option extends \Q {
+class option {
 
     // store db query ##
     // public static $query = false;
@@ -21,16 +20,12 @@ class option extends \Q {
     * @since       1.0
     * @return      void
     */
-    public static function run()
-    {
+    public static function run(){
 
         // set debug from Q settings page ---- very late ##
         \add_action( 'plugins_loaded', [ get_class(), 'debug' ], 10 );
 
     }
-
-
-
     
     /**
     * Get stored values of defined options
@@ -38,8 +33,7 @@ class option extends \Q {
     * @since       1.0
     * @return      Object
     */
-    public static function get( String $field = null ) 
-    {
+    public static function get( String $field = null ){
         
         // we need to get all stored options from WP ##
 		if ( ! $array = core\wpdb::query( 'options_q_option%' ) ) {
@@ -104,22 +98,21 @@ class option extends \Q {
     *
     * @since 2.3.1   
     */
-    public static function debug( $option = null )
-    {
+    public static function debug( $option = null ){
 
         // if debug set in code, use that setting first ##
-        if ( self::$debug ) { 
+        if ( q::$_debug ) { 
         
             // h::log( 'Debug set to true in code, so respect that...' );
 
-            return self::$debug; 
+            return q::$_debug; 
         
         }
 
         // h::log( 'debug set to: '.self::get('debug') );
 
         // get all stored options ##
-        $debug = self::get('debug'); // \get_field( 'q_option_debug', 'option' ); 
+        $_debug = self::get('debug'); // \get_field( 'q_option_debug', 'option' ); 
         // \delete_site_option( 'options_q_option_debug', false );
 
         // check ##
@@ -128,10 +121,10 @@ class option extends \Q {
         // h::log( 'debug pulled from options table: '. ( 1 == $debug ? 'True' : 'False' ) );
 
         // make a real boolean ##
-        $debug = ( 
+        $_debug = ( 
             ( 
-                'on' == $debug
-                || true === $debug 
+                'on' == $_debug
+                || true === $_debug 
             ) ? 
             true : 
             false 
@@ -141,10 +134,10 @@ class option extends \Q {
         // h::log( 'd:>debug set to: '. ( $debug ? 'True' : 'False' ) );
 
         // update property ##
-        self::$debug = $debug;
+        q::$_debug = $_debug;
 
         // kick back something ##
-        return self::$debug;
+        return q::$_debug;
 
     }
 

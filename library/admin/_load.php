@@ -2,13 +2,14 @@
 
 namespace q;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
 // load it up ##
 \q\admin::run();
 
-class admin extends \Q {
+class admin {
 
 	public static function run(){
 
@@ -21,8 +22,7 @@ class admin extends \Q {
     *
     * @since        2.0.0
     */
-    public static function load()
-    {
+    public static function load(){
 
 		return $array = [
 

@@ -14,17 +14,16 @@
 
 namespace q\hook;
 
-
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
 // load it up ##
 \q\hook\plugins_loaded::run();
 
-class plugins_loaded extends \Q {
+class plugins_loaded {
 
-    public static function run()
-    {
+    public static function run(){
 
         // empty error log ##
         \add_action( 'plugins_loaded', array ( get_class(), 'empty_error_log' ), 5 );

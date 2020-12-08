@@ -11,7 +11,7 @@ use q\core\helper as h;
 // load it up ##
 \q\module\sticky\option::run();
 
-class option extends \Q {
+class option {
 
     public static function run()
     {

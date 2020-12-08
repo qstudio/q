@@ -2,6 +2,7 @@
 
 namespace q\asset;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 use q\asset;
@@ -10,7 +11,7 @@ use q\strings;
 // fire up ##
 \q\asset\js::__run();
 
-class js extends \Q {
+class js {
 
 	protected static 
 

@@ -2,13 +2,14 @@
 
 namespace q;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
 // load it up ##
 \q\asset::run();
 
-class asset extends \Q {
+class asset {
 
 	public static function run(){
 
@@ -21,19 +22,18 @@ class asset extends \Q {
 	*
 	* @since        2.0.0
 	*/
-	public static function load()
-	{
+	public static function load(){
 
 		return $array = [
 
 			// add assets ##
-			'enqueue' => self::get_plugin_path( 'library/asset/enqueue.php' ),
+			'enqueue' => q::get_plugin_path( 'library/asset/enqueue.php' ),
 
 			// minification ##
-			'minifier' => self::get_plugin_path( 'library/asset/minifier.php' ),
+			'minifier' => q::get_plugin_path( 'library/asset/minifier.php' ),
 
 			// js loaded ##
-			'js' => self::get_plugin_path( 'library/asset/js.php' ),
+			'js' => q::get_plugin_path( 'library/asset/js.php' ),
 
 			// css loader ## -- @todo _deprecate, all assets should be loaded as scss modules ##
 			// 'css' => self::get_plugin_path( 'library/asset/css.php' ),

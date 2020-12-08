@@ -2,10 +2,11 @@
 
 namespace q\admin;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
-class method extends \Q {
+class method {
 
 	public static function empty_directory( $path = null, $pattern = '*' ){
 

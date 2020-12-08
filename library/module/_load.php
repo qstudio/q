@@ -8,7 +8,7 @@ use q\core\helper as h;
 // load it up ##
 \q\module::__run();
 
-class module extends \Q {
+class module {
 
 	// properties ##
 	public static $count = 0; // count modules added ##

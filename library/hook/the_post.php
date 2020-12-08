@@ -9,16 +9,16 @@
 
 namespace q\hook;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
 // load it up ##
 \q\hook\the_post::run();
 
-class the_post extends \Q {
+class the_post {
 
-    public static function run()
-    {
+    public static function run(){
 
         if ( ! \is_admin() ) {
 

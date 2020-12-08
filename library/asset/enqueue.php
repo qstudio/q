@@ -2,19 +2,19 @@
 
 namespace q\asset;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
 // load it up ##
 \q\asset\enqueue::run();
 
-class enqueue extends \Q {
+class enqueue {
 
     public static $plugin_version;
     public static $option;
 
-    public static function run()
-    {
+    public static function run(){
 
         // load templates ##
 		self::load_properties();
@@ -49,8 +49,7 @@ class enqueue extends \Q {
      * @return      Boolean 
      * @since       0.1.0
      */
-    public static function has_dependencies()
-    {
+    public static function has_dependencies(){
 
         // check for what's needed ##
         if (
@@ -79,7 +78,7 @@ class enqueue extends \Q {
     {
 
         // assign values ##
-        // self::$plugin_version = self::version ;
+        // self::$plugin_version = q::$_version ;
 
         // grab the options ##
         self::$option = core\option::get();
@@ -195,7 +194,7 @@ class enqueue extends \Q {
         }
 
         // h::log( self::$option->module );
-        // h::log( 'd:>debug set to: '. ( true === self::$debug ? 'True' : 'False' ) );
+        // h::log( 'd:>debug set to: '. ( true === q::$_debug ? 'True' : 'False' ) );
 
 		// module JS ##
 		/*
@@ -217,11 +216,11 @@ class enqueue extends \Q {
 			// h::log( $q_modules );
 
 			// minified - .min - version used based on debugging setting - local OR global ##
-			// $min = ( true === self::$debug ) ? '' : '.min' ;
+			// $min = ( true === q::$_debug ) ? '' : '.min' ;
 			// $min = '.min' ;
 
 			if ( 
-				true === self::$debug 
+				true === q::$_debug 
 				// || ! \q_theme::get_parent_theme_url( "/library/asset/js/module/module.min.js" ) // minified version missing ##
 			){
 
@@ -281,7 +280,7 @@ class enqueue extends \Q {
 						$handle, 
 						$file_url.$defer.$hash, 
 						$dependecy, 
-						self::version,
+						q::$_version,
 						// true
 					);
 
@@ -294,7 +293,7 @@ class enqueue extends \Q {
 					'q-module', 
 					\q_theme::get_child_theme_url( "/library/asset/js/module.min.js?__js_defer" ), 
 					array( 'jquery' ), 
-					self::version,
+					q::$_version,
 					// true
 				);
 
@@ -303,7 +302,7 @@ class enqueue extends \Q {
 			// default localize values ##
 			$localize = [
 				'ajaxurl'           => \admin_url( 'admin-ajax.php' ), // q_data.ajaxurl
-				'debug'             => self::$debug, // q_data.debug
+				'debug'             => q::$_debug, // q_data.debug
 				'nonce'             => \wp_create_nonce( 'q_data_nonce' ), // q_data.nonce
 			];
 
@@ -336,7 +335,7 @@ class enqueue extends \Q {
     public static function wp_enqueue_scripts_general() {
 
         // Loads HTML5 JavaScript file to add support for HTML5 elements in older IE versions ##
-		\wp_register_script( 'q-html5', h::get( "vendor/js/html5.js?__js_defer", 'return' ), array(), self::version, 'all' );
+		\wp_register_script( 'q-html5', h::get( "vendor/js/html5.js?__js_defer", 'return' ), array(), q::$_version, 'all' );
 		\wp_enqueue_script( 'q-html5' );
 		wp_style_add_data( 'q-html5', 'conditional', 'lt IE 9' );
 
@@ -398,7 +397,7 @@ class enqueue extends \Q {
             $found = false;
 
             // minified - .min - version used based on debugging setting - local OR global ##
-            // $min = ( true === self::$debug ) ? '' : '.min' ;
+            // $min = ( true === q::$_debug ) ? '' : '.min' ;
             
             // handle ##
 			$handle = 'q-local-'.$key;
@@ -410,7 +409,7 @@ class enqueue extends \Q {
 			$files = [];
 			
 			// if debugging, try to load non-minified version first ##
-			if ( true === self::$debug ) { $files[] = $type[1].".".$type_ext; }
+			if ( true === q::$_debug ) { $files[] = $type[1].".".$type_ext; }
 
             // load minified version ##
 			$files[] = $type[1].".min.".$type_ext;
@@ -443,14 +442,14 @@ class enqueue extends \Q {
 
 						case "css" :
 		
-							\wp_register_style( $handle, $load, '', self::version, 'all' );
+							\wp_register_style( $handle, $load, '', q::$_version, 'all' );
 							\wp_enqueue_style( $handle );
 		
 						break ;
 		
 						case "js" :
 		
-							\wp_register_script( $handle, $load.'?__js_defer', [ 'jquery' ], self::version, 'all' );
+							\wp_register_script( $handle, $load.'?__js_defer', [ 'jquery' ], q::$_version, 'all' );
 							\wp_enqueue_script( $handle );
 		
 						break ;
@@ -529,7 +528,7 @@ class enqueue extends \Q {
             $found = false;
 
             // minified - .min - version used based on debugging setting - local OR global ##
-            $min = ( true === self::$debug ) ? '' : '.min' ;
+            $min = ( true === q::$_debug ) ? '' : '.min' ;
             
             // handle ##
 			$handle = 'q-parent-theme-css';
@@ -620,7 +619,7 @@ class enqueue extends \Q {
             $found = false;
 
             // minified - .min - version used based on debugging setting ##
-            $min = ( true === self::$debug ) ? '' : '.min' ;
+            $min = ( true === q::$_debug ) ? '' : '.min' ;
             
             // handle ##
 			$handle = 'q-child-theme-css';
@@ -696,10 +695,10 @@ class enqueue extends \Q {
             $found = false;
 
             // minified - .min - version used based on debugging setting - local OR global ##
-			$min = ( true === self::$debug ) ? '' : '.min' ;
+			$min = ( true === q::$_debug ) ? '' : '.min' ;
 			
 			// debug from _source -> production from asset ##
-			$asset_path = ( true === self::$debug ) ? '_source' : 'asset' ;
+			$asset_path = ( true === q::$_debug ) ? '_source' : 'asset' ;
             
             // handle ##
 			$handle = 'q-parent-theme-js';
@@ -765,7 +764,7 @@ class enqueue extends \Q {
             // pass variable values defined in parent class ##
             \wp_localize_script( $handle, 'q_parent_theme_'.\get_current_blog_id(), array(
                 'ajaxurl'           => \admin_url( 'admin-ajax.php', \is_ssl() ? 'https' : 'http' ), 
-                'debug'             => self::$debug,
+                'debug'             => q::$_debug,
                 'nonce'             => $nonce
             ));
 
@@ -788,10 +787,10 @@ class enqueue extends \Q {
             $found = false;
 
             // minified - .min - version used based on debugging setting - local OR global ##
-            $min = ( true === self::$debug ) ? '' : '.min' ;
+            $min = ( true === q::$_debug ) ? '' : '.min' ;
 			
 			// debug from _source -> production from asset ##
-			$asset_path = ( true === self::$debug ) ? '_source' : 'asset' ;
+			$asset_path = ( true === q::$_debug ) ? '_source' : 'asset' ;
 
             // handle ##
 			$handle = 'q-child-theme-js';
@@ -863,7 +862,7 @@ class enqueue extends \Q {
             // pass variable values defined in parent class ##
             \wp_localize_script( $handle, 'q_child_theme_'.\get_current_blog_id(), array(
                 'ajaxurl'           => \admin_url( 'admin-ajax.php', \is_ssl() ? 'https' : 'http' ), 
-                'debug'             => self::$debug,
+                'debug'             => q::$_debug,
                 'nonce'             => $nonce
             ));
 

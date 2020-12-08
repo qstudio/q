@@ -2,6 +2,7 @@
 
 namespace q\core;
 
+use q\plugin as q;
 use q\core;
 use q\render;
 use q\core\helper as h;
@@ -9,7 +10,7 @@ use q\core\helper as h;
 // run ##
 \q\core\log::__run();
 
-class log extends \Q {
+class log {
 
 	// track who called what ##
 	public static 
@@ -154,7 +155,7 @@ class log extends \Q {
 	public static function set_to( $key = null, $value = null ){
 
 		// sanity @todo ##
-		self::$log[$key] = $value;
+		q::$_log[$key] = $value;
 
 	}
 	
@@ -183,7 +184,7 @@ class log extends \Q {
 		){
 
 			// core\helper::hard_log( 'is_array OR is_object or is_int' );
-			// return self::$log['log'][] = var_export( $args, true ).self::$backtrace;
+			// return q::$_log['log'][] = var_export( $args, true ).self::$backtrace;
 			return self::push( 'debug', print_r( $args, true ).self::$backtrace, self::$backtrace_key );
 			
 		}
@@ -214,7 +215,7 @@ class log extends \Q {
 		){
 
 			// core\helper::hard_log( 'is_bool' );
-			// return self::$log['log'][] = ( true === $args ? 'boolean:true' : 'boolean:false' ).self::$backtrace ;
+			// return q::$_log['log'][] = ( true === $args ? 'boolean:true' : 'boolean:false' ).self::$backtrace ;
 			return self::push( 'debug', ( true === $args ? 'boolean:true' : 'boolean:false' ).self::$backtrace, self::$backtrace_key );
 
 		}
@@ -301,8 +302,8 @@ class log extends \Q {
 
 		// @todo - sanity ##
 
-		// grab reference of self::$log ##
-		$log = self::$log;
+		// grab reference of q::$_log ##
+		$log = q::$_log;
 
 		// check if $key already exists ##
 		if ( 
@@ -372,7 +373,7 @@ class log extends \Q {
 			$log[$key][$new_key][] = $value;
 
 			// kick back ##
-			return self::$log = $log;
+			return q::$_log = $log;
 
 		}
 
@@ -392,7 +393,7 @@ class log extends \Q {
 			// h::log( self::$key_array );
 
 			// merge created keys with log ##
-			return self::$log = array_merge( $log, self::$key_array );
+			return q::$_log = array_merge( $log, self::$key_array );
 			*/
 
 			//
@@ -418,17 +419,17 @@ class log extends \Q {
 			// h::log( $log );
 
 			
-			// self::$log = array_merge( self::$log, self::$key_array );
+			// q::$_log = array_merge( q::$_log, self::$key_array );
 
-			// self::$log = array_merge_recursive( self::$key_array, self::$log );
+			// q::$_log = array_merge_recursive( self::$key_array, q::$_log );
 
 			// duplicates gone.. hacky ##
-			// self::$log = self::array_unique_multidimensional( self::$log );
+			// q::$_log = self::array_unique_multidimensional( q::$_log );
 
-			// return self::$log = array_merge_recursive( self::$key_array, self::$log );
-			// h::log( self::$log );
+			// return q::$_log = array_merge_recursive( self::$key_array, q::$_log );
+			// h::log( q::$_log );
 
-			// self::$log = $merge;
+			// q::$_log = $merge;
 
 			// check if key exists ##
 
@@ -436,21 +437,21 @@ class log extends \Q {
 			if (
 				isset( $key[2] )
 			){
-				if ( ! isset( self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ][ self::key_replace($key[2]) ] ) ) {
+				if ( ! isset( q::$_log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ][ self::key_replace($key[2]) ] ) ) {
 					
-					self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ][ self::key_replace($key[2]) ] = [];
+					q::$_log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ][ self::key_replace($key[2]) ] = [];
 				
 				}
 
 				// value exists ##
 				if ( 
-					in_array( $value, self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ][ self::key_replace($key[2]) ], true ) 
+					in_array( $value, q::$_log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ][ self::key_replace($key[2]) ], true ) 
 				){ 
 					return false;
 				};
 
 				// add value and return ##
-				return self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ][ self::key_replace($key[2]) ][] = $value;
+				return q::$_log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ][ self::key_replace($key[2]) ][] = $value;
 
 			}
 
@@ -458,57 +459,57 @@ class log extends \Q {
 				isset( $key[1] )
 			){
 
-				if ( ! isset( self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ] ) ) {
+				if ( ! isset( q::$_log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ] ) ) {
 
-					self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ] = [];
+					q::$_log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ] = [];
 
 				}
 
 				// value exists ##
 				if ( 
-					in_array( $value, self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ], true ) 
+					in_array( $value, q::$_log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ], true ) 
 				){ 
 					return false;
 				};
 
 				// add value and return ##
-				return self::$log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ][] = $value;
+				return q::$_log[ self::key_replace($key[0]) ][ self::key_replace($key[1]) ][] = $value;
 
 			}
 
 			if (
 				isset( $key[0] )
 			){
-				if ( ! isset( self::$log[self::key_replace($key[0])] ) ) {
+				if ( ! isset( q::$_log[self::key_replace($key[0])] ) ) {
 
-					self::$log[ self::key_replace($key[0]) ] = [];
+					q::$_log[ self::key_replace($key[0]) ] = [];
 
 				}
 
 				// value exists ##
 				if ( 
-					in_array( $value, self::$log[ self::key_replace($key[0]) ], true ) 
+					in_array( $value, q::$_log[ self::key_replace($key[0]) ], true ) 
 				){ 
 					return false;
 				};
 
 				// add value and return ##
-				return self::$log[ self::key_replace($key[0]) ][] = $value;
+				return q::$_log[ self::key_replace($key[0]) ][] = $value;
 
 			}
 			
 			/*
 			$md_array = [];
-			$md_array = self::create_multidimensional_array( self::$log, $key, $value ) ;
+			$md_array = self::create_multidimensional_array( q::$_log, $key, $value ) ;
 			// h::log( $md_array );
-			// h::log( self::$log );
+			// h::log( q::$_log );
 
-			// merge array into self::$log ##
-			// self::$log = core\method::parse_args( $md_array, self::$log );
-			$merge = array_replace_recursive( $md_array, self::$log );
+			// merge array into q::$_log ##
+			// q::$_log = core\method::parse_args( $md_array, q::$_log );
+			$merge = array_replace_recursive( $md_array, q::$_log );
 			h::log( $merge );
 
-			self::$log = $merge
+			q::$_log = $merge
 			*/
 
 		}
@@ -638,12 +639,12 @@ class log extends \Q {
 
 		// test ##
 		// self::set( 'write: '.$key );
-		// core\helper::hard_log( self::$log );
+		// core\helper::hard_log( q::$_log );
 
 		// if key set, check if exists, else bale ##
 		if ( 
 			! is_null( $key )
-			&& ! isset( self::$log[ $key ] ) 
+			&& ! isset( q::$_log[ $key ] ) 
 		) {
 
 			// self::set( '"'.$key.'" Log is empty.' );
@@ -654,9 +655,9 @@ class log extends \Q {
 
 		// if key set, check if exists, else bale ##
 		if ( 
-			// array_filter( self::$log[$key] )
+			// array_filter( q::$_log[$key] )
 			// || 
-			empty( self::$log[$key] )
+			empty( q::$_log[$key] )
 		) {
 
 			// self::set( '"'.$key.'" Log is empty.' );
@@ -668,18 +669,18 @@ class log extends \Q {
 		// option to debug only specific key ##
 		if ( isset( $key ) ) {
 			
-			$return = self::$log[ $key ];  // key group ##
+			$return = q::$_log[ $key ];  // key group ##
 
 			// empty log key ##
-			unset( self::$log[ $key ] );
+			unset( q::$_log[ $key ] );
 
         } else {
 
-			$return = self::$log ; // all
+			$return = q::$_log ; // all
 
 			// empty log ##
-			// unset( self::$log );
-			self::$log = [];
+			// unset( q::$_log );
+			q::$_log = [];
 
 		}
 			
@@ -799,7 +800,7 @@ class log extends \Q {
 		// if key set, check if exists, else bale ##
 		if ( 
 			isset( $args['key'] )
-			&& ! isset( self::$log[ $args['key'] ] ) 
+			&& ! isset( q::$_log[ $args['key'] ] ) 
 		) {
 
 			core\helper::hard_log( 'Log key empty: "'.$args['key'].'"' );
@@ -808,12 +809,12 @@ class log extends \Q {
 
 		}
 
-		// core\helper::hard_log( self::$log );
+		// core\helper::hard_log( q::$_log );
 
         // option to debug only specific fields ##
         if ( isset( $args['key'] ) ) {
 
-			unset( self::$log[ $args['key'] ] );
+			unset( q::$_log[ $args['key'] ] );
 
 			core\helper::hard_log( 'n>Emptied log key: "'.$args['key'].'"' );
 
@@ -821,7 +822,7 @@ class log extends \Q {
 
 		}
 
-		unset( self::$log );
+		unset( q::$_log );
 
 		core\helper::hard_log( 'n>Emptied all log keys' );
 		
@@ -1013,7 +1014,7 @@ class log extends \Q {
 			! $key 
 			|| is_null( $key ) 
 			|| empty( $key ) 
-			// || ! isset( self::$log[ $key ] )
+			// || ! isset( q::$_log[ $key ] )
 		){
 
 			core\helper::hard_log( 'd:>shutdown -- no key, so write all..' );
@@ -1031,11 +1032,11 @@ class log extends \Q {
 			// h::debug( 'd:>key is: '.$v );
 			
 			// skip missing keys ##
-			if ( ! isset( self::$log[$v] ) ) { continue; }
+			if ( ! isset( q::$_log[$v] ) ) { continue; }
 
 			// log specific key ##
 			// self::write( $v );
-			$log[$v] = self::$log[$v];
+			$log[$v] = q::$_log[$v];
 
 		}
 
@@ -1052,20 +1053,20 @@ class log extends \Q {
 				if ( is_array( $key ) && array_key_exists( $v, $key ) ) { continue; }
 
 				// skip missing keys ##
-				if ( ! isset( self::$log[$v] ) ) { continue; }
+				if ( ! isset( q::$_log[$v] ) ) { continue; }
 
 				// h::debug( 'd:>debug key is: '.$v );
 
 				// log specific key ##
 				// self::write( $v );
-				$log[$v] = self::$log[$v];
+				$log[$v] = q::$_log[$v];
 
 			}
 
 		}
 
 		// assign to new key ##
-		self::$log['q'] = $log;
+		q::$_log['q'] = $log;
 
 		// write new key to log ##
 		self::write( 'q' );

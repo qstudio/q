@@ -2,16 +2,16 @@
 
 namespace q\admin;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
 // load it up ##
 \q\admin\tinymce::__run();
 
-class tinymce extends \Q {
+class tinymce {
 
-    public static function __run()
-    {
+    public static function __run(){
 
         if ( \is_admin() ) {
 

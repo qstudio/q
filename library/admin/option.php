@@ -2,9 +2,9 @@
 
 namespace q\admin;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
-use q\plugin; 
 use q\get;
 
 // date ##
@@ -13,7 +13,7 @@ use \Datetime;
 // load it up ##
 \q\admin\option::run();
 
-class option extends \Q {
+class option {
 
     // store db query ##
     public static $query = false;
@@ -24,14 +24,13 @@ class option extends \Q {
     * @since       1.0
     * @return      void
     */
-    public static function run()
-    {
+    public static function run(){
 
         // add acf options page ##
         self::acf_add_options_page();
         
 		// add ACF fields
-        \add_action( 'acf/init', function() { \q\plugin\acf::add_field_groups( self::add_field_groups() ); }, 1 );
+        \add_action( 'acf/init', function() { \q\plugins\acf::add_field_groups( self::add_field_groups() ); }, 1 );
 
         // example how to inject extra options in libraries select API ##
         // \add_filter( 'acf/load_field/name=q_option_library', [ get_class(), 'filter_acf_library' ], 10, 1 );
@@ -433,7 +432,7 @@ class option extends \Q {
 			$handle = 'q-'.$key;
 
 			// min if debugging ##
-			$min = self::$debug ? '' : '.min' ;
+			$min = q::$_debug ? '' : '.min' ;
 
 			// complete file ##
 			$file_lookup = "vendor/".$type_dir."/".$type[1].$min.".".$type_ext;
@@ -444,7 +443,7 @@ class option extends \Q {
 			$file = false;
 
 			// look for minified library -- only if debugging ##
-            // if ( self::$debug ) {
+            // if ( q::$_debug ) {
 			
 			// 	$file = h::get( "asset/".$type_dir."/vendor/".$type[1].".min.".$type_ext, 'return' );
 
@@ -456,7 +455,7 @@ class option extends \Q {
                 // ! $file
                 // ||
                 // (
-                    // self::$debug 
+                    // q::$_debug 
                     // && h::get( "asset/".$type_dir."/vendor/".$type[1].".".$type_ext, 'return' )
                 // )
             // ) {
@@ -495,8 +494,7 @@ class option extends \Q {
 
 
 
-    public static function acf_add_options_page()
-    {
+    public static function acf_add_options_page(){
 
         if ( ! function_exists( 'acf_add_options_page' ) ) {
 

@@ -4,10 +4,9 @@ namespace q\core;
 
 use q\core;
 use q\core\helper as h;
-use q\render;
-// use q\theme;
+use q\plugin as q;
 
-class method extends \Q {
+class method {
 
 
     /**
@@ -444,7 +443,7 @@ class method extends \Q {
 		if ( is_null( $string ) ) { return false; }
 
 		return 
-			render\method::chop( 
+			\willow\strings\method::chop( 
 				str_replace(
 					[ '-', '_' ], "", // replace ##
 					strtolower( 

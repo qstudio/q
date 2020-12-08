@@ -2,15 +2,11 @@
 
 namespace q\core;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
-use q\plugin; 
-// use q\core\wordpress as wordpress;
 
-// load it up ##
-// \q\core\option::run();
-
-class wpdb extends \Q {
+class wpdb {
 
     // store db query ##
     public static $query = false;
@@ -21,8 +17,7 @@ class wpdb extends \Q {
      * 
      * @since 2.3.0
     */
-    public static function query( $string = 'options_q_option%' )
-    {
+    public static function query( $string = 'options_q_option%' )    {
 
         if ( 
 			self::$query

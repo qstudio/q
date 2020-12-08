@@ -2,6 +2,7 @@
 
 namespace q;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 // use q\core\options as options;
@@ -9,7 +10,7 @@ use q\core\helper as h;
 // load it up ##
 \q\hook::run();
 
-class hook extends \Q {
+class hook {
 
     public static function run(){
 
@@ -22,8 +23,7 @@ class hook extends \Q {
     *
     * @since        2.0.0
     */
-    public static function load()
-    {
+    public static function load(){
 
 		return $array = [
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace q\plugin;
+namespace q\plugins;
 
 use q\core;
 use q\core\helper as h;
 
-\q\plugin\acf::__run();
+\q\plugins\acf::__run();
 
-class acf extends \Q {
+class acf {
 
 	public static function __run(){
 
@@ -37,8 +37,7 @@ class acf extends \Q {
     *
     * @since    2.0.0
     */
-    public static function add_field_groups( Array $groups = null )
-    {
+    public static function add_field_groups( Array $groups = null ){
 
         // get all field groups ##
 		// $groups = self::get_fields();

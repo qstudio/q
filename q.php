@@ -13,10 +13,11 @@
  * Plugin Name:     Q
  * Plugin URI:      https://www.qstudio.us
  * Description:     Q is a Development Framework that provides an API to manage libraries, themes, plugins and widgets.
- * Version:         5.0.3
+ * Version:         6.0.0
  * Author:          Q Studio
  * Author URI:      https://www.qstudio.us
  * License:         GPL
+ * Requires PHP:    7.0 
  * Copyright:       Q Studio
  * Class:           Q
  * Text Domain:     q
@@ -24,244 +25,58 @@
  * GitHub Plugin URI: qstudio/q
 */
 
-// quick check :) ##
-defined( 'ABSPATH' ) OR exit;
+// namespace plugin ##
+namespace q;
 
-/* Check for Class */
-if ( ! class_exists( 'Q' ) ) {
+// import ##
+use q;
+use q\plugin;
 
-    // instatiate plugin via WP plugins_loaded ##
-    add_action( 'plugins_loaded', array ( 'Q', 'get_instance' ), 0 );
+// If this file is called directly, Bulk!
+if ( ! defined( 'ABSPATH' ) ) {
+	return;
+}
 
-    // Q Class ##
-    class Q {
+// plugin activation hook to store current application and plugin state ##
+\register_activation_hook( __FILE__, [ '\\Q\\plugin', 'activation_hook' ] );
 
-        // Refers to a single instance of this class. ##
-        private static $instance = null;
+// plugin deactivation hook - clear stored data ##
+\register_deactivation_hook( __FILE__, [ '\\Q\\plugin', 'deactivation_hook' ] );
 
-        // Plugin Settings
-        const version = '5.0.3';
-        const text_domain = 'q-textdomain'; // for translation ##
-        static $debug = false; // global debugging, normally false, as individual plugins can control local level debugging ##
-		static $device = false; // current device ##
-		static $log = []; // global log ##
+// required bits to get set-up ##
+require_once __DIR__ . '/library/api/function.php';
+// require_once __DIR__ . '/autoload.php'; // @TODO -- need to consier if this is a good idea with priority h::get loader also ...
+require_once __DIR__ . '/plugin.php';
 
-        /// Theme Settings
-		// public static $config = []; // shared config array ##
+// get plugin instance ##
+$q = plugin::get_instance();
 
-        /**
-         * Creates or returns an instance of this class.
-         *
-         * @return  Foo     A single instance of this class.
-         */
-        public static function get_instance()
-        {
+// validate instance ##
+if( ! ( $q instanceof q\plugin ) ) {
 
-            if ( null == self::$instance ) {
-                self::$instance = new self;
-            }
+	error_log( 'Error in Willow plugin instance' );
 
-            return self::$instance;
-
-        }
-
-
-        /**
-         * Instatiate Class
-         *
-         * @since       0.2
-         * @return      void
-         */
-        private function __construct()
-        {
-
-            // activation ##
-            register_activation_hook( __FILE__, array ( $this, 'register_activation_hook' ) );
-
-            // deactvation ##
-            register_deactivation_hook( __FILE__, array ( $this, 'register_deactivation_hook' ) );
-
-            // set text domain ##
-            add_action( 'init', array( $this, 'load_plugin_textdomain' ), 1 );
-
-            // load libraries ##
-            self::load_libraries();
-
-        }
-
-
-
-
-        /**
-         * plugin activation
-         *
-         * @since   0.2
-         */
-        public function register_activation_hook()
-        {
-
-            $q_options = array(
-                'configured'    => true
-                ,'version'      => self::version
-            );
-
-            // init running, so update configuration flag ##
-            add_option( 'q_plugin', $q_options, '', true );
-
-        }
-
-
-        /**
-         * plugin deactivation
-         *
-         * @since   0.2
-         */
-        public function register_deactivation_hook()
-        {
-
-            // de-configure plugin ##
-            delete_option('q_plugin');
-
-        }
-
-
-        /**
-         * Load Text Domain for translations
-         *
-         * @since       1.7.0
-         *
-         */
-        public function load_plugin_textdomain()
-        {
-
-            // set text-domain ##
-            $domain = self::text_domain;
-
-            // The "plugin_locale" filter is also used in load_plugin_textdomain()
-            $locale = apply_filters('plugin_locale', get_locale(), $domain );
-
-            // try from global WP location first ##
-            load_textdomain( $domain, WP_LANG_DIR.'/plugins/'.$domain.'-'.$locale.'.mo' );
-
-            // try from plugin last ##
-            load_plugin_textdomain( $domain, FALSE, plugin_dir_path( __FILE__ ).'library/languages/' );
-
-        }
-
-
-
-        /**
-         * Get Plugin URL
-         *
-         * @since       0.1
-         * @param       string      $path   Path to plugin directory
-         * @return      string      Absoulte URL to plugin directory
-         */
-        public static function get_plugin_url( $path = '' )
-        {
-
-            #return plugins_url( ltrim( $path, '/' ), __FILE__ );
-            return plugins_url( $path, __FILE__ );
-
-        }
-
-
-        /**
-         * Get Plugin Path
-         *
-         * @since       0.1
-         * @param       string      $path   Path to plugin directory
-         * @return      string      Absoulte URL to plugin directory
-         */
-        public static function get_plugin_path( $path = '' )
-        {
-
-            return plugin_dir_path( __FILE__ ).$path;
-
-		}
-
-
-
-
-        /**
-         * Check for required breaking dependencies
-         *
-         * @return      Boolean
-         * @since       1.0.0
-         */
-        public static function has_dependencies()
-        {
-
-            // check for what's needed ##
-            if (
-                ! class_exists( 'ACF' )
-            ) {
-
-                helper::log( 'e:>Q requires ACF to run correctly..' );
-
-                return false;
-
-            }
-
-            // ok ##
-            return true;
-
-        }
-
-
-
-        /**
-        * Load Libraries
-        *
-        * @since        2.0
-        */
-		private static function load_libraries()
-        {
-
-            // methods ##
-			require_once self::get_plugin_path( 'library/core/_load.php' );
-
-			// getter ##
-			// most moved to willow - basic post items remain ##
-			require_once self::get_plugin_path( 'library/get/_load.php' );
-
-			// string methods -- moved to Willow ##
-			// require_once self::get_plugin_path( 'library/strings/_load.php' );
-
-			// willow contexts -- moved to parent +|| child theme ##
-			// require_once self::get_plugin_path( 'library/context/_load.php' );
-
-			// view ##
-			require_once self::get_plugin_path( 'library/view/_load.php' );
-
-			// assets ##
-			require_once self::get_plugin_path( 'library/asset/_load.php' );
-
-			// ui modules ##
-			require_once self::get_plugin_path( 'library/module/_load.php' );
-
-            // admin ##
-			require_once self::get_plugin_path( 'library/admin/_load.php' );
-
-			// test suite ##
-            require_once self::get_plugin_path( 'library/test/_load.php' );
-
-            // hooks ##
-            require_once self::get_plugin_path( 'library/hook/_load.php' );
-
-            // check for dependencies, required for UI components - admin will still run ##
-            if ( ! self::has_dependencies() ) {
-
-                return false;
-
-            }
-
-			// plugins required to run other plugins... ##
-            require_once self::get_plugin_path( 'library/plugin/_load.php' );
-
-        }
-
-
-    }
+	// nothing else to do here ##
+	return;
 
 }
+
+// fire hooks - build log, helper and config objects and translations ## 
+\add_action( 'plugins_loaded', function() use( $q ){
+
+	// kick off config and store object ##
+	// $config = new q\core\config( $q );
+	// $config->hooks();
+	// $plugin->set( 'config', $config );
+
+	// build factory objects ##
+	// $q->factory( $q );
+	$q->load_libraries();
+
+	// set text domain on init hook ##
+	\add_action( 'init', [ $q, 'load_plugin_textdomain' ], 1 );
+	
+	// check debug settings ##
+	// \add_action( 'plugins_loaded', [ $q, 'debug' ], 11 );
+
+}, 0 );

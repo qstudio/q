@@ -2,13 +2,14 @@
 
 namespace q;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
 // load it up ##
 \q\view::run();
 
-class view extends \Q {
+class view {
 
 	public static function run(){
 
@@ -21,16 +22,15 @@ class view extends \Q {
 	*
 	* @since        2.0.0
 	*/
-	public static function load()
-	{
+	public static function load(){
 
 		return $array = [
 
 			// is methods ##
-			'is' => self::get_plugin_path( 'library/view/is.php' ),
+			'is' => q::get_plugin_path( 'library/view/is.php' ),
 
 			// filters ##
-			'view' => self::get_plugin_path( 'library/view/filter.php' ),
+			'view' => q::get_plugin_path( 'library/view/filter.php' ),
 
 		];
 

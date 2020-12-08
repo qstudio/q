@@ -2,11 +2,10 @@
 
 namespace q\core;
 
-use q\core;
+use q\plugin as q;
 use q\core\helper as h;
-use q\view;
 
-class config extends \Q {
+class config {
 
 	/**
 	 * Willow is in charge of config, so check for plugin, else return false with a warning

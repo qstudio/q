@@ -9,16 +9,16 @@
 
 namespace q\hook;
 
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
 // load it up ##
 \q\hook\wp_enqueue_script::run();
 
-class wp_enqueue_script extends \Q {
+class wp_enqueue_script {
 
-    public static function run()
-    {
+    public static function run(){
 
 		// not in the admin ##
         if ( ! \is_admin() ) { 
