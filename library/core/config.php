@@ -8,8 +8,6 @@ use q\view;
 
 class config extends \Q {
 
-	private static $willow = null;
-
 	/**
 	 * Willow is in charge of config, so check for plugin, else return false with a warning
 	 * 
@@ -19,8 +17,8 @@ class config extends \Q {
 
 		// check for Willow ##
 		if( 
-			! class_exists( 'willow' )
-			&& ! class_exists( 'Q\willow\plugin' )
+			! function_exists( 'willow' )
+			// && ! class_exists( 'willow\plugin' )
 		){
 
 			h::log( 'e:>Config loading requires Willow plugins, please install of activate' );

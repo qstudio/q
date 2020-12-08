@@ -214,7 +214,7 @@ class wp_head extends \Q {
             if ( $meta_desc = \get_post_meta( $id, "metadescription", true ) ) {
 
                 #pr( '1' );
-                $meta_desc =  \Q\willow\get\post::excerpt_from_id( \get_the_ID(), $length, '', '' );
+                $meta_desc =  \willow\get\post::excerpt_from_id( \get_the_ID(), $length, '', '' );
 
             } else if ( $meta_desc = \get_post_meta ( $id, 'template_meta_description', true ) ) {
 
@@ -224,7 +224,7 @@ class wp_head extends \Q {
             } else {
 
                 #pr( '3' );
-                $meta_desc =  \Q\willow\get\post::excerpt_from_id( $id, $length );
+                $meta_desc =  \willow\get\post::excerpt_from_id( $id, $length );
 
             }
         }
@@ -232,19 +232,19 @@ class wp_head extends \Q {
         #wp_die( $meta_desc );
 
         // fall-back ##
-        if ( ! $meta_desc ) { $meta_desc =  \Q\willow\get\post::excerpt_from_id( $id, $length ); }
+        if ( ! $meta_desc ) { $meta_desc =  \willow\get\post::excerpt_from_id( $id, $length ); }
 
         // extra fall-back ##
         if ( ! $meta_desc ) { $meta_desc = \get_the_title( $id ); }
 
         // clean up ##
-        $meta_desc = \Q\willow\strings\method::rip_tags($meta_desc);
+        $meta_desc = \willow\strings\method::rip_tags($meta_desc);
 
         // replacements ##
         $meta_desc = str_replace( "\"", "'", $meta_desc );
 
         // keep it all to size ##
-        $meta_desc = \Q\willow\strings\method::chop( $meta_desc, $length );
+        $meta_desc = \willow\strings\method::chop( $meta_desc, $length );
 
         // apply filters ##
         $meta_desc = \apply_filters( 'q/simple_seo/meta_description', $meta_desc );
@@ -421,7 +421,7 @@ class wp_head extends \Q {
 
 		} else {
 
-			$get_post = new \Q\willow\get\post( willow() );
+			$get_post = new \willow\get\post( willow() );
 		
 			$get_title = $get_post->title([ 'filter' => true ]);
 
