@@ -9,17 +9,17 @@
 namespace q\test;
 
 use q\core\core as core; 
-use q\core\helper as helper;
+use q\core\helper as h;
 use q\test\log as log;
-use q\extension\service\asana as asana;
+// use q\extension\service\asana as asana;
 
-\q\test\error::run();
+class error {
+	
+	function __construct(){}
 
-class error extends \Q {
-    
+    function hooks(){
 
-    public static function run()
-    {
+		// h::log( 'Here.. somehow..' );
 
         // schedule cron ##
         // self::schedule_cron();
@@ -59,21 +59,19 @@ class error extends \Q {
 
     }
 
-
     /**
      * Run once a day to check if log files are set-up correctly
      * 
      * @since 0.0.1
      */
-    public static function setup() 
-    {
+    public static function setup(){
 
         // crash it ##
         // \delete_site_transient( 'q/test/error/log/check' );
 
         if ( false === ( $check = \get_site_transient( 'q/test/error/log/check' ) ) ) {
 
-            helper::log( 'setting up error log check...' );
+            h::log( 'd:>setting up error log check...' );
 
             // set-up log ##
             log::args([

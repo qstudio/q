@@ -2,41 +2,38 @@
 
 namespace q\test;
 
-use q\core\core as core; 
-use q\core\helper as helper;
+use q\core\core; 
+use q\core\helper as h;
 
-class log extends \Q {
+class log {
     
     public static $defined = false ;
     public static $title = false ; // test type ##
     public static $action = false ; // test type ##
-    public static $file = false ; // helper::get( 'test/logs/email.log' ); // 
+    public static $file = false ; // h::get( 'test/logs/email.log' ); // 
     public static $path = false ;
     public static $url = false ;
     public static $max_size = false;
 
-    public static function args( Array $args = null )
-    {
+    public static function args( Array $args = null ){
 
-        self::$title = isset( $args['title'] ) ? $args['title'] : 'Email Log'; // helper::get( 'logs/email.log' ); ##
-        self::$action = isset( $args['action'] ) ? $args['action'] : 'email'; // helper::get( 'logs/email.log' ); ##
-        self::$file = isset( $args['file'] ) ? $args['file'] : 'email.log'; // helper::get( 'logs/email.log' ); ##
+        self::$title = isset( $args['title'] ) ? $args['title'] : 'Email Log'; // h::get( 'logs/email.log' ); ##
+        self::$action = isset( $args['action'] ) ? $args['action'] : 'email'; // h::get( 'logs/email.log' ); ##
+        self::$file = isset( $args['file'] ) ? $args['file'] : 'email.log'; // h::get( 'logs/email.log' ); ##
         self::$path = isset( $args['path'] ) ? self::get_plugin_path( $args['path'] ) : WP_CONTENT_DIR.'/logs/'; // self::get_plugin_path( 'library/test/logs/' );
         self::$url = isset( $args['url'] ) ? self::get_plugin_url( $args['url'] ) : WP_CONTENT_URL.'/logs/'; // self::get_plugin_url( 'library/test/logs/' );
         self::$max_size = isset( $args['max_size'] ) ? $args['max_size'] : '1024' ;
 
-        // helper::log( 'Action: '.self::$action );
-        // helper::log( 'File: '.self::$file );
-        // helper::log( 'Path: '.self::$path );
-        // helper::log( 'URL: '.self::$url );
-        // helper::log( 'Max Size: '.self::$max_size );
+        // h::log( 'Action: '.self::$action );
+        // h::log( 'File: '.self::$file );
+        // h::log( 'Path: '.self::$path );
+        // h::log( 'URL: '.self::$url );
+        // h::log( 'Max Size: '.self::$max_size );
 
         // update tracker ##
         self::$defined = true ;
 
     }
-
-
 
     /**
      * Set Error Handlers
@@ -45,14 +42,13 @@ class log extends \Q {
      * @link        http://us1.php.net/set_error_handler
      * @ return     void
      */
-    public static function run()
-    {
+    public static function run(){
 
         // check if args re defined ##
         if ( ! self::$defined ) {
 
             // we can stop right now ##
-            helper::log( 'Log settings not defined correctly' );
+            h::log( 'Log settings not defined correctly' );
 
             return false;
 
@@ -63,22 +59,18 @@ class log extends \Q {
         
     }
     
-
-
-    
     /**
      * Make Error Log
      * 
      * @since       0.3
      * @return      void
      */
-    public static function make() 
-    {
+    public static function make(){
         
         // get error log details ##
         $check = self::check();
 
-        // helper::log( $check );
+        // h::log( $check );
                 
         if ( $check["file_exists"] === false ) {
             
@@ -86,7 +78,7 @@ class log extends \Q {
             
             if ( $make_error_log === false ) {
                 
-                helper::log( 'Error creating log file' );
+                h::log( 'Error creating log file' );
 
                 return false;
                 
@@ -96,16 +88,13 @@ class log extends \Q {
 
     }
     
-
-    
     /**
      * Check Log File
      * 
      * @since       0.3
      * @return      Array     data about error log ##
      */
-    public static function check() 
-    {
+    public static function check(){
         
         // start empty ##
         $check = [];
@@ -150,9 +139,6 @@ class log extends \Q {
         return $check;
         
     }
-
-
-
     
     /**
      * Rename Error Log
@@ -160,20 +146,17 @@ class log extends \Q {
      * @since       0.3
      * @return      boolean     True or False ##
      */
-    public static function rename() 
-    {
+    public static function rename(){
         
         // get todays date ##
         $now = date( "Y-m-d-H-i-s", strtotime( "now" ));
         
-        helper::log( 'Renamed log file: '.$now );
+        h::log( 'Renamed log file: '.$now );
 
         // do some renaming ##
         return @rename( self::$path.self::$file, self::$path.$now.'_'.self::$file );
         
     }        
-    
-
 
     /**
      * write to log file
@@ -182,13 +165,12 @@ class log extends \Q {
      * 
      * @return      void
      */
-    public static function write( $log = null ) 
-    {
+    public static function write( $log = null ){
 
         // sanity ##
         if ( is_null( $log ) ) {
 
-            helper::log( 'Passed value empty...' );
+            h::log( 'Passed value empty...' );
 
             return false;
 
@@ -209,22 +191,18 @@ class log extends \Q {
         $message = $now->format( 'Y-m-d H:i:s' )." - ".$log;
 
         // debug ##
-        // helper::log( self::$path.self::$file );
-        // helper::log( $message  );
+        // h::log( self::$path.self::$file );
+        // h::log( $message  );
         
         // write ##
         $return = file_put_contents( self::$path.self::$file, $message . PHP_EOL, FILE_APPEND );
 
-        // helper::log( 'Write debug: '.$return );
+        // h::log( 'Write debug: '.$return );
 
         // Don't execute PHP internal error handler ##
         return false;
         
     }
-
-    
-
-
 
     /**
      * Delete Log Files
@@ -244,7 +222,7 @@ class log extends \Q {
         foreach ( $files as $file ){ // iterate files ##
             if ( is_file( $file ) ) {
 
-                helper::log( 'Deleted log file: '.$now );
+                h::log( 'Deleted log file: '.$now );
 
                 @unlink( $file ); // delete file ##
             }
@@ -264,7 +242,7 @@ class log extends \Q {
     public static function empty() 
     {
         
-        helper::log( 'Empty: '.self::$path.self::$file );
+        h::log( 'Empty: '.self::$path.self::$file );
 
         return file_put_contents( self::$path.self::$file, "" );
         
@@ -301,7 +279,7 @@ class log extends \Q {
         // get the size of the file ##
         $bytes = file_exists( $file ) ? filesize( $file ) : 0; 
         
-        // helper::log( $bytes. ' / ' . $file );
+        // h::log( $bytes. ' / ' . $file );
         
         // not yet complete ##
         $complete = FALSE;
@@ -408,7 +386,7 @@ class log extends \Q {
         if ( $log_meta = \apply_filters( 'q/test/log/meta/'.self::$action, false ) ) {
 
             // log ##
-            // helper::log( $log_meta );
+            // h::log( $log_meta );
 
             // echo directly, trusting format passed ##
             echo $log_meta;

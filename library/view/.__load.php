@@ -7,13 +7,19 @@ use q\core;
 use q\core\helper as h;
 
 // load it up ##
-\q\view::run();
+// \q\view::run();
 
 class view {
 
-	public static function run(){
+	function __construct(){
 
 		core\load::libraries( self::load() );
+
+	}
+
+    function hooks(){
+
+		// start get things ##
 
 	}
 

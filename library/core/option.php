@@ -6,13 +6,9 @@ use q\core;
 use q\core\helper as h;
 use q\plugin as q; 
 
-// load it up ##
-\q\core\option::run();
-
 class option {
 
-    // store db query ##
-    // public static $query = false;
+	function __construct(){}
 
     /**
     * Class Constructor
@@ -20,10 +16,10 @@ class option {
     * @since       1.0
     * @return      void
     */
-    public static function run(){
+    function hooks(){
 
         // set debug from Q settings page ---- very late ##
-        \add_action( 'plugins_loaded', [ get_class(), 'debug' ], 10 );
+        \add_action( 'plugins_loaded', [ $this, 'debug' ], 10 );
 
     }
     
@@ -91,14 +87,12 @@ class option {
 
     }
 
-    
-
     /**
     * define debug setting from stored option
     *
     * @since 2.3.1   
     */
-    public static function debug( $option = null ){
+    function debug( $option = null ){
 
         // if debug set in code, use that setting first ##
         if ( q::$_debug ) { 
@@ -146,8 +140,7 @@ class option {
     /**
     * Delete Q Options - could be used to clear old settings
     */
-    public static function delete( $option = null )
-    {
+    public static function delete( $option = null ){
 
         
 
@@ -155,8 +148,7 @@ class option {
 
 
 
-    public static function add_theme_support( $support )
-    {
+    public static function add_theme_support( $support ){
 
        h::log( 'd:>add_theme_support is deprecated, please use the new Q settings page and filters.' );
 

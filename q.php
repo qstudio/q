@@ -31,6 +31,7 @@ namespace q;
 // import ##
 use q;
 use q\plugin;
+use q\core;
 
 // If this file is called directly, Bulk!
 if ( ! defined( 'ABSPATH' ) ) {
@@ -45,8 +46,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // required bits to get set-up ##
 require_once __DIR__ . '/library/api/function.php';
-// require_once __DIR__ . '/autoload.php'; // @TODO -- need to consier if this is a good idea with priority h::get loader also ...
+require_once __DIR__ . '/library/core/log.php';
 require_once __DIR__ . '/plugin.php';
+
+// fire up log
+$log = new \q\core\log();
+$log->hooks();
 
 // get plugin instance ##
 $q = plugin::get_instance();
@@ -54,29 +59,52 @@ $q = plugin::get_instance();
 // validate instance ##
 if( ! ( $q instanceof q\plugin ) ) {
 
-	error_log( 'Error in Q plugin instance' );
+	$log::set( 'Error in Q plugin instance' );
 
 	// nothing else to do here ##
 	return;
 
 }
 
+// object controllers ##
+require_once __DIR__ . '/library.php';
+require_once __DIR__ . '/hooks.php';
+
+// set text domain on init hook ##
+\add_action( 'init', [ $q, 'load_plugin_textdomain' ], 1 );
+
 // fire hooks - build log, helper and config objects and translations ## 
 \add_action( 'plugins_loaded', function() use( $q ){
 
-	// kick off config and store object ##
-	// $config = new q\core\config( $q );
-	// $config->hooks();
-	// $plugin->set( 'config', $config );
+	// build library object ##
+	$library = new q\library();
+	$library->load();
 
-	// build factory objects ##
-	// $q->factory( $q );
-	$q->load_libraries();
+	// add action and filter hooks ##
+	$hooks = new q\hooks();
 
-	// set text domain on init hook ##
-	\add_action( 'init', [ $q, 'load_plugin_textdomain' ], 1 );
-	
-	// check debug settings ##
-	// \add_action( 'plugins_loaded', [ $q, 'debug' ], 11 );
+	// core hooks ##
+	$hooks->core();
+
+	// view hooks ##
+	$hooks->view();
+
+	// asset hooks ##
+	$hooks->asset();
+
+	// global hooks ##
+	$hooks->hook();
+
+	// module hooks ##
+	$hooks->module();
+
+	// admin hooks ##
+	$hooks->admin();
+
+	// plugin hooks ##
+	$hooks->plugins();
+
+	// test hooks ##
+	$hooks->test();
 
 }, 0 );

@@ -5,11 +5,11 @@ namespace q\plugins;
 use q\core;
 use q\core\helper as h;
 
-\q\plugins\acf::__run();
-
 class acf {
 
-	public static function __run(){
+	function __construct(){}
+
+	function hooks(){
 
 		\add_filter( 'q/hook/wp_enqueue_script/script_loader_tag/avoid', function( $array ){
 
@@ -78,7 +78,6 @@ class acf {
 
     }
 
-
     /**
      * Get field group
      */
@@ -118,6 +117,5 @@ class acf {
         return $array;
 
     }   
-
 
 }

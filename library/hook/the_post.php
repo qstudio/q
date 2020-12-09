@@ -13,12 +13,11 @@ use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
-// load it up ##
-\q\hook\the_post::run();
-
 class the_post {
 
-    public static function run(){
+    function __construct(){}
+	
+	function hooks() {
 
         if ( ! \is_admin() ) {
 

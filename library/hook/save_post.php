@@ -12,12 +12,11 @@ use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
-// load it up ##
-\q\hook\save_post::run();
-
 class save_post {
 
-    public static function run(){
+	function __construct(){}
+	
+	function hooks() {
 
         if ( \is_admin() ) { // make sure this is only loaded up in the admin ##
 

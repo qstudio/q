@@ -5,41 +5,12 @@ namespace q;
 use q\core;
 use q\core\helper as h;
 
-// load it up ##
-\q\module::__run();
-
 class module {
 
 	// properties ##
 	public static $count = 0; // count modules added ##
 
-	public static function __run(){
-
-		core\load::libraries( self::load() );
-
-	}
-
-	
-	
-	/**
-    * Load Libraries
-    *
-    * @since        2.0.0
-    */
-    public static function load()
-    {
-
-		return $array = [
-
-			// admin ##
-			'sticky' 				=> h::get( 'module/sticky/sticky.php', 'return', 'path' ),
-
-		];
-
-
-	}
-	
-
+	function __construct(){}
 	
 	/**
     * Filter modules via ACF options page
@@ -72,7 +43,7 @@ class module {
 
 		}
 
-		// style --crude ##
+		// style <---- crude ##
 		$style = 'style="background: #ddd; padding: 2px 6px; font-weight: strong;" class=""';
 		
 		// look for module assets ( scss / js ) with matching name, to indicate which files will be included ##
@@ -126,6 +97,5 @@ class module {
 		}, 10, 1 );
 
 	}
-
 
 }

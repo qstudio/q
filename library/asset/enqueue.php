@@ -6,15 +6,14 @@ use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
-// load it up ##
-\q\asset\enqueue::run();
-
 class enqueue {
 
     public static $plugin_version;
-    public static $option;
+	public static $option;
+	
+	function __construct(){}
 
-    public static function run(){
+    function hooks(){
 
         // load templates ##
 		self::load_properties();
@@ -40,9 +39,6 @@ class enqueue {
 
     }
 
-
-    
-
     /**
      * Check for required classes to build UI features
      * 
@@ -53,10 +49,10 @@ class enqueue {
 
         // check for what's needed ##
         if (
-            ! class_exists( 'q_theme' ) // how to get around this ?? ##
+            ! class_exists( 'q_theme' )
         ) {
 
-            h::log( 'e:>@todo ---> Q requires q_theme to run correctly..' );
+            h::log( 'e:>Q requires q_theme to run correctly..' );
 
             return false;
 
@@ -67,15 +63,12 @@ class enqueue {
 
     }
 
-
-
     /**
     * Load Properties
     *
     * @since        2.0.0
     */
-    private static function load_properties()
-    {
+    private static function load_properties(){
 
         // assign values ##
         // self::$plugin_version = q::$_version ;
@@ -488,7 +481,7 @@ class enqueue {
 		// check we have dependencies ##
         if ( ! self::has_dependencies() ){
 
-			h::log( 'e:>No Q Theme class...');
+			// h::log( 'e:>No Q Theme class...');
 
             return false;
 

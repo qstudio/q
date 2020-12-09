@@ -14,18 +14,11 @@
 
 namespace q\hook;
 
-use q\plugin as q;
-use q\core;
-use q\core\helper as h;
-
-// load it up ##
-\q\hook\admin_init::run();
-
 class admin_init {
 
-    public static function run(){
-
-        // h::log( 'Admin...' );
+    function __construct(){}
+	
+	function hooks() {
 
         \add_action( 'admin_head', array ( get_class(), 'favicon' ), 9999999 ); // add to backend ##
 

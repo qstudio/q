@@ -2,13 +2,12 @@
 
 namespace q\get;
 
+use q\plugin as q;
 use q\core\helper as h;
-use q\get;
 
-class theme extends \q\get {
+class theme {
 	
-	public static function is_child()
-	{
+	public static function is_child():bool {
 
 		$theme = \wp_get_theme(); // gets the current theme
 		// h::log( $theme );
@@ -22,13 +21,14 @@ class theme extends \q\get {
 	}
 
 
-	public static function is_parent()
-	{
+	public static function is_parent():bool {
 
 		$theme = \wp_get_theme(); // gets the current theme
 		
 		if ( ! $theme->parent_theme ) {
+
 			return true;
+
 		}
 
 		return false;

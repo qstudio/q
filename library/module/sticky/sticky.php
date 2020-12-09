@@ -8,11 +8,13 @@ use q\core;
 use q\core\helper as h;
 
 // load it up ##
-\q\module\sticky::run();
+// \q\module\sticky::run();
 
 class sticky {
 
 	public static $post_types = [ 'post' ]; // default, filtered later ##
+
+	function __construct(){}
                 
 	/**
 	 * Runner..
@@ -20,8 +22,7 @@ class sticky {
 	 * @since       0.2
 	 * @return      void
 	 */
-	public static function run() 
-	{
+	function build(){
 
 		// load libraries ##
 		core\load::libraries( self::load() );
@@ -34,8 +35,7 @@ class sticky {
 	*
 	* @since        2.0
 	*/
-	private static function load()
-	{
+	private static function load(){
 
 		$array = [
 

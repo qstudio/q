@@ -5,19 +5,17 @@ namespace q;
 use q\plugin as q;
 use q\core;
 use q\core\helper as h;
-use q\plugin; 
-
-// load it up ##
-\q\test::run();
 
 class test {
 
-    // public static $output = false;
+	// public static $output = false;
+	
+	function __construct(){}
 
-    public static function run()    {
+    function hooks(){
 
         // add ACF fields ##
-        \add_action( 'acf/init', function() { plugins\acf::add_field_groups( self::add_field_groups() ); }, 1 );
+        \add_action( 'acf/init', function() { \q\plugins\acf::add_field_groups( self::add_field_groups() ); }, 1 );
 
         // check if the test suite is activated via Q settings ##
         if ( ! self::check() ) {
@@ -39,54 +37,13 @@ class test {
 
     }
 
-
-
-    
-
-    // /**
-    // * Add ACF Fields
-    // *
-    // * @since    2.0.0
-    // */
-    // public static function add_fields()
-    // {
-
-    //     // get all field groups ##
-    //     $groups = self::get_fields();
-
-    //     if ( 
-    //         ! $groups 
-    //         || ! is_array( $groups )
-    //     ) {
-
-    //         h::log( 'No groups to load.' );
-
-    //         return false;
-
-    //     }
-
-    //     // loop over gruops ##
-    //     foreach( $groups as $key => $value ) {
-
-    //         // h::log( 'filter: q/core/options/add_field/'.$key );
-    //         // h::log( $value );
-
-    //         // load them all up ##
-    //         \acf_add_local_field_group( $value );
-
-    //     }
-
-    // }
-
-
     /**
     * Define field groups
     *
     * @since    2.0.0
     * @return   Mixed
     */
-    public static function add_field_groups()
-    {
+    public static function add_field_groups(){
 
         // define field groups - exported from ACF ##
         $groups = array (
@@ -173,12 +130,7 @@ class test {
 
     }
 
-
-
-
-
-    public static function check()
-    {
+    public static function check(){
 
         // h::log( 'Checking if test suite is active' );
         // h::log( core\option::get( 'test' ) );
@@ -189,21 +141,19 @@ class test {
             && is_object( core\option::get( 'test' ) )
         ) {
 
-            // h::log( 'test suite options active' );
+            // h::log( 'Q test suite options active' );
 
             // seems good ##
             return true;
         
         }
 
-        // h::log( 'test suite options inactive' );
+        // h::log( 'Q test suite options inactive' );
 
         // inactive ##
         return false;    
 
     }
-
-
 
     /**
     * include plugin admin assets
@@ -214,7 +164,7 @@ class test {
     public static function admin_enqueue_scripts() {
 
         // add JS ## -- after all dependencies ##
-        \wp_enqueue_script( 'q-test-admin-js', h::get( "test/asset/javascript/admin.js", 'return' ), array( 'jquery' ), self::version );
+        \wp_enqueue_script( 'q-test-admin-js', h::get( "test/asset/javascript/admin.js", 'return' ), array( 'jquery' ), q::$_version );
 
         // nonce ##
         $nonce = \wp_create_nonce( 'q-test-nonce' );
@@ -222,28 +172,24 @@ class test {
         // pass variable values defined in parent class ##
         \wp_localize_script( 'q-test-admin-js', 'q_test_admin', array(
             'ajaxurl'           => \admin_url( 'admin-ajax.php', \is_ssl() ? 'https' : 'http' ), ## add 'https' to use secure URL ##
-            'debug'             => self::$debug,
+            'debug'             => q::$_debug,
             'nonce'             => $nonce
         ));
 
     }
-
-
-
 
     /**
     * Load Libraries
     *
     * @since        0.0.1
     */
-    private static function load_libraries()
-    {
+    private static function load_libraries(){
 
         // log controller ##
-        require_once self::get_plugin_path( 'library/test/log.php' );
+        require_once q::get_plugin_path( 'library/test/log.php' );
 
         // Asana controller ##
-        require_once self::get_plugin_path( 'library/extension/service/asana.php' );
+        // require_once self::get_plugin_path( 'library/extension/service/asana.php' );
 
         // h::log( options::get( 'test' ) );
 
@@ -251,9 +197,14 @@ class test {
         foreach ( core\option::get( 'test' ) as $key => $value ) {
             
             // check if file exists ##
-            if ( file_exists( self::get_plugin_path( "library/test/{$key}.php" ) ) ) {
+            if ( file_exists( q::get_plugin_path( "library/test/{$key}.php" ) ) ) {
 
-                require_once self::get_plugin_path( "library/test/{$key}.php" );
+				require_once q::get_plugin_path( "library/test/{$key}.php" );
+				
+				// instantiate test ##
+				$class = "\\q\\test\\{$key}";
+				$test = new $class();
+				$test->hooks();
 
             }
 

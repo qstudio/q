@@ -10,13 +10,12 @@ use q\get;
 // date ##
 use \Datetime;
 
-// load it up ##
-\q\admin\option::run();
-
 class option {
 
     // store db query ##
-    public static $query = false;
+	public static $query = false;
+	
+	function __construct(){}
 
     /**
     * Class Constructor
@@ -24,7 +23,7 @@ class option {
     * @since       1.0
     * @return      void
     */
-    public static function run(){
+    function hooks(){
 
         // add acf options page ##
         self::acf_add_options_page();

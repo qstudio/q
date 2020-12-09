@@ -79,7 +79,6 @@ class method {
 
 	}
 
-
 	public static function copy_files( $args = null ){
 
 		// sanity ##
@@ -149,8 +148,6 @@ class method {
 		return $log;
 
 	}
-
-
 
 	/**
 	 * Recursive copy directories and content
@@ -225,16 +222,13 @@ class method {
 		return $log;
 
 	}
-
-
 	
     /**
      * restrict_manage_posts filter
      *
      * @param       Array       $args       Array of custom post types and taxaonomies to filter
      */
-    public static function restrict_manage_posts( $args = null )
-    {
+    public static function restrict_manage_posts( $args = null ){
 
         // sanity check ##
         if ( is_null ( $args ) || ! array_filter( $args ) ) { 
@@ -278,8 +272,6 @@ class method {
 
     }
 
-
-
     /**
      * Generate Admin <select>'s ##
      *
@@ -289,8 +281,7 @@ class method {
      * @param type $level
      * @param type $selected
      */
-    public static function generate_taxonomy_options( $tax_slug, $tax_name, $parent = '', $level = 0,$selected = null)
-    {
+    public static function generate_taxonomy_options( $tax_slug, $tax_name, $parent = '', $level = 0,$selected = null ){
 
         $args = array( 'show_empty' => 1, 'hierarchical' => true );
         #if( !is_null($parent)) {
@@ -322,20 +313,16 @@ class method {
 
     }
 
-
-
 	// add thumbnails to admin columns ##
 	// \add_action( 'admin_init', function(){ return self::add_thumbnail_to( array( 'posts', 'pages' ) ) ) );
 	
-
     /**
      * Add Thumbnail Column to Post Type in admin
      * 
      * @since       1.2.0
      * @param       Array    $post_types
      */
-    public static function add_thumbnail_to( $post_types = null )
-    {
+    public static function add_thumbnail_to( $post_types = null ){
         
         // sanity check ##
         if ( ! $post_types ) { return false; } // nothing to do ##
@@ -359,23 +346,18 @@ class method {
         
     }
     
-    
     /**
      * Add thumbnail column
      * 
      * @param       Array    $cols
      * @return      Array
      */
-    public static function admin_add_thumbnail_column( $cols ) 
-    {
+    public static function admin_add_thumbnail_column( $cols ){
         
         $cols['thumbnail'] = __('Thumbnail');
         return $cols;
         
     }
-
-	
-	
 
     /**
      * Add row thumbnail value 
@@ -383,8 +365,7 @@ class method {
      * @param type $column_name
      * @param type $post_id
      */
-    public static function admin_add_thumbnail_value( $column_name, $post_id ) 
-    {
+    public static function admin_add_thumbnail_value( $column_name, $post_id ){
 
         $width = (int) 200;
         $height = (int) 125;
@@ -409,6 +390,5 @@ class method {
             }
         }
     }
-    
     
 }

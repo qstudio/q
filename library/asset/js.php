@@ -8,9 +8,6 @@ use q\core\helper as h;
 use q\asset;
 use q\strings;
 
-// fire up ##
-\q\asset\js::__run();
-
 class js {
 
 	protected static 
@@ -19,7 +16,9 @@ class js {
 
 	;
 
-	public static function __run(){
+	function __construct(){}
+
+	function hooks(){
 
 		// load early ##
 		\add_action( 'init', [ get_class(), 'load' ], 10 );

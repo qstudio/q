@@ -6,20 +6,15 @@
  * @since 0.4
  * @link        http://codex.wordpress.org/Plugin_API/Action_Reference
  * @author:     Q Studio
- * @URL:        http://qstudio.us/
+ * @URL:        https://qstudio.us/
  */
 namespace q\hook;
 
-use q\plugin as q;
-use q\core;
-use q\core\helper as h;
-
-// load it up ##
-\q\hook\switch_theme::run();
-
 class switch_theme {
 
-    public static function run(){
+	function __construct(){}
+	
+	function hooks() {
 
         if ( \is_admin() ) { // make sure this is only loaded up in the admin ##
 
@@ -31,7 +26,7 @@ class switch_theme {
 
 
     // function on swtich theme ##
-    public static function switch_theme(){
+    public function switch_theme(){
 
         h::log( 'switched' );
 

@@ -5,6 +5,7 @@ namespace q;
 // import classes ##
 use q;
 use q\plugin;
+use q\core\helper as h;
 
 // If this file is called directly, Bulk!
 if ( ! defined( 'ABSPATH' ) ) {
@@ -41,6 +42,13 @@ final class plugin {
 		$_device = null
 
 	;
+
+	// private 
+
+		// instantiated objects ##
+		// $factory
+	
+	// ;
 
     /**
      * Initiator
@@ -81,61 +89,10 @@ final class plugin {
      * @since   0.0.1
      * @return  void
     */
-    private function __construct() {
+    function __construct() {
 
         // empty ##
 		
-	}
-	
-	public function factory( $q ){
-
-		// kick off things.. ##
-		// $q->set( 'extend', new willow\context\extend( $q ) );
-
-	}
-
-	/**
-	* Load Libraries
-	*
-	* @since        2.0
-	*/
-	public function load_libraries(){
-
-		// methods ##
-		require_once self::get_plugin_path( 'library/core/_load.php' );
-
-		// getter ##
-		// most moved to willow - basic post items remain ##
-		require_once $this->get_plugin_path( 'library/get/_load.php' );
-
-		// view ##
-		require_once $this->get_plugin_path( 'library/view/_load.php' );
-
-		// assets ##
-		require_once $this->get_plugin_path( 'library/asset/_load.php' );
-
-		// ui modules ##
-		require_once $this->get_plugin_path( 'library/module/_load.php' );
-
-		// admin ##
-		require_once $this->get_plugin_path( 'library/admin/_load.php' );
-
-		// test suite ##
-		require_once $this->get_plugin_path( 'library/test/_load.php' );
-
-		// hooks ##
-		require_once $this->get_plugin_path( 'library/hook/_load.php' );
-
-		// check for dependencies, required for UI components - admin will still run ##
-		if ( ! self::has_dependencies() ) {
-
-			return false;
-
-		}
-
-		// plugins required to run other plugins... ##
-		require_once $this->get_plugin_path( 'library/plugins/_load.php' );
-
 	}
 
     /**
@@ -271,30 +228,6 @@ final class plugin {
 
 	}
 	
-	/**
-	 * Check for required breaking dependencies
-	 *
-	 * @return      Boolean
-	 * @since       1.0.0
-	 */
-	public static function has_dependencies(){
-
-		// check for what's needed ##
-		if (
-			! class_exists( 'ACF' )
-		) {
-
-			q__log( 'e:>Q requires ACF to run correctly..' );
-
-			return false;
-
-		}
-
-		// ok ##
-		return true;
-
-	}
-
     /**
      * Get Plugin URL
      *

@@ -6,20 +6,7 @@ use q\plugin as q;
 use q\core as core;
 use q\core\helper as h;
 
-// load it up ##
-\q\core\media::run();
-
 class media {
-
-    public static function run()
-    {
-
-        // filter intermediate image sizes ##
-        // \add_filter( 'intermediate_image_sizes_advanced', [ get_class(), 'intermediate_image_sizes_advanced' ] );
-
-	}
-
-
 
     /**
      * Remove standard image sizes so that these sizes are not
@@ -34,8 +21,7 @@ class media {
      * @return $sizes, modified array of image sizes
      * @author http://www.wpmayor.com/code/remove-image-sizes-in-wordpress/
      */
-    public static function intermediate_image_sizes_advanced( $sizes)
-    {
+    public static function intermediate_image_sizes_advanced( $sizes){
 
         unset( $sizes['hero']);
 
@@ -43,17 +29,12 @@ class media {
 
     }
 
-
-
-	
-    public static function image_sizes_list()
-    {
+    public static function image_sizes_list(){
 
         global $_wp_additional_image_sizes; 
         if( self::$debug ) h::log( $_wp_additional_image_sizes ); 
 
 	}
-	
 
 	/**
 	 * Get information about available image sizes
@@ -94,16 +75,13 @@ class media {
 
 	}
 
-
-
 	/**
      * Check if an attached file exists
      *
      * @since       1.6.3
      * @return      boolean
      */
-    public static function attachment_exists( $id = null )
-    {
+    public static function attachment_exists( $id = null ){
 
         // sanity ##
         if ( is_null ( $id ) ) {
@@ -127,6 +105,5 @@ class media {
         return false;
 
 	}
-
 
 }

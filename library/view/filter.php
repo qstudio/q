@@ -4,10 +4,6 @@ namespace q\view;
 
 use q\core;
 use q\core\helper as h;
-// use q\core\options as options;
-
-// load it up ##
-\q\view\filter::run();
 
 class filter {
 
@@ -38,13 +34,14 @@ class filter {
     protected static $view_default = 'index.php';
 
     // tracker ##
-    protected static $view_tracker = null;
+	protected static $view_tracker = null;
+	
+	function __construct(){}
 
     /**
     * Kick things off
     */
-    public static function run()
-    {
+    function hooks(){
 
         // we need to filter $view_custom to allow plugins to inject extra templates ##
 
@@ -87,23 +84,17 @@ class filter {
 
     }
 
-
-
-
     /**
-     * Get Q template name, if set - else return
+     * Get Q template name, if set - else return WP template name
      * 
      * 
      */
-    public static function get() 
-    {
+    public static function get(): string {
 
         if( ! isset( $GLOBALS['q_template'] ) ) {
 
-            // h::log( 'Page template empty' );
+            // h::log( 'Q Page template empty' );
             
-			// return false;
-			
 			// changes to return WP template -- check for introduced issues ##
 			return str_replace( '.php', '', \get_page_template_slug() );
 
@@ -111,14 +102,11 @@ class filter {
 
             // h::log( 'Page template: '.$GLOBALS['q_template'] );
 
-            return str_replace( '.php', '', $GLOBALS['q_template'] );        
+            return str_replace( [ '.willow', '.php' ], '', $GLOBALS['q_template'] );        
 
         }
 
 	}
-
-
-	
 
 	/**
 	 * Check is the current view matches the controller
@@ -133,8 +121,6 @@ class filter {
 		return self::get() == trim( $file ) ;
 
 	}
-
-
 
     /**
      * Tracking Method
@@ -179,15 +165,9 @@ class filter {
 
             break ;
 
-
         }
 
-
     }
-
-
-
-    
 
     /**
      * Add custom templates defined in external plugins
@@ -240,7 +220,6 @@ class filter {
 
     }
 
-
     /**
      * Add native templates defined in external plugins
      */
@@ -288,15 +267,12 @@ class filter {
 
     }
 
-
-
     /**
      * Default template
      * 
      * 
      */
-    public static function get_view_default( $template )
-    {
+    public static function get_view_default( $template ){
         
         // look for default template - in q_theme
         $template =  
@@ -311,7 +287,6 @@ class filter {
         return $template;
 
     }
-
 
     public static function format_view_custom( Array $array = null ){
 
@@ -344,16 +319,13 @@ class filter {
 
     }
 
-
-
     /**
 	 * Adds our template to the WP admin dropdown for v4.7+
 	 *
      * @since       0.1.0
      * @return      Array
 	 */
-	public static function add_view_custom( $templates ) 
-    {
+	public static function add_view_custom( $templates ){
 
         // filter in external custom templates ##
         // We also need to format the templates to what WP expects [ 'file.php' => 'Name', ]; ##
@@ -368,7 +340,6 @@ class filter {
         return $templates;
 
 	}
-
 
     /**
     * Register extra templates to the WP cache
@@ -409,8 +380,6 @@ class filter {
         return $atts;
 
     }
-
-
 
     /**
     * Checks if the template is assigned to the page
@@ -516,7 +485,6 @@ class filter {
         return $template;
 
     }
-
 
     /**
     * Template loader.

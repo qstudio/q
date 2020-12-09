@@ -13,12 +13,11 @@ use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
-// load it up ##
-\q\hook\wp_enqueue_style::run();
-
 class wp_enqueue_style {
 
-    public static function run(){
+    function __construct(){}
+	
+	function hooks() {
 
 		// not in the admin ##
         if ( ! \is_admin() ) { 

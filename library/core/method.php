@@ -8,7 +8,6 @@ use q\plugin as q;
 
 class method {
 
-
     /**
      * Request data safely using $_GET, $_POST & $_REQUEST
      * 
@@ -18,8 +17,7 @@ class method {
      * @param   Boolean     $debug          Allows for individual debugging of keys
      * @return  mixed       boolean | string         
      */
-    public static function request_safe( $key = null, $sanitize = null, $debug = false, $methods = array( 'post' => true ) )
-    {
+    public static function request_safe( $key = null, $sanitize = null, $debug = false, $methods = array( 'post' => true ) ){
         
         // quick check ##
         if ( ! $key ) { return false; }
@@ -86,8 +84,7 @@ class method {
      * @link        http://wp.tutsplus.com/tutorials/creative-coding/data-sanitization-and-validation-with-wordpress/
      * @return      string      HTML output
      */
-    public static function sanitize( $value = null, $type = 'text' )
-    {
+    public static function sanitize( $value = null, $type = 'text' ){
         
         // check submitted data ##
         if ( is_null( $value ) ) {
@@ -173,8 +170,7 @@ class method {
     * @param string $key String key
     * @return string Sanitized key
     */
-    public static function php_namespace( $key = null ) 
-    {
+    public static function php_namespace( $key = null ){
         
         // sanity check ##
         if ( ! $key ) { return false; }
@@ -196,8 +192,7 @@ class method {
     * @param string $key String key
     * @return string Sanitized key
     */
-    public static function php_function( $key = null ) 
-    {
+    public static function php_function( $key = null ){
         
         // sanity check ##
         if ( ! $key ) { return false; }
@@ -219,8 +214,7 @@ class method {
     * @param string $key String key
     * @return string Sanitized key
     */
-    public static function php_class( $key = null ) 
-    {
+    public static function php_class( $key = null ){
         
         // sanity check ##
         if ( ! $key ) { return false; }
@@ -242,8 +236,7 @@ class method {
     * @param string $key String key
     * @return string Sanitized key
     */
-    public static function sanitize_key( $key = null ) 
-    {
+    public static function sanitize_key( $key = null ){
         
         // sanity check ##
         if ( ! $key ) { return false; }
@@ -264,7 +257,7 @@ class method {
 	 * 
 	 * @since 	4.0.0
 	 */
-	public static function backtrace( $args = null ) {
+	public static function backtrace( $args = null ){
 
 		// default args ##
 		$level = isset( $args['level'] ) ? $args['level'] : 1 ; // direct caller ##
@@ -357,11 +350,7 @@ class method {
 
 	}
 
-
-
-	
-
-    public static function array_to_object( $array ) {
+    public static function array_to_object( $array ){
         
         #h::log( 'here..' );
         if ( ! is_array( $array ) ) {
@@ -395,11 +384,8 @@ class method {
         }
 
 	}
-	
 
-
-	public static function array_unique_multidimensional( $input )
-	{
+	public static function array_unique_multidimensional( $input ){
 
 		$serialized = array_map('serialize', $input);
 
@@ -409,14 +395,12 @@ class method {
 	
 	}
 
-	
-
     /**
      * Recursive pass args 
      * 
      * @link    https://mekshq.com/recursive-wp-parse-args-wordpress-function/
      */
-    public static function parse_args( &$args, $defaults ) {
+    public static function parse_args( &$args, $defaults ){
 
         $args = (array) $args;
         $defaults = (array) $defaults;
@@ -433,9 +417,6 @@ class method {
         return $result;
 
 	}
-	
-
-
 	
 	public static function get_acronym( $string = null, $length = 10 ) {
 
@@ -459,9 +440,6 @@ class method {
 
 	}
     
-
-
-
     public static function array_search( $field = null, $value = null, $array = null ) {
 
 		// sanity ##
@@ -491,15 +469,13 @@ class method {
         return null;
 
 	}
-	
 
 	/**
 	 * search string by array
 	 * 
 	 * @link	https://stackoverflow.com/questions/6284553/using-an-array-as-needles-in-strpos
 	 */
-	public static function strposa($haystack, $needle, $offset=0) 
-	{
+	public static function strposa( $haystack, $needle, $offset = 0 ){
 		if( ! is_array( $needle ) ) {
 			
 			$needle = array($needle);
@@ -517,15 +493,13 @@ class method {
 
 	}
 
-
     /**
      * Save a value to the options table, either updating or creating a new key
      * 
      * @since       2.0.0
      * @return      Void
      */
-    public static function add_update_option( $option_name, $new_value, $deprecated = '', $autoload = 'no' ) 
-    {
+    public static function add_update_option( $option_name, $new_value, $deprecated = '', $autoload = 'no' ){
     
         if ( \get_option( $option_name ) != $new_value ) {
 
@@ -539,9 +513,7 @@ class method {
     
     }
 
-
-
-	public static function file_extension( $string = null ) {
+	public static function file_extension( $string = null ){
 
 		// sanity ##
 		if( is_null( $string ) ){
@@ -557,10 +529,7 @@ class method {
 		
 	}
 
-
-
-	public static function file_put_array( $path, $array )
-	{
+	public static function file_put_array( $path, $array ){
 
 		if ( is_array( $array ) ){
 
@@ -587,7 +556,6 @@ class method {
 
 	}
 
-
 	public static function var_export_short( $data, $return = true ){
 
 		$dump = var_export($data, true);
@@ -610,7 +578,6 @@ class method {
 		}
 
 	}
-
 
 	/*
 	public static function var_export( $var, $indent ="" ) {

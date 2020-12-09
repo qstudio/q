@@ -4,10 +4,6 @@ namespace q\view;
 
 use q\core;
 use q\core\helper as h;
-// use q\core\options as options;
-
-// load it up ##
-// \q\view\method::run();
 
 class is {
 

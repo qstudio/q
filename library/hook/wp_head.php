@@ -19,12 +19,11 @@ use q\core;
 use q\core\helper as h;
 use q\get;
 
-// load it up ##
-\q\hook\wp_head::run();
-
 class wp_head {
 
-    public static function run(){
+    function __construct(){}
+	
+	function hooks() {
 
         // pre-fetch data ##
         #add_action( 'wp_head', 'q_prefetch', 1 );

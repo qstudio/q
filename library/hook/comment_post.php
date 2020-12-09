@@ -13,15 +13,13 @@ use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
-// load it up ##
-\q\hook\comment_post::run();
-
 class comment_post {
 
-    public static function run(){
+    function __construct(){}
+	
+	function hooks() {
 
         if ( \is_admin() ) { // make sure this is only loaded up in the admin ##
-
 
             // \add_action( 'transition_comment_status', array ( $this, 'approve_comment_callback' ), 10, 3 );
 

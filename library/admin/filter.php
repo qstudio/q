@@ -6,13 +6,11 @@ use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
-// load it up ##
-\q\admin\filter::run();
-
 class filter {
 
-    public static function run()
-    {
+	function __construct(){}
+
+    function hooks(){
 
         if ( \is_admin() ) {
 
@@ -26,16 +24,12 @@ class filter {
 
     }
 
-
-
-
     /**
      * Fix for broken preview link in admin - link to default url ?p=ID
      * 
      * @since       0.1.0
      */
-    public static function preview_post_link( $preview_link, $post ) 
-    {
+    public static function preview_post_link( $preview_link, $post ){
 
         if ( 
             \get_post_status ( $post->ID ) != 'draft' 
@@ -53,10 +47,6 @@ class filter {
         }
 
     }
-
-
-
-    
     
     /**
      * Add filters to WP Media Library
@@ -64,8 +54,7 @@ class filter {
      * @since       1.4.2
      * @return      Array
      */
-    public static function post_mime_types( $post_mime_types )
-    {
+    public static function post_mime_types( $post_mime_types ){
 
         // select the mime type, here: 'application/pdf'
         // then we define an array with the label values
@@ -79,7 +68,5 @@ class filter {
         return $post_mime_types;
 
     }
-
-
 
 }

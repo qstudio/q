@@ -7,9 +7,6 @@ use q\core;
 use q\render;
 use q\core\helper as h;
 
-// run ##
-\q\core\log::__run();
-
 class log {
 
 	// track who called what ##
@@ -37,8 +34,11 @@ class log {
 		$shutdown_key_debug = [ 'debug', 'todo' ] // control debug keys ##
 	;
 
+	function __construct(){
+		//..
+	}
 
-	public static function __run(){
+	function hooks(){
 
 		// filter pre-defined actions ##
 		$on_run 			= \apply_filters( 'q/core/log/on_run', self::$on_run );

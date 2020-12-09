@@ -3,17 +3,11 @@
 namespace q\get;
 
 // Q ##
+use q\plugin as q;
 use q\core;
 use q\core\helper as h;
-use q\ui;
-use q\get;
-use willow\render;
-use q\strings;
 
-// Q Theme ##
-use q\theme;
-
-class post extends \q\get {
+class post {
 
     /**
      * Method to clean up calling and checking for the global $post object
@@ -24,8 +18,7 @@ class post extends \q\get {
      * @since       1.0.7
      * @return      Object      WP_Post object
      */
-    public static function object( $args = null )
-    {
+    public static function object( $args = null ){
 
         // h::log( $args );
 
@@ -82,7 +75,5 @@ class post extends \q\get {
         return $post;
 
     }
-
-
 
 }

@@ -20,7 +20,7 @@ class config {
 			// && ! class_exists( 'willow\plugin' )
 		){
 
-			h::log( 'e:>Config loading requires Willow plugins, please install of activate' );
+			h::log( 'e:>Config loading requires Willow plugins, please install or activate' );
 
 			return false;
 

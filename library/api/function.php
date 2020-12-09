@@ -34,16 +34,16 @@ if ( ! function_exists( 'q' ) ) {
 			|| ! ( $q instanceof \q\plugin ) 
 		) {
 
-			// get stored willow instance from filter ##
+			// get stored Q instance from filter ##
 			$q = \apply_filters( 'Q/instance', NULL );
 
-			// sanity - make sure willow instance returned ##
+			// sanity - make sure Q instance returned ##
 			if( 
 				is_null( $q )
 				|| ! ( $q instanceof \q\plugin ) 
 			) {
 
-				error_log( 'Error in object instance returned to '.__FUNCTION__ );
+				error_log( 'Error in Q object instance returned to '.__FUNCTION__ );
 
 				return false;
 
