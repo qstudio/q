@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /*
 * Factory Class
 */
-final class hooks {
+final class factory {
 
 	private
 		$q // Q instance ##

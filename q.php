@@ -68,7 +68,7 @@ if( ! ( $q instanceof q\plugin ) ) {
 
 // object controllers ##
 require_once __DIR__ . '/library.php';
-require_once __DIR__ . '/hooks.php';
+require_once __DIR__ . '/factory.php';
 
 // set text domain on init hook ##
 \add_action( 'init', [ $q, 'load_plugin_textdomain' ], 1 );
@@ -80,31 +80,31 @@ require_once __DIR__ . '/hooks.php';
 	$library = new q\library();
 	$library->load();
 
-	// add action and filter hooks ##
-	$hooks = new q\hooks();
+	// build factory ##
+	$factory = new q\factory();
 
 	// core hooks ##
-	$hooks->core();
+	$factory->core();
 
 	// view hooks ##
-	$hooks->view();
+	$factory->view();
 
 	// asset hooks ##
-	$hooks->asset();
+	$factory->asset();
 
 	// global hooks ##
-	$hooks->hook();
+	$factory->hook();
 
 	// module hooks ##
-	$hooks->module();
+	$factory->module();
 
 	// admin hooks ##
-	$hooks->admin();
+	$factory->admin();
 
 	// plugin hooks ##
-	$hooks->plugins();
+	$factory->plugins();
 
 	// test hooks ##
-	$hooks->test();
+	$factory->test();
 
 }, 0 );
