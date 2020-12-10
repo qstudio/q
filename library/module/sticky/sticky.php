@@ -7,9 +7,6 @@ use q\plugin as q;
 use q\core;
 use q\core\helper as h;
 
-// load it up ##
-// \q\module\sticky::run();
-
 class sticky {
 
 	public static $post_types = [ 'post' ]; // default, filtered later ##
