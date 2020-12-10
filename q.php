@@ -74,7 +74,7 @@ require_once __DIR__ . '/factory.php';
 \add_action( 'init', [ $q, 'load_plugin_textdomain' ], 1 );
 
 // fire hooks - build log, helper and config objects and translations ## 
-\add_action( 'plugins_loaded', function() use( $q ){
+\add_action( 'plugins_loaded', function(){
 
 	// build library object ##
 	$library = new q\library();

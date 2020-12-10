@@ -35,7 +35,7 @@ if ( ! function_exists( 'q' ) ) {
 		) {
 
 			// get stored Q instance from filter ##
-			$q = \apply_filters( 'Q/instance', NULL );
+			$q = \apply_filters( 'q/instance', NULL );
 
 			// sanity - make sure Q instance returned ##
 			if( 
