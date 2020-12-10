@@ -264,7 +264,7 @@ class enqueue {
 				// add single module.min.js ##
 				\wp_enqueue_script( 
 					'q-module', 
-					\q\theme\plugin::get_child_theme_url( "/library/asset/js/module.min.js?__js_defer" ), 
+					\q\theme\plugin::get_child_url( "/library/asset/js/module.min.js?__js_defer" ), 
 					array( 'jquery' ), 
 					\q\theme\child\plugin::$_version,
 					// true
@@ -470,7 +470,7 @@ class enqueue {
             && '1' == $this->option->theme_child->css    
         ) {
 
-			// \wp_register_style( 'q-plugin-css-theme', \q\theme\plugin::get_child_theme_path( '/library/asset/css/theme.min.css' ), array(), \q\theme\plugin::version, 'all' );
+			// \wp_register_style( 'q-plugin-css-theme', \q\theme\plugin::get_child_path( '/library/asset/css/theme.min.css' ), array(), \q\theme\plugin::version, 'all' );
 			// \wp_enqueue_style( 'q-plugin-css-theme' );
 
             // h::log( 'd:> Loading Child CSS...' );
@@ -478,11 +478,11 @@ class enqueue {
             // IE ##
             if ( 
 				file_exists( 
-					$file_path_ie = \q\theme\plugin::get_child_theme_path( '/library/asset/css/ie.css' )
+					$file_path_ie = \q\theme\plugin::get_child_path( '/library/asset/css/ie.css' )
 				)
 			) {
 
-				$file_uri_ie = \q\theme\plugin::get_child_theme_url( '/library/asset/css/ie.css' );
+				$file_uri_ie = \q\theme\plugin::get_child_url( '/library/asset/css/ie.css' );
          
                 \wp_enqueue_style( 'q-child-ie-css', $file_uri_ie, '', \q\theme\child\plugin::$_version );
                 \wp_style_add_data( 'q-child-ie-css', 'conditional', 'IE' );
@@ -524,8 +524,8 @@ class enqueue {
 				// load first found file ##
 				if ( $found ) break;
 
-				$file_uri = \q\theme\plugin::get_child_theme_url( '/library/asset/css/'.$file );
-				$file_path = \q\theme\plugin::get_child_theme_path( '/library/asset/css/'.$file );
+				$file_uri = \q\theme\plugin::get_child_url( '/library/asset/css/'.$file );
+				$file_path = \q\theme\plugin::get_child_path( '/library/asset/css/'.$file );
 
 				// h::log( 'd:>looking up file: '.$file_uri );
 
@@ -589,8 +589,8 @@ class enqueue {
 				// load first found file ##
 				if ( $found ) break;
 
-				$file_uri = \q\theme\plugin::get_child_theme_url( '/library/'.$asset_path.'/js/'.$file );
-				$file_path = \q\theme\plugin::get_child_theme_path( '/library/'.$asset_path.'/js/'.$file );
+				$file_uri = \q\theme\plugin::get_child_url( '/library/'.$asset_path.'/js/'.$file );
+				$file_path = \q\theme\plugin::get_child_path( '/library/'.$asset_path.'/js/'.$file );
 
 				// h::log( 'd:>looking up file: '.$file_uri );
 

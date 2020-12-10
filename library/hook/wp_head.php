@@ -404,7 +404,7 @@ class wp_head {
 
 		} else {
 
-			$get_post = new \willow\get\post( willow() );
+			$get_post = new \willow\get\post();
 		
 			$get_title = $get_post->title([ 'filter' => true ]);
 

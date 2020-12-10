@@ -279,7 +279,7 @@ class filter {
             $this->format_view_custom( \apply_filters( 'q/view/custom', $this->view_custom )
 		);
 		
-		h::log( $this->view_custom );
+		// h::log( $this->view_custom );
 
         // Now add our template to the list of templates by merging our templates
         // with the existing templates array from the cache.

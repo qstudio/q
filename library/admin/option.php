@@ -113,11 +113,11 @@ class option {
 				// check theme get method ##
 				if( 
 					! function_exists( 'q_theme' )
-					|| ! method_exists( 'q\theme\plugin', 'get_parent_theme_path' )
-					|| ! is_callable( [ 'q\theme\plugin', 'get_parent_theme_path' ]  )  
+					|| ! method_exists( 'q\theme\plugin', 'get_parent_path' )
+					|| ! is_callable( [ 'q\theme\plugin', 'get_parent_path' ]  )  
 				){
 
-					h::log( 'e:>q_theme::get_parent_theme_path() is not available' );
+					h::log( 'e:>q_theme::get_parent_path() is not available' );
 
 					return false;
 
@@ -131,18 +131,18 @@ class option {
 
 					// css / scss ##
 					'scss'				=> in_array( 'css', $values['q_option_module_asset'] ), // get from passed values ##
-					'child_scss'		=> $theme::get_child_theme_path( '/library/_source/scss/module/' ),
-					'parent_scss'		=> $theme::get_parent_theme_path( '/library/_source/scss/module/' ),
+					'child_scss'		=> $theme::get_child_path( '/library/_source/scss/module/' ),
+					'parent_scss'		=> $theme::get_parent_path( '/library/_source/scss/module/' ),
 					'parent_path'		=> 'q-theme-parent/library/_source/scss/module/',
 					'file_scss'			=> 'index.scss',
 
 					// js -- rename modules which are inactive to "_FILENAME" ##
 					'js'				=> in_array( 'js', $values['q_option_module_asset'] ), // get from passed values ##
 					'source_js'			=> [ 
-						'child'			=> $theme::get_child_theme_path( '/library/_source/js/module/' ),
-						'parent'		=> $theme::get_parent_theme_path( '/library/_source/js/module/' )
+						'child'			=> $theme::get_child_path( '/library/_source/js/module/' ),
+						'parent'		=> $theme::get_parent_path( '/library/_source/js/module/' )
 					],
-					'asset_js'			=> $theme::get_parent_theme_path( '/library/asset/js/module/' ),
+					'asset_js'			=> $theme::get_parent_path( '/library/asset/js/module/' ),
 					'file_module'		=> 'q.module.json'
 					
 				];
@@ -271,7 +271,7 @@ class option {
 
 				// push in localize script ##
 				$q_modules['javascript'][] = '__q';
-				$q_modules['javascript_path'][] = \esc_html( $theme::get_parent_theme_path( '/library/_source/js/module/__q.js' ) );
+				$q_modules['javascript_path'][] = \esc_html( $theme::get_parent_path( '/library/_source/js/module/__q.js' ) );
 
 				// if user has disabled js - nothing to do... ##
 				if ( ! $options['js'] ) {
@@ -339,7 +339,7 @@ class option {
 				// h::log( $q_modules_json );
 
 				// save to child theme, as this where Grunt will load it for task runners ##
-				file_put_contents( $theme::get_child_theme_path('/q.module.json' ), $q_modules_json );
+				file_put_contents( $theme::get_child_path('/q.module.json' ), $q_modules_json );
 
 				// store active modules list ##
 				core\method::add_update_option( 'q_modules', $q_modules, '', 'yes' );
