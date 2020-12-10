@@ -25,24 +25,11 @@ class sticky {
 	function build(){
 
 		// load libraries ##
-		core\load::libraries( self::load() );
+		core\load::libraries( $this->libraries() );
 
-	}
-
-
-	/**
-	* Load Libraries
-	*
-	* @since        2.0
-	*/
-	private static function load(){
-
-		$array = [
-
-			// core ##
-			'option' => h::get( 'module/sticky/core/option.php', 'return', 'path' )
-
-		];
+		// add options page ##
+		$option = new \q\module\sticky\option();
+		$option->hooks();
 
 		// h::log( core\option::get('module') );
 		if ( 
@@ -52,23 +39,39 @@ class sticky {
 
 			// h::log( 'd:>Sticky is not enabled.' );
 
-			return $array;
+			return false;
 
 		}
 
-		// h::log( 'd:>Sticky is enabled.' );
+		// admin ##
+		$admin = new \q\module\sticky\admin();
+		$admin->hooks();
 
-		// backend ##
-		$array['admin'] = h::get( 'module/sticky/admin/admin.php', 'return', 'path' );
-		$array['render'] = h::get( 'module/sticky/admin/render.php', 'return', 'path' );
-		$array['method'] = h::get( 'module/sticky/core/method.php', 'return', 'path' );
-		$array['ajax'] = h::get( 'module/sticky/core/ajax.php', 'return', 'path' );
+		// render ##
+		$render = new \q\module\sticky\render();
+		$render->hooks();
 
-		// require_once self::get_plugin_path( 'library/core/core.php' );
-		// require_once self::get_plugin_path( 'library/core/ajax.php' );
-		// // backend ##
-		// require_once self::get_plugin_path( 'library/admin/admin.php' );
-		// require_once self::get_plugin_path( 'library/admin/theme.php' );
+		// ajax ##
+		$ajax = new \q\module\sticky\ajax();
+		$ajax->hooks();
+
+	}
+
+
+	/**
+	* Load Libraries
+	*
+	* @since        2.0
+	*/
+	function libraries(){
+
+		$array = [];
+
+		$array['module/sticky/option'] = h::get( 'module/sticky/core/option.php', 'return', 'path' );
+		$array['module/sticky/admin'] = h::get( 'module/sticky/admin/admin.php', 'return', 'path' );
+		$array['module/sticky/render'] = h::get( 'module/sticky/admin/render.php', 'return', 'path' );
+		$array['module/sticky/method'] = h::get( 'module/sticky/core/method.php', 'return', 'path' );
+		$array['module/sticky/ajax'] = h::get( 'module/sticky/core/ajax.php', 'return', 'path' );
 
 		return $array;
 

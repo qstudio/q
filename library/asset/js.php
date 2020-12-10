@@ -10,18 +10,19 @@ use q\strings;
 
 class js {
 
-	protected static 
+	private $q;
 
-		$q_modules = []
+	function __construct(){
 
-	;
+		// we need the current $q instance ##
+		$this->q = \q\plugin::get_instance();
 
-	function __construct(){}
+	}
 
 	function hooks(){
 
 		// load early ##
-		\add_action( 'init', [ get_class(), 'load' ], 10 );
+		\add_action( 'init', [ $this, 'load' ], 1 );
 
 		// delete ##
 		// \add_action( 'init', [ get_class(), 'delete' ], 9 );
@@ -30,51 +31,49 @@ class js {
 		// \add_action( 'shutdown', [ get_class(), 'save' ], 1000 );
 
 		// add values to js localize ##
-		\add_filter( 'q/asset/localize', [ get_class(), 'localize' ], 10, 1 );
+		\add_filter( 'q/asset/localize', [ $this, 'localize' ], 10, 1 );
 
 	}
 	
-	
-	public static function load(){
+	function load(){
 
 		// h::log( \q\core\option::get('module') );
+		// $_q_modules = $this->q->get( '_q_modules' );
 
 		// load list of modules, stored in site_option "q_modules" - includes list of parameters to localize ##
 		// h::log( \get_option( "q_modules" ) );
-		if ( ! self::$q_modules = \get_option( "q_modules" ) ){
+		if ( false === $_q_modules = \get_option( "q_modules" ) ){
 
 			// return false;
 
 			h::log( 'e:>No modules option found: "q_modules", creating now.' );
 
-			$q_modules = [];
-			$q_modules['scss'] = [];
-			$q_modules['js'] = [];
-			$q_modules['localize'] = [];
-
-			self::$q_modules = $q_modules;
+			$_q_modules = [];
+			$_q_modules['scss'] = [];
+			$_q_modules['javascript'] = [];
+			$_q_modules['localize'] = [];
 
 		}
 
-		// h::log( self::$q_modules );
+		// self::$q_modules = $q_modules;
+		$this->q->set( '_q_modules', $_q_modules );
+
+		// h::log( $_q_modules );
 
 	}
 
-
-	public static function delete(){
+	function delete(){
 
 		\delete_option( "q_modules" );
 
 	}
 
-
-	public static function save(){
+	function save(){
 
 		// store active modules list ##
-		core\method::add_update_option( 'q_modules', self::$q_modules, '', 'yes' );
+		core\method::add_update_option( 'q_modules', $this->q->get( '_q_modules' ), '', 'yes' );
 
 	}
-
 
 	/**
 	 * Add scripts from modules
@@ -86,7 +85,7 @@ class js {
 	 * This method allows modules to register scripts to enqueue
 	 * also, pass params to make available to JS, via wp_localize_script - they would be available at "q_data.MODULENAME__PARAM"
 	 */
-	public static function set( $args = null ){
+	function set( $args = null ){
 
 		// sanity ##
 		if(
@@ -101,10 +100,15 @@ class js {
 
 		}
 
-		// check if module in array, if not add ##
-		if( ! in_array( $args['module'], self::$q_modules['javascript'] ) ){
+		// h::log( $args );
 
-			self::$q_modules['javascript'][] = $args['module'];
+		$_q_modules = $this->q->get( '_q_modules' );
+		// h::log( $_q_modules );
+
+		// check if module in array, if not add ##
+		if( ! in_array( $args['module'], $_q_modules['javascript'] ) ){
+
+			$_q_modules['javascript'][] = $args['module'];
 
 		}
 
@@ -129,43 +133,47 @@ class js {
 			);
 			// h::log( $args['localize'] );
 
-			if ( ! isset( self::$q_modules['localize'] ) ){ self::$q_modules['localize'] = []; }
+			if ( ! isset( $_q_modules['localize'] ) ){ $_q_modules['localize'] = []; }
 
 			// $q_modules['']
 			foreach( $args['localize'] as $key => $value ){
 
 				// check if localize key already exists, else add it ##
-				if( ! array_key_exists( $key, self::$q_modules['localize'] ) ){
+				if( ! array_key_exists( $key, $_q_modules['localize'] ) ){
 
 					// note that localized keys are "namespaced" from the sending module ##
-					self::$q_modules['localize'][$key] = $value;
+					$_q_modules['localize'][$key] = $value;
 
 				}
 
 			}
 
-			self::$q_modules['localize'] = array_merge( self::$q_modules['localize'], $args['localize'] );
+			$_q_modules['localize'] = array_merge( $_q_modules['localize'], $args['localize'] );
 
 		}
 
 		// clean up empty items ##
-		self::$q_modules['localize'] = array_filter( self::$q_modules['localize'], 'strlen' );
+		$_q_modules['localize'] = array_filter( $_q_modules['localize'], 'strlen' );
+
+		// store ##
+		$this->q->set( '_q_modules', $_q_modules );
 
 		// test ##
-		// h::log( self::$q_modules );
+		// h::log( $_q_modules );
 
 		// update class property ##
-		// self::$q_modules['localize'];
+		// $_q_modules['localize'];
 
 		// store active modules list ##
-		// core\method::add_update_option( 'q_modules', self::$q_modules, '', 'yes' );
+		// core\method::add_update_option( 'q_modules', $_q_modules, '', 'yes' );
 
 	}
 
 
-	public static function get(){
+	function get(){
 
-		return self::$q_modules;
+		// return self::$q_modules;
+		return $this->q->get( '_q_modules' );
 
 	}
 
@@ -173,21 +181,25 @@ class js {
 	/**
 	 * Merge generated localize values into array passed to wp_enqueue_script
 	*/
-	public static function localize( $array ){
+	function localize( $array ){
+
+		$_q_modules = $this->get();
+		// h::log( $_q_modules['localize'] );
 
 		if ( 
-			! self::$q_modules['localize']
-			|| ! is_array( self::$q_modules['localize'] )
+			! isset( $_q_modules['localize'] )
+			|| ! is_array( $_q_modules['localize'] )
 		){
 
-			h::log( 'e:>No modules provided arguments to localize.' );
+			h::log( 'e:>q_modules localize is empty or not an array.' );
 
-			return $array; // return passed array ##
+			// return $array; // return passed array ##
+			$_q_modules['localize'] = [];
 
 		}
 
-		// h::log( self::$q_modules );
-		return array_merge( $array, self::$q_modules['localize'] );
+		// h::log( $_q_modules );
+		return array_merge( $array, $_q_modules['localize'] );
 
 	}
 

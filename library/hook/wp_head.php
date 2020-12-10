@@ -29,19 +29,19 @@ class wp_head {
         #add_action( 'wp_head', 'q_prefetch', 1 );
 
         // remove WP version from RSS
-        \add_filter( 'the_generator', array ( get_class(), 'rss_version' ) );
+        \add_filter( 'the_generator', array ( $this, 'rss_version' ) );
 
         // remove pesky injected css for recent comments widget
-        \add_filter( 'wp_head', array ( get_class(), 'remove_wp_widget_recent_comments_style' ), 1 );
+        \add_filter( 'wp_head', array ( $this, 'remove_wp_widget_recent_comments_style' ), 1 );
 
         // clean up comment styles in the head
-        \add_action( 'wp_head', array ( get_class(), 'remove_recent_comments_style' ), 0 );
+        \add_action( 'wp_head', array ( $this, 'remove_recent_comments_style' ), 0 );
 
         // simple SEO stuff #
-        \add_action( 'wp_head', array ( get_class(), 'simple_seo' ), 1 );
+        \add_action( 'wp_head', array ( $this, 'simple_seo' ), 1 );
 
         // simple SEO stuff #
-        // \add_action( 'wp_head', array ( get_class(), 'webmasters' ), 3 );
+        // \add_action( 'wp_head', array ( $this, 'webmasters' ), 3 );
 
         // remove category feeds
         \remove_action( 'wp_head', 'feed_links_extra', 3 );
@@ -71,56 +71,50 @@ class wp_head {
         \remove_action( 'wp_head', 'wp_generator' );
 
         // remove WP version from css
-        #add_filter( 'style_loader_src', array ( get_class(), 'remove_wp_ver_css_js' ), 9999 );
+        #add_filter( 'style_loader_src', array ( $this, 'remove_wp_ver_css_js' ), 9999 );
 
         // remove Wp version from scripts
-        #add_filter( 'script_loader_src', array ( get_class(), 'remove_wp_ver_css_js' ), 9999 );
+        #add_filter( 'script_loader_src', array ( $this, 'remove_wp_ver_css_js' ), 9999 );
 
         // add favicon ##
-        \add_action( 'wp_head', array ( get_class(), 'favicon' ), 9999999 ); // add to theme ##
-        \add_action( 'admin_head', array ( get_class(), 'favicon' ), 9999999 ); // add to backend ##
+        \add_action( 'wp_head', array ( $this, 'favicon' ), 9999999 ); // add to theme ##
+        \add_action( 'admin_head', array ( $this, 'favicon' ), 9999999 ); // add to backend ##
 
         // filter meta title ##
-		// \add_filter( 'wp_title', array ( get_class(), 'wp_title' ), 10, 2 );
-		\add_filter( 'pre_get_document_title', array ( get_class(), 'pre_get_document_title' ), 10, 11 );
+		// \add_filter( 'wp_title', array ( $this, 'wp_title' ), 10, 2 );
+		\add_filter( 'pre_get_document_title', array ( $this, 'pre_get_document_title' ), 10, 11 );
 
         // add body classes ##
-		\add_filter( 'body_class', array ( get_class(), 'body_class' ), 15, 1 );
+		\add_filter( 'body_class', array ( $this, 'body_class' ), 15, 1 );
 		
     }
-
 
     /**
      * remove WP version from RSS
      */
-    public static function rss_version() { return ''; }
-
-
+    function rss_version() { return ''; }
 
     /**
      * remove recent comments filter ##
      */
-    public static function remove_wp_widget_recent_comments_style() {
+    function remove_wp_widget_recent_comments_style() {
         if ( \has_filter('wp_head', 'wp_widget_recent_comments_style') ) {
             \remove_filter('wp_head', 'wp_widget_recent_comments_style' );
         }
     }
 
-
     /**
      * remove injected CSS from recent comments widget
      */
-    public static function remove_recent_comments_style() {
+    function remove_recent_comments_style() {
         global $wp_widget_factory;
         if ( isset( $wp_widget_factory->widgets['WP_Widget_Recent_Comments'] ) ) {
             \remove_action( 'wp_head', array( $wp_widget_factory->widgets['WP_Widget_Recent_Comments'], 'recent_comments_style' ) );
         }
     }
 
-
-
     /* helper function to get parent term name */
-    public static function parent_cat_names( $sep = '|' ) {
+    function parent_cat_names( $sep = '|' ) {
         if ( ! is_single() or array() === $categories = get_the_category() )
             return '';
 
@@ -141,13 +135,12 @@ class wp_head {
         return esc_html( join( $sep, wp_list_pluck( $parents, 'name' ) ) );
     }
 
-
     /*
-        * prefetch data ##
-        * @TODO check if serving from cloudflare ##
-        * @TODO get server CDN ##
-        */
-    public static function q_prefetch() {
+	* prefetch data ##
+	* @TODO check if serving from cloudflare ##
+	* @TODO get server CDN ##
+	*/
+    function q_prefetch() {
 
         $home = get_option('home');
         $home = str_replace( 'http://', '', $home );
@@ -157,7 +150,6 @@ class wp_head {
         echo '<link rel=dns-prefetch href="//dns.'.$home.'">';
 
     }
-
 
     /**
      * Simple SEO function - add meta desc &
@@ -171,7 +163,7 @@ class wp_head {
      * @subpackage Q
      * @since 0.1
      */
-    public static function simple_seo( $length = 155, $echo = true ){
+    function simple_seo( $length = 155, $echo = true ){
 
         $length = 155;
         global $post;
@@ -188,23 +180,23 @@ class wp_head {
 
         if( \is_category() || \is_archive() ) {
 
-            $meta_desc = ( \category_description() )? \category_description() : \single_cat_title( '', false ).' '.__("category archive.",self::text_domain) ;
+            $meta_desc = ( \category_description() )? \category_description() : \single_cat_title( '', false ).' '.__("category archive.",'q-textdomain') ;
 
         } elseif( \is_tag() ) {
 
-            $meta_desc = \single_tag_title( '', false).' '.__("tag archive.", self::text_domain);
+            $meta_desc = \single_tag_title( '', false).' '.__("tag archive.", 'q-textdomain');
 
         } elseif( \is_month() ) {
 
-            $meta_desc = \get_the_time('F, Y').' '.__("archive page.", self::text_domain);
+            $meta_desc = \get_the_time('F, Y').' '.__("archive page.", 'q-textdomain');
 
         } elseif ( \is_search() ) {
 
-            $meta_desc = \esc_html(stripslashes($_GET['s'])).' '.__("search results.", self::text_domain);
+            $meta_desc = \esc_html(stripslashes($_GET['s'])).' '.__("search results.", 'q-textdomain');
 
         } elseif ( \is_404() ) {
 
-            $meta_desc = __("404 - page not found.", self::text_domain);
+            $meta_desc = __("404 - page not found.", 'q-textdomain');
             $meta_robots = 'noindex,nofollow';
 
         } else { // normal page or post ##
@@ -279,11 +271,10 @@ class wp_head {
 
     }
 
-
     /**
      * add webmaster verification meta to head ##
      */
-    public static function webmasters() {
+    function webmasters() {
 
         #global $option; // load framework options ##
 
@@ -308,14 +299,12 @@ class wp_head {
         }
     }
 
-
     /**
      * remove WP version from scripts
      *
      * @deprecated
      */
-    public static function remove_wp_ver_css_js( $src )
-    {
+    function remove_wp_ver_css_js( $src ){
 
         if ( strpos( $src, 'ver=' ) ) {
 
@@ -327,13 +316,12 @@ class wp_head {
 
     }
 
-
     /**
      * favicon function ##
      * reference favicon.png in header if found in top directory of child or parent theme ##
      * include favicon.ico on IE if found ##
      */
-    public static function favicon(){
+    function favicon(){
 
         #if ( $file = h::get( 'favicon.png' ) ) { // load from parent ##
 
@@ -347,15 +335,13 @@ class wp_head {
            # }
     }
 
-
-
     /**
      * Google Analytics tracking code ##
 	 *
 	 * __deprecated
      */
 	/*
-    public static function google_analytics() {
+    function google_analytics() {
 
         #global $option; // load framework options ##
 
@@ -388,8 +374,6 @@ class wp_head {
     }
 	*/
 
-
-
     /**
      * Filters the page title appropriately depending on the current page
      * This function is attached to the 'pre_get_document_title' filter hook.
@@ -400,7 +384,7 @@ class wp_head {
      *
      * @since       0.1
      */
-    public static function pre_get_document_title() {
+    function pre_get_document_title() {
 
 		// define seperator ##
 		$sep = ' ~ ';
@@ -528,13 +512,10 @@ class wp_head {
 
     }
 
-
-
-
     /*
     * add extra classes to html body tag ##
     */
-    public static function body_class( $classes ) {
+    function body_class( $classes ) {
 
         // browser classes ##
         global $post; // get $post object ##

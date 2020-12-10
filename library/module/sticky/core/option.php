@@ -8,45 +8,27 @@ use q\core;
 // Q Theme
 use q\core\helper as h;
 
-// load it up ##
-\q\module\sticky\option::run();
-
 class option {
 
-    public static function run()
-    {
+    function hooks(){
 
 		// add extra options in module select API ##
-		\add_filter( 'acf/load_field/name=q_option_module', [ get_class(), 'filter_acf_module' ], 10, 1 );
+		\add_filter( 'acf/load_field/name=q_option_module', [ $this, 'filter_acf_module' ], 10, 1 );
         
     }
-
-
-
 
 	/**
      * Add new libraries to Q Settings via API
      * 
      * @since 2.3.0
      */
-    public static function filter_acf_module( $field )
-    {
-
-        // h::log( $field['choices'] );
-        // h::log( $field['default_value'] );
+    function filter_acf_module( $field ){
 
 		// pop on a new choice ##
 		$field['choices']['sticky'] = 'Admin ~ Sticky Posts';
 
-		// make it selected ##
-		// $field['default_value'][0] = 'consent';
-		
-        // h::log( $field['choices'] );
-        // h::log( $field['default_value'] );
-
-         return $field;
+		return $field;
 
 	}
-	
 
 }

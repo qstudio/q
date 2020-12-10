@@ -18,9 +18,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class library {
 
     /**
-     * Class constructor to define object props --> empty
+     * Class constructor
      * 
-     * @since   0.0.1
+     * @since   6.0.0
      * @return  void
     */
     function __construct() {
@@ -72,8 +72,8 @@ final class library {
 
 		// view <------- ##
 
-		// is methods ##
-		require_once $q::get_plugin_path( 'library/view/is.php' );
+		// methods ##
+		require_once $q::get_plugin_path( 'library/view/method.php' );
 
 		// filters ##
 		require_once $q::get_plugin_path( 'library/view/filter.php' );

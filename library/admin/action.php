@@ -191,7 +191,7 @@ class action {
                 array( 'id' => 'dts-switch-handheld', 'title' => __( 'Handheld', 'q-textdomain' ), 'url' => '?theme=handheld' )
             ,   array( 'id' => 'dts-switch-tablet', 'title' => __( 'Tablet', 'q-textdomain' ), 'url' => '?theme=tablet' )
             ,   array( 'id' => 'dts-switch-desktop', 'title' => __( 'Desktop', 'q-textdomain'), 'url' => '?theme=desktop' )
-            #,   array( 'id' => 'dts-switch-low-support', 'title' => __('Low Support', self::text_domain ), 'url' => '?theme=low_support' )
+            #,   array( 'id' => 'dts-switch-low-support', 'title' => __('Low Support', 'q-textdomain' ), 'url' => '?theme=low_support' )
         );
 
         // get the current URL ##

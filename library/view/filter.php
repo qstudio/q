@@ -6,35 +6,39 @@ use q\core;
 use q\core\helper as h;
 
 class filter {
+    
+	private 
 
-    // Array of custom templates to add ##
-    protected static $view_custom = [
-        /*
-        'test.php'      => [ 
-                                'name'      => 'Theme : TEST',
-                                'class      => '', // if empty, checks in Q 'theme/template' path, else indicates plugin class ##
-                                'template'  => 'test.php'
-                        ],
-        */
-    ];
+		// Array of custom templates to add ##
+		$view_custom = [
+			/*
+			'test.php'      => [ 
+				'name'      => 'Theme : TEST',
+				'class      => '', // if empty, checks in Q 'theme/template' path, else indicates plugin class ##
+				'template'  => 'test.php'
+							],
+			*/
+		],
 
-    // Array of Native templates to override ##
-    protected static $view_native = [
-        /*
-        'single-post'   => [
-                                'function'  => 'is_singular',
-                                'argument'  => 'post',
-                                'template'  => 'single-post.php',
-                                'class'     => '', // if empty, checks in Q 'theme/template' path, else indicates plugin class ##
-                        ],
-        */
-    ];
+		// Array of Native templates to override ##
+		$view_native = [
+			/*
+			'single-post'   => [
+				'function'  => 'is_singular',
+				'argument'  => 'post',
+				'template'  => 'single-post.php',
+				'class'     => '', // if empty, checks in Q 'theme/template' path, else indicates plugin class ##
+							],
+			*/
+						],
 
-    // default page template ##
-    protected static $view_default = 'index.php';
+		// default page template ##
+		$view_default = 'index.php'
 
-    // tracker ##
-	protected static $view_tracker = null;
+	;
+
+	// tracker ##
+	private static $view_tracker = null;
 	
 	function __construct(){}
 
@@ -51,14 +55,14 @@ class filter {
             // 4.6 and older
             \add_filter(
                 'page_attributes_dropdown_pages_args',
-                array( get_class(), 'register_view_custom' )
+                array( $this, 'register_view_custom' )
             );
 
         } else {
 
             // Add a filter to the wp 4.7 version attributes metabox
             \add_filter(
-                'theme_page_templates', array( get_class(), 'add_view_custom' )
+                'theme_page_templates', array( $this, 'add_view_custom' )
             );
 
         }
@@ -66,113 +70,28 @@ class filter {
         // Add a filter to the save post to inject our template into the page cache
         \add_filter(
             'wp_insert_post_data', 
-            array( get_class(), 'register_view_custom' ) 
+            array( $this, 'register_view_custom' ) 
         );
 
         // Add a filter to the template include to determine if the page has our 
         // template assigned and return it's path
         \add_filter(
             'template_include', 
-            array( get_class(), 'check_custom_template' ), 3, 1 
+            array( $this, 'check_custom_template' ), 3, 1 
         );
 
         // override native templates ##
         \add_filter( 
             'template_include', 
-            array( get_class(), 'add_view_native' ), 2, 1
+            array( $this, 'add_view_native' ), 2, 1
         );
-
-    }
-
-    /**
-     * Get Q template name, if set - else return WP template name
-     * 
-     * 
-     */
-    public static function get(): string {
-
-        if( ! isset( $GLOBALS['q_template'] ) ) {
-
-            // h::log( 'Q Page template empty' );
-            
-			// changes to return WP template -- check for introduced issues ##
-			return str_replace( '.php', '', \get_page_template_slug() );
-
-        } else {
-
-            // h::log( 'Page template: '.$GLOBALS['q_template'] );
-
-            return str_replace( [ '.willow', '.php' ], '', $GLOBALS['q_template'] );        
-
-        }
-
-	}
-
-	/**
-	 * Check is the current view matches the controller
-	 * 
-	 * @since 4.0.0
-	*/
-	public static function showing( $file = null ): bool {
-
-		// h::log( 'd:>temp: '.view\is::get() );
-		// h::log( 'd:>file: '.$file  );
-
-		return self::get() == trim( $file ) ;
-
-	}
-
-    /**
-     * Tracking Method
-     */
-    public static function track( $option = 'status', $template = null ){
-
-        switch ( $option ) {
-
-            case "status" :
-
-                // h::log( 'Checking Tracker: '.( ! is_null( self::$view_tracker ) ? self::$view_tracker : 'null' ) );
-
-                // check on tracker status ##
-                return ( true === self::$view_tracker ) ? true : false ;
-
-            break ;
-
-            case "reset" :
-
-                // h::log( 'Reset Tracker' );
-
-                // empty stored template ##
-                return self::$view_tracker = null ;
-
-            break ;
-
-            case "set" :
-
-                // h::log( 'Set Tracker: '.$template );
-
-                // set stored template ##
-                return self::$view_tracker = $template;
-
-            break ;
-
-            case "get" :
-
-                // h::log( 'Get Tracker: '.self::$view_tracker );
-
-                // returned stored template ##
-                return self::$view_tracker;
-
-            break ;
-
-        }
 
     }
 
     /**
      * Add custom templates defined in external plugins
      */
-    public static function custom( $array, $templates = null, $class = null ){
+    function custom( $array, $templates = null, $class = null ){
 
         // let's check if we have any items to add, and format them as required ##
         if ( 
@@ -223,7 +142,7 @@ class filter {
     /**
      * Add native templates defined in external plugins
      */
-    public static function native( $array, $templates = null, $class = null ){
+    function native( $array, $templates = null, $class = null ){
 
         // let's check if we have any items to add, and format them as required ##
         if ( 
@@ -238,7 +157,7 @@ class filter {
 
         }
 
-        // h::log( 'we have '.count( self::$view_native ).' native templates to add' );
+        // h::log( 'we have '.count( $this->view_native ).' native templates to add' );
             
         // define a new array ##
         $new_array = $templates;
@@ -272,12 +191,12 @@ class filter {
      * 
      * 
      */
-    public static function get_view_default( $template ){
+    function get_view_default( $template ){
         
         // look for default template - in q_theme
         $template =  
-            h::get( 'view/'.self::$view_default, 'return', 'path' ) ? 
-            self::$view_default = h::get( 'view/'.self::$view_default, 'return', 'path' ) : 
+            h::get( 'view/'.$this->view_default, 'return', 'path' ) ? 
+            $this->view_default = h::get( 'view/'.$this->view_default, 'return', 'path' ) : 
             $template ;
 
         // filter ##
@@ -288,7 +207,7 @@ class filter {
 
     }
 
-    public static function format_view_custom( Array $array = null ){
+    function format_view_custom( Array $array = null ){
 
         // sanity ##
         if ( 
@@ -325,16 +244,16 @@ class filter {
      * @since       0.1.0
      * @return      Array
 	 */
-	public static function add_view_custom( $templates ){
+	function add_view_custom( $templates ){
 
         // filter in external custom templates ##
         // We also need to format the templates to what WP expects [ 'file.php' => 'Name', ]; ##
-        self::$view_custom = 
-            self::format_view_custom( \apply_filters( 'q/view/custom', self::$view_custom )
+        $this->view_custom = 
+            $this->format_view_custom( \apply_filters( 'q/view/custom', $this->view_custom )
         );
         
         // merge into known list ##
-    	$templates = array_merge( $templates, self::$view_custom );
+    	$templates = array_merge( $templates, $this->view_custom );
         
         // return ##
         return $templates;
@@ -347,7 +266,7 @@ class filter {
     * @since        0.1.0
     * @return       Array
     */
-    public static function register_view_custom( $atts ) {
+    function register_view_custom( $atts ) {
 
         // Create the key used for the themes cache
         $cache_key = 'page_templates-' . md5( \get_theme_root() . '/' . \get_stylesheet() );
@@ -364,13 +283,13 @@ class filter {
 
         // filter in external custom templates ##
         // We also need to format the templates to what WP expects [ 'file.php' => 'Name', ]; ##
-        self::$view_custom = 
-            self::format_view_custom( \apply_filters( 'q/view/custom', self::$view_custom )
+        $this->view_custom = 
+            $this->format_view_custom( \apply_filters( 'q/view/custom', $this->view_custom )
         );
 
         // Now add our template to the list of templates by merging our templates
         // with the existing templates array from the cache.
-        $templates = array_merge( $templates, self::$view_custom );
+        $templates = array_merge( $templates, $this->view_custom );
 
         // Add the modified cache to allow WordPress to pick it up for listing
         // available templates
@@ -387,10 +306,10 @@ class filter {
     * @since        0.1.0
     * @return       String
     */
-    public static function check_custom_template( $template ) {
+    function check_custom_template( $template ) {
         
         // force default template --- @TESTING ##
-        // $template = self::get_view_default( $template );
+        // $template = $this->get_view_default( $template );
 
         // check tracker ##
         if ( self::track() ) {
@@ -434,10 +353,10 @@ class filter {
 
         // filter in external custom templates ##
         // remember that the format has changed ##
-        self::$view_custom = \apply_filters( 'q/view/custom', self::$view_custom );
+        $this->view_custom = \apply_filters( 'q/view/custom', $this->view_custom );
 
         // Return default template if we don't have a custom one defined
-        if ( ! isset( self::$view_custom[ $_wp_page_template ] ) ) {
+        if ( ! isset( $this->view_custom[ $_wp_page_template ] ) ) {
 
             // h::log( 'kicking back template: '.$template );
 
@@ -448,10 +367,10 @@ class filter {
         // we need to include the 'class' parameter, if the templates has this defined by an extended plugin ##
         $class = 
             (
-                isset( self::$view_custom[ $_wp_page_template ]['class'] )
-                && ! is_null( self::$view_custom[ $_wp_page_template ]['class'] )
+                isset( $this->view_custom[ $_wp_page_template ]['class'] )
+                && ! is_null( $this->view_custom[ $_wp_page_template ]['class'] )
             ) ?
-            self::$view_custom[ $_wp_page_template ]['class'] :
+            $this->view_custom[ $_wp_page_template ]['class'] :
             null ;
 
         // look for file - fallback to default if not found ##
@@ -498,29 +417,29 @@ class filter {
     * @param	string	$template	Template file that is being loaded.
     * @return	string				Template file that should be loaded.
     */
-    public static function add_view_native( $template ) {
+    function add_view_native( $template ) {
 
         // h::log( 'Native: '.$template );
 
         // check tracker ##
         if ( self::track() ) {
 
-            h::log( 'Template already defined: '.self::track('get') );
+            h::log( 'Template already defined: '.self::track( 'get' ) );
 
-            return self::track('get');
+            return self::track( 'get' );
 
         }
         
         // force default template ##
-        $template = self::get_view_default( $template );
+        $template = $this->get_view_default( $template );
 
         // filter in external native templates ##
         // remember that the format has changed ##
-        self::$view_native = \apply_filters( 'q/view/native', self::$view_native );
+        $this->view_native = \apply_filters( 'q/view/native', $this->view_native );
 
         if ( 
-            // ! is_array( self::$view_native )
-            ! array_filter( self::$view_native ) 
+            // ! is_array( $this->view_native )
+            ! array_filter( $this->view_native ) 
         ) {
 
             // h::log( 'not filtering any native templates.' );
@@ -529,7 +448,7 @@ class filter {
 
         }
 
-        foreach( self::$view_native as $key => $item ) {
+        foreach( $this->view_native as $key => $item ) {
 
             // we need to include the 'class' parameter, if the templates has this defined by an extended plugin ##
             $class = 
@@ -595,6 +514,53 @@ class filter {
 
         // nothing cooking -- kick back orginal ##
         return $template;
+
+	}
+	
+	/**
+     * Tracking Method
+     */
+    public static function track( $option = 'status', $template = null ){
+
+        switch ( $option ) {
+
+            case "status" :
+
+                // h::log( 'Checking Tracker: '.( ! is_null( self::$view_tracker ) ? self::$view_tracker : 'null' ) );
+
+                // check on tracker status ##
+                return ( true === self::$view_tracker ) ? true : false ;
+
+            break ;
+
+            case "reset" :
+
+                // h::log( 'Reset Tracker' );
+
+                // empty stored template ##
+                return self::$view_tracker = null ;
+
+            break ;
+
+            case "set" :
+
+                // h::log( 'Set Tracker: '.$template );
+
+                // set stored template ##
+                return self::$view_tracker = $template;
+
+            break ;
+
+            case "get" :
+
+                // h::log( 'Get Tracker: '.self::$view_tracker );
+
+                // returned stored template ##
+                return self::$view_tracker;
+
+            break ;
+
+        }
 
     }
 

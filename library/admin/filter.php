@@ -15,10 +15,10 @@ class filter {
         if ( \is_admin() ) {
 
             // filter admin preview link ##
-            \add_filter( 'preview_post_link', [ get_class(), 'preview_post_link' ], 10, 2 );
+            \add_filter( 'preview_post_link', [ $this, 'preview_post_link' ], 10, 2 );
 
             // Add Filter Hook
-            \add_filter( 'post_mime_types', array( get_class(), 'post_mime_types' ) );
+            \add_filter( 'post_mime_types', array( $this, 'post_mime_types' ) );
 
         }
 
@@ -29,7 +29,7 @@ class filter {
      * 
      * @since       0.1.0
      */
-    public static function preview_post_link( $preview_link, $post ){
+    function preview_post_link( $preview_link, $post ){
 
         if ( 
             \get_post_status ( $post->ID ) != 'draft' 
@@ -54,7 +54,7 @@ class filter {
      * @since       1.4.2
      * @return      Array
      */
-    public static function post_mime_types( $post_mime_types ){
+    function post_mime_types( $post_mime_types ){
 
         // select the mime type, here: 'application/pdf'
         // then we define an array with the label values

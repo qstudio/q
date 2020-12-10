@@ -6,20 +6,18 @@ use q\core\helper as h;
 use q\module;
 
 // load it up ##
-\q\module\sticky\ajax::run();
+// \q\module\sticky\ajax::run();
 
 class ajax extends module\sticky {
 
-    public static function run()
-    {
+    function hooks(){
 
         // ajax callback ##
-        \add_action( 'wp_ajax_q_sticky', array( get_class(), 'callback' ) );
+        \add_action( 'wp_ajax_q_sticky', array( $this, 'callback' ) );
 
     }
 
-    public static function callback()
-    {
+    function callback(){
 
         // failed nonce validation ##
         if ( ! \wp_verify_nonce( $_POST['code'], 'q-sticky-nonce' ) || ! isset( $_POST['id'] ) ) {

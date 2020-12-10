@@ -13,7 +13,7 @@ use \Datetime;
 class option {
 
     // store db query ##
-	public static $query = false;
+	// public static $query = false;
 	
 	function __construct(){}
 
@@ -32,29 +32,27 @@ class option {
         \add_action( 'acf/init', function() { \q\plugins\acf::add_field_groups( self::add_field_groups() ); }, 1 );
 
         // example how to inject extra options in libraries select API ##
-        // \add_filter( 'acf/load_field/name=q_option_library', [ get_class(), 'filter_acf_library' ], 10, 1 );
+        // \add_filter( 'acf/load_field/name=q_option_library', [ $this, 'filter_acf_library' ], 10, 1 );
 
         // add link to view library from
-		\add_filter( 'acf/load_field/name=q_option_library', [ get_class(), 'filter_acf_library' ], 100, 1 );
+		\add_filter( 'acf/load_field/name=q_option_library', [ $this, 'filter_acf_library' ], 100, 1 );
 
 		// add direct link to Q settings to admin bar ##
-		\add_action( 'admin_bar_menu', [ get_class(), 'admin_bar_menu' ], 999, 1 );
+		\add_action( 'admin_bar_menu', [ $this, 'admin_bar_menu' ], 999, 1 );
 		
 		// run action on acf options save ##
-		\add_action( 'acf/save_post', [ get_class(), '_save_modules' ], 20 );
+		\add_action( 'acf/save_post', [ $this, '_save_modules' ], 20 );
 
 		// Apply to all fields.
-		// \add_action( 'acf/render_field/key=group_q_option_module', [ get_class(), '_filter_modules' ], 10, 1 );
+		// \add_action( 'acf/render_field/key=group_q_option_module', [ $this, '_filter_modules' ], 10, 1 );
 
 	}
-
-
 
 	/**
 	 * Add Q Settings to main WP admin bar menu
 	 * 
 	*/
-	public static function admin_bar_menu($admin_bar) {       
+	function admin_bar_menu( $admin_bar ) {       
 
 		$args = array(
 			'parent' => 'site-name',
@@ -67,14 +65,12 @@ class option {
 
 	}
 
-
-
     /**
      * API run when Q settings options are saved
      * 
      * @since 2.3.0
      */
-    public static function _save_modules( $post_id ){
+    function _save_modules( $post_id ){
 
 		// admin only ##
 		if( 
@@ -351,31 +347,24 @@ class option {
 
     }
 
-
-
     /**
      * API to add fields to Q settings
      * 
      * @since 2.3.0
      */
-    public static function api( Array $args = null )
-    {
+    function api( Array $args = null ){
 
         // @todo ... but should be a wrapper to: 
-        // \add_filter( 'acf/load_field/name=q_option_library', [ get_class(), 'filter_acf_library' ], 1000000, 1 );
+        // \add_filter( 'acf/load_field/name=q_option_library', [ $this, 'filter_acf_library' ], 1000000, 1 );
 
     }
 
-
-
-    
     /**
      * Add view to link assets from backend
      * 
      * @since 2.3.0
      */
-    public static function filter_acf_library( $field )
-    {
+    function filter_acf_library( $field ){
 
 		// h::log( 'd:>here..' );
 		// h::log( $field['choices'] );
@@ -490,9 +479,6 @@ class option {
 
     }
 
-
-
-
     public static function acf_add_options_page(){
 
         if ( ! function_exists( 'acf_add_options_page' ) ) {
@@ -505,18 +491,16 @@ class option {
 
         // h::log( 'Adding ACF settings page...' );
 
-        \acf_add_options_page( array(
+        \acf_add_options_page([
             'page_title' 	=> 'Q ~ Settings',
             'menu_title'	=> 'Q',
             'menu_slug' 	=> 'q',
             'capability'	=> 'manage_options',
             'parent'        => 'options-general.php',
             'redirect'		=> false
-        ));
+        ]);
 
     }
-
-
 
     /**
     * Define field groups
@@ -524,8 +508,7 @@ class option {
     * @since    2.0.0
     * @return   Mixed
     */
-    public static function add_field_groups()
-    {
+    public static function add_field_groups(){
 
         // define field groups - exported from ACF ##
         $groups = array (
@@ -1019,7 +1002,5 @@ class option {
 		return $groups;
 
     }
-
-
 
 }

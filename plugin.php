@@ -43,12 +43,12 @@ final class plugin {
 
 	;
 
-	// private 
+	private 
 
-		// instantiated objects ##
-		// $factory
+		// q_module data - sass, js etc ##
+		$_q_modules = false
 	
-	// ;
+	;
 
     /**
      * Initiator

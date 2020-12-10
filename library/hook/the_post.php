@@ -22,38 +22,38 @@ class the_post {
         if ( ! \is_admin() ) {
 
             // clean up gallery output in wp ##
-            \add_filter( 'gallery_style', array ( get_class(), 'gallery_style' ) );
+            \add_filter( 'gallery_style', array ( $this, 'gallery_style' ) );
 
             // cleaning up random code around images
-            \add_filter( 'the_content', array ( get_class(), 'the_content_images' ));
+            \add_filter( 'the_content', array ( $this, 'the_content_images' ));
 
             // cleaning up excerpt
-            \add_filter( 'excerpt_more', array ( get_class(), 'excerpt_more' ));
+            \add_filter( 'excerpt_more', array ( $this, 'excerpt_more' ));
 
             // custom excerpt more length ##
-            #add_filter( 'get_the_excerpt', array ( get_class(), 'get_the_excerpt', 20 );
+            #add_filter( 'get_the_excerpt', array ( $this, 'get_the_excerpt', 20 );
 
             // custom excerpt more length ##
-            \add_filter( 'excerpt_length', array ( get_class(), 'excerpt_length' ), 999 );
+            \add_filter( 'excerpt_length', array ( $this, 'excerpt_length' ), 999 );
 
             // filter archives_link to highlight current date ##
-            \add_filter( 'get_archives_link', array ( get_class(), 'get_archives_link' ) );
+            \add_filter( 'get_archives_link', array ( $this, 'get_archives_link' ) );
 
             // filter content links to open with target="_blank"
-            \add_filter( 'the_content', array ( get_class(), 'the_content_target' ) );
+            \add_filter( 'the_content', array ( $this, 'the_content_target' ) );
 
             // exclude featured image from gallery ##
-            #add_filter('post_gallery', array ( get_class(), 'exclude_thumbnail_from_gallery' ), 10, 2);
+            #add_filter('post_gallery', array ( $this, 'exclude_thumbnail_from_gallery' ), 10, 2);
 
             // add featured image if content has no inline images ##
-            #add_filter( 'the_content', array ( get_class(), 'q_has_inline_image', 1 );
+            #add_filter( 'the_content', array ( $this, 'q_has_inline_image', 1 );
 
             // gforms anchor - if not using AJAX validation ##
             // add_filter( "gform_confirmation_anchor", '__return_false' );
 
             // Filter WP's the_time() function ##
-            \add_filter( 'the_time', array( get_class(), 'the_time' ) );
-            \add_filter( 'get_the_time', array( get_class(), 'the_time' ) );
+            \add_filter( 'the_time', array( $this, 'the_time' ) );
+            \add_filter( 'get_the_time', array( $this, 'the_time' ) );
 
         }
 
@@ -65,7 +65,7 @@ class the_post {
      * scripts not to be minifed - by handle ##
      * http://betterwp.net/wordpress-plugins/bwp-minify/#advanced_customization
      */
-    public static function parent_minify_script_ignore($excluded) {
+    function parent_minify_script_ignore($excluded) {
 
         $excluded = array( 'wpsocialite', 'socialite-lib', 'jquery-easing' );
         return $excluded;
@@ -76,7 +76,7 @@ class the_post {
     /**
      * remove injected CSS from gallery
      */
-    public static function gallery_style($css) {
+    function gallery_style($css) {
         return preg_replace("!<style type='text/css'>(.*?)</style>!s", '', $css);
     }
 
@@ -88,7 +88,7 @@ class the_post {
     /*
 	* remove the p from around imgs (http://css-tricks.com/snippets/wordpress/remove-paragraph-tags-from-around-images/)
 	*/
-    public static function the_content_images($content){
+    function the_content_images($content){
         return preg_replace('/<p>\s*(<a .*>)?\s*(<img .* \/>)\s*(<\/a>)?\s*<\/p>/iU', '\1\2\3', $content);
     }
 
@@ -96,7 +96,7 @@ class the_post {
     /**
      * removes the annoying […] from the Read More link
      */
-    public static function excerpt_more( $more ) {
+    function excerpt_more( $more ) {
         global $post;
         return rtrim( $more, '[&hellip;]' );
     }
@@ -105,7 +105,7 @@ class the_post {
     /**
      * remove link from the excerpt ##
      */
-    public static function get_the_excerpt( $output ) {
+    function get_the_excerpt( $output ) {
         return preg_replace('/<a[^>]+>Continue reading.*?<\/a>/i','',$output);
     }
 
@@ -113,7 +113,7 @@ class the_post {
     /**
      * custom excerpt length ##
      */
-    public static function excerpt_length( $length ) {
+    function excerpt_length( $length ) {
         return 27;
     }
 
@@ -121,7 +121,7 @@ class the_post {
     /* *
 	* highlight active post achive date
 	*/
-    public static function get_archives_link ( $link_html ) {
+    function get_archives_link ( $link_html ) {
         global $wp;
         static $current_url;
         if ( empty( $current_url ) ) {
@@ -137,13 +137,13 @@ class the_post {
     /**
      * open external links in new window ##
      */
-    public static function the_content_target($content) {
-        return preg_replace_callback('/<a[^>]+/', array ( get_class(), 'the_content_target_callback' ), $content);
+    function the_content_target($content) {
+        return preg_replace_callback('/<a[^>]+/', array ( $this, 'the_content_target_callback' ), $content);
     }
 
 
     // link callback function ##
-    public static function the_content_target_callback($matches) {
+    function the_content_target_callback($matches) {
         $link = $matches[0];
         $site_link = get_bloginfo('url'); // TODO UPDATE ##
 
@@ -161,7 +161,7 @@ class the_post {
      * exclude featured image from gallery ##
      * http://stackoverflow.com/questions/4337999/wordpress-exclude-the-post-thumbnail-from-gallery-shortcode
      */
-    public static function exclude_thumbnail_from_gallery($null, $attr) {
+    function exclude_thumbnail_from_gallery($null, $attr) {
         if ( !$thumbnail_ID = \get_post_thumbnail_id() ) {
             return $null; // no point carrying on if no thumbnail ID
         }
@@ -193,7 +193,7 @@ class the_post {
     * @link     http://www.jasonbobich.com/wordpress/a-better-way-to-add-time-ago-to-your-wordpress-theme/
     * @since    1.5.1
     */
-    public static function the_time()
+    function the_time()
     {
 
         global $post;
@@ -268,7 +268,7 @@ class the_post {
     * @since       1.1.0
     * @example     call using -- add_filter( 'the_content', 'remove_gallery_shortcode', 1 );
     */
-    public static function remove_gallery_shortcode( $content )
+    function remove_gallery_shortcode( $content )
     {
 
         $expr = '/\[gallery(.*?)\]/i';

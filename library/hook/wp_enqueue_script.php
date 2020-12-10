@@ -23,10 +23,10 @@ class wp_enqueue_script {
         if ( ! \is_admin() ) { 
 
 			// update jQuery - risky ##
-			// add_action( 'wp_enqueue_scripts', [ get_class(), 'update_jquery' ], 0 );
+			// add_action( 'wp_enqueue_scripts', [ $this, 'update_jquery' ], 0 );
 
 			// defer / async asset loading ##
-            \add_filter( 'script_loader_tag', [ get_class(), 'script_loader_tag' ], 1, 3 );
+            \add_filter( 'script_loader_tag', [ $this, 'script_loader_tag' ], 1, 3 );
 
         }
 
@@ -34,7 +34,7 @@ class wp_enqueue_script {
 	
 	// Front-end not excuted in the wp admin and the wp customizer (for compatibility reasons)
 	// See: https://core.trac.wordpress.org/ticket/45130 and https://core.trac.wordpress.org/ticket/37110
-	public static function update_jquery() {
+	function update_jquery() {
 
 		// jQuery
 		if ( \is_admin() || \is_customize_preview() ) {
@@ -74,7 +74,7 @@ class wp_enqueue_script {
 	* @return String  $tag     The modified <script async|defer src="...> tag
 	*/
 	// only on the front-end
-	public static function script_loader_tag( $tag, $handle, $src ) {
+	function script_loader_tag( $tag, $handle, $src ) {
 
 		// route two - exclude files based on handle match ##
 		$avoid = [

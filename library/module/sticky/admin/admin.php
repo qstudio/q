@@ -5,28 +5,24 @@ namespace q\module\sticky;
 use q\core\helper as h;
 use q\module;
 
-// load it up ##
-\q\module\sticky\admin::run();
-
 class admin extends module\sticky {
 
-    public static function run()
-    {
+    function hooks(){
 
-        \add_action( 'plugins_loaded', array( get_class(), 'user_roles' ), 10 );
+        \add_action( 'plugins_loaded', array( $this, 'user_roles' ), 10 );
 
-        #\add_action( 'post_submitbox_misc_actions', array( get_class(), 'post_submitbox' ) );
+        #\add_action( 'post_submitbox_misc_actions', array( $this, 'post_submitbox' ) );
 
         // hook to action to ensure functions are loaded ##
-        \add_action( 'current_screen', array( get_class(), 'init' ) );
+        \add_action( 'current_screen', array( $this, 'init' ) );
 
         // hook into save_post action and ensure stickyness is maintained ##
-        \add_action( 'save_post', array( get_class(), 'save_post' ), 1, 10 );
+        \add_action( 'save_post', array( $this, 'save_post' ), 1, 10 );
 
     }
 
 
-    public static function save_post( $post_id ){
+    function save_post( $post_id ){
 
         if ( ! $post_types = method::get_defined_post_types() ) {
             
@@ -88,9 +84,7 @@ class admin extends module\sticky {
 
     }
 
-
-    public static function user_roles()
-    {
+    function user_roles(){
 
         // get the "administrator" role object ##
         $role = \get_role( 'administrator' );
@@ -100,9 +94,7 @@ class admin extends module\sticky {
 
     } 
 
-
-    public static function init()
-    {
+    function init(){
         
         if ( 
             ! \current_user_can('edit_others_posts') 
@@ -129,7 +121,7 @@ class admin extends module\sticky {
         // helper::log( $post_types );
 
         // get current post type ##
-        $get_current_post_type = self::get_current_post_type() ? self::get_current_post_type() : false ;
+        $get_current_post_type = method::get_current_post_type() ? method::get_current_post_type() : false ;
 
         #$screen = get_current_screen();
         #helper::log( $get_current_post_type );
@@ -144,8 +136,8 @@ class admin extends module\sticky {
 
                     #helper::log( $get_current_post_type .' == '. $post_type );
 
-                    \add_filter( "manage_edit-{$post_type}_columns", array( get_class(), 'edit_columns' ) );
-                    \add_action( "manage_{$post_type}_posts_custom_column", array( get_class(), 'column_content' ) );
+                    \add_filter( "manage_edit-{$post_type}_columns", array( $this, 'edit_columns' ) );
+                    \add_action( "manage_{$post_type}_posts_custom_column", array( $this, 'column_content' ) );
 
                 }
 
@@ -153,51 +145,7 @@ class admin extends module\sticky {
 
         }
 
-        #}
-
     }
-
-
-
-    /**
-    * gets the current post type in the WordPress Admin
-    *
-    * @since    2.0.0
-    * @return   Mixed
-    */
-    public static function get_current_post_type() 
-    {
-        
-        global $post, $typenow, $current_screen;
-
-        //we have a post so we can just get the post type from that
-        if ( $post && $post->post_type ) {
-            
-            return $post->post_type;
-
-        //check the global $typenow - set in admin.php
-        } elseif( $typenow ) {
-            
-            return $typenow;
-
-        //check the global $current_screen object - set in sceen.php
-        } elseif( $current_screen && $current_screen->post_type ) {
-
-            return $current_screen->post_type;
-
-        //lastly check the post_type querystring
-        } elseif( isset( $_REQUEST['post_type'] ) ) {
-
-            return \sanitize_key( $_REQUEST['post_type'] );
-
-        }
-
-        //we do not know the post type!
-        return null;
-
-    }
-
-
 
     /**
     * Edit listed columns
@@ -205,8 +153,7 @@ class admin extends module\sticky {
     * @since    2.0.0
     * @return   Array
     */
-    public static function edit_columns ( $columns )
-    {
+    function edit_columns ( $columns ){
 
         $offset = 1;
         $new_array = array_slice( $columns, 0, $offset, true ) +
@@ -218,23 +165,19 @@ class admin extends module\sticky {
 
     }
 
-
-
-
     /**
     * Edit column content
     *
     * @since    2.0.0
     * @return   Array
     */
-    public static function column_content( $name )
-    {
+    function column_content( $name ){
 
         global $post;
 
         if( $name == 'sticky' ) {
 
-            echo self::link( $post->ID );
+            echo $this->link( $post->ID );
 
         }
     }
@@ -246,8 +189,7 @@ class admin extends module\sticky {
     * @since    2.0.0
     * @return   Array
     */
-    public static function link( $post_id = '' )
-    {
+    function link( $post_id = '' ){
      
         global $post;
         
@@ -272,9 +214,7 @@ class admin extends module\sticky {
 
     }
 
-
-    function post_submitbox()
-    {
+    function post_submitbox(){
     
         global $post;
     

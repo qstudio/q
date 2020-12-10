@@ -5,7 +5,7 @@ namespace q\view;
 use q\core;
 use q\core\helper as h;
 
-class is {
+class method {
 
     /**
      * Get Q template name, if set - else return WP global
@@ -32,8 +32,6 @@ class is {
         }
 
 	}
-
-
 
 	/**
      * Get Q template format - normally .php or .willow
@@ -67,8 +65,6 @@ class is {
 
 	}
 
-	
-
 	/**
 	 * Check is the current view matches the controller
 	 * 
@@ -76,13 +72,11 @@ class is {
 	*/
 	public static function showing( $file = null ): bool {
 
-		// h::log( 'd:>temp: '.view\is::get() );
+		// h::log( 'd:>temp: '.view\method::get() );
 		// h::log( 'd:>file: '.$file  );
 
 		return self::get() == trim( $file ) ;
 
 	}
-
-
 
 }

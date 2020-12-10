@@ -22,7 +22,7 @@ class wp_enqueue_style {
 		// not in the admin ##
         if ( ! \is_admin() ) { 
 
-            \add_filter( 'style_loader_tag', [ get_class(), 'style_loader_tag' ], 0, 4 );
+            \add_filter( 'style_loader_tag', [ $this, 'style_loader_tag' ], 0, 4 );
 
         }
 
@@ -37,7 +37,7 @@ class wp_enqueue_style {
 	* @return String  $tag     The modified <link rel="...> tag
 	*/
 	// only on the front-end
-	public static function style_loader_tag( $html, $handle, $href, $media ) {
+	function style_loader_tag( $html, $handle, $href, $media ) {
 
 		// h::log( $html );
 		// h::log( $tag );

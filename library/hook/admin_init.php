@@ -20,17 +20,16 @@ class admin_init {
 	
 	function hooks() {
 
-        \add_action( 'admin_head', array ( get_class(), 'favicon' ), 9999999 ); // add to backend ##
+        \add_action( 'admin_head', array ( $this, 'favicon' ), 9999999 ); // add to backend ##
 
     }
-
 
     /**
      * favicon function ##
      * reference favicon.png in header if found in top directory of child or parent theme ##
      * include favicon.ico on IE if found ##
      */
-    public static function favicon(){
+    function favicon(){
 
         // h::log( 'Adding favicon...' );
 

@@ -5,21 +5,9 @@ namespace q\module\sticky;
 use q\core\helper as h;
 use q\module;
 
-// load it up ##
-// \q\module\sticky\admin::run();
-
 class method extends module\sticky {
 
-    public static function run()
-    {
-
-        #\add_action( 'init', array( get_class(), 'init' ) );
-
-    }
-
-
-    public static function get_defined_post_types()
-    {
+    public static function get_defined_post_types(){
 
         // get defined post_types via filter ##
         $post_types = \apply_filters( "q/sticky/post_types", self::$post_types ); // unserialize ( Q_STICKY_POST_TYPE );
@@ -51,13 +39,46 @@ class method extends module\sticky {
         // kick it back ##
         return $post_types;
 
+	}
+	
+	/**
+    * gets the current post type in the WordPress Admin
+    *
+    * @since    2.0.0
+    * @return   Mixed
+    */
+    public static function get_current_post_type(){
+        
+        global $post, $typenow, $current_screen;
+
+        //we have a post so we can just get the post type from that
+        if ( $post && $post->post_type ) {
+            
+            return $post->post_type;
+
+        //check the global $typenow - set in admin.php
+        } elseif( $typenow ) {
+            
+            return $typenow;
+
+        //check the global $current_screen object - set in sceen.php
+        } elseif( $current_screen && $current_screen->post_type ) {
+
+            return $current_screen->post_type;
+
+        //lastly check the post_type querystring
+        } elseif( isset( $_REQUEST['post_type'] ) ) {
+
+            return \sanitize_key( $_REQUEST['post_type'] );
+
+        }
+
+        //we do not know the post type!
+        return null;
+
     }
 
-
-
-
-    public static function get_sticky_posts()
-    {
+    public static function get_sticky_posts(){
 
         // start empty ##
         $sticky_posts = false;

@@ -8,32 +8,37 @@ use q\core\helper as h;
 
 class enqueue {
 
-    public static $plugin_version;
-	public static $option;
+	private $option;
+	private $q;
 	
-	function __construct(){}
+	function __construct(){
+
+		// grab the options ##
+		$this->option = core\option::get();
+		
+		// we need the current $q instance ##
+		$this->q = \q\plugin::get_instance();
+
+	}
 
     function hooks(){
 
-        // load templates ##
-		self::load_properties();
-		
         if ( ! \is_admin() ) {
 
 			// plugins and enhanecments ##
-			\add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_general' ), 2 );
+			\add_action( 'wp_enqueue_scripts', array ( $this, 'wp_enqueue_scripts_general' ), 2 );
 			
 			// local external scripts ##
-			\add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_external' ), 3 );
+			\add_action( 'wp_enqueue_scripts', array ( $this, 'wp_enqueue_scripts_external' ), 3 );
 
             // local optional scripts ##
-			\add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_local' ), 4 );
+			\add_action( 'wp_enqueue_scripts', array ( $this, 'wp_enqueue_scripts_local' ), 4 );
 			
 			// plugin css / js -- includes defaults and resets and snippets from controllers ##
-            \add_action( 'wp_enqueue_scripts', array( get_class(), 'wp_enqueue_scripts_module' ), 999 );
+            \add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts_module' ), 999 );
 
             // css / js from theme ##
-			\add_action( 'wp_enqueue_scripts', array ( get_class(), 'wp_enqueue_scripts_theme' ), 1000 );
+			\add_action( 'wp_enqueue_scripts', array ( $this, 'wp_enqueue_scripts_theme' ), 1000 );
 
         }
 
@@ -63,33 +68,15 @@ class enqueue {
 
     }
 
-    /**
-    * Load Properties
-    *
-    * @since        2.0.0
-    */
-    private static function load_properties(){
-
-        // assign values ##
-        // self::$plugin_version = q::$_version ;
-
-        // grab the options ##
-        self::$option = core\option::get();
-        // h::log( self::$option );
-
-    }
-
-    
-    
     /*
     * script enqueuer 
     *
     * @since  2.0
     */
-    public static function wp_enqueue_scripts_external() {
+    function wp_enqueue_scripts_external() {
 
         // dump - shuold be an interger repesenting how many external libraries are added ##
-        // h::log( self::$option->external );
+        // h::log( $this->option->external );
         // h::log( \get_field( 'q_option_external', 'option' ) );
 
         /*
@@ -102,8 +89,8 @@ class enqueue {
 
         // sanity check ##
         if ( 
-            ! isset( self::$option->external )
-            || 1 > self::$option->external
+            ! isset( $this->option->external )
+            || 1 > $this->option->external
         ){
 
             // h::log( 'No external libraries to load' );
@@ -166,10 +153,6 @@ class enqueue {
 
 	}
 	
-
-	
-
-
     /**
     * include plugin assets
     *
@@ -177,7 +160,7 @@ class enqueue {
     * @note         This file contrains css / js pushed to files from controllers and is required ##
     * @return       __void
     */
-    public static function wp_enqueue_scripts_module() {
+    function wp_enqueue_scripts_module() {
 
 		// check we have dependencies ##
         if ( ! self::has_dependencies() ){
@@ -186,7 +169,7 @@ class enqueue {
 
         }
 
-        // h::log( self::$option->module );
+        // h::log( $this->option->module );
         // h::log( 'd:>debug set to: '. ( true === q::$_debug ? 'True' : 'False' ) );
 
 		// module JS ##
@@ -200,8 +183,8 @@ class enqueue {
 		* - no cache-buster
 		*/
         if ( 
-			isset( self::$option->module_asset->js ) 
-			&& 1 == self::$option->module_asset->js
+			isset( $this->option->module_asset->js ) 
+			&& 1 == $this->option->module_asset->js
         ) {
 
 			// load list of modules, stored in site_option "q_modules" - includes list of parameters to localize ##
@@ -221,7 +204,8 @@ class enqueue {
 				$hash = 'hash='.rand() ;
 
 				// get all "active" modules ##
-				$modules = \q\asset\js::get();
+				// $modules = $this->js->get();
+				$modules = $this->q->get( '_q_modules' );
 
 				// h::log( $modules );
 
@@ -325,7 +309,7 @@ class enqueue {
     *
     * @since  2.0
     */
-    public static function wp_enqueue_scripts_general() {
+    function wp_enqueue_scripts_general() {
 
         // Loads HTML5 JavaScript file to add support for HTML5 elements in older IE versions ##
 		\wp_register_script( 'q-html5', h::get( "vendor/js/html5.js?__js_defer", 'return' ), array(), q::$_version, 'all' );
@@ -356,12 +340,12 @@ class enqueue {
     *
     * @since  2.0
     */
-    public static function wp_enqueue_scripts_local() {
+    function wp_enqueue_scripts_local() {
 
-        // h::debug( self::$option->library );
+        // h::debug( $this->option->library );
 
         // loop over libraries and include - checking for "min" version is debugging ##
-        foreach( self::$option->library as $key => $value ) {
+        foreach( $this->option->library as $key => $value ) {
 
             // h::log( 'd:>working: '.$key );
 
@@ -476,7 +460,7 @@ class enqueue {
     *
     * @since  2.0
     */
-    public static function wp_enqueue_scripts_theme(){
+    function wp_enqueue_scripts_theme(){
 
 		// check we have dependencies ##
         if ( ! self::has_dependencies() ){
@@ -488,12 +472,12 @@ class enqueue {
 		}
 		
 		// h::log( 'e:>Loading Theme files.....');
-		// h::log( self::$option );
+		// h::log( $this->option );
 		/*
         // Load Parent CSS
         if ( 
-            isset( self::$option->theme_parent->css ) 
-            && '1' == self::$option->theme_parent->css    
+            isset( $this->option->theme_parent->css ) 
+            && '1' == $this->option->theme_parent->css    
         ) {
 
 			// h::log( 'd:> Loading Parent CSS...' );
@@ -583,8 +567,8 @@ class enqueue {
 
 		// Load Child CSS
 		if ( 
-            isset( self::$option->theme_child->css ) 
-            && '1' == self::$option->theme_child->css    
+            isset( $this->option->theme_child->css ) 
+            && '1' == $this->option->theme_child->css    
         ) {
 
 			// \wp_register_style( 'q-plugin-css-theme', \q_theme::get_child_theme_path( '/library/asset/css/theme.min.css' ), array(), \q_theme::version, 'all' );
@@ -675,8 +659,8 @@ class enqueue {
 		/*
 		// load parent theme js
         if ( 
-            isset( self::$option->theme_parent->js ) 
-            && '1' == self::$option->theme_parent->js
+            isset( $this->option->theme_parent->js ) 
+            && '1' == $this->option->theme_parent->js
         ) {
 
 			// add JS ## -- after all dependencies ##
@@ -767,8 +751,8 @@ class enqueue {
 
 		// load child theme JS
 		if ( 
-            isset( self::$option->theme_child->js ) 
-            && '1' == self::$option->theme_child->js
+            isset( $this->option->theme_child->js ) 
+            && '1' == $this->option->theme_child->js
         ) {
 
 			// add JS ## -- after all dependencies ##
