@@ -359,7 +359,7 @@ class wp_head {
 
         if ( ! $analytics ) { return false; }
 
-        if ( class_exists( 'q_theme' ) && method_exists( 'q_theme', 'the_analytics' ) ) {
+        if ( function_exists( 'q_theme' ) && method_exists( 'q_theme', 'the_analytics' ) ) {
 
             // print markup ##
             echo Q_Template::the_analytics();

@@ -22,7 +22,7 @@ class load {
 			|| ! is_array( $array )
 		) {
 
-			// h::log( 'e:>Error in passed params' );
+			h::log( 'e:>Error in passed params' );
 
 			return false;
 
