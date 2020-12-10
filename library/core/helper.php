@@ -167,7 +167,7 @@ class helper {
             // file_exists( self::get_plugin_path( $path.$include ) )
         ) {
 
-            // h::log( 'd:>h::get class: '.$class );
+            // h::log( 'e:>EXTENDED h::get class: '.$class.'->'.$path.$include );
 
             // $template = self::get_plugin_url( $path.$include ); // plugin URL ##
             $template = call_user_func( array( $class, 'get_plugin_url' ), $path.$include );

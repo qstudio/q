@@ -40,51 +40,41 @@ class filter {
 	// tracker ##
 	private static $view_tracker = null;
 	
-	function __construct(){}
+	function __construct(){
+
+		// h::log( 'we are here..' );
+
+	}
 
     /**
     * Kick things off
     */
     function hooks(){
 
-        // we need to filter $view_custom to allow plugins to inject extra templates ##
+		// we need to filter $view_custom to allow plugins to inject extra templates ##
 
         // Add a filter to the attributes metabox to inject template into the cache.
         if ( version_compare( floatval( \get_bloginfo( 'version' ) ), '4.7', '<' ) ) {
 
             // 4.6 and older
-            \add_filter(
-                'page_attributes_dropdown_pages_args',
-                array( $this, 'register_view_custom' )
-            );
+            \add_filter( 'page_attributes_dropdown_pages_args', array( $this, 'register_view_custom' ) );
 
         } else {
 
             // Add a filter to the wp 4.7 version attributes metabox
-            \add_filter(
-                'theme_page_templates', array( $this, 'add_view_custom' )
-            );
+            \add_filter( 'theme_page_templates', array( $this, 'add_view_custom' ) );
 
         }
 
         // Add a filter to the save post to inject our template into the page cache
-        \add_filter(
-            'wp_insert_post_data', 
-            array( $this, 'register_view_custom' ) 
-        );
+        \add_filter( 'wp_insert_post_data', array( $this, 'register_view_custom' ) );
 
         // Add a filter to the template include to determine if the page has our 
         // template assigned and return it's path
-        \add_filter(
-            'template_include', 
-            array( $this, 'check_custom_template' ), 3, 1 
-        );
+        \add_filter( 'template_include', array( $this, 'check_custom_template' ), 3, 1 );
 
         // override native templates ##
-        \add_filter( 
-            'template_include', 
-            array( $this, 'add_view_native' ), 2, 1
-        );
+        \add_filter( 'template_include', array( $this, 'add_view_native' ), 2, 1 );
 
     }
 
@@ -250,7 +240,9 @@ class filter {
         // We also need to format the templates to what WP expects [ 'file.php' => 'Name', ]; ##
         $this->view_custom = 
             $this->format_view_custom( \apply_filters( 'q/view/custom', $this->view_custom )
-        );
+		);
+		
+		// h::log( $this->view_custom );
         
         // merge into known list ##
     	$templates = array_merge( $templates, $this->view_custom );
@@ -285,7 +277,9 @@ class filter {
         // We also need to format the templates to what WP expects [ 'file.php' => 'Name', ]; ##
         $this->view_custom = 
             $this->format_view_custom( \apply_filters( 'q/view/custom', $this->view_custom )
-        );
+		);
+		
+		h::log( $this->view_custom );
 
         // Now add our template to the list of templates by merging our templates
         // with the existing templates array from the cache.
@@ -309,19 +303,19 @@ class filter {
     function check_custom_template( $template ) {
         
         // force default template --- @TESTING ##
-        // $template = $this->get_view_default( $template );
-
+		// $template = $this->get_view_default( $template );
+		
         // check tracker ##
         if ( self::track() ) {
 
-            // h::log( 'Template already defined: '.self::track('get') );
+            h::log( 'e:>Template already defined: '.self::track('get') );
 
             return self::track('get');
 
         }
 
         // test ##
-        // h::log( 'Template at start: '.$template );
+        // h::log( 'e:>Template at start: '.$template );
 
         // Get global post
         global $post;
@@ -333,7 +327,7 @@ class filter {
             || \is_404()
         ) {
 
-            // h::log( 'No post, is_search or is_404 matched - using '.$template );
+            // h::log( 'e:>No post, is_search or is_404 matched - using '.$template );
 
             return $template;
 
@@ -342,14 +336,14 @@ class filter {
         // get template ##
         if ( ! $_wp_page_template = \get_post_meta( $post->ID, '_wp_page_template', true ) ) {
 
-            // h::log( 'No stored match in _wp_page_template - using: '.$template );
+            // h::log( 'e:>No stored match in _wp_page_template - using: '.$template );
 
             return $template;
 
         }
 
         // we need to check if this is empty ##
-        // h::log( '$_wp_page_template: '.$_wp_page_template );
+        // h::log( 'e:>$_wp_page_template: '.$_wp_page_template );
 
         // filter in external custom templates ##
         // remember that the format has changed ##
@@ -358,7 +352,7 @@ class filter {
         // Return default template if we don't have a custom one defined
         if ( ! isset( $this->view_custom[ $_wp_page_template ] ) ) {
 
-            // h::log( 'kicking back template: '.$template );
+            // h::log( 'e:>kicking back template: '.$template );
 
             return $template;
 
@@ -398,7 +392,7 @@ class filter {
         }
 
         // test ##
-        // h::log( 'custom file not found, kicking back default template: '.$template );
+        // h::log( 'e:>custom file not found, kicking back default template: '.$template );
 
         // return ##
         return $template;
