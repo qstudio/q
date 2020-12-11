@@ -1,3 +1,8 @@
+### 6.0.0 ###
+
+* Update: Move to more standard OOP model
+* new api q__log() q()
+
 ### 5.0.3 ###
 
 * Update: pre-branch for Q 6.0 - prepared and tested against willow 2.0
