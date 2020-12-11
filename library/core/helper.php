@@ -432,9 +432,8 @@ class helper {
 
 		}
 		
-		// new \q\theme\module\consent();
+		// get consent instance ##
 		$consent = \q\theme\module\consent::get_instance();
-		// h::log( $consent );
 
         if (
             ! $consent->is_active( $setting ) 
