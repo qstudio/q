@@ -64,6 +64,8 @@ final class factory {
 
 		// build hook objects ##
 		$option = new \q\core\option();
+
+		// set up debug option ##
 		$option->hooks();
 
 

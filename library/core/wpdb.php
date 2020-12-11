@@ -9,25 +9,28 @@ use q\core\helper as h;
 class wpdb {
 
     // store db query ##
-    public static $query = false;
+	private $query = false;
+	
+	function __construct(){
 
+	}
 
     /**
      * Single query to retrieve all stored options saved via ACF
      * 
      * @since 2.3.0
     */
-    public static function query( $string = 'options_q_option%' )    {
+    function query( $string = 'options_q_option%' )    {
 
         if ( 
-			self::$query
-			&& is_array( self::$query )
-			&& isset( self::$query[$string] ) 
+			$this->query
+			&& is_array( $this->query )
+			&& isset( $this->query[$string] ) 
 		) {
 
-            // h::log( 'query already returned, so using stored values...' );
+            // h::log( 'e:>query already returned, so using stored values...' );
 
-            return self::$query[$string];
+            return $this->query[$string];
 
         }
 
@@ -61,19 +64,16 @@ class wpdb {
         }
 
         // kick it back ##
-        return self::$query[$string] = $query;
+        return $this->query[$string] = $query;
 
     }
-
-
 
     /**
      * Single query to retrieve all stored options saved via ACF
      * 
      * @since 2.3.0
     */
-    public static function prepare( Array $array = null, $string = 'options_q_option_' )
-    {
+    function prepare( Array $array = null, $string = 'options_q_option_' ){
 
         // sanity check ##
         if (
@@ -155,6 +155,5 @@ class wpdb {
         return $object;
 
     }
-    
     
 }

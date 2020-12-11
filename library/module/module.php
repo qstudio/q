@@ -94,4 +94,51 @@ class module {
 
 	}
 
+	/**
+	 * Check if a given module is currently set as active
+	 * 
+	 * @since		6.0.0
+	 * @param		$module		String
+	 * @return		Boolean		defaults to false, in case of bad param
+	*/
+	public static function is_active( $module = null ){
+
+		// sanity ##
+		if(
+			is_null( $module )
+		){
+
+			h::log( 'e:>Error in module passed.' );
+
+			return false;
+
+		}
+
+		// get module with null-coalesce fallback ##		
+		$get = \q\core\option::get( 'module' )->$module ?? false ;
+
+		// h::log( $get );
+
+		// do some checks ##
+		if ( 
+			// ! $get
+			// || 
+			is_null( $get )
+			|| '' == $get
+			|| ! is_bool( $get )
+			|| true !== $get 
+		){
+
+			// h::log( 'd:>"'.$module.'" is NOT enabled.' );
+
+			return false;
+
+		}
+
+		// h::log( 'd:>"'.$module.'" IS enabled.' );
+
+		return true;
+
+	}
+
 }

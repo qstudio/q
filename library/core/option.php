@@ -8,7 +8,13 @@ use q\plugin as q;
 
 class option {
 
-	function __construct(){}
+	private static $wpdb = false;
+
+	function __construct(){
+
+		self::$wpdb = new core\wpdb();
+
+	}
 
     /**
     * Class Constructor
@@ -32,7 +38,7 @@ class option {
     public static function get( String $field = null ){
         
         // we need to get all stored options from WP ##
-		if ( ! $array = core\wpdb::query( 'options_q_option%' ) ) {
+		if ( ! $array = self::$wpdb->query( 'options_q_option%' ) ) {
 
             h::log( 'e:>No stored values found.' );
 
@@ -42,7 +48,7 @@ class option {
 
         // now we need to format them into something which all existing theme controllers expect:
         // an array with "q_option_" removed and a value of 1 or 0 ##
-		if ( ! $object = core\wpdb::prepare( $array, 'options_q_option_' ) ) {
+		if ( ! $object = self::$wpdb->prepare( $array, 'options_q_option_' ) ) {
 
             h::log( 'e:>Error preparing stored values' );
 
@@ -135,8 +141,6 @@ class option {
 
     }
 
-
-
     /**
     * Delete Q Options - could be used to clear old settings
     */
@@ -146,14 +150,14 @@ class option {
 
     }
 
-
-
+	/*
     public static function add_theme_support( $support ){
 
        h::log( 'd:>add_theme_support is deprecated, please use the new Q settings page and filters.' );
 
        return false;
 
-    }
+	}
+	*/
     
 }
