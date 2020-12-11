@@ -19,8 +19,6 @@ final class factory {
 
 	private
 		$q // Q instance ##
-		// $factory // q\factory object ##
-		// $hook // q\factory\hook object ##
 	;
 
     /**
