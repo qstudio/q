@@ -351,18 +351,6 @@ class option {
     }
 
     /**
-     * API to add fields to Q settings
-     * 
-     * @since 2.3.0
-     */
-    function api( Array $args = null ){
-
-        // @todo ... but should be a wrapper to: 
-        // \add_filter( 'acf/load_field/name=q_option_library', [ $this, 'filter_acf_library' ], 1000000, 1 );
-
-    }
-
-    /**
      * Add view to link assets from backend
      * 
      * @since 2.3.0
@@ -475,7 +463,10 @@ class option {
         }
 
         // replace array ##
-        $field['choices'] = $array;
+		$field['choices'] = $array;
+		
+		// A->Z order ##
+		// asort( $field['choices'] );
 
         // kick it all back ##
         return $field;
