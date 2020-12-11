@@ -253,7 +253,7 @@ class enqueue {
 						$handle, 
 						$file_url.$defer.$hash, 
 						$dependecy, 
-						q::$_version,
+						\q\theme\plugin::$_version,
 						// true
 					);
 
@@ -266,7 +266,7 @@ class enqueue {
 					'q-module', 
 					\q\theme\plugin::get_child_url( "/library/asset/js/module.min.js?__js_defer" ), 
 					array( 'jquery' ), 
-					\q\theme\child\plugin::$_version,
+					\q\theme\plugin::$_version,
 					// true
 				);
 
@@ -293,12 +293,7 @@ class enqueue {
 
         }
 
-
     }
-
-
-
-
 
     /*
     * script enqueuer 
@@ -328,9 +323,6 @@ class enqueue {
 
     }
 
-
-
-    
     /*
     * script enqueuer 
     *
@@ -443,10 +435,6 @@ class enqueue {
 		}
 
     }
-
-
-
-
 
     /*
     * script enqueuer -- loaded from q_theme
