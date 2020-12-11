@@ -91,7 +91,6 @@ class helper {
 
     }
 
-
     /**
     * check if a file exists with environmental fallback
     * first check the active theme, then the plugin
@@ -316,7 +315,6 @@ class helper {
 
     }
 
-
     /**
      * Pretty print_r / var_dump
      *
@@ -325,14 +323,12 @@ class helper {
      * @param       string      $title      Optional title for the dump
      * @return      String      HTML output
      */
-    public static function pr( $var, $title = null )
-    {
+    public static function pr( $var, $title = null ){
 
         if ( $title ) $title = '<h2>'.$title.'</h2>';
         print '<pre class="var_dump">'; echo $title; var_dump($var); print '</pre>';
 
     }
-
 
     /**
      * Pretty print_r / var_dump with wp_die
@@ -342,15 +338,11 @@ class helper {
      * @param       string      $title      Optional title for the dump
      * @return      String      HTML output
      */
-    public static function pr_die( $var, $title = null )
-    {
+    public static function pr_die( $var, $title = null ){
 
         \wp_die( self::pr( $var, $title ) );
 
     }
-
-
-
 
     /**
     * Get current device type
@@ -412,16 +404,12 @@ class helper {
 
     }
 
-
-
-
 	/** 
      * Check which consent is given by the user via a stored cookie
      * 
      * @since 4.0.0
      * */
-    public static function consent( $setting = null ): bool
-    {
+    public static function consent( $setting = null ): bool{
 
         if ( is_null( $setting ) ) {
 
@@ -432,30 +420,34 @@ class helper {
         }
 
         if ( 
-			! class_exists( '\q\extension\consent' )
-			|| ! isset( core\option::get('extension')->consent )
-			|| true !== core\option::get('extension')->consent 
+			! class_exists( '\q\theme\module\consent' )
+			|| ! isset( core\option::get( 'module' )->consent )
+			|| true !== core\option::get( 'module' )->consent 
         ) {
 
-            // self::log( 'd:>Consent Class not found, default to true' );
+            // h::log( 'd:>Consent Class not found, default to true' );
 
             // no ##
             return true;
 
-        }
+		}
+		
+		// new \q\theme\module\consent();
+		$consent = \q\theme\module\consent::get_instance();
+		// h::log( $consent );
 
         if (
-            ! \q\extension\consent\cookie::is_active( $setting ) 
+            ! $consent->is_active( $setting ) 
         ) {
 
-            // self::log( 'd:>Setting not allowed: '.$setting );
+            // h::log( 'd:>Setting not allowed: '.$setting );
 
             // no ##
             return false;
 
         }
 
-        // self::log( 'd:>Setting allowed: '.$setting );
+        // h::log( 'd:>Setting allowed: '.$setting );
 
         // ok ##
         return true;
