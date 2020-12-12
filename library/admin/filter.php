@@ -2,8 +2,6 @@
 
 namespace q\admin;
 
-use q\plugin as q;
-use q\core;
 use q\core\helper as h;
 
 class filter {
