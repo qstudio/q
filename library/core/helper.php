@@ -5,7 +5,6 @@ namespace q\core;
 use q\plugin as q;
 use q\core;
 use q\extension;
-use q\core\helper as h;
 
 class helper {
 
@@ -115,18 +114,10 @@ class helper {
         // nada ##
         $template = false; 
         
-        #if ( ! defined( 'TEMPLATEPATH' ) ) {
-
-        #    h::log( 'MISSING for: '.$include.' - AJAX = '.( \wp_doing_ajax() ? 'true' : 'false' ) );
-
-		#}
-		
 		// h::log( 'd:>h::get class/include: '.$class.'/'.$include );
 
         // perhaps this is a child theme ##
         if ( 
-            // defined( 'Q_CHILD_THEME' )
-            // && Q_CHILD_THEME
 			\get_template_directory() !== \get_stylesheet_directory()
             && file_exists( \get_stylesheet_directory().'/'.$path.$include )
         ) {

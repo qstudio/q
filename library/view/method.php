@@ -21,13 +21,13 @@ class method {
 			// return false;
 			
 			// changes to return WP template -- check for introduced issues ##
-			return str_replace( [ '.php', '.willow' ], '', \get_page_template_slug() );
+			return str_replace( [ '.php', '.willow', '.willow.php' ], '', \get_page_template_slug() );
 
         } else {
 
             // h::log( 'Page template: '.$GLOBALS['q_template'] );
 
-            return str_replace( [ '.php', '.willow' ], '', $GLOBALS['q_template'] );        
+            return str_replace( [ '.php', '.willow', '.willow.php' ], '', $GLOBALS['q_template'] );        
 
         }
 
@@ -38,8 +38,7 @@ class method {
      * 
 	 * @since 4.1.0
      */
-    public static function format() 
-    {
+    public static function format(){
 
         if( ! isset( $GLOBALS['q_template'] ) ) {
 
