@@ -1,3 +1,7 @@
+### 6.0.1 ###
+
+* Update: View filter priority moved to Willow - legacy model remains inside Q 
+
 ### 6.0.0 ###
 
 * Update: Move to more standard OOP model

@@ -27,7 +27,7 @@ final class plugin {
 	public static 
 	
 		// current tag ##
-		$_version = '6.0.0',
+		$_version = '6.0.1',
 
 		// helper object ##
 		$helper = null,
