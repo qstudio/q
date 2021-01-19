@@ -55,26 +55,6 @@ class method {
 
 		}
 
-		/*
-		// h::log( $path );
-		$files = glob( $path.$pattern ); // get all file names
-		// h::log( $files );
-		$log = [];
-
-		foreach( $files as $file ) { // iterate files
-
-			if( is_file( $file ) ) {
-
-				$log[] = $file;
-				unlink( $file ); // delete file
-		
-			}
-
-		}
-		*/
-
-		// h::log( $log );
-
 		return $log;
 
 	}
@@ -255,13 +235,15 @@ class method {
 
                     // retrieve the taxonomy object
                     $tax_obj = \get_taxonomy($tax_slug);
-                    //pr($tax_obj);
-                    $tax_name = $tax_obj->labels->name;
-                    //pr($tax_name);
-                    // output html for taxonomy dropdown filter
+					$tax_name = $tax_obj->labels->name;
+					
+					// get _GET_ tax_slug ##
+					$_get_tax_slug = isset( $_GET[strtolower( $tax_slug ) ] ) ? $_GET[strtolower($tax_slug)] : null ;
+
+                    // output html for taxonomy dropdown filter ##
                     echo "<select name='".strtolower($tax_slug)."' id='".strtolower($tax_slug)."' class='postform'>";
                     echo "<option value=''>".__( "All", 'q-textdomain' )." $tax_name</option>";
-                    self::generate_taxonomy_options( $tax_slug, $tax_name, 0, 0, (isset($_GET[strtolower($tax_slug)])? $_GET[strtolower($tax_slug)] : null) );
+                    self::generate_taxonomy_options( $tax_slug, $tax_name, 0, 0, $_get_tax_slug );
                     echo "</select>";
 
                 }
@@ -313,14 +295,12 @@ class method {
 
     }
 
-	// add thumbnails to admin columns ##
-	// \add_action( 'admin_init', function(){ return self::add_thumbnail_to( array( 'posts', 'pages' ) ) ) );
-	
     /**
      * Add Thumbnail Column to Post Type in admin
      * 
      * @since       1.2.0
      * @param       Array    $post_types
+	 * @usage		\add_action( 'admin_init', function(){ return self::add_thumbnail_to( array( 'posts', 'pages' ) ) ) );
      */
     public static function add_thumbnail_to( $post_types = null ){
         

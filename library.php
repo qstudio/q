@@ -52,7 +52,6 @@ final class library {
 		// core <------- ##
 		require_once $q::get_plugin_path( 'library/core/method.php' );
 		require_once $q::get_plugin_path( 'library/core/helper.php' );
-		// require_once $q::get_plugin_path( 'library/core/log.php' ); // loaded early in main plugin class ##
 		require_once $q::get_plugin_path( 'library/core/filter.php' );
 		require_once $q::get_plugin_path( 'library/core/load.php' );
 		require_once $q::get_plugin_path( 'library/core/config.php' );
@@ -94,7 +93,7 @@ final class library {
 		$array['module/sticky'] = h::get( 'module/sticky/sticky.php', 'return', 'path' );
 
 		// admin <----- ##
-
+		
 		// functions ##
 		$array['admin/method'] = h::get( 'admin/method.php', 'return', 'path' );
 

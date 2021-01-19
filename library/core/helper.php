@@ -80,11 +80,11 @@ class helper {
 
             fclose( $connected );
 
-            return true; //action when connected ##
+            return true; // action when connected ##
 
         } else {
 
-            return false; //action in connection failure
+            return false; // action in connection failure
 
         }
 
@@ -92,7 +92,7 @@ class helper {
 
     /**
     * check if a file exists with environmental fallback
-    * first check the active theme, then the plugin
+    * defaults to parent child theme, then parent, but can also be instructed to lookup via a class 
     *
     * @param    $include        string      Include file with path ( from library/  ) to include. i.e. - templates/loop-nothing.php
     * @param    $return         string      return method ( echo, return, require )
@@ -510,8 +510,7 @@ class helper {
 	 *
 	 * @return bool               Whether the function is removed.
 	 */
-    public static function remove_class_action( $tag, $class_name = '', $method_name = '', $priority = 10 ) 
-    {
+    public static function remove_class_action( $tag, $class_name = '', $method_name = '', $priority = 10 ){
     
         global $wp_filter;
 

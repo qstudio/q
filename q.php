@@ -28,6 +28,9 @@
 // namespace plugin ##
 namespace q;
 
+// STOP ##
+return;
+
 // import ##
 use q;
 use q\plugin;

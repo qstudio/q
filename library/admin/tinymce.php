@@ -7,13 +7,17 @@ use q\core;
 use q\core\helper as h;
 
 // load it up ##
-\q\admin\tinymce::__run();
+// \q\admin\tinymce::__run();
 
 class tinymce {
 
-    public static function __run(){
+	function __construct(){
 
-        if ( \is_admin() ) {
+	}
+
+    function hooks(){
+
+        // if ( \is_admin() ) {
 
 			\add_filter( 'tiny_mce_before_init', [ get_class(), 'style_formats' ] );
 			
@@ -21,10 +25,9 @@ class tinymce {
 
 			\add_filter( 'mce_external_plugins', [ get_class(), 'code_plugin' ], 10, 1 );
 
-        }
+        // }
 
 	}
-	
 
 	public static function code_plugin( $plugins ){
 
@@ -33,7 +36,6 @@ class tinymce {
 		return $plugins;
 	
 	}
-
 
 	public static function buttons( $buttons ) {   
 		
@@ -46,7 +48,6 @@ class tinymce {
 		return $buttons;
 
 	}
-
 
     public static function style_formats( $init_array ){
 
@@ -70,6 +71,5 @@ class tinymce {
 		return $init_array;
 
 	}	
-
 
 }

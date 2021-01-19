@@ -12,9 +12,6 @@ use \Datetime;
 
 class option {
 
-    // store db query ##
-	// public static $query = false;
-	
 	function __construct(){}
 
     /**
