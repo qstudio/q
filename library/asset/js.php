@@ -37,7 +37,7 @@ class js {
 	
 	function load(){
 
-		// h::log( \q\core\option::get('module') );
+		// h::log( \q\theme\core\option::get('module') );
 		// $_q_modules = $this->q->get( '_q_modules' );
 
 		// load list of modules, stored in site_option "q_modules" - includes list of parameters to localize ##

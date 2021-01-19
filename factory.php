@@ -180,7 +180,7 @@ final class factory {
 		if ( ! $this->q_ready() ){ return false; }
 
 		// acf filter ##
-		$acf = new \q\plugins\acf();
+		$acf = new \q\theme\plugins\acf();
 		$acf->hooks();
 
 	}

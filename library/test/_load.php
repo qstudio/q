@@ -15,7 +15,7 @@ class test {
     function hooks(){
 
         // add ACF fields ##
-        \add_action( 'acf/init', function() { \q\plugins\acf::add_field_groups( self::add_field_groups() ); }, 1 );
+        \add_action( 'acf/init', function() { \q\theme\plugins\acf::add_field_groups( self::add_field_groups() ); }, 1 );
 
         // check if the test suite is activated via Q settings ##
         if ( ! self::check() ) {
