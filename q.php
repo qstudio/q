@@ -52,6 +52,8 @@ require_once __DIR__ . '/library/api/function.php';
 require_once __DIR__ . '/library/core/log.php';
 require_once __DIR__ . '/plugin.php';
 
+error_log('sdfsdf');
+
 // fire up log
 $log = new \q\core\log();
 $log->hooks();
@@ -88,6 +90,9 @@ require_once __DIR__ . '/factory.php';
 
 	// core hooks ##
 	$factory->core();
+
+	// update hooks ##
+	$factory->update();
 
 	// view hooks ##
 	$factory->view();

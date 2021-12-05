@@ -77,6 +77,10 @@ final class library {
 		// filters ##
 		require_once $q::get_plugin_path( 'library/view/filter.php' );
 
+		// update <--------- ##
+		require_once $q::get_plugin_path( 'library/update/filter.php' );
+		require_once $q::get_plugin_path( 'library/update/check.php' );
+
 		// asset <------- ##
 
 		// add assets ##

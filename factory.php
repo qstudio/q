@@ -58,7 +58,7 @@ final class factory {
 	function core(){
 
 		// sanity ##
-		if ( ! $this->q_ready() ){ return false; }
+		if ( ! $this->q_ready() ){ return; }
 
 		// build hook objects ##
 		$option = new \q\core\option();
@@ -66,6 +66,29 @@ final class factory {
 		// set up debug option ##
 		$option->hooks();
 
+
+	}
+
+	/**
+	 * Update hooks
+	*/
+	public function update():void
+	{
+
+		// sanity ##
+		if ( ! $this->q_ready() ){ return; }
+
+		// build hook objects ##
+		$check = new \q\update\check( $this->q );
+
+		// set up update check ##
+		$check->hooks();
+
+		// build hook objects ##
+		$filter = new \q\update\filter( $this->q );
+
+		// set up update filter ##
+		$filter->hooks();
 
 	}
 
@@ -78,7 +101,7 @@ final class factory {
 	function view(){
 
 		// sanity ##
-		if ( ! $this->q_ready() ){ return false; }
+		if ( ! $this->q_ready() ){ return; }
 
 		// view filter ##
 		$filter = new \q\view\filter();
